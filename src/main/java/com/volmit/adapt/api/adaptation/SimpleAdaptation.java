@@ -178,7 +178,7 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
 
         return AdaptAdvancement.builder()
                 .key("adaptation_" + getName())
-                .title(C.WHITE + "[     " + getDisplayName() + C.WHITE + "     ]")
+                .title(getDisplayName())
                 .description(getDescription() + ". " + Localizer.dLocalize("snippets", "gui", "unlockthisbyclicking") + " " + AdaptConfig.get().adaptActivatorBlockName)
                 .icon(getIcon())
                 .children(a)
