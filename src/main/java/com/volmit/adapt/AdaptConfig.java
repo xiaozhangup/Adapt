@@ -44,7 +44,7 @@ public class AdaptConfig {
     public boolean xpInCreative = false;
     public boolean allowAdaptationsInCreative = false;
     public String adaptActivatorBlock = "BOOKSHELF";
-    public String adaptActivatorBlockName = "a Bookshelf";
+    public String adaptActivatorBlockName = "书架";
     public List<String> blacklistedWorlds = List.of("some_world_adapt_should_not_run_in", "anotherWorldFolderName");
     public int experienceMaxLevel = 1000;
     boolean preventHunterSkillsWhenHungerApplied = true;
