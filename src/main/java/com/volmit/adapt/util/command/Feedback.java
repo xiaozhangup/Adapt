@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.Singular;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.text.TextComponent;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,7 +30,7 @@ public class Feedback {
         }
 
         for (TextComponent i : messages) {
-            String prefix =  C.GRAY + "[" + C.DARK_RED + "Adapt" + C.GRAY + "]:" ;
+            String prefix =  C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "]" ;
             Adapt.audiences.sender(serverOrPlayer).sendMessage(i.content(prefix + " " + i.content()));
         }
     }

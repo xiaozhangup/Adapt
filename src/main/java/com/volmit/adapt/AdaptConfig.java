@@ -50,7 +50,7 @@ public class AdaptConfig {
     boolean preventHunterSkillsWhenHungerApplied = true;
     private ValueConfig value = new ValueConfig();
     private boolean metrics = true;
-    private String language = "en_US";
+    private String language = "zh_CN";
     private String fallbackLanguageDontChangeUnlessYouKnowWhatYouAreDoing = "en_US";
     private Curves xpCurve = Curves.XL3L7;
     private double playerXpPerSkillLevelUpBase = 489;

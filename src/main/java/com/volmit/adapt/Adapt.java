@@ -41,6 +41,7 @@ import io.github.mqzn.commands.base.manager.CommandExecutionCoordinator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -120,8 +121,8 @@ public class Adapt extends VolmitPlugin {
         }
         startSim();
         registerListener(new BrewingManager());
-        setupMetrics();
-        startupPrint(); // Splash screen
+        // setupMetrics();
+        // startupPrint(); // Splash screen
         if (AdaptConfig.get().isAutoUpdateCheck()) {
             autoUpdateCheck();
         }
@@ -287,7 +288,7 @@ public class Adapt extends VolmitPlugin {
     }
 
     public static void messagePlayer(Player p, String string) {
-        String msg = C.GRAY + "[" + C.DARK_RED + "Adapt" + C.GRAY + "]: " + string;
+        String msg = C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "] " + string;
         p.sendMessage(msg);
     }
 
@@ -298,7 +299,7 @@ public class Adapt extends VolmitPlugin {
                 return;
             }
 
-            String msg = C.GRAY + "[" + C.DARK_RED + "Adapt" + C.GRAY + "]: " + string;
+            String msg = C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "] " + string;
             Bukkit.getConsoleSender().sendMessage(msg);
         } catch (Throwable e) {
             System.out.println("[Adapt]: " + string);

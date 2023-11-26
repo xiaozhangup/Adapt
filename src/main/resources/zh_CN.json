@@ -263,6 +263,7 @@
       "xp": "至下一级经验",
       "welcome": "欢迎！",
       "welcomeback": "欢迎回来！",
+      "maxabilitypower": "最大能力值",
       "xpbonusfortime": "经验增益，持续",
       "unlockthisbyclicking": "右键该方块以解锁：",
       "back": "返回",
@@ -311,7 +312,7 @@
       "description": "敏捷可以在遇到障碍时帮助你快速、灵活的移动。"
     },
     "architect": {
-      "name": "建筑师",
+      "name": "建筑",
       "icon": "⬧",
       "description": "结构是万物之本。现实在你手中，由你掌控。"
     },
@@ -353,7 +354,7 @@
       "description": "挖大洞......"
     },
     "herbalism": {
-      "name": "草药学",
+      "name": "草药",
       "icon": "⚘",
       "description": "我见不到植物，不过我能找到一些种子还有- 呃......那是杂草吗？"
     },
@@ -403,7 +404,7 @@
       "description": "鹦鹉、蜜蜂，还有......你？"
     },
     "tragoul": {
-      "name": "塔格奥",
+      "name": "耐性",
       "icon": "🗡",
       "description": "血液在宇宙的血管中游动，束缚于你的手中。"
     },
@@ -958,9 +959,9 @@
   },
   "rift": {
     "remoteaccess": {
-      "name": "远程访问权限",
+      "name": "远程访问",
       "description": "来自虚空之中，可以访问被标记的容器。",
-      "lore1": "末影珍珠 + 指南针 = Reliquary Portkey",
+      "lore1": "末影珍珠 + 指南针 = 末影之匙",
       "lore2": "这个物品允许你远程访问被标记的容器。",
       "lore3": "制作完成后，查看物品来使用该技能",
       "notcontainer": "该物品不是可用容器"
