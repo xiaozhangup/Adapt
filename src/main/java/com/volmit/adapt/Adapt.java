@@ -48,6 +48,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldUnloadEvent;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -125,26 +126,31 @@ public class Adapt extends VolmitPlugin {
             autoUpdateCheck();
         }
         protectorRegistry = new ProtectorRegistry();
-        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-            protectorRegistry.registerProtector(new WorldGuardProtector());
-        }
-        if (getServer().getPluginManager().getPlugin("Factions") != null) {
-            protectorRegistry.registerProtector(new FactionsClaimProtector());
-        }
-        if (getServer().getPluginManager().getPlugin("ChestProtect") != null) {
-            protectorRegistry.registerProtector(new ChestProtectProtector());
-        }
-        if (getServer().getPluginManager().getPlugin("Residence") != null) {
-            protectorRegistry.registerProtector(new ResidenceProtector());
-        }
-        if (getServer().getPluginManager().getPlugin("GriefDefender") != null) {
-            protectorRegistry.registerProtector(new GriefDefenderProtector());
-        }
-        if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
-            protectorRegistry.registerProtector(new GriefPreventionProtector());
-        }
-        if (getServer().getPluginManager().getPlugin("LockettePro") != null) {
-            protectorRegistry.registerProtector(new LocketteProProtector());
+//        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+//            protectorRegistry.registerProtector(new WorldGuardProtector());
+//        }
+//        if (getServer().getPluginManager().getPlugin("Factions") != null) {
+//            protectorRegistry.registerProtector(new FactionsClaimProtector());
+//        }
+//        if (getServer().getPluginManager().getPlugin("ChestProtect") != null) {
+//            protectorRegistry.registerProtector(new ChestProtectProtector());
+//        }
+//        if (getServer().getPluginManager().getPlugin("Residence") != null) {
+//            protectorRegistry.registerProtector(new ResidenceProtector());
+//        }
+//        if (getServer().getPluginManager().getPlugin("GriefDefender") != null) {
+//            protectorRegistry.registerProtector(new GriefDefenderProtector());
+//        }
+//        if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
+//            protectorRegistry.registerProtector(new GriefPreventionProtector());
+//        }
+//        if (getServer().getPluginManager().getPlugin("LockettePro") != null) {
+//            protectorRegistry.registerProtector(new LocketteProProtector());
+//        }
+        if (getServer().getPluginManager().getPlugin("SlimeCargo") != null) {
+            protectorRegistry.registerProtector(new SlimeCargoProtector());
+        } else {
+            protectorRegistry.registerProtector(new PermissionProtector());
         }
         glowingEntities = new GlowingEntities(this);
         parser.parse(new CommandAdapt());
