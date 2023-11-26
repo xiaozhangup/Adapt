@@ -55,12 +55,13 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
                 .build());
         registerRecipe(AdaptRecipe.shaped()
                 .key("crafting-witherskeletonskull")
-                .ingredient(new MaterialChar('I', Material.NETHER_BRICK))
-                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
+                .ingredient(new MaterialChar('I', Material.COAL_BLOCK))
+                .ingredient(new MaterialChar('B', Material.NETHER_BRICK))
+                .ingredient(new MaterialChar('X', Material.SKELETON_SKULL))
                 .shapes(List.of(
                         "III",
-                        "IXI",
-                        "III"))
+                        "IXB",
+                        "BBB"))
                 .result(new ItemStack(Material.WITHER_SKELETON_SKULL, 1))
                 .build());
         registerRecipe(AdaptRecipe.shaped()
@@ -102,7 +103,11 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
         v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore3"));
         v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore4"));
         v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore5"));
+        v.addLore(" ");
         v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore6"));
+        v.addLore("  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore7"));
+        v.addLore("  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore8"));
+        v.addLore("  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore9"));
     }
 
 
