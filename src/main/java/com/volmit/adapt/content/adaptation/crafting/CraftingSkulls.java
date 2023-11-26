@@ -105,9 +105,9 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
         v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore5"));
         v.addLore(" ");
         v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore6"));
-        v.addLore("  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore7"));
-        v.addLore("  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore8"));
-        v.addLore("  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore9"));
+        v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore7"));
+        v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore8"));
+        v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore9"));
     }
 
 

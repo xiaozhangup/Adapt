@@ -245,7 +245,7 @@ public interface Skill<T> extends Ticked, Component {
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(getDisplayName() + " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
+        w.setTitle(getDisplayName() + C.BLACK + " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
         w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis())));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);
