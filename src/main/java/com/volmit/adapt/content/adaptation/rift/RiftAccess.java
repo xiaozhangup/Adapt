@@ -275,7 +275,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
     @NoArgsConstructor
     protected static class Config {
         boolean permanent = false;
-        boolean enabled = true;
+        boolean enabled = false;
         boolean showParticles = true;
         int baseCost = 3;
         double costFactor = 0.2;

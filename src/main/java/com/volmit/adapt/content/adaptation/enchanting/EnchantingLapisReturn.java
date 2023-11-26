@@ -103,7 +103,7 @@ public class EnchantingLapisReturn extends SimpleAdaptation<EnchantingLapisRetur
     @NoArgsConstructor
     protected static class Config {
         boolean permanent = false;
-        boolean enabled = true;
+        boolean enabled = false;
         int baseCost = 5;
         int maxLevel = 3;
         int initialCost = 2;

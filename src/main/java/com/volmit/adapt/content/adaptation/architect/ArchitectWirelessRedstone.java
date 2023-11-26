@@ -267,7 +267,7 @@ public class ArchitectWirelessRedstone extends SimpleAdaptation<ArchitectWireles
     protected static class Config {
         public int cooldown = 125;
         boolean permanent = true;
-        boolean enabled = true;
+        boolean enabled = false;
         boolean showParticles = true;
         int baseCost = 5;
         int maxLevel = 1;

@@ -172,7 +172,7 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
     @NoArgsConstructor
     protected static class Config {
         boolean permanent = false;
-        boolean enabled = true;
+        boolean enabled = false;
         int baseCost = 6;
         int maxLevel = 7;
         int initialCost = 8;
