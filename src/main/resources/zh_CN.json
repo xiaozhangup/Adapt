@@ -325,7 +325,7 @@
     },
     "brewing": {
       "name": "酿造",
-      "icon": "❦",
+      "icon": "🧪",
       "description": "咕嘟，咕嘟，咕嘟- 我依然不敢把这瓶药水丢进炼药锅中。"
     },
     "blocking": {
@@ -340,7 +340,7 @@
     },
     "discovery": {
       "name": "探索",
-      "icon": "⚛",
+      "icon": "🌊",
       "description": "当洞察力提升时，你的思维便会愈发澄澈，探索更多的奥秘。"
     },
     "enchanting": {
@@ -360,7 +360,7 @@
     },
     "hunter": {
       "name": "狩猎",
-      "icon": "☠",
+      "icon": "🔱",
       "description": "狩猎是一段旅程，而不是结果。"
     },
     "nether": {
@@ -415,7 +415,7 @@
     },
     "unarmed": {
       "name": "搏击",
-      "icon": "»",
+      "icon": "🔥",
       "description": "赤手空拳并不意味着失去力量。"
     }
   },

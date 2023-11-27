@@ -26,19 +26,15 @@ import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.util.*;
-import manifold.rt.api.util.Pair;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 
-import static com.volmit.adapt.util.M.clip;
-
-public class SkillsGui {
+public class AllSkillsGui {
     public static void open(Player player) {
         Window w = new UIWindow(player);
         w.setViewportHeight(4); // Resize GUI
-        w.setTag("/");
+        w.setTag("/all");
         w.setDecorator((window, position, row) -> new UIElement("bg")
                 .setName(" ")
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE)));
@@ -50,30 +46,30 @@ public class SkillsGui {
         }
 
         if (!adaptPlayer.getData().getSkillLines().isEmpty()) {
+            int ind = 0;
             for (PlayerSkillLine i : adaptPlayer.getData().getSkillLines().sortV()) {
                 if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer)) || i.getLevel() < 0) {
                     continue;
                 }
-
-                Skill<?> sk = Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(i.getLine());
+                int pos = w.getPosition(ind);
+                int row = w.getRow(ind);
                 int adaptationLevel = 0;
                 for (PlayerAdaptation adaptation : i.getAdaptations().sortV()) {
                     adaptationLevel = adaptation.getLevel();
                 }
-
-                Pair<Integer, Integer> location = getLocation(sk, w);
-                if (location == null) continue;
-
-                int pos = location.getFirst();
-                int row = location.getSecond();
-
+                Skill<?> sk = Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(i.getLine());
                 w.setElement(pos, row, new UIElement("skill-" + sk.getName())
                         .setMaterial(new MaterialBlock(sk.getIcon()))
                         .setName(sk.getDisplayName(i.getLevel()))
                         .setProgress(1D)
+                        .addLore(C.ITALIC + "" + C.GRAY + sk.getDescription())
                         .addLore(C.UNDERLINE + "" + C.WHITE + i.getKnowledge() + C.RESET + " " + C.GRAY + Localizer.dLocalize("snippets", "gui", "knowledge"))
                         .addLore(C.ITALIC + "" + C.DARK_GREEN + adaptationLevel + " " + C.GRAY + Localizer.dLocalize("snippets", "gui", "powerused"))
-                        .onLeftClick((e) -> sk.openGui(true, player)));
+                        .onLeftClick((e) -> {
+                            w.close();
+                            sk.openGui(player);
+                        }));
+                ind++;
             }
 
             if (AdaptConfig.get().isUnlearnAllButton()) {
@@ -98,38 +94,19 @@ public class SkillsGui {
                         }));
             }
 
-            w.setElement(w.getPosition(24), w.getRow(24), new UIElement("all_skill")
-                    .setMaterial(new MaterialBlock(Material.WRITABLE_BOOK))
-                    .setName(C.WHITE + "查看你的所有属性")
-                    .addLore(C.GRAY + "总计 21 种")
-                    .addLore(C.GRAY + "已触发 " + adaptPlayer.getData().getSkillLines().sortV().size() + " 种")
-                    .onLeftClick((e) -> {
-                        w.close();
-                        AllSkillsGui.open(player);
-                    }));
-
             w.setTitle(Localizer.dLocalize("snippets", "gui", "level") + " " + (int) XP.getLevelForXp(adaptPlayer.getData().getMasterXp()) + " (" + adaptPlayer.getData().getUsedPower() + "/" + adaptPlayer.getData().getMaxPower() + " " + Localizer.dLocalize("snippets", "gui", "powerused") + ")");
             w.open();
-            w.onClosed((e) -> Adapt.instance.getGuiLeftovers().remove(player.getUniqueId().toString()));
+            w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis())));
             Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);
         }
     }
 
-    private static Pair<Integer, Integer> getLocation(Skill<?> skill, Window w) {
-        int slot = 0;
-
-        switch (skill.getName()) {
-            case "discovery" -> slot = 11;
-            case "brewing" -> slot = 12;
-            case "axes" -> slot = 13;
-            case "hunter" -> slot = 14;
-            case "ranged" -> slot = 15;
-            case "seaborne" -> slot = 20;
-            case "unarmed" -> slot = 21;
-            case "tragoul" -> slot = 22;
+    private static void onGuiClose(Player player, boolean openPrevGui) {
+        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
+        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 1.455f);
+        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
+        if (openPrevGui) {
+            SkillsGui.open(player);
         }
-
-        if (slot == 0) return null;
-        return new Pair<>(w.getPosition(slot), w.getRow(slot));
     }
 }

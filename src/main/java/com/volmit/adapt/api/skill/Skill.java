@@ -29,6 +29,7 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.api.xp.XP;
+import com.volmit.adapt.content.gui.AllSkillsGui;
 import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.util.*;
 import org.bukkit.Location;
@@ -196,6 +197,10 @@ public interface Skill<T> extends Ticked, Component {
     }
 
     default void openGui(Player player) {
+        openGui(false, player);
+    }
+
+    default void openGui(boolean simple, Player player) {
         if (!this.isEnabled()) {
             this.unregister();
         }
@@ -226,7 +231,7 @@ public interface Skill<T> extends Ticked, Component {
                     .setProgress(1D)
                     .onLeftClick((e) -> {
                         w.close();
-                        i.openGui(player);
+                        i.openGui(simple, player);
                     }));
             ind++;
         }
@@ -240,23 +245,27 @@ public interface Skill<T> extends Ticked, Component {
                     .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "back"))
                     .onLeftClick((e) -> {
                         w.close();
-                        onGuiClose(player, true);
+                        onGuiClose(player, true, false);
                     }));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
         w.setTitle(getDisplayName() + C.BLACK + " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
-        w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis())));
+        w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple)));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);
     }
 
-    private void onGuiClose(Player player, boolean openPrevGui) {
+    private void onGuiClose(Player player, boolean openPrevGui, boolean simple) {
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 1.455f);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
         if (openPrevGui) {
-            SkillsGui.open(player);
+            if (simple) {
+                SkillsGui.open(player);
+            } else {
+                AllSkillsGui.open(player);
+            }
         }
     }
 }
