@@ -384,6 +384,10 @@ public interface Adaptation<T> extends Ticked, Component {
     }
 
     default void openGui(Player player) {
+        openGui(false, player);
+    }
+
+    default void openGui(boolean simple, Player player) {
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 0.655f);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 0.855f);
@@ -484,23 +488,23 @@ public interface Adaptation<T> extends Ticked, Component {
                     .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "back"))
                     .onLeftClick((e) -> {
                         w.close();
-                        onGuiClose(player, true);
+                        onGuiClose(player, true, false);
                     }));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
         w.setTitle(getDisplayName() + " " + C.DARK_GRAY + " " + Form.f(a.getSkillLine(getSkill().getName()).getKnowledge()) + " " + Localizer.dLocalize("snippets", "adaptmenu", "knowledge"));
-        w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis())));
+        w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple)));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);
     }
 
-    private void onGuiClose(Player player, boolean openPrevGui) {
+    private void onGuiClose(Player player, boolean openPrevGui, boolean simple) {
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 0.655f);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 0.855f);
         if (openPrevGui) {
-            getSkill().openGui(player);
+            getSkill().openGui(simple, player);
         }
     }
 
