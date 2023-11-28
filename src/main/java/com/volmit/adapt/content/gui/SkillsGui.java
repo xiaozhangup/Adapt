@@ -118,14 +118,14 @@ public class SkillsGui {
         int slot = 0;
 
         switch (skill.getName()) {
-            case "discovery" -> slot = 11;
-            case "brewing" -> slot = 12;
-            case "axes" -> slot = 13;
-            case "hunter" -> slot = 14;
-            case "ranged" -> slot = 15;
-            case "seaborne" -> slot = 20;
-            case "unarmed" -> slot = 21;
-            case "tragoul" -> slot = 22;
+            case "unarmed" -> slot = 11;
+            case "discovery" -> slot = 12;
+            case "tragoul" -> slot = 13;
+            case "ranged" -> slot = 14;
+            case "axes" -> slot = 15;
+            case "hunter" -> slot = 20;
+            case "seaborne" -> slot = 21;
+            case "brewing" -> slot = 22;
         }
 
         if (slot == 0) return null;
