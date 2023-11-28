@@ -32,9 +32,15 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.volmit.adapt.util.M.clip;
 
 public class SkillsGui {
+    private static final List<Integer> slots = Arrays.asList(11, 12, 13, 14, 15, 20, 21, 22);
+
     public static void open(Player player) {
         Window w = new UIWindow(player);
         w.setViewportHeight(4); // Resize GUI
@@ -49,9 +55,11 @@ public class SkillsGui {
             return;
         }
 
+        List<Integer> locked = new ArrayList<>(slots);
+
         if (!adaptPlayer.getData().getSkillLines().isEmpty()) {
             for (PlayerSkillLine i : adaptPlayer.getData().getSkillLines().sortV()) {
-                if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer))) {
+                if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer)) || i.getLevel() < 0) {
                     continue;
                 }
 
@@ -66,6 +74,7 @@ public class SkillsGui {
 
                 int pos = w.getPosition(location);
                 int row = w.getRow(location);
+                locked.remove(location);
 
                 w.setElement(pos, row, new UIElement("skill-" + sk.getName())
                         .setMaterial(new MaterialBlock(sk.getIcon()))
@@ -84,7 +93,7 @@ public class SkillsGui {
                         .setMaterial(new MaterialBlock(Material.BARRIER))
                         .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnall")
                                 + (AdaptConfig.get().isHardcoreNoRefunds()
-                                ? " " + C.DARK_RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
+                                ? " " + C.DARK_RED + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
                                 : ""))
                         .onLeftClick((e) -> {
                             Adapt.instance.getAdaptServer().getSkillRegistry().getSkills().forEach(skill -> skill.getAdaptations().forEach(adaptation -> adaptation.unlearn(player, 1, false)));
@@ -106,6 +115,16 @@ public class SkillsGui {
                         w.close();
                         AllSkillsGui.open(player);
                     }));
+
+            for (int slot : locked) { // 未解锁的显示未点亮
+                w.setElement(w.getPosition(slot), w.getRow(slot), new UIElement("locked_skill_" + slot)
+                        .setMaterial(new MaterialBlock(Material.RED_STAINED_GLASS_PANE))
+                        .setName(C.RED + "未点亮")
+                        .onLeftClick((e) -> {
+                            w.close();
+                            Adapt.messagePlayer(player, C.GRAY + "所有属性均会在游戏过程中根据你的经历(如伐木, 钓鱼, 探索等)而点亮!");
+                        }));
+            }
 
             w.setTitle(Localizer.dLocalize("snippets", "gui", "level") + " " + (int) XP.getLevelForXp(adaptPlayer.getData().getMasterXp()) + " (" + adaptPlayer.getData().getUsedPower() + "/" + adaptPlayer.getData().getMaxPower() + " " + Localizer.dLocalize("snippets", "gui", "powerused") + ")");
             w.open();

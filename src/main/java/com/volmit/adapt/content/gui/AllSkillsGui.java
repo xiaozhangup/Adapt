@@ -30,7 +30,13 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class AllSkillsGui {
+    private static final List<Integer> slots = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+
     public static void open(Player player) {
         Window w = new UIWindow(player);
         w.setViewportHeight(4); // Resize GUI
@@ -44,6 +50,8 @@ public class AllSkillsGui {
             Adapt.error("Failed to open skills gui for " + player.getName() + " because they are not Online, Were Kicked, Or are a fake player.");
             return;
         }
+
+        List<Integer> locked = new ArrayList<>(slots);
 
         if (!adaptPlayer.getData().getSkillLines().isEmpty()) {
             int ind = 0;
@@ -72,7 +80,7 @@ public class AllSkillsGui {
                             w.close();
                             sk.openGui(player);
                         }));
-                ind++;
+                locked.remove(ind++);
             }
 
             if (AdaptConfig.get().isUnlearnAllButton()) {
@@ -94,6 +102,29 @@ public class AllSkillsGui {
                                 player.sendTitle(" ", C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnedall"), 1, 5, 11);
                             }
                             J.s(() -> open(player), AdaptConfig.get().getLearnUnlearnButtonDelayTicks());
+                        }));
+            }
+
+            if (AdaptConfig.get().isGuiBackButton()) {
+                int backPos = w.getResolution().getWidth() - 1;
+                int backRow = w.getViewportHeight() - 1;
+                if (w.getElement(backPos, backRow) != null) backRow++;
+                w.setElement(backPos, backRow, new UIElement("back")
+                        .setMaterial(new MaterialBlock(Material.RED_BED))
+                        .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "back"))
+                        .onLeftClick((e) -> {
+                            w.close();
+                            SkillsGui.open(player);
+                        }));
+            }
+
+            for (int slot : locked) { // 未解锁的显示未点亮
+                w.setElement(w.getPosition(slot), w.getRow(slot), new UIElement("locked_skill_" + slot)
+                        .setMaterial(new MaterialBlock(Material.RED_STAINED_GLASS_PANE))
+                        .setName(C.RED + "未点亮")
+                        .onLeftClick((e) -> {
+                            w.close();
+                            Adapt.messagePlayer(player, C.GRAY + "所有属性均会在游戏过程中根据你的经历(如伐木, 钓鱼, 探索等)而点亮!");
                         }));
             }
 
