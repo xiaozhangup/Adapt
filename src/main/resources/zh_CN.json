@@ -313,7 +313,7 @@
     },
     "architect": {
       "name": "建筑",
-      "icon": "⬧",
+      "icon": "◆",
       "description": "结构是万物之本。现实在你手中，由你掌控。"
     },
     "axes": {
@@ -345,7 +345,7 @@
     },
     "enchanting": {
       "name": "附魔",
-      "icon": "📖",
+      "icon": "¤",
       "description": "你在嘀咕些什么？预言，幻象，还是在胡言乱语？"
     },
     "excavation": {
@@ -355,7 +355,7 @@
     },
     "herbalism": {
       "name": "草药",
-      "icon": "🌸",
+      "icon": "★",
       "description": "我见不到植物，不过我能找到一些种子还有- 呃......那是杂草吗？"
     },
     "hunter": {
@@ -380,7 +380,7 @@
     },
     "rift": {
       "name": "裂痕",
-      "icon": "❍",
+      "icon": "☄",
       "description": "裂痕如同一道尖锐的线束，此时你已控制了它。"
     },
     "seaborne": {

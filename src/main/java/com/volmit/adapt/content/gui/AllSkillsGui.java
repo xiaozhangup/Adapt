@@ -80,7 +80,8 @@ public class AllSkillsGui {
                             w.close();
                             sk.openGui(player);
                         }));
-                locked.remove(ind++);
+                locked.remove((Object) ind);
+                ind++;
             }
 
             if (AdaptConfig.get().isUnlearnAllButton()) {

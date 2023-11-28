@@ -31,6 +31,7 @@ import com.volmit.adapt.util.*;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 
 import java.io.File;
@@ -157,6 +158,16 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
     public String getDisplayName() {
         try {
             return displayName == null ? Adaptation.super.getDisplayName() : (C.RESET + "" + C.BOLD + getSkill().getColor().toString() + displayName);
+        } catch (Exception ignored) {
+            Adapt.verbose("Failed to get display name for " + getName());
+            return null;
+        }
+    }
+
+    @Override
+    public String getTitleDisplay() {
+        try {
+            return displayName == null ? Adaptation.super.getDisplayName() : (C.RESET + "" + C.BOLD + ChatColor.of(getSkill().getColor().getColor().darker()) + displayName);
         } catch (Exception ignored) {
             Adapt.verbose("Failed to get display name for " + getName());
             return null;

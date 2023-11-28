@@ -220,6 +220,11 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     }
 
     @Override
+    public String getTitleDisplay() {
+        return displayName == null ? Skill.super.getDisplayName() : (C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " " + displayName);
+    }
+
+    @Override
     public void onRegisterAdvancements(List<AdaptAdvancement> advancements) {
         advancements.addAll(cachedAdvancements);
     }

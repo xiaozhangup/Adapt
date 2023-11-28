@@ -114,6 +114,13 @@ public interface Skill<T> extends Ticked, Component {
         return C.RESET + "" + C.BOLD + getColor().toString() + getEmojiName() + " " + Form.capitalize(getName());
     }
 
+    default String getTitleDisplay() {
+        if (!this.isEnabled()) {
+            this.unregister();
+        }
+        return C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " " + Form.capitalize(getName());
+    }
+
     default String getShortName() {
         if (!this.isEnabled()) {
             this.unregister();
@@ -251,7 +258,7 @@ public interface Skill<T> extends Ticked, Component {
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(C.BLACK + getEmojiName() + " " + Form.capitalize(getName()) + C.DARK_GRAY +  " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
+        w.setTitle(getTitleDisplay() + C.BLACK + " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
         w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple)));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);
