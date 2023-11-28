@@ -26,7 +26,7 @@ import com.volmit.adapt.content.adaptation.blocking.BlockingChainArmorer;
 import com.volmit.adapt.content.adaptation.blocking.BlockingHorseArmorer;
 import com.volmit.adapt.content.adaptation.blocking.BlockingMultiArmor;
 import com.volmit.adapt.content.adaptation.blocking.BlockingSaddlecrafter;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -48,7 +48,7 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
     public SkillBlocking() {
         super("blocking", Localizer.dLocalize("skill", "blocking", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.DARK_GRAY);
+        setColor(ChatColor.DARK_GRAY);
         setDescription(Localizer.dLocalize("skill", "blocking", "description"));
         setDisplayName(Localizer.dLocalize("skill", "blocking", "name"));
         setInterval(5000);

@@ -26,7 +26,7 @@ import com.volmit.adapt.content.adaptation.pickaxe.PickaxeAutosmelt;
 import com.volmit.adapt.content.adaptation.pickaxe.PickaxeChisel;
 import com.volmit.adapt.content.adaptation.pickaxe.PickaxeDropToInventory;
 import com.volmit.adapt.content.adaptation.pickaxe.PickaxeVeinminer;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
@@ -53,7 +53,7 @@ public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "pickaxe", "description"));
         setDisplayName(Localizer.dLocalize("skill", "pickaxe", "name"));
-        setColor(C.GOLD);
+        setColor(ChatColor.GOLD);
         setInterval(2750);
         setIcon(Material.NETHERITE_PICKAXE);
         cooldowns = new HashMap<>();

@@ -26,7 +26,7 @@ import com.volmit.adapt.content.adaptation.excavation.ExcavationDropToInventory;
 import com.volmit.adapt.content.adaptation.excavation.ExcavationHaste;
 import com.volmit.adapt.content.adaptation.excavation.ExcavationOmniTool;
 import com.volmit.adapt.content.adaptation.excavation.ExcavationSpelunker;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -50,7 +50,7 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "excavation", "description"));
         setDisplayName(Localizer.dLocalize("skill", "excavation", "name"));
-        setColor(C.YELLOW);
+        setColor(ChatColor.YELLOW);
         setInterval(5953);
         setIcon(Material.DIAMOND_SHOVEL);
         cooldowns = new HashMap<>();

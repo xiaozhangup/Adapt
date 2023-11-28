@@ -22,7 +22,7 @@ import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.content.adaptation.nether.NetherFireResist;
 import com.volmit.adapt.content.adaptation.nether.NetherSkullYeet;
 import com.volmit.adapt.content.adaptation.nether.NetherWitherResist;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,7 +46,7 @@ public class SkillNether extends SimpleSkill<SkillNether.Config> {
         setDescription(Localizer.dLocalize("skill", "nether", "description"));
         setDisplayName(Localizer.dLocalize("skill", "nether", "name"));
         setInterval(7425);
-        setColor(C.DARK_GRAY);
+        setColor(ChatColor.DARK_GRAY);
         setIcon(Material.NETHER_STAR);
         registerAdaptation(new NetherWitherResist());
         registerAdaptation(new NetherSkullYeet());

@@ -27,7 +27,7 @@ import com.volmit.adapt.content.adaptation.architect.ArchitectFoundation;
 import com.volmit.adapt.content.adaptation.architect.ArchitectGlass;
 import com.volmit.adapt.content.adaptation.architect.ArchitectPlacement;
 import com.volmit.adapt.content.adaptation.architect.ArchitectWirelessRedstone;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
@@ -50,7 +50,7 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
     public SkillArchitect() {
         super("architect", Localizer.dLocalize("skill", "architect", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.AQUA);
+        setColor(ChatColor.AQUA);
         setDescription(Localizer.dLocalize("skill", "architect", "description"));
         setDisplayName(Localizer.dLocalize("skill", "architect", "name"));
         setInterval(3100);

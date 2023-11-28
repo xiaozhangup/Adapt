@@ -51,7 +51,7 @@ public class SkillsGui {
 
         if (!adaptPlayer.getData().getSkillLines().isEmpty()) {
             for (PlayerSkillLine i : adaptPlayer.getData().getSkillLines().sortV()) {
-                if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer)) || i.getLevel() < 0) {
+                if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer))) {
                     continue;
                 }
 
@@ -61,11 +61,11 @@ public class SkillsGui {
                     adaptationLevel = adaptation.getLevel();
                 }
 
-                Pair<Integer, Integer> location = getLocation(sk, w);
+                Integer location = getLocation(sk);
                 if (location == null) continue;
 
-                int pos = location.getFirst();
-                int row = location.getSecond();
+                int pos = w.getPosition(location);
+                int row = w.getRow(location);
 
                 w.setElement(pos, row, new UIElement("skill-" + sk.getName())
                         .setMaterial(new MaterialBlock(sk.getIcon()))
@@ -100,9 +100,8 @@ public class SkillsGui {
 
             w.setElement(w.getPosition(24), w.getRow(24), new UIElement("all_skill")
                     .setMaterial(new MaterialBlock(Material.WRITABLE_BOOK))
-                    .setName(C.WHITE + "查看你的所有属性")
-                    .addLore(C.GRAY + "总计 21 种")
-                    .addLore(C.GRAY + "已触发 " + adaptPlayer.getData().getSkillLines().sortV().size() + " 种")
+                    .setName(C.WHITE + "查看所有属性")
+                    .addLore(C.GRAY + "已触发 " + adaptPlayer.getData().getSkillLines().sortV().size() + "/21 种")
                     .onLeftClick((e) -> {
                         w.close();
                         AllSkillsGui.open(player);
@@ -115,7 +114,7 @@ public class SkillsGui {
         }
     }
 
-    private static Pair<Integer, Integer> getLocation(Skill<?> skill, Window w) {
+    public static Integer getLocation(Skill<?> skill) {
         int slot = 0;
 
         switch (skill.getName()) {
@@ -130,6 +129,6 @@ public class SkillsGui {
         }
 
         if (slot == 0) return null;
-        return new Pair<>(w.getPosition(slot), w.getRow(slot));
+        return slot;
     }
 }

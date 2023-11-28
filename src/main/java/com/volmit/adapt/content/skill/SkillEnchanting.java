@@ -25,7 +25,7 @@ import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.enchanting.EnchantingLapisReturn;
 import com.volmit.adapt.content.adaptation.enchanting.EnchantingQuickEnchant;
 import com.volmit.adapt.content.adaptation.enchanting.EnchantingXPReturn;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -45,7 +45,7 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
     public SkillEnchanting() {
         super("enchanting", Localizer.dLocalize("skill", "enchanting", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.LIGHT_PURPLE);
+        setColor(ChatColor.LIGHT_PURPLE);
         setDescription(Localizer.dLocalize("skill", "enchanting", "description"));
         setDisplayName(Localizer.dLocalize("skill", "enchanting", "name"));
         setInterval(3909);

@@ -25,7 +25,7 @@ import com.volmit.adapt.content.adaptation.stealth.StealthGhostArmor;
 import com.volmit.adapt.content.adaptation.stealth.StealthSight;
 import com.volmit.adapt.content.adaptation.stealth.StealthSnatch;
 import com.volmit.adapt.content.adaptation.stealth.StealthSpeed;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -44,7 +44,7 @@ public class SkillStealth extends SimpleSkill<SkillStealth.Config> {
     public SkillStealth() {
         super("stealth", Localizer.dLocalize("skill", "stealth", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.DARK_GRAY);
+        setColor(ChatColor.DARK_GRAY);
         setInterval(1412);
         setIcon(Material.WITHER_ROSE);
         cooldowns = new HashMap<>();

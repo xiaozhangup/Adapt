@@ -23,7 +23,7 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.adaptation.sword.SwordsBloodyBlade;
 import com.volmit.adapt.content.adaptation.sword.SwordsMachete;
 import com.volmit.adapt.content.adaptation.sword.SwordsPoisonedBlade;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -42,7 +42,7 @@ public class SkillSwords extends SimpleSkill<SkillSwords.Config> {
     public SkillSwords() {
         super("swords", Localizer.dLocalize("skill", "swords", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.YELLOW);
+        setColor(ChatColor.YELLOW);
         setDescription(Localizer.dLocalize("skill", "swords", "description"));
         setDisplayName(Localizer.dLocalize("skill", "swords", "name"));
         setInterval(2150);

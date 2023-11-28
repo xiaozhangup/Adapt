@@ -22,7 +22,7 @@ import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.herbalism.*;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
@@ -51,7 +51,7 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
     public SkillHerbalism() {
         super("herbalism", Localizer.dLocalize("skill", "herbalism", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.GREEN);
+        setColor(ChatColor.GREEN);
         setInterval(3990);
         setDescription(Localizer.dLocalize("skill", "herbalism", "description"));
         setDisplayName(Localizer.dLocalize("skill", "herbalism", "name"));

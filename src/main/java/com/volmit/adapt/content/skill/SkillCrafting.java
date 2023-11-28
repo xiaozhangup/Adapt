@@ -22,7 +22,7 @@ import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.crafting.*;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -47,7 +47,7 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
     public SkillCrafting() {
         super("crafting", Localizer.dLocalize("skill", "crafting", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.YELLOW);
+        setColor(ChatColor.YELLOW);
         setDescription(Localizer.dLocalize("skill", "crafting", "description"));
         setDisplayName(Localizer.dLocalize("skill", "crafting", "name"));
         setInterval(3789);

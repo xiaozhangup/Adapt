@@ -85,9 +85,9 @@ public class Adapt extends VolmitPlugin {
     @Getter
     private Map<String, Window> guiLeftovers = new HashMap<>();
 
-
-
-    
+    // TODO 颜色的修改
+    // TODO 颜色对应的变量和 TAB 联动
+    // TODO 挖矿右键的技能的权限绕过
 
     public Adapt() {
         super();
@@ -202,7 +202,7 @@ public class Adapt extends VolmitPlugin {
 
     @Override
     public String getTag(String subTag) {
-        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + "" + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET + "" + C.GRAY + ": ";
+        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET + "" + C.GRAY + ": ";
     }
 
     private void setupMetrics() {

@@ -20,7 +20,7 @@ package com.volmit.adapt.content.skill;
 
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.content.adaptation.ranged.*;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
 import net.minecraft.world.entity.projectile.EntityFishingHook;
@@ -45,7 +45,7 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "ranged", "description"));
         setDisplayName(Localizer.dLocalize("skill", "ranged", "name"));
-        setColor(C.DARK_GREEN);
+        setColor(ChatColor.DARK_GREEN);
         setInterval(3044);
         registerAdaptation(new RangedForce());
         registerAdaptation(new RangedPiercing());

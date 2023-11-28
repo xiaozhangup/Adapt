@@ -25,7 +25,7 @@ import com.volmit.adapt.content.adaptation.discovery.DiscoveryArmor;
 import com.volmit.adapt.content.adaptation.discovery.DiscoveryUnity;
 import com.volmit.adapt.content.adaptation.discovery.DiscoveryVillagerAtt;
 import com.volmit.adapt.content.adaptation.discovery.DiscoveryXpResist;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
@@ -54,7 +54,7 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
     public SkillDiscovery() {
         super("discovery", Localizer.dLocalize("skill", "discovery", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.AQUA);
+        setColor(ChatColor.AQUA);
         setDescription(Localizer.dLocalize("skill", "discovery", "description"));
         setDisplayName(Localizer.dLocalize("skill", "discovery", "name"));
         setInterval(500);

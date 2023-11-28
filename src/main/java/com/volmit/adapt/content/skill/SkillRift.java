@@ -20,7 +20,7 @@ package com.volmit.adapt.content.skill;
 
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.content.adaptation.rift.*;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
 import lombok.NoArgsConstructor;
@@ -47,7 +47,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "rift", "description"));
         setDisplayName(Localizer.dLocalize("skill", "rift", "name"));
-        setColor(C.DARK_PURPLE);
+        setColor(ChatColor.DARK_PURPLE);
         setInterval(1154);
         setIcon(Material.ENDER_EYE);
         registerAdaptation(new RiftResist());

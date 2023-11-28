@@ -32,6 +32,7 @@ import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.content.gui.AllSkillsGui;
 import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.util.*;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -91,7 +92,7 @@ public interface Skill<T> extends Ticked, Component {
 
     List<Adaptation<?>> getAdaptations();
 
-    C getColor();
+    ChatColor getColor();
 
     double getMinXp();
 

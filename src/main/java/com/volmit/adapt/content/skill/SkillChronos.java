@@ -20,7 +20,7 @@ package com.volmit.adapt.content.skill;
 
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.skill.SimpleSkill;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
@@ -31,7 +31,7 @@ public class SkillChronos extends SimpleSkill<SkillChronos.Config> {
     public SkillChronos() {
         super("chronos", Localizer.dLocalize("skill", "chronos", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.AQUA);
+        setColor(ChatColor.AQUA);
         setInterval(600000);
         setDescription(Localizer.dLocalize("skill", "chronos", "description"));
         setDisplayName(Localizer.dLocalize("skill", "chronos", "name"));

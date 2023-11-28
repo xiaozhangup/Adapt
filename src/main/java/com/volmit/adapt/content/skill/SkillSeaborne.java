@@ -23,7 +23,7 @@ import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.seaborrne.*;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -47,7 +47,7 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
     public SkillSeaborne() {
         super("seaborne", Localizer.dLocalize("skill", "seaborne", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.BLUE);
+        setColor(ChatColor.BLUE);
         setDescription(Localizer.dLocalize("skill", "seaborne", "description"));
         setDisplayName(Localizer.dLocalize("skill", "seaborne", "name"));
         setInterval(2120);

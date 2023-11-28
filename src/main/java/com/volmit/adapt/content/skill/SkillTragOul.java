@@ -28,7 +28,7 @@ import com.volmit.adapt.content.adaptation.tragoul.TragoulGlobe;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulHealing;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulLance;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulThorns;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import de.slikey.effectlib.effect.CloudEffect;
 import lombok.NoArgsConstructor;
@@ -51,7 +51,7 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
     public SkillTragOul() {
         super("tragoul", Localizer.dLocalize("skill", "tragoul", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.AQUA);
+        setColor(ChatColor.AQUA);
         setDescription(Localizer.dLocalize("skill", "tragoul", "description"));
         setDisplayName(Localizer.dLocalize("skill", "tragoul", "name"));
         setInterval(2755);

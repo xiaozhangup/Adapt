@@ -24,6 +24,7 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.axe.*;
 import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -45,7 +46,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
     public SkillAxes() {
         super("axes", Localizer.dLocalize("skill", "axes", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.YELLOW);
+        setColor(ChatColor.YELLOW);
         setDescription(Localizer.dLocalize("skill", "axes", "description1") + C.ITALIC + Localizer.dLocalize("skill", "axes", "description2") + C.GRAY + " " + Localizer.dLocalize("skill", "axes", "description3"));
         setDisplayName(Localizer.dLocalize("skill", "axes", "name"));
         setInterval(5251);

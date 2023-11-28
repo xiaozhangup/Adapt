@@ -27,7 +27,7 @@ import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.brewing.*;
 import com.volmit.adapt.content.matter.BrewingStandOwner;
 import com.volmit.adapt.content.matter.BrewingStandOwnerMatter;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementDisplay;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
@@ -51,7 +51,7 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
     public SkillBrewing() {
         super("brewing", Localizer.dLocalize("skill", "brewing", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.LIGHT_PURPLE);
+        setColor(ChatColor.LIGHT_PURPLE);
         setDescription(Localizer.dLocalize("skill", "brewing", "description"));
         setDisplayName(Localizer.dLocalize("skill", "brewing", "name"));
         setInterval(5851);

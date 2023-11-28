@@ -23,7 +23,7 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.adaptation.unarmed.UnarmedGlassCannon;
 import com.volmit.adapt.content.adaptation.unarmed.UnarmedPower;
 import com.volmit.adapt.content.adaptation.unarmed.UnarmedSuckerPunch;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -37,7 +37,7 @@ public class SkillUnarmed extends SimpleSkill<SkillUnarmed.Config> {
     public SkillUnarmed() {
         super("unarmed", Localizer.dLocalize("skill", "unarmed", "icon"));
         registerConfiguration(Config.class);
-        setColor(C.YELLOW);
+        setColor(ChatColor.YELLOW);
         setDescription(Localizer.dLocalize("skill", "unarmed", "description"));
         setDisplayName(Localizer.dLocalize("skill", "unarmed", "name"));
         setInterval(2579);

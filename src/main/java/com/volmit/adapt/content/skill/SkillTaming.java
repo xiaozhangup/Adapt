@@ -22,7 +22,7 @@ import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.content.adaptation.taming.TamingDamage;
 import com.volmit.adapt.content.adaptation.taming.TamingHealthBoost;
 import com.volmit.adapt.content.adaptation.taming.TamingHealthRegeneration;
-import com.volmit.adapt.util.C;
+import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
@@ -45,7 +45,7 @@ public class SkillTaming extends SimpleSkill<SkillTaming.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "taming", "description"));
         setDisplayName(Localizer.dLocalize("skill", "taming", "name"));
-        setColor(C.GOLD);
+        setColor(ChatColor.GOLD);
         setInterval(3480);
         setIcon(Material.LEAD);
         cooldowns = new HashMap<>();
