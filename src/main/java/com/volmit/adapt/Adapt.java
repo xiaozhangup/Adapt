@@ -85,7 +85,6 @@ public class Adapt extends VolmitPlugin {
     @Getter
     private Map<String, Window> guiLeftovers = new HashMap<>();
 
-    // TODO 颜色的修改
     // TODO 颜色对应的变量和 TAB 联动
     // TODO 挖矿右键的技能的权限绕过
 

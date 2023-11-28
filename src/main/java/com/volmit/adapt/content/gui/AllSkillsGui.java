@@ -111,7 +111,7 @@ public class AllSkillsGui {
                 if (w.getElement(backPos, backRow) != null) backRow++;
                 w.setElement(backPos, backRow, new UIElement("back")
                         .setMaterial(new MaterialBlock(Material.RED_BED))
-                        .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "back"))
+                        .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
                         .onLeftClick((e) -> {
                             w.close();
                             SkillsGui.open(player);
@@ -122,9 +122,10 @@ public class AllSkillsGui {
                 w.setElement(w.getPosition(slot), w.getRow(slot), new UIElement("locked_skill_" + slot)
                         .setMaterial(new MaterialBlock(Material.RED_STAINED_GLASS_PANE))
                         .setName(C.RED + "未点亮")
+                        .addLore(C.GRAY + "在游戏过程中点亮")
                         .onLeftClick((e) -> {
                             w.close();
-                            Adapt.messagePlayer(player, C.GRAY + "所有属性均会在游戏过程中根据你的经历(如伐木, 钓鱼, 探索等)而点亮!");
+                            Adapt.messagePlayer(player, C.GRAY + "所有属性均会在游戏过程中根据你的经历(如伐木, 钓鱼, 探索等) 而点亮!");
                         }));
             }
 
