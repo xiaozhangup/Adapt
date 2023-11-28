@@ -45,7 +45,7 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "ranged", "description"));
         setDisplayName(Localizer.dLocalize("skill", "ranged", "name"));
-        setColor(ChatColor.DARK_GREEN);
+        setColor(ChatColor.of("#c7a998"));
         setInterval(3044);
         registerAdaptation(new RangedForce());
         registerAdaptation(new RangedPiercing());

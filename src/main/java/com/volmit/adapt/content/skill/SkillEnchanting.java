@@ -45,7 +45,7 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
     public SkillEnchanting() {
         super("enchanting", Localizer.dLocalize("skill", "enchanting", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.LIGHT_PURPLE);
+        setColor(ChatColor.of("#bf91b2"));
         setDescription(Localizer.dLocalize("skill", "enchanting", "description"));
         setDisplayName(Localizer.dLocalize("skill", "enchanting", "name"));
         setInterval(3909);

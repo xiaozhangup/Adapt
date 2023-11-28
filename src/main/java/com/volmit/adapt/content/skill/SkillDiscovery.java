@@ -54,7 +54,7 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
     public SkillDiscovery() {
         super("discovery", Localizer.dLocalize("skill", "discovery", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.AQUA);
+        setColor(ChatColor.of("#96d3d8"));
         setDescription(Localizer.dLocalize("skill", "discovery", "description"));
         setDisplayName(Localizer.dLocalize("skill", "discovery", "name"));
         setInterval(500);

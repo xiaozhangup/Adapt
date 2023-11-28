@@ -45,7 +45,7 @@ public class SkillTaming extends SimpleSkill<SkillTaming.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "taming", "description"));
         setDisplayName(Localizer.dLocalize("skill", "taming", "name"));
-        setColor(ChatColor.GOLD);
+        setColor(ChatColor.of("#af9d83"));
         setInterval(3480);
         setIcon(Material.LEAD);
         cooldowns = new HashMap<>();

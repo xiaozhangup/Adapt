@@ -51,7 +51,7 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
     public SkillTragOul() {
         super("tragoul", Localizer.dLocalize("skill", "tragoul", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.AQUA);
+        setColor(ChatColor.of("#96aeb0"));
         setDescription(Localizer.dLocalize("skill", "tragoul", "description"));
         setDisplayName(Localizer.dLocalize("skill", "tragoul", "name"));
         setInterval(2755);

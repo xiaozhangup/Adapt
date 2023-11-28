@@ -44,7 +44,7 @@ public class SkillStealth extends SimpleSkill<SkillStealth.Config> {
     public SkillStealth() {
         super("stealth", Localizer.dLocalize("skill", "stealth", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.DARK_GRAY);
+        setColor(ChatColor.of("#858585"));
         setInterval(1412);
         setIcon(Material.WITHER_ROSE);
         cooldowns = new HashMap<>();

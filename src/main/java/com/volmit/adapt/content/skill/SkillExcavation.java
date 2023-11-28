@@ -50,7 +50,7 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "excavation", "description"));
         setDisplayName(Localizer.dLocalize("skill", "excavation", "name"));
-        setColor(ChatColor.YELLOW);
+        setColor(ChatColor.of("#dfc393"));
         setInterval(5953);
         setIcon(Material.DIAMOND_SHOVEL);
         cooldowns = new HashMap<>();

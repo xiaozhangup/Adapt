@@ -50,7 +50,7 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
     public SkillArchitect() {
         super("architect", Localizer.dLocalize("skill", "architect", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.AQUA);
+        setColor(ChatColor.of("#85ced1"));
         setDescription(Localizer.dLocalize("skill", "architect", "description"));
         setDisplayName(Localizer.dLocalize("skill", "architect", "name"));
         setInterval(3100);

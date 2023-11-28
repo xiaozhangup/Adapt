@@ -48,7 +48,7 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
     public SkillBlocking() {
         super("blocking", Localizer.dLocalize("skill", "blocking", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.DARK_GRAY);
+        setColor(ChatColor.of("#a1a19f"));
         setDescription(Localizer.dLocalize("skill", "blocking", "description"));
         setDisplayName(Localizer.dLocalize("skill", "blocking", "name"));
         setInterval(5000);

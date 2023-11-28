@@ -51,7 +51,7 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
     public SkillBrewing() {
         super("brewing", Localizer.dLocalize("skill", "brewing", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.LIGHT_PURPLE);
+        setColor(ChatColor.of("#9488be"));
         setDescription(Localizer.dLocalize("skill", "brewing", "description"));
         setDisplayName(Localizer.dLocalize("skill", "brewing", "name"));
         setInterval(5851);

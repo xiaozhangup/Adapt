@@ -31,7 +31,7 @@ public class SkillChronos extends SimpleSkill<SkillChronos.Config> {
     public SkillChronos() {
         super("chronos", Localizer.dLocalize("skill", "chronos", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.AQUA);
+        setColor(ChatColor.of("#b3c4d5"));
         setInterval(600000);
         setDescription(Localizer.dLocalize("skill", "chronos", "description"));
         setDisplayName(Localizer.dLocalize("skill", "chronos", "name"));

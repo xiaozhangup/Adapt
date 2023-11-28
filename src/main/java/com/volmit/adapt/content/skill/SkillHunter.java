@@ -50,7 +50,7 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
     public SkillHunter() {
         super("hunter", Localizer.dLocalize("skill", "hunter", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.RED);
+        setColor(ChatColor.of("#db472c"));
         setDescription(Localizer.dLocalize("skill", "hunter", "description"));
         setDisplayName(Localizer.dLocalize("skill", "hunter", "name"));
         setInterval(4150);

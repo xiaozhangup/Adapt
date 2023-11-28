@@ -52,7 +52,7 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "agility", "description"));
         setDisplayName(Localizer.dLocalize("skill", "agility", "name"));
-        setColor(ChatColor.GREEN);
+        setColor(ChatColor.of("#8cb684"));
         setInterval(975);
         setIcon(Material.FEATHER);
         registerAdaptation(new AgilityWindUp());

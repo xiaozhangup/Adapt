@@ -47,7 +47,7 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
     public SkillCrafting() {
         super("crafting", Localizer.dLocalize("skill", "crafting", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.YELLOW);
+        setColor(ChatColor.of("#d3b78b"));
         setDescription(Localizer.dLocalize("skill", "crafting", "description"));
         setDisplayName(Localizer.dLocalize("skill", "crafting", "name"));
         setInterval(3789);

@@ -37,7 +37,7 @@ public class SkillUnarmed extends SimpleSkill<SkillUnarmed.Config> {
     public SkillUnarmed() {
         super("unarmed", Localizer.dLocalize("skill", "unarmed", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.YELLOW);
+        setColor(ChatColor.of("#cd4646"));
         setDescription(Localizer.dLocalize("skill", "unarmed", "description"));
         setDisplayName(Localizer.dLocalize("skill", "unarmed", "name"));
         setInterval(2579);

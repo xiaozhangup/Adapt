@@ -53,7 +53,7 @@ public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
         registerConfiguration(Config.class);
         setDescription(Localizer.dLocalize("skill", "pickaxe", "description"));
         setDisplayName(Localizer.dLocalize("skill", "pickaxe", "name"));
-        setColor(ChatColor.GOLD);
+        setColor(ChatColor.of("#dac98e"));
         setInterval(2750);
         setIcon(Material.NETHERITE_PICKAXE);
         cooldowns = new HashMap<>();

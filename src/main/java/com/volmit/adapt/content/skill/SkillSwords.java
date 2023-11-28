@@ -42,7 +42,7 @@ public class SkillSwords extends SimpleSkill<SkillSwords.Config> {
     public SkillSwords() {
         super("swords", Localizer.dLocalize("skill", "swords", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.YELLOW);
+        setColor(ChatColor.of("#e8b523"));
         setDescription(Localizer.dLocalize("skill", "swords", "description"));
         setDisplayName(Localizer.dLocalize("skill", "swords", "name"));
         setInterval(2150);

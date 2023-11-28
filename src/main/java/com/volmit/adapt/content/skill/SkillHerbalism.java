@@ -51,7 +51,7 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
     public SkillHerbalism() {
         super("herbalism", Localizer.dLocalize("skill", "herbalism", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.GREEN);
+        setColor(ChatColor.of("#82994c"));
         setInterval(3990);
         setDescription(Localizer.dLocalize("skill", "herbalism", "description"));
         setDisplayName(Localizer.dLocalize("skill", "herbalism", "name"));

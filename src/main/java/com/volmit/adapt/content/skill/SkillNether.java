@@ -46,7 +46,7 @@ public class SkillNether extends SimpleSkill<SkillNether.Config> {
         setDescription(Localizer.dLocalize("skill", "nether", "description"));
         setDisplayName(Localizer.dLocalize("skill", "nether", "name"));
         setInterval(7425);
-        setColor(ChatColor.DARK_GRAY);
+        setColor(ChatColor.of("#6a6d6d"));
         setIcon(Material.NETHER_STAR);
         registerAdaptation(new NetherWitherResist());
         registerAdaptation(new NetherSkullYeet());

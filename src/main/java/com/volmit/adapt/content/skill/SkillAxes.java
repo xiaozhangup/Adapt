@@ -46,7 +46,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
     public SkillAxes() {
         super("axes", Localizer.dLocalize("skill", "axes", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.YELLOW);
+        setColor(ChatColor.of("#ffb756"));
         setDescription(Localizer.dLocalize("skill", "axes", "description1") + C.ITALIC + Localizer.dLocalize("skill", "axes", "description2") + C.GRAY + " " + Localizer.dLocalize("skill", "axes", "description3"));
         setDisplayName(Localizer.dLocalize("skill", "axes", "name"));
         setInterval(5251);

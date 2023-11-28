@@ -47,7 +47,7 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
     public SkillSeaborne() {
         super("seaborne", Localizer.dLocalize("skill", "seaborne", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.BLUE);
+        setColor(ChatColor.of("#61a1a9"));
         setDescription(Localizer.dLocalize("skill", "seaborne", "description"));
         setDisplayName(Localizer.dLocalize("skill", "seaborne", "name"));
         setInterval(2120);
