@@ -48,16 +48,19 @@ public class AllSkillsGui {
         if (!adaptPlayer.getData().getSkillLines().isEmpty()) {
             int ind = 0;
             for (PlayerSkillLine i : adaptPlayer.getData().getSkillLines().sortV()) {
-                if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer)) || i.getLevel() < 0) {
+                if (i.getRawSkill(adaptPlayer).hasBlacklistPermission(adaptPlayer.getPlayer(), i.getRawSkill(adaptPlayer))) {
                     continue;
                 }
+                Skill<?> sk = Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(i.getLine());
+                if (i.getLevel() < 0 && SkillsGui.getLocation(sk) == null) continue;
+
                 int pos = w.getPosition(ind);
                 int row = w.getRow(ind);
                 int adaptationLevel = 0;
                 for (PlayerAdaptation adaptation : i.getAdaptations().sortV()) {
                     adaptationLevel = adaptation.getLevel();
                 }
-                Skill<?> sk = Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(i.getLine());
+
                 w.setElement(pos, row, new UIElement("skill-" + sk.getName())
                         .setMaterial(new MaterialBlock(sk.getIcon()))
                         .setName(sk.getDisplayName(i.getLevel()))

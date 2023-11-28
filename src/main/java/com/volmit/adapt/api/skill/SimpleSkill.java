@@ -35,6 +35,7 @@ import com.volmit.adapt.util.JSONObject;
 import com.volmit.adapt.nms.advancements.advancement.AdvancementVisibility;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -53,7 +54,7 @@ import java.util.UUID;
 public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     private final String name;
     private final String emojiName;
-    private C color;
+    private ChatColor color;
     private double minXp;
     private String description;
     private String displayName;
@@ -74,7 +75,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
         cachedAdvancements = new ArrayList<>();
         this.emojiName = emojiName;
         adaptations = new ArrayList<>();
-        setColor(C.WHITE);
+        setColor(ChatColor.WHITE);
         this.name = name;
         setIcon(Material.BOOK);
         setDescription("No Description Provided");
@@ -215,7 +216,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
 
     @Override
     public String getDisplayName() {
-        return displayName == null ? Skill.super.getDisplayName() : (C.RESET + "" + C.BOLD + getColor().toString() + getEmojiName() + " " + displayName);
+        return displayName == null ? Skill.super.getDisplayName() : (C.RESET + "" + C.BOLD + getColor() + getEmojiName() + " " + displayName);
     }
 
     @Override
