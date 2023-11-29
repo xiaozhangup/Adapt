@@ -250,7 +250,7 @@ public interface Skill<T> extends Ticked, Component {
             if (w.getElement(backPos, backRow) != null) backRow++;
             w.setElement(backPos, backRow, new UIElement("back")
                     .setMaterial(new MaterialBlock(Material.RED_BED))
-                    .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "back"))
+                    .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
                     .onLeftClick((e) -> {
                         w.close();
                         onGuiClose(player, true, false);

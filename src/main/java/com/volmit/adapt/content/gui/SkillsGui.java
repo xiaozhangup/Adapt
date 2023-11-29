@@ -110,7 +110,7 @@ public class SkillsGui {
             w.setElement(w.getPosition(24), w.getRow(24), new UIElement("all_skill")
                     .setMaterial(new MaterialBlock(Material.WRITABLE_BOOK))
                     .setName(C.WHITE + "查看所有属性")
-                    .addLore(C.GRAY + "已触发 " + adaptPlayer.getData().getSkillLines().sortV().size() + "/21 种")
+                    .addLore(C.GRAY + "总计 21 种")
                     .onLeftClick((e) -> {
                         w.close();
                         AllSkillsGui.open(player);
