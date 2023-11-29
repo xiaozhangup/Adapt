@@ -1,9 +1,12 @@
 package com.volmit.adapt.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Color {
+    private static HashMap<String, List<String>> colorCache = new HashMap<>();
+
     public static String modifiedColorCode(String colorCode, float ratio) {
         String colorStr = colorCode.replaceFirst("#", "");
 
@@ -42,8 +45,20 @@ public class Color {
         return colors;
     }
 
+    public static List<String> gradientWhiteColors(String cA, int number) {
+        var cached = colorCache.getOrDefault(cA, null);
+        if (cached != null) return cached;
+        var colors = gradientColors("#ffffff", cA, number);
+        colorCache.put(cA, colors);
+        return colors;
+    }
+
     public static int calculateColor(int a, int b, int step, int number) {
         return a + (b - a) * number / step;
+    }
+
+    public static String color2Hex(java.awt.Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
     public static String rgb2Hex(int r, int g, int b) {

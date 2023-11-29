@@ -232,6 +232,22 @@ public class PlayerData {
         }
     }
 
+    public PlayerSkillLine getNullableSkillLine(String skillLine) {
+        if (Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(skillLine) == null) {
+            return null;
+        }
+
+        synchronized (skillLines) {
+            try {
+                return skillLines.get(skillLine);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                Adapt.error("Failed to get skill line " + skillLine);
+            }
+            return null;
+        }
+    }
+
     public void addWisdom() {
         wisdom++;
     }

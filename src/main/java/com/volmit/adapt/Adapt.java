@@ -85,9 +85,6 @@ public class Adapt extends VolmitPlugin {
     @Getter
     private Map<String, Window> guiLeftovers = new HashMap<>();
 
-    // TODO 颜色对应的变量和 TAB 联动
-    // TODO 挖矿右键的技能的权限绕过
-
     public Adapt() {
         super();
         instance = this;
@@ -149,8 +146,10 @@ public class Adapt extends VolmitPlugin {
 //        }
         if (getServer().getPluginManager().getPlugin("SlimeCargo") != null) {
             protectorRegistry.registerProtector(new SlimeCargoProtector());
+            info("Enabled SlimeCargoProtector!");
         } else {
             protectorRegistry.registerProtector(new PermissionProtector());
+            info("Enabled PermissionProtector!");
         }
         glowingEntities = new GlowingEntities(this);
         parser.parse(new CommandAdapt());

@@ -226,7 +226,7 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
     @NoArgsConstructor
     protected static class Config {
         boolean permanent = false;
-        boolean enabled = true;
+        boolean enabled = false;
         boolean consumeOnUse = true;
         boolean showParticles = true;
     }

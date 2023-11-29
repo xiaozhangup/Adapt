@@ -3,14 +3,22 @@ package com.volmit.adapt;
 import com.google.common.collect.Maps;
 import com.volmit.adapt.api.adaptation.Adaptation;
 import com.volmit.adapt.api.skill.Skill;
+import com.volmit.adapt.api.skill.SkillRegistry;
 import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.api.world.PlayerSkillLine;
+import com.volmit.adapt.api.xp.XP;
+import com.volmit.adapt.util.C;
+import com.volmit.adapt.util.Color;
+import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.md_5.bungee.api.ChatColor;
+import org.abego.treelayout.internal.util.java.util.ListUtil;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -85,6 +93,14 @@ public class PapiExpansion extends PlaceholderExpansion {
         return "Unknown";
     }
 
+    private static <T> List<T> getElementsFromSecond(List<T> list) {
+        if (list == null || list.size() < 2) {
+            return new ArrayList<>();
+        }
+
+        return list.subList(1, list.size());
+    }
+
     @Override
     public @NotNull String getIdentifier() {
         return Adapt.instance.getDescription().getName().toLowerCase();
@@ -127,6 +143,45 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (line != null && skillMap.containsKey(skillAttr)) {
                 return skillMap.get(skillAttr).apply(line);
             }
+        }
+
+        // Handle colored icons
+        if (key.equals("icons")) {
+            List<String> icons = new ArrayList<>();
+            for (String s : getElementsFromSecond(args.toList())) {
+                var skill = SkillRegistry.skills.get(s);
+                var made = p.getNullableSkillLine(skill.getName());
+
+                if (made == null) {
+                    icons.add(C.WHITE + skill.getEmojiName() + C.RESET);
+                } else {
+                    var gradiented = Color.gradientWhiteColors(Color.color2Hex(skill.getColor().getColor()), 16);
+                    var color = gradiented.get(Math.max(0, Math.min(made.getLevel(), 15)));
+
+                    icons.add(ChatColor.of(color) + skill.getEmojiName() + C.RESET);
+                }
+            }
+
+            return String.join(" ", icons);
+        }
+
+        if (key.equals("miniicons")) {
+            List<String> icons = new ArrayList<>();
+            for (String s : getElementsFromSecond(args.toList())) {
+                var skill = SkillRegistry.skills.get(s);
+                var made = p.getNullableSkillLine(skill.getName());
+
+                if (made == null) {
+                    icons.add("<white>" + skill.getEmojiName() + "</white>");
+                } else {
+                    var gradiented = Color.gradientWhiteColors(Color.color2Hex(skill.getColor().getColor()), 16);
+                    var color = gradiented.get(Math.max(0, Math.min(made.getLevel(), 15)));
+
+                    icons.add("<color:" + color + ">" + skill.getEmojiName() + "</color>");
+                }
+            }
+
+            return String.join(" ", icons);
         }
 
         // Handle adaptation attributes
