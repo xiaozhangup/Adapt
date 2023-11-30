@@ -44,7 +44,7 @@ public class PermissionProtector implements Protector {
 
     @Override
     public boolean isEnabledByDefault() {
-        return false;
+        return true;
     }
 
 }

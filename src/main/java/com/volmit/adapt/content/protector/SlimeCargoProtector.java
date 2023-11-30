@@ -48,7 +48,7 @@ public class SlimeCargoProtector implements Protector {
 
     @Override
     public boolean isEnabledByDefault() {
-        return false;
+        return true;
     }
 
 }
