@@ -165,6 +165,22 @@ public class PapiExpansion extends PlaceholderExpansion {
             return String.join(" ", icons);
         }
 
+        if (key.equals("pack")) {
+            var skill = SkillRegistry.skills.get(args[1]);
+            var made = p.getNullableSkillLine(skill.getName());
+            var text = new StringBuilder();
+            if (made == null) {
+                text.append(ChatColor.WHITE).append(skill.getEmojiName()).append(ChatColor.RED).append(" 0");
+            } else {
+                var gradiented = Color.gradientWhiteColors(Color.color2Hex(skill.getColor().getColor()), 16);
+                var color = gradiented.get(Math.max(0, Math.min(made.getLevel(), 15)));
+
+                text.append(ChatColor.of(color)).append(skill.getEmojiName()).append(" ").append(made.getLevel());
+            }
+
+            return text.toString();
+        }
+
         if (key.equals("miniicons")) {
             List<String> icons = new ArrayList<>();
             for (String s : getElementsFromSecond(args.toList())) {
