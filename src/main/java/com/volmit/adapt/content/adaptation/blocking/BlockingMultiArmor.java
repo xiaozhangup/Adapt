@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.blocking;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.content.item.multiItems.MultiArmor;
+import com.volmit.adapt.content.item.multiItems.MultiItem;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.J;
@@ -132,25 +133,12 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
             if (validateArmor(e.getItemDrop().getItemStack())) {
                 List<ItemStack> drops = multiarmor.explode(e.getItemDrop().getItemStack());
                 for (ItemStack i : drops) {
-                    Damageable iDmgable = (Damageable) i.getItemMeta();
-                    if (i.hasItemMeta()) {
-                        ItemMeta im = i.getItemMeta().clone();
-                        ItemMeta im2 = im;
-                        if (im.hasDisplayName()) {
-                            im2.setDisplayName(im.getDisplayName());
-                        }
-                        if (im.hasEnchants()) {
-                            Map<Enchantment, Integer> enchants = im.getEnchants();
-                            for (Enchantment enchant : enchants.keySet()) {
-                                im2.addEnchant(enchant, enchants.get(enchant), true);
-                            }
-                        }
-                        if (iDmgable != null && iDmgable.hasDamage()) {
-                            ((Damageable) im2).setDamage(iDmgable.getDamage());
-                        }
-                        im2.setLore(null);
-                        i.setItemMeta(im2);
+                    var meta = i.getItemMeta();
+                    if (meta != null) {
+                        meta.setLore(MultiArmor.getLoreWithout(meta));
                     }
+                    i.setItemMeta(meta);
+
                     drops.set(drops.indexOf(i), i);
                 }
 
@@ -205,7 +193,7 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
     private boolean validateArmor(ItemStack item) {
         if (item.getItemMeta() != null && item.getItemMeta().getLore() != null) {
             for (String lore : item.getItemMeta().getLore()) {
-                if (lore != null && lore.contains("MultiArmor")) {
+                if (lore != null && (lore.contains("复合盔甲") || lore.contains("MultiArmor"))) {
                     return true;
                 }
             }
