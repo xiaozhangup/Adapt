@@ -82,7 +82,7 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(PlayerToggleFlightEvent e) {
         Player p = e.getPlayer();
-        if (hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL)) {
+        if (hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL) && !p.isFlying()) {
             e.setCancelled(true);
             p.setAllowFlight(false);
             if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration()) {
@@ -129,9 +129,10 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
     public void on(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         boolean isJumping = p.getVelocity().getY() > jumpVelocity;
-        if (isJumping && !canBlink.containsKey(p) && hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL) && p.isSprinting()) {
+        boolean canFlight = p.getAllowFlight();
+        if (isJumping && !canBlink.containsKey(p) && hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL) && p.isSprinting() && !p.isFlying()) {
             if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration()) {
-                p.setAllowFlight(false);
+                if (!canFlight) p.setAllowFlight(false);
                 return;
             }
             Location loc = p.getLocation().clone();
@@ -151,7 +152,7 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
                 p.setAllowFlight(true);
                 Adapt.verbose("Allowing flight for " + p.getName() + "");
                 J.a(() -> {
-                    p.setAllowFlight(false);
+                    if (!canFlight) p.setAllowFlight(false);
                     p.setFlying(false);
                     Adapt.verbose("Disabling flight for " + p.getName() + "");
                     canBlink.remove(p);

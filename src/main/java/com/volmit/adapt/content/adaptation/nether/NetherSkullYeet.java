@@ -128,6 +128,7 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
             entity.setBounce(false);
             entity.setDirection(dir);
             entity.setShooter(p);
+            entity.setVelocity(entity.getLocation().getDirection().normalize().multiply(1));
             xp(p, 100);
         });
     }
