@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.volmit.adapt.nms.advancements.CrazyAdvancementsAPI;
+import com.volmit.adapt.util.ListC;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 
@@ -107,7 +108,7 @@ public class Criteria {
 	 * @return The Requirements
 	 */
 	public AdvancementRequirements getAdvancementRequirements() {
-		return new AdvancementRequirements(requirements);
+		return new AdvancementRequirements(ListC.convert(requirements));
 	}
 	
 	/**

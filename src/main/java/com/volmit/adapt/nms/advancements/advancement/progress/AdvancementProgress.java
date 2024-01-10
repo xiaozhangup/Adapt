@@ -6,6 +6,7 @@ import java.util.stream.StreamSupport;
 
 import com.google.common.collect.Iterables;
 
+import com.volmit.adapt.util.ListC;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionProgress;
@@ -30,7 +31,7 @@ public class AdvancementProgress {
 	 */
 	@Deprecated(forRemoval = true, since = "2.1.15")
 	public AdvancementProgress(Map<String, Criterion<?>> criteria, String[][] requirements) {
-		nmsProgress.a(new AdvancementRequirements(requirements));
+		nmsProgress.a(new AdvancementRequirements(ListC.convert(requirements)));
 	}
 	
 	/**
@@ -40,7 +41,7 @@ public class AdvancementProgress {
 	 * @param requirements The Requirements
 	 */
 	public AdvancementProgress(String[][] requirements) {
-		nmsProgress.a(new AdvancementRequirements(requirements));
+		nmsProgress.a(new AdvancementRequirements(ListC.convert(requirements)));
 	}
 	
 	/**
