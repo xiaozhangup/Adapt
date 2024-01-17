@@ -120,7 +120,7 @@ public class Adapt extends VolmitPlugin {
         // setupMetrics();
         // startupPrint(); // Splash screen
         if (AdaptConfig.get().isAutoUpdateCheck()) {
-            autoUpdateCheck();
+            // autoUpdateCheck();
         }
         protectorRegistry = new ProtectorRegistry();
 //        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {

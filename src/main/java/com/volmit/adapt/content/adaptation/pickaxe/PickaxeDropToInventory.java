@@ -20,9 +20,7 @@ package com.volmit.adapt.content.adaptation.pickaxe;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.ItemListings;
-import com.volmit.adapt.util.C;
-import com.volmit.adapt.util.Element;
-import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -74,14 +72,7 @@ public class PickaxeDropToInventory extends SimpleAdaptation<PickaxeDropToInvent
             return;
         }
         if (ItemListings.toolPickaxes.contains(p.getInventory().getItemInMainHand().getType())) {
-            List<Item> items = e.getItems().copy();
-            e.getItems().clear();
-            for (Item i : items) {
-                p.playSound(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
-                if (!p.getInventory().addItem(i.getItemStack()).isEmpty()) {
-                    p.getWorld().dropItem(p.getLocation(), i.getItemStack());
-                }
-            }
+            J.s(() -> PU.dropTo(p, e.getBlock()), 1);
         }
     }
 

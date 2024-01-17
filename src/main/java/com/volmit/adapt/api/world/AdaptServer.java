@@ -128,7 +128,7 @@ public class AdaptServer extends TickedObject {
         super.unregister();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(ProjectileLaunchEvent e) {
         if (e.getEntity() instanceof Snowball s && e.getEntity().getShooter() instanceof Player p) {
             KnowledgeOrb.Data data = KnowledgeOrb.get(s.getItem());
