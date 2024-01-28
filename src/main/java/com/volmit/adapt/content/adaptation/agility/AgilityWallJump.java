@@ -82,9 +82,7 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
             return;
         }
         Player p = e.getPlayer();
-        if (!canInteract(p, p.getLocation())) {
-            return;
-        }
+
         if (airjumps.containsKey(p)) {
             if (p.isOnGround() && !p.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial().isAir()) {
                 airjumps.remove(p);
@@ -107,10 +105,6 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
                 continue;
             }
 
-            if (!canInteract(p, p.getLocation())){
-                return;
-            }
-
             if (p.isFlying() || !p.isSneaking() || p.getFallDistance() < 0.3) {
                 boolean jumped = false;
 
@@ -123,7 +117,7 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
                         p.setVelocity(p.getVelocity().setY(getJumpHeight(level)));
                         if (getConfig().showParticles) {
 
-                            p.getWorld().spawnParticle(Particle.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15, 0.1, 0.8, 0.1, 0.1, getStick(p).getBlockData());
+                            p.spawnParticle(Particle.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15, 0.1, 0.8, 0.1, 0.1, getStick(p).getBlockData());
                         }
                     }
                     airjumps.put(p, j);
@@ -131,17 +125,17 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
 
                 if (!jumped && !p.hasGravity()) {
                     p.setGravity(true);
-                    p.getLocation().getWorld().playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.439f);
+                    p.playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.439f);
                 }
                 continue;
             }
 
             if (canStick(p)) {
                 if (p.hasGravity()) {
-                    p.getLocation().getWorld().playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.89f);
-                    p.getLocation().getWorld().playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_CHAIN, 1f, 1.39f);
+                    p.playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.89f);
+                    p.playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_CHAIN, 1f, 1.39f);
                     if (getConfig().showParticles && getStick(p) != null) {
-                        p.getWorld().spawnParticle(Particle.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15, 0.1, 0.2, 0.1, 0.1, getStick(p).getBlockData());
+                        p.spawnParticle(Particle.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15, 0.1, 0.2, 0.1, 0.1, getStick(p).getBlockData());
                     }
                 }
 
