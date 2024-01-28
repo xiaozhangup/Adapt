@@ -85,32 +85,34 @@ public class StealthSnatch extends SimpleAdaptation<StealthSnatch.Config> {
         }
 
         double range = getRange(factor);
-        HashSet<Item> items = new HashSet<>();
-        for (Entity droppedItemEntity : player.getWorld().getNearbyEntities(player.getLocation(), range, range / 1.5, range)) {
-            if (droppedItemEntity instanceof Item droppedItem) {
-                if (droppedItem.getPickupDelay() <= 0 || droppedItem.getTicksLived() > 1) {
-                    items.add(droppedItem);
-                }
-            }
-        }
 
-        for (Item droppedItemEntity : items) {
-            if (!holds.contains(droppedItemEntity.getEntityId())) {
-                double dist = droppedItemEntity.getLocation().distanceSquared(player.getLocation());
-                if (dist < range * range) {
-                    ItemStack is = droppedItemEntity.getItemStack().clone();
-
-                    if (Inventories.hasSpace(player.getInventory(), is)) {
-                        holds.add(droppedItemEntity.getEntityId());
-                        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1f, (float) (1.0 + (Math.random() / 3)));
-                        safeGiveItem(player, droppedItemEntity, is);
-                        sendCollected(player, droppedItemEntity);
-                        int id = droppedItemEntity.getEntityId();
-                        J.s(() -> holds.remove(Integer.valueOf(id)));
-                    }
-                }
-            }
-        }
+        PU.dropTo(player, player.getLocation(), range);
+//        HashSet<Item> items = new HashSet<>();
+//        for (Entity droppedItemEntity : player.getWorld().getNearbyEntities(player.getLocation(), range, range / 1.5, range)) {
+//            if (droppedItemEntity instanceof Item droppedItem) {
+//                if (droppedItem.getPickupDelay() <= 0 || droppedItem.getTicksLived() > 1) {
+//                    items.add(droppedItem);
+//                }
+//            }
+//        }
+//
+//        for (Item droppedItemEntity : items) {
+//            if (!holds.contains(droppedItemEntity.getEntityId())) {
+//                double dist = droppedItemEntity.getLocation().distanceSquared(player.getLocation());
+//                if (dist < range * range) {
+//                    ItemStack is = droppedItemEntity.getItemStack().clone();
+//
+//                    if (Inventories.hasSpace(player.getInventory(), is)) {
+//                        holds.add(droppedItemEntity.getEntityId());
+//                        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1f, (float) (1.0 + (Math.random() / 3)));
+//                        safeGiveItem(player, droppedItemEntity, is);
+//                        sendCollected(player, droppedItemEntity);
+//                        int id = droppedItemEntity.getEntityId();
+//                        J.s(() -> holds.remove(Integer.valueOf(id)));
+//                    }
+//                }
+//            }
+//        }
 
     }
 
