@@ -255,8 +255,10 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
                         return 0;
                     }
 
-                    i.getWorld().playSound(i.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 10.0f);
-                    i.getWorld().playSound(i.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 0.81f);
+                    J.s(() -> {
+                        i.getWorld().playSound(i.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 10.0f);
+                        i.getWorld().playSound(i.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 0.81f);
+                    });
                     return availablePower;
                 }
                 return v;
