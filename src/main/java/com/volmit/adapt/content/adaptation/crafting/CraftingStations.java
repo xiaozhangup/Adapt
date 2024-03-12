@@ -52,8 +52,10 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.RED + Localizer.dLocalize("crafting", "stations", "lore2"));
-        v.addLore(C.GRAY + Localizer.dLocalize("crafting", "stations", "lore3"));
+        v.addLore(C.GRAY + Localizer.dLocalize("crafting", "stations", "lore2"));
+        v.addLore(C.GRAY + "");
+        v.addLore(C.RED + Localizer.dLocalize("crafting", "stations", "lore3"));
+        v.addLore(C.GRAY + Localizer.dLocalize("crafting", "stations", "lore4"));
     }
 
     @EventHandler
@@ -62,98 +64,30 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
         if (!hasAdaptation(p)) {
             return;
         }
+        if (!p.isSneaking()) {
+            return;
+        }
 
         ItemStack hand = p.getInventory().getItemInMainHand();
-        switch (hand.getType()) {
-            case CRAFTING_TABLE -> {
-                if (p.hasCooldown(hand.getType())) {
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    NMS.get().sendCooldown(p, hand.getType(), 1000);
-                    p.setCooldown(hand.getType(), 1000);
-                }
-                if ((e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
-                    p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    p.openWorkbench(null, true);
-                }
-            }
-            case GRINDSTONE -> {
-                if (p.hasCooldown(hand.getType())) {
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    NMS.get().sendCooldown(p, hand.getType(), 1000);
-                    p.setCooldown(hand.getType(), 1000);
-                }
-                if ((e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
-                    p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.GRINDSTONE);
-                    p.openInventory(inv);
-                }
-            }
-            case ANVIL -> {
-                if (p.hasCooldown(hand.getType())) {
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    NMS.get().sendCooldown(p, hand.getType(), 1000);
-                    p.setCooldown(hand.getType(), 1000);
-                }
-                if ((e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
-                    p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.ANVIL);
-                    p.openInventory(inv);
-                }
-            }
-            case STONECUTTER -> {
-                if (p.hasCooldown(hand.getType())) {
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    NMS.get().sendCooldown(p, hand.getType(), 1000);
-                    p.setCooldown(hand.getType(), 1000);
-                }
-                if ((e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
-                    p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.STONECUTTER);
-                    p.openInventory(inv);
-                }
-            }
-            case CARTOGRAPHY_TABLE -> {
-                if (p.hasCooldown(hand.getType())) {
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    NMS.get().sendCooldown(p, hand.getType(), 1000);
-                    p.setCooldown(hand.getType(), 1000);
-                }
-                if ((e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
-                    p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.CARTOGRAPHY);
-                    p.openInventory(inv);
-                }
-            }
-            case LOOM -> {
-                if (p.hasCooldown(hand.getType())) {
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    NMS.get().sendCooldown(p, hand.getType(), 1000);
-                    p.setCooldown(hand.getType(), 1000);
-                }
-                if ((e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
-                    p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.LOOM);
-                    p.openInventory(inv);
-                }
-            }
+
+        if (p.hasCooldown(hand.getType())) {
+            e.setCancelled(true);
+            return;
+        }
+
+        CraftingStation station = CraftingStation.getStation(hand.getType());
+        if (station == null) {
+            return;
+        }
+
+        NMS.get().sendCooldown(p, hand.getType(), 1000);
+        p.setCooldown(hand.getType(), 1000);
+
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            p.playSound(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
+            p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
+            Inventory inv = Bukkit.createInventory(p, station.getInventoryType());
+            p.openInventory(inv);
         }
     }
 
@@ -170,6 +104,40 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
     @Override
     public boolean isPermanent() {
         return getConfig().permanent;
+    }
+
+    enum CraftingStation {
+        CRAFTING_TABLE(Material.CRAFTING_TABLE, InventoryType.WORKBENCH),
+        GRINDSTONE(Material.GRINDSTONE, InventoryType.GRINDSTONE),
+        ANVIL(Material.ANVIL, InventoryType.ANVIL),
+        STONECUTTER(Material.STONECUTTER, InventoryType.STONECUTTER),
+        CARTOGRAPHY_TABLE(Material.CARTOGRAPHY_TABLE, InventoryType.CARTOGRAPHY),
+        LOOM(Material.LOOM, InventoryType.LOOM);
+
+        private Material material;
+        private InventoryType inventoryType;
+
+        CraftingStation(Material material, InventoryType inventoryType) {
+            this.material = material;
+            this.inventoryType = inventoryType;
+        }
+
+        public static CraftingStation getStation(Material material) {
+            for (CraftingStation station : values()) {
+                if (station.getMaterial() == material) {
+                    return station;
+                }
+            }
+            return null;
+        }
+
+        public Material getMaterial() {
+            return material;
+        }
+
+        public InventoryType getInventoryType() {
+            return inventoryType;
+        }
     }
 
     @NoArgsConstructor

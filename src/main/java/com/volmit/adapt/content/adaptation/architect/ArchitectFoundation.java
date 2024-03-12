@@ -210,8 +210,8 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         J.s(() -> {
             block.setBlockData(BLOCK);
             activeBlocks.add(block);
+            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_DEEPSLATE_PLACE, 1.0f, 1.0f);
         });
-        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_DEEPSLATE_PLACE, 1.0f, 1.0f);
         if (getConfig().showParticles) {
 
             vfxCuboidOutline(block, Particle.REVERSE_PORTAL);
@@ -229,8 +229,8 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         J.s(() -> {
             block.setBlockData(AIR);
             activeBlocks.remove(block);
+            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
         });
-        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
         if (getConfig().showParticles) {
             vfxCuboidOutline(block, Particle.ENCHANTMENT_TABLE);
         }
