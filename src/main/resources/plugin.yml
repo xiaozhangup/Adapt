@@ -8,6 +8,8 @@ authors:
 api-version: '${apiversion}'
 softdepend:
   - PlaceholderAPI
+  - OrangDomain
+  - SlimeCargoNext
   - WorldGuard
   - Factions
   - ChestProtect

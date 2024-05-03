@@ -49,7 +49,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldUnloadEvent;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -147,9 +146,11 @@ public class Adapt extends VolmitPlugin {
         if (getServer().getPluginManager().getPlugin("SlimeCargoNext") != null) {
             protectorRegistry.registerProtector(new SlimeCargoProtector());
             info("Enabled SlimeCargoProtector!");
-        } else {
-            protectorRegistry.registerProtector(new PermissionProtector());
-            info("Enabled PermissionProtector!");
+        }
+        if (getServer().getPluginManager().getPlugin("OrangDomain") != null) {
+            protectorRegistry.registerProtector(new OrangDomainProtector());
+            protectorRegistry.registerProtector(new WorldProtector());
+            info("Enabled OrangDomainProtector!");
         }
         glowingEntities = new GlowingEntities(this);
         parser.parse(new CommandAdapt());

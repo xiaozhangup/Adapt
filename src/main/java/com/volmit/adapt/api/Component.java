@@ -18,8 +18,6 @@
 
 package com.volmit.adapt.api;
 
-import com.francobm.magicosmetics.api.CosmeticType;
-import com.francobm.magicosmetics.api.MagicAPI;
 import com.google.common.collect.Lists;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
@@ -124,9 +122,7 @@ public interface Component {
         ItemStack pants = inv.getLeggings();
         double armorValue = 0.0;
         if (helmet == null) armorValue = armorValue + 0.0;
-        else if (Bukkit.getServer().getPluginManager().getPlugin("MagicCosmetics") != null && MagicAPI.hasEquipCosmetic(player, CosmeticType.HAT)) {
-            armorValue = armorValue + 0;
-        } else if (helmet.getType() == Material.LEATHER_HELMET) armorValue = armorValue + 0.04;
+        else if (helmet.getType() == Material.LEATHER_HELMET) armorValue = armorValue + 0.04;
         else if (helmet.getType() == Material.GOLDEN_HELMET) armorValue = armorValue + 0.08;
         else if (helmet.getType() == Material.TURTLE_HELMET) armorValue = armorValue + 0.08;
         else if (helmet.getType() == Material.CHAINMAIL_HELMET) armorValue = armorValue + 0.08;
@@ -151,9 +147,7 @@ public interface Component {
         else if (pants.getType() == Material.NETHERITE_LEGGINGS) armorValue = armorValue + 0.24;
         //
         if (chest == null) armorValue = armorValue + 0.0;
-        else if (Bukkit.getServer().getPluginManager().getPlugin("MagicCosmetics") != null && MagicAPI.hasEquipCosmetic(player, CosmeticType.BAG)) {
-            armorValue = armorValue + 0;
-        } else if (chest.getType() == Material.LEATHER_CHESTPLATE) armorValue = armorValue + 0.12;
+        else if (chest.getType() == Material.LEATHER_CHESTPLATE) armorValue = armorValue + 0.12;
         else if (chest.getType() == Material.GOLDEN_CHESTPLATE) armorValue = armorValue + 0.20;
         else if (chest.getType() == Material.CHAINMAIL_CHESTPLATE) armorValue = armorValue + 0.20;
         else if (chest.getType() == Material.IRON_CHESTPLATE) armorValue = armorValue + 0.24;

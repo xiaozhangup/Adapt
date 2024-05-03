@@ -147,6 +147,7 @@ dependencies {
     implementation "com.github.TechFortress:GriefPrevention:16.18.1"
     implementation 'xyz.xenondevs:particle:1.8.1'
     implementation "me.xiaozhangup:SlimeCargoNext:1.0.0"
+    implementation "me.xiaozhangup:OrangDomain:1.0.0"
     compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
 
     // Dynamically Loaded
