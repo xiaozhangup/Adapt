@@ -144,7 +144,7 @@ public class Adapt extends VolmitPlugin {
 //        if (getServer().getPluginManager().getPlugin("LockettePro") != null) {
 //            protectorRegistry.registerProtector(new LocketteProProtector());
 //        }
-        if (getServer().getPluginManager().getPlugin("SlimeCargo") != null) {
+        if (getServer().getPluginManager().getPlugin("SlimeCargoNext") != null) {
             protectorRegistry.registerProtector(new SlimeCargoProtector());
             info("Enabled SlimeCargoProtector!");
         } else {
