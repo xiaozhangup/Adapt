@@ -11,36 +11,34 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class WorldProtector implements Protector {
-    private final List<String> worlds = OrangDomain.INSTANCE.getWorlds();
-
     @Override
     public boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !worlds.contains(blockLocation.getWorld().getName());
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(blockLocation.getWorld().getName());
     }
 
     @Override
     public boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !worlds.contains(blockLocation.getWorld().getName());
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(blockLocation.getWorld().getName());
     }
 
     @Override
     public boolean canPVP(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !worlds.contains(entityLocation.getWorld().getName());
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(entityLocation.getWorld().getName());
     }
 
     @Override
     public boolean canPVE(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !worlds.contains(entityLocation.getWorld().getName());
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(entityLocation.getWorld().getName());
     }
 
     @Override
     public boolean canInteract(Player player, Location targetLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !worlds.contains(targetLocation.getWorld().getName());
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(targetLocation.getWorld().getName());
     }
 
     @Override
     public boolean canAccessChest(Player player, Location chestLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !worlds.contains(chestLocation.getWorld().getName());
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(chestLocation.getWorld().getName());
     }
 
     @Override
