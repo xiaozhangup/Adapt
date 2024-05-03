@@ -30,7 +30,7 @@ def specialSourceVersion = '1.11.0' //[NMS]
 def spigotJarVersion = '1.20.4-R0.1-SNAPSHOT' //[NMS]
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'
-def manifoldVersion = '2023.1.33'
+def manifoldVersion = '2024.1.12'
 
 // ADD YOURSELF AS A NEW LINE IF YOU WANT YOUR OWN BUILD TASK GENERATED
 // ======================== WINDOWS =============================
@@ -139,7 +139,6 @@ dependencies {
     //Random Api's
     implementation 'com.github.DeadSilenceIV:AdvancedChestsAPI:2.9-BETA'
     implementation 'com.sk89q.worldguard:worldguard-bukkit:7.0.8'
-    implementation "com.github.FrancoBM12:API-MagicCosmetics:2.2.2"
     implementation 'me.clip:placeholderapi:2.11.2'
     implementation 'com.github.LoneDev6:api-itemsadder:3.2.5'
     implementation 'io.th0rgal:oraxen:1.94.0'
@@ -147,6 +146,7 @@ dependencies {
     implementation "com.github.angeschossen:ChestProtectAPI:3.9.1"
     implementation "com.github.TechFortress:GriefPrevention:16.18.1"
     implementation 'xyz.xenondevs:particle:1.8.1'
+    implementation "me.xiaozhangup:SlimeCargoNext:1.0.0"
     compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
 
     // Dynamically Loaded
