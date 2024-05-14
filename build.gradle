@@ -30,7 +30,7 @@ def specialSourceVersion = '1.11.4' //[NMS]
 def spigotJarVersion = '1.20.4-R0.1-SNAPSHOT' //[NMS]
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'
-def manifoldVersion = '2024.1.10'
+def manifoldVersion = '2024.1.12'
 
 // ADD YOURSELF AS A NEW LINE IF YOU WANT YOUR OWN BUILD TASK GENERATED
 // ======================== WINDOWS =============================
@@ -153,6 +153,8 @@ dependencies {
     //implementation 'com.github.ZockerAxel:CrazyAdvancementsAPI:v2.1.17a'
     implementation 'com.github.VolmitSoftware:AdvancementsAPI:2.1.17:shadable'
     compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
+    compileOnly "me.xiaozhangup:SlimeCargoNext:1.0.0"
+    compileOnly "me.xiaozhangup:OrangDomain:1.0.0"
 
     // Dynamically Loaded
     compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
