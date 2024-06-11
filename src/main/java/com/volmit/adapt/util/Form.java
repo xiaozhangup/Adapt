@@ -649,26 +649,26 @@ public class Form {
      */
     public static String duration(long ms, int prec) {
         if (ms < 1000.0) {
-            return Form.f(ms, prec) + "ms";
+            return Form.f(ms, prec) + "毫秒";
         }
 
         if (ms / 1000.0 < 60.0) {
-            return Form.f(ms / 1000.0, prec) + " seconds";
+            return Form.f(ms / 1000.0, prec) + " 秒";
         }
 
         if (ms / 1000.0 / 60.0 < 60.0) {
-            return Form.f(ms / 1000.0 / 60.0, prec) + " minutes";
+            return Form.f(ms / 1000.0 / 60.0, prec) + " 分";
         }
 
         if (ms / 1000.0 / 60.0 / 60.0 < 24.0) {
-            return Form.f(ms / 1000.0 / 60.0 / 60.0, prec) + " hours";
+            return Form.f(ms / 1000.0 / 60.0 / 60.0, prec) + " 时";
         }
 
         if (ms / 1000.0 / 60.0 / 60.0 / 24.0 < 7) {
-            return Form.f(ms / 1000.0 / 60.0 / 24.0, prec) + " days";
+            return Form.f(ms / 1000.0 / 60.0 / 24.0, prec) + " 天";
         }
 
-        return Form.f(ms, prec) + "ms";
+        return Form.f(ms, prec) + "毫秒";
     }
 
     /**
