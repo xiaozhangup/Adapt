@@ -65,14 +65,15 @@ public interface AdaptComponent {
     }
 
     default boolean isSword(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, NETHERITE_SWORD, STONE_SWORD, WOODEN_SWORD -> true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_SWORD");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, NETHERITE_SWORD, STONE_SWORD, WOODEN_SWORD -> true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isTrident(ItemStack it) {
@@ -87,113 +88,128 @@ public interface AdaptComponent {
     }
 
     default boolean isAxe(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_AXE, GOLDEN_AXE, IRON_AXE, NETHERITE_AXE, STONE_AXE, WOODEN_AXE -> true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_AXE");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_AXE, GOLDEN_AXE, IRON_AXE, NETHERITE_AXE, STONE_AXE, WOODEN_AXE -> true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isPickaxe(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, NETHERITE_PICKAXE, STONE_PICKAXE, WOODEN_PICKAXE ->
-                        true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_PICKAXE");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, NETHERITE_PICKAXE, STONE_PICKAXE, WOODEN_PICKAXE ->
+//                        true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isShovel(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_SHOVEL, GOLDEN_SHOVEL, IRON_SHOVEL, NETHERITE_SHOVEL, STONE_SHOVEL, WOODEN_SHOVEL -> true;
-                default -> false;
-            };
-        }
-        return false;
+        return it.getType().toString().endsWith("_SHOVEL");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_SHOVEL, GOLDEN_SHOVEL, IRON_SHOVEL, NETHERITE_SHOVEL, STONE_SHOVEL, WOODEN_SHOVEL -> true;
+//                default -> false;
+//            };
+//        }
+//        return false;
     }
 
     default boolean isLog(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case ACACIA_LOG, BIRCH_LOG, CHERRY_LOG, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG,
-                        STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG,
-                        STRIPPED_SPRUCE_LOG, ACACIA_WOOD, BIRCH_WOOD, DARK_OAK_WOOD, JUNGLE_WOOD, OAK_WOOD,
-                        SPRUCE_WOOD, STRIPPED_ACACIA_WOOD, STRIPPED_BIRCH_WOOD, STRIPPED_DARK_OAK_WOOD, STRIPPED_JUNGLE_WOOD,
-                        STRIPPED_OAK_WOOD, STRIPPED_SPRUCE_WOOD, MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK,
-                        MANGROVE_LOG, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS, STRIPPED_MANGROVE_LOG, MANGROVE_WOOD, STRIPPED_MANGROVE_WOOD ->
-                        true;
-                default -> false;
-            };
-        }
-
-        return false;
+        var type = it.getType().toString();
+        return type.endsWith("_LOG") ||
+                type.endsWith("_WOOD") ||
+                it.getType() == Material.MUSHROOM_STEM ||
+                it.getType() == Material.MANGROVE_ROOTS ||
+                it.getType() == Material.MUDDY_MANGROVE_ROOTS;
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case ACACIA_LOG, BIRCH_LOG, CHERRY_LOG, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG,
+//                        STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG,
+//                        STRIPPED_SPRUCE_LOG, ACACIA_WOOD, BIRCH_WOOD, DARK_OAK_WOOD, JUNGLE_WOOD, OAK_WOOD,
+//                        SPRUCE_WOOD, STRIPPED_ACACIA_WOOD, STRIPPED_BIRCH_WOOD, STRIPPED_DARK_OAK_WOOD, STRIPPED_JUNGLE_WOOD,
+//                        STRIPPED_OAK_WOOD, STRIPPED_SPRUCE_WOOD, MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK,
+//                        MANGROVE_LOG, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS, STRIPPED_MANGROVE_LOG, MANGROVE_WOOD, STRIPPED_MANGROVE_WOOD ->
+//                        true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isLeaves(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case OAK_LEAVES, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS, SPRUCE_LEAVES, BIRCH_LEAVES,
-                        JUNGLE_LEAVES, ACACIA_LEAVES, DARK_OAK_LEAVES, MANGROVE_LEAVES, CHERRY_LEAVES,
-                        AZALEA_LEAVES, FLOWERING_AZALEA_LEAVES -> true;
-                default -> false;
-            };
-        }
-
-        return false;
+        var type = it.getType().toString();
+        return type.endsWith("_LEAVES") || it.getType() == Material.MANGROVE_ROOTS || it.getType() == Material.MUDDY_MANGROVE_ROOTS;
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case OAK_LEAVES, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS, SPRUCE_LEAVES, BIRCH_LEAVES,
+//                        JUNGLE_LEAVES, ACACIA_LEAVES, DARK_OAK_LEAVES, MANGROVE_LEAVES, CHERRY_LEAVES,
+//                        AZALEA_LEAVES, FLOWERING_AZALEA_LEAVES -> true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isBoots(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_BOOTS, GOLDEN_BOOTS, IRON_BOOTS, NETHERITE_BOOTS, CHAINMAIL_BOOTS, LEATHER_BOOTS -> true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_BOOTS");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_BOOTS, GOLDEN_BOOTS, IRON_BOOTS, NETHERITE_BOOTS, CHAINMAIL_BOOTS, LEATHER_BOOTS -> true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isHelmet(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case CHAINMAIL_HELMET, DIAMOND_HELMET, GOLDEN_HELMET, IRON_HELMET, LEATHER_HELMET, NETHERITE_HELMET, TURTLE_HELMET ->
-                        true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_HELMET");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case CHAINMAIL_HELMET, DIAMOND_HELMET, GOLDEN_HELMET, IRON_HELMET, LEATHER_HELMET, NETHERITE_HELMET, TURTLE_HELMET ->
+//                        true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isLeggings(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_LEGGINGS, GOLDEN_LEGGINGS, IRON_LEGGINGS, NETHERITE_LEGGINGS, CHAINMAIL_LEGGINGS, LEATHER_LEGGINGS ->
-                        true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_LEGGINGS");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_LEGGINGS, GOLDEN_LEGGINGS, IRON_LEGGINGS, NETHERITE_LEGGINGS, CHAINMAIL_LEGGINGS, LEATHER_LEGGINGS ->
+//                        true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isChestplate(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_CHESTPLATE, GOLDEN_CHESTPLATE, IRON_CHESTPLATE, NETHERITE_CHESTPLATE, CHAINMAIL_CHESTPLATE, LEATHER_CHESTPLATE ->
-                        true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_CHESTPLATE");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_CHESTPLATE, GOLDEN_CHESTPLATE, IRON_CHESTPLATE, NETHERITE_CHESTPLATE, CHAINMAIL_CHESTPLATE, LEATHER_CHESTPLATE ->
+//                        true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isElytra(ItemStack it) {
@@ -208,22 +224,24 @@ public interface AdaptComponent {
     }
 
     default boolean isHoe(ItemStack it) {
-        if (isItem(it)) {
-            return switch (it.getType()) {
-                case DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, NETHERITE_HOE, STONE_HOE, WOODEN_HOE -> true;
-                default -> false;
-            };
-        }
-
-        return false;
+        return it.getType().toString().endsWith("_HOE");
+//        if (isItem(it)) {
+//            return switch (it.getType()) {
+//                case DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, NETHERITE_HOE, STONE_HOE, WOODEN_HOE -> true;
+//                default -> false;
+//            };
+//        }
+//
+//        return false;
     }
 
     default boolean isOre(BlockData b) {
-        return switch (b.getMaterial()) {
-            case COPPER_ORE, DEEPSLATE_COPPER_ORE, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMOND_ORE, LAPIS_ORE, EMERALD_ORE, NETHER_QUARTZ_ORE, NETHER_GOLD_ORE, REDSTONE_ORE, DEEPSLATE_COAL_ORE, DEEPSLATE_IRON_ORE, DEEPSLATE_GOLD_ORE, DEEPSLATE_LAPIS_ORE, DEEPSLATE_DIAMOND_ORE, DEEPSLATE_EMERALD_ORE, DEEPSLATE_REDSTONE_ORE ->
-                    true;
-            default -> false;
-        };
+        return b.getMaterial().toString().endsWith("_ORE");
+//        return switch (b.getMaterial()) {
+//            case COPPER_ORE, DEEPSLATE_COPPER_ORE, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMOND_ORE, LAPIS_ORE, EMERALD_ORE, NETHER_QUARTZ_ORE, NETHER_GOLD_ORE, REDSTONE_ORE, DEEPSLATE_COAL_ORE, DEEPSLATE_IRON_ORE, DEEPSLATE_GOLD_ORE, DEEPSLATE_LAPIS_ORE, DEEPSLATE_DIAMOND_ORE, DEEPSLATE_EMERALD_ORE, DEEPSLATE_REDSTONE_ORE ->
+//                    true;
+//            default -> false;
+//        };
     }
 
     default boolean isStorage(BlockData b) {
