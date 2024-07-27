@@ -65,6 +65,7 @@ public interface AdaptComponent {
     }
 
     default boolean isSword(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_SWORD");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -88,6 +89,7 @@ public interface AdaptComponent {
     }
 
     default boolean isAxe(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_AXE");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -100,6 +102,7 @@ public interface AdaptComponent {
     }
 
     default boolean isPickaxe(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_PICKAXE");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -113,6 +116,7 @@ public interface AdaptComponent {
     }
 
     default boolean isShovel(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_SHOVEL");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -124,6 +128,7 @@ public interface AdaptComponent {
     }
 
     default boolean isLog(ItemStack it) {
+        if (it == null) return false;
         var type = it.getType().toString();
         return type.endsWith("_LOG") ||
                 type.endsWith("_WOOD") ||
@@ -147,6 +152,7 @@ public interface AdaptComponent {
     }
 
     default boolean isLeaves(ItemStack it) {
+        if (it == null) return false;
         var type = it.getType().toString();
         return type.endsWith("_LEAVES") || it.getType() == Material.MANGROVE_ROOTS || it.getType() == Material.MUDDY_MANGROVE_ROOTS;
 //        if (isItem(it)) {
@@ -162,6 +168,7 @@ public interface AdaptComponent {
     }
 
     default boolean isBoots(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_BOOTS");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -174,6 +181,7 @@ public interface AdaptComponent {
     }
 
     default boolean isHelmet(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_HELMET");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -187,6 +195,7 @@ public interface AdaptComponent {
     }
 
     default boolean isLeggings(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_LEGGINGS");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -200,6 +209,7 @@ public interface AdaptComponent {
     }
 
     default boolean isChestplate(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_CHESTPLATE");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -224,6 +234,7 @@ public interface AdaptComponent {
     }
 
     default boolean isHoe(ItemStack it) {
+        if (it == null) return false;
         return it.getType().toString().endsWith("_HOE");
 //        if (isItem(it)) {
 //            return switch (it.getType()) {
@@ -236,6 +247,7 @@ public interface AdaptComponent {
     }
 
     default boolean isOre(BlockData b) {
+        if (b == null) return false;
         return b.getMaterial().toString().endsWith("_ORE");
 //        return switch (b.getMaterial()) {
 //            case COPPER_ORE, DEEPSLATE_COPPER_ORE, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMOND_ORE, LAPIS_ORE, EMERALD_ORE, NETHER_QUARTZ_ORE, NETHER_GOLD_ORE, REDSTONE_ORE, DEEPSLATE_COAL_ORE, DEEPSLATE_IRON_ORE, DEEPSLATE_GOLD_ORE, DEEPSLATE_LAPIS_ORE, DEEPSLATE_DIAMOND_ORE, DEEPSLATE_EMERALD_ORE, DEEPSLATE_REDSTONE_ORE ->
