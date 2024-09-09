@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.herbalism;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.*;
+import com.volmit.adapt.util.SoundPlayer;
 import lombok.NoArgsConstructor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -63,6 +64,7 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
             return;
         }
         Player p = e.getPlayer();
+        SoundPlayer sp = SoundPlayer.of(p);
         if (!hasAdaptation(p)) {
             return;
         }
@@ -70,7 +72,15 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
             return;
         }
         if (ItemListings.toolHoes.contains(p.getInventory().getItemInMainHand().getType())) {
-            J.s(() -> xp(p, 2 * PU.dropTo(p, e.getBlock())), 1);
+            List<Item> items = e.getItems().copy();
+            e.getItems().clear();
+            for (Item i : items) {
+                sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
+                xp(p, 2);
+                if (!p.getInventory().addItem(i.getItemStack()).isEmpty()) {
+                    p.getWorld().dropItem(p.getLocation(), i.getItemStack());
+                }
+            }
         }
     }
 

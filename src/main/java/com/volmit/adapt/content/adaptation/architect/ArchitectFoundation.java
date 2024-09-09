@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.architect;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
+import com.volmit.adapt.util.reflect.enums.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -197,8 +198,9 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         } else if (!e.isSneaking() && active) {
             this.active.remove(p);
             cooldowns.put(p, M.ms() + getConfig().cooldown);
-            p.playSound(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1.0f, 10.0f);
-            p.playSound(p.getLocation(), Sound.BLOCK_SCULK_CATALYST_BREAK, 1.0f, 0.81f);
+            SoundPlayer sp = SoundPlayer.of(p);
+            sp.play(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1.0f, 10.0f);
+            sp.play(p.getLocation(), Sound.BLOCK_SCULK_CATALYST_BREAK, 1.0f, 0.81f);
         }
     }
 
@@ -210,8 +212,9 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         J.s(() -> {
             block.setBlockData(BLOCK);
             activeBlocks.add(block);
-            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_DEEPSLATE_PLACE, 1.0f, 1.0f);
         });
+        SoundPlayer spw = SoundPlayer.of(block.getWorld());
+        spw.play(block.getLocation(), Sound.BLOCK_DEEPSLATE_PLACE, 1.0f, 1.0f);
         if (getConfig().showParticles) {
 
             vfxCuboidOutline(block, Particle.REVERSE_PORTAL);
@@ -229,10 +232,11 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         J.s(() -> {
             block.setBlockData(AIR);
             activeBlocks.remove(block);
-            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
+            SoundPlayer spw = SoundPlayer.of(block.getWorld());
+            spw.play(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
         });
         if (getConfig().showParticles) {
-            vfxCuboidOutline(block, Particle.ENCHANTMENT_TABLE);
+            vfxCuboidOutline(block, Particles.ENCHANTMENT_TABLE);
         }
     }
 
@@ -254,11 +258,13 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
                     if (i == null) {
                         return 0;
                     }
+                    final var world = i.getWorld();
+                    final var location = i.getLocation();
 
-                    J.s(() -> {
-                        i.getWorld().playSound(i.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 10.0f);
-                        i.getWorld().playSound(i.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 0.81f);
-                    });
+                    SoundPlayer spw = SoundPlayer.of(world);
+                    spw.play(location, Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 10.0f);
+                    spw.play(location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 0.81f);
+
                     return availablePower;
                 }
                 return v;

@@ -27,6 +27,7 @@ import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.util.*;
 import manifold.rt.api.util.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -42,6 +43,11 @@ public class SkillsGui {
     private static final List<Integer> slots = Arrays.asList(11, 12, 13, 14, 15, 20, 21, 22);
 
     public static void open(Player player) {
+        if (!Bukkit.isPrimaryThread()) {
+            J.s(() -> open(player));
+            return;
+        }
+
         Window w = new UIWindow(player);
         w.setViewportHeight(4); // Resize GUI
         w.setTag("/");
@@ -97,8 +103,9 @@ public class SkillsGui {
                                 : ""))
                         .onLeftClick((e) -> {
                             Adapt.instance.getAdaptServer().getSkillRegistry().getSkills().forEach(skill -> skill.getAdaptations().forEach(adaptation -> adaptation.unlearn(player, 1, false)));
-                            player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NETHER_GOLD_ORE_PLACE, 0.7f, 1.355f);
-                            player.getWorld().playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.4f, 0.755f);
+                            SoundPlayer spw = SoundPlayer.of(player.getWorld());
+                            spw.play(player.getLocation(), Sound.BLOCK_NETHER_GOLD_ORE_PLACE, 0.7f, 1.355f);
+                            spw.play(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.4f, 0.755f);
                             w.close();
                             if (AdaptConfig.get().getLearnUnlearnButtonDelayTicks() != 0) {
                                 player.sendTitle(" ", C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnedall"), 1, 5, 11);

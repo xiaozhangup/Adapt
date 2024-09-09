@@ -136,17 +136,17 @@ public class AdaptServer extends TickedObject {
                 Skill<?> skill = getSkillRegistry().getSkill(data.getSkill());
                 data.apply(p);
                 SoundNotification.builder()
-                        .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
-                        .volume(0.35f).pitch(1.455f)
-                        .build().play(getPlayer(p));
+                    .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
+                    .volume(0.35f).pitch(1.455f)
+                    .build().play(getPlayer(p));
                 SoundNotification.builder()
-                        .sound(Sound.ENTITY_SHULKER_OPEN)
-                        .volume(1f).pitch(1.655f)
-                        .build().play(getPlayer(p));
+                    .sound(Sound.ENTITY_SHULKER_OPEN)
+                    .volume(1f).pitch(1.655f)
+                    .build().play(getPlayer(p));
                 getPlayer(p).getNot().queue(AdvancementNotification.builder()
-                        .icon(Material.BOOK)
-                        .title(C.GRAY + "+ " + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
-                        .build());
+                    .icon(Material.BOOK)
+                    .title(C.GRAY + "+ " + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
+                    .build());
                 e.setCancelled(false);
                 e.getEntity().setVelocity(e.getEntity().getVelocity().multiply(1000));
             } else {
@@ -154,13 +154,13 @@ public class AdaptServer extends TickedObject {
                 if (datax != null) {
                     datax.apply(p);
                     SoundNotification.builder()
-                            .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
-                            .volume(0.35f).pitch(1.455f)
-                            .build().play(getPlayer(p));
+                        .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
+                        .volume(0.35f).pitch(1.455f)
+                        .build().play(getPlayer(p));
                     SoundNotification.builder()
-                            .sound(Sound.ENTITY_SHULKER_OPEN)
-                            .volume(1f).pitch(1.655f)
-                            .build().play(getPlayer(p));
+                        .sound(Sound.ENTITY_SHULKER_OPEN)
+                        .volume(1f).pitch(1.655f)
+                        .build().play(getPlayer(p));
                     e.setCancelled(false);
                     e.getEntity().setVelocity(e.getEntity().getVelocity().multiply(1000));
                 }
@@ -184,11 +184,12 @@ public class AdaptServer extends TickedObject {
     @EventHandler
     public void on(CraftItemEvent e) {
         if (e.getWhoClicked() instanceof Player p) {
+            SoundPlayer sp = SoundPlayer.of(p);
             for (Skill<?> i : getSkillRegistry().getSkills()) {
                 for (Adaptation<?> j : i.getAdaptations()) {
                     if (j.isAdaptationRecipe(e.getRecipe()) && !j.hasAdaptation(p)) {
                         Adapt.actionbar(p, C.RED + "Requires " + j.getDisplayName() + C.RED + " from " + i.getDisplayName());
-                        p.playSound(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.5f, 1.8f);
+                        sp.play(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.5f, 1.8f);
                         e.setCancelled(true);
                     }
                 }

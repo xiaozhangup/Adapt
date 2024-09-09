@@ -23,12 +23,13 @@ import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.reflect.enums.Enchantments;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -55,7 +56,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
     static void autosmeltBlockDTI(Block b, Player p) {
         int fortune = getFortuneOreMultiplier(p.getInventory().getItemInMainHand()
-                .getEnchantments().get(Enchantment.LOOT_BONUS_BLOCKS));
+                .getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
+        SoundPlayer spw = SoundPlayer.of(b.getWorld());
         switch (b.getType()) {
             case IRON_ORE, DEEPSLATE_IRON_ORE -> {
                 if (b.getLocation().getWorld() == null) {
@@ -65,7 +67,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 b.setType(Material.AIR);
                 HashMap<Integer, ItemStack> excessItems = p.getInventory().addItem(new ItemStack(Material.IRON_INGOT, fortune));
                 excessItems.values().forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
-                b.getWorld().playSound(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+                spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
             case GOLD_ORE, DEEPSLATE_GOLD_ORE -> {
@@ -76,7 +78,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 b.setType(Material.AIR);
                 HashMap<Integer, ItemStack> excessItems = p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, fortune));
                 excessItems.values().forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
-                b.getWorld().playSound(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+                spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
             case COPPER_ORE, DEEPSLATE_COPPER_ORE -> {
@@ -86,7 +88,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 b.setType(Material.AIR);
                 HashMap<Integer, ItemStack> excessItems = p.getInventory().addItem(new ItemStack(Material.COPPER_INGOT, fortune));
                 excessItems.values().forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
-                b.getWorld().playSound(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+                spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
 
@@ -95,7 +97,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
     static void autosmeltBlock(Block b, Player p) {
         int fortune = getFortuneOreMultiplier(p.getInventory().getItemInMainHand()
-                .getEnchantments().get(Enchantment.LOOT_BONUS_BLOCKS));
+                .getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
+        SoundPlayer spw = SoundPlayer.of(b.getWorld());
         switch (b.getType()) {
             case IRON_ORE, DEEPSLATE_IRON_ORE -> {
 
@@ -105,7 +108,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
                 b.setType(Material.AIR);
                 b.getLocation().getWorld().dropItemNaturally(b.getLocation(), new ItemStack(Material.IRON_INGOT, fortune));
-                b.getWorld().playSound(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+                spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
             case GOLD_ORE, DEEPSLATE_GOLD_ORE -> {
@@ -115,7 +118,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
                 b.setType(Material.AIR);
                 b.getLocation().getWorld().dropItemNaturally(b.getLocation(), new ItemStack(Material.GOLD_INGOT, fortune));
-                b.getWorld().playSound(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+                spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
             case COPPER_ORE, DEEPSLATE_COPPER_ORE -> {
@@ -124,7 +127,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 }
                 b.setType(Material.AIR);
                 b.getLocation().getWorld().dropItemNaturally(b.getLocation(), new ItemStack(Material.COPPER_INGOT, fortune));
-                b.getWorld().playSound(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+                spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
 

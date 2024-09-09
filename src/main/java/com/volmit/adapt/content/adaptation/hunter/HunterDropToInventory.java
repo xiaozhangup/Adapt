@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.hunter;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.*;
+import com.volmit.adapt.util.SoundPlayer;
 import lombok.NoArgsConstructor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -66,6 +67,7 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
             return;
         }
         Player p = e.getPlayer();
+        SoundPlayer sp = SoundPlayer.of(p);
         if (!hasAdaptation(p)) {
             return;
         }
@@ -79,7 +81,14 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
             return;
         }
         if (ItemListings.toolSwords.contains(p.getInventory().getItemInMainHand().getType())) {
-            J.s(() -> xp(p, 2 * PU.dropTo(p, e.getBlock())), 1);
+            List<Item> items = e.getItems().copy();
+            e.getItems().clear();
+            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
+            for (Item i : items) {
+                if (!p.getInventory().addItem(i.getItemStack()).isEmpty()) {
+                    p.getWorld().dropItem(p.getLocation(), i.getItemStack());
+                }
+            }
         }
     }
 
@@ -97,7 +106,14 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
             return;
         }
         if (e.getEntity().getKiller() != null && e.getEntity().getKiller().getClass().getSimpleName().equals("CraftPlayer")) {
-            J.s(() -> xp(p, 2 * PU.dropTo(p, e.getEntity())), 1);
+            SoundPlayer sp = SoundPlayer.of(p);
+            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
+            e.getDrops().forEach(i -> {
+                if (!p.getInventory().addItem(i).isEmpty()) {
+                    p.getWorld().dropItem(p.getLocation(), i);
+                }
+            });
+            e.getDrops().clear();
         }
     }
 

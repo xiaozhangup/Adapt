@@ -32,6 +32,7 @@ import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.content.gui.AllSkillsGui;
 import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.util.*;
+import org.bukkit.Bukkit;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -72,9 +73,6 @@ public interface Skill<T> extends Ticked, Component {
             this.unregister();
         }
         if (!player.getPlayer().getClass().getSimpleName().equals("CraftPlayer")) {
-            return;
-        }
-        if (!player.getAdvancementHandler().isReady()) {
             return;
         }
         if (!AdaptConfig.get().isAdvancements()) {
@@ -215,9 +213,15 @@ public interface Skill<T> extends Ticked, Component {
         if (!player.getClass().getSimpleName().equals("CraftPlayer")) {
             return;
         }
-        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
-        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 1.455f);
-        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
+        if (!Bukkit.isPrimaryThread()) {
+            J.s(() -> openGui(player));
+            return;
+        }
+
+        SoundPlayer spw = SoundPlayer.of(player.getWorld());
+        spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
+        spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 1.455f);
+        spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
         Window w = new UIWindow(player);
         w.setTag("skill/" + getName());
         w.setDecorator((window, position, row) -> new UIElement("bg").setName(" ").setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE)));
@@ -265,9 +269,10 @@ public interface Skill<T> extends Ticked, Component {
     }
 
     private void onGuiClose(Player player, boolean openPrevGui, boolean simple) {
-        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
-        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 1.455f);
-        player.getWorld().playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
+        SoundPlayer spw = SoundPlayer.of(player.getWorld());
+        spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.1f, 1.255f);
+        spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.7f, 1.455f);
+        spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
         if (openPrevGui) {
             if (simple) {
                 SkillsGui.open(player);
