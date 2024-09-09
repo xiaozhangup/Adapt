@@ -26,6 +26,7 @@ import com.volmit.adapt.content.item.BoundEyeOfEnder;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
+import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -182,8 +183,10 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
 
         p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 10, true, false, false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 85, 0, true, false, false));
-        sp.play(l, Sound.BLOCK_LODESTONE_PLACE, 1f, 0.1f);
-        sp.play(l, Sound.BLOCK_BELL_RESONATE, 1f, 0.1f);
+        if (l != null) {
+            sp.play(l, Sound.BLOCK_LODESTONE_PLACE, 1f, 0.1f);
+            sp.play(l, Sound.BLOCK_BELL_RESONATE, 1f, 0.1f);
+        }
 
         J.a(() -> {
             long dur = 4000; // time in miliseconds

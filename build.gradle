@@ -98,7 +98,7 @@ allprojects {
         mavenCentral()
         maven { url "https://repo.papermc.io/repository/maven-public/"}
         maven { url "https://repo.codemc.org/repository/maven-public" }
-        maven { url "https://mvn.lumine.io/repository/maven-public/" }
+//        maven { url "https://mvn.lumine.io/repository/maven-public/" }
         maven { url "https://nexus.frengor.com/repository/public/"}
         maven { url "https://jitpack.io"}
         maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
@@ -131,18 +131,18 @@ allprojects {
         implementation 'systems.manifold:manifold-rt:' + manifoldVersion
 
         //Random Api's
-        implementation 'com.github.DeadSilenceIV:AdvancedChestsAPI:2.9-BETA'
-        implementation 'com.sk89q.worldguard:worldguard-bukkit:7.0.8'
-        implementation "com.github.FrancoBM12:API-MagicCosmetics:2.2.2"
+//        implementation 'com.github.DeadSilenceIV:AdvancedChestsAPI:2.9-BETA'
+//        implementation 'com.sk89q.worldguard:worldguard-bukkit:7.0.8'
+//        implementation "com.github.FrancoBM12:API-MagicCosmetics:2.2.2"
         implementation 'me.clip:placeholderapi:2.11.2'
-        implementation 'com.github.LoneDev6:api-itemsadder:3.2.5'
-        implementation 'io.th0rgal:oraxen:1.94.0'
-        implementation 'com.massivecraft:Factions:1.6.9.5-U0.6.21'
-        implementation "com.github.angeschossen:ChestProtectAPI:3.9.1"
-        implementation "com.github.TechFortress:GriefPrevention:16.18.1"
+//        implementation 'com.github.LoneDev6:api-itemsadder:3.2.5'
+//        implementation 'io.th0rgal:oraxen:1.94.0'
+//        implementation 'com.massivecraft:Factions:1.6.9.5-U0.6.21'
+//        implementation "com.github.angeschossen:ChestProtectAPI:3.9.1"
+//        implementation "com.github.TechFortress:GriefPrevention:16.18.1"
         implementation 'xyz.xenondevs:particle:1.8.1'
         implementation "com.frengor:ultimateadvancementapi-shadeable:2.4.1"
-        compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
+//        compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
         compileOnly 'io.netty:netty-all:4.1.68.Final'
 
         // Dynamically Loaded

@@ -243,7 +243,7 @@ public interface Skill<T> extends Ticked, Component {
                     .setProgress(1D)
                     .onLeftClick((e) -> {
                         w.close();
-                        i.openGui(simple, player);
+                        i.openGui(player);
                     }));
             ind++;
         }

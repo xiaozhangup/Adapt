@@ -82,6 +82,14 @@ public class StealthSnatch extends SimpleAdaptation<StealthSnatch.Config> {
         }
 
         double range = getRange(factor);
+        HashSet<Item> items = new HashSet<>();
+        for (Entity droppedItemEntity : player.getWorld().getNearbyEntities(player.getLocation(), range, range / 1.5, range)) {
+            if (droppedItemEntity instanceof Item droppedItem) {
+                if (droppedItem.getPickupDelay() <= 0 || droppedItem.getTicksLived() > 1) {
+                    items.add(droppedItem);
+                }
+            }
+        }
 
         for (Item droppedItemEntity : items) {
             if (!holds.contains(droppedItemEntity.getEntityId())) {
