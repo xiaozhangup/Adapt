@@ -182,7 +182,18 @@ public class AdaptPlayer extends TickedObject {
         if (AdaptConfig.get().isUseSql()) {
             String sqlData = Adapt.instance.getSqlManager().fetchData(player.getUniqueId());
             if (sqlData != null) {
-                return new Gson().fromJson(sqlData, PlayerData.class);
+                try {
+                    return new Gson().fromJson(sqlData, PlayerData.class);
+                } catch (Throwable e) {
+                    try {
+                        IO.writeAll(getPlayerDataBackupFile(player.getUniqueId()), sqlData);
+                    } catch (Throwable ee) {
+                        Adapt.error("Failed to backup player data for " + player.getName() + " (" + player.getUniqueId() + ")");
+                        ee.printStackTrace();
+                    }
+                    Adapt.error("Encountered an error while loading player " + player.getName() + "'s data, loading failed, data was overwritten by local file");
+                    e.printStackTrace();
+                }
             }
             upload = true;
         }
@@ -287,8 +298,10 @@ public class AdaptPlayer extends TickedObject {
             double boostAmount = M.lerp(0.1, 0.25, (double) boostTime / (double) TimeUnit.HOURS.toMillis(1));
             getData().globalXPMultiplier(boostAmount, (int) boostTime);
             getNot().queue(AdvancementNotification.builder()
-                    .title(first ? Localizer.dLocalize("snippets", "gui", "welcome") : Localizer.dLocalize("snippets", "gui", "welcomeback"))
-                    .description("+" + C.GREEN + Form.pc(boostAmount, 0) + C.GRAY + " " + Localizer.dLocalize("snippets", "gui", "xpbonusfortime") + " " + C.AQUA + Form.duration(boostTime, 0))
+                    .title(
+                            first ? Localizer.dLocalize("snippets", "gui", "welcome") : Localizer.dLocalize("snippets", "gui", "welcomeback")
+                                    + "\n" + C.GREEN + "+" + Form.pc(boostAmount, 0) + C.GRAY + " " + Localizer.dLocalize("snippets", "gui", "xpbonusfortime") + " " + C.AQUA + Form.duration(boostTime, 0)
+                    )
                     .build());
         }
     }
@@ -299,5 +312,9 @@ public class AdaptPlayer extends TickedObject {
 
     private File getPlayerDataFile(UUID uuid) {
         return new File(Adapt.instance.getDataFolder("data", "players"), uuid.toString() + ".json");
+    }
+
+    private File getPlayerDataBackupFile(UUID uuid) {
+        return new File(Adapt.instance.getDataFolder("fallback"), uuid.toString() + ".bak");
     }
 }
