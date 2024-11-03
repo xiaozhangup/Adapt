@@ -18,8 +18,7 @@
 plugins {
     id 'java'
     id 'java-library'
-    id "io.freefair.lombok" version "6.3.0"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.gradleup.shadow" version "8.3.5"
 }
 
 version '1.15.2-1.19.2-1.21.1'
@@ -122,8 +121,8 @@ allprojects {
 
     dependencies {
         // Provided or Classpath
-        compileOnly 'org.projectlombok:lombok:1.18.24'
-        annotationProcessor 'org.projectlombok:lombok:1.18.24'
+        compileOnly 'org.projectlombok:lombok:1.18.34'
+        annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
         // Cancer
         implementation 'com.github.VolmitDev:Fukkit:23.6.1'
@@ -143,7 +142,7 @@ allprojects {
 //        implementation 'com.github.DeadSilenceIV:AdvancedChestsAPI:2.9-BETA'
 //        implementation 'com.sk89q.worldguard:worldguard-bukkit:7.0.8'
 //        implementation "com.github.FrancoBM12:API-MagicCosmetics:2.2.8"
-        implementation 'me.clip:placeholderapi:2.11.2'
+        implementation 'me.clip:placeholderapi:2.11.6'
 //        implementation 'com.github.LoneDev6:api-itemsadder:3.2.5'
 //        implementation 'io.th0rgal:oraxen:1.182.0'
 //        implementation 'com.massivecraft:Factions:1.6.9.5-U0.6.21'
@@ -153,8 +152,6 @@ allprojects {
         implementation "com.frengor:ultimateadvancementapi-shadeable:2.4.1"
 //        compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
         compileOnly 'io.netty:netty-all:4.1.68.Final'
-        compileOnly "me.xiaozhangup:SlimeCargoNext:1.0.0"
-        compileOnly "me.xiaozhangup:OrangDomain:1.0.0"
 
         // Dynamically Loaded
         compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
@@ -200,10 +197,11 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    implementation 'org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT'
 }
 
-if (JavaVersion.current().toString() != "17") {
+//if (JavaVersion.current().toString() != "17") {
+if (JavaVersion.current().toString() != "21") {
     System.err.println()
     System.err.println("=========================================================================================================")
     System.err.println("You must run gradle on Java 17. You are using " + JavaVersion.current())
@@ -226,7 +224,7 @@ def outputJar = new File(buildDir, "libs/Adapt-" + version + "-all.jar")
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 

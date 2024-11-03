@@ -36,7 +36,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import us.lynuxcraft.deadsilenceiv.advancedchests.AdvancedChestsAPI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -161,11 +160,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
             return;
         }
         loadChunkAsync(b.getLocation(), chunk -> {
-            if (Bukkit.getPluginManager().isPluginEnabled("AdvancedChests") &&
-                    AdvancedChestsAPI.getChestManager().getAdvancedChest(b.getLocation()) != null) {
-                AdvancedChestsAPI.getChestManager().getAdvancedChest(b.getLocation()).openPage(p, 1);
-                Adapt.verbose("Opening AdvancedChests GUI");
-            } else if (b.getState() instanceof InventoryHolder holder) {
+            if (b.getState() instanceof InventoryHolder holder) {
                 InventoryView view = p.openInventory(holder.getInventory());
                 activeViewsMap.computeIfAbsent(b.getLocation(), k -> new ArrayList<>()).add(view);
             }
