@@ -19,10 +19,12 @@
 package com.volmit.adapt.content.adaptation.stealth;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
@@ -32,8 +34,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config> {
+    private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-ghost-armor".getBytes());
+    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString( "adapt:ghost-armor");
+
     public StealthGhostArmor() {
         super("stealth-ghost-armor");
         registerConfiguration(Config.class);
@@ -77,18 +83,11 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             double armor = getMaxArmorPoints(getLevelPercent(p));
             armor = Double.isNaN(armor) ? 0 : armor;
 
-
+            var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
             if (oldArmor < armor) {
-                Collection<AttributeModifier> c = p.getAttribute(Attribute.GENERIC_ARMOR).getModifiers();
-                for (AttributeModifier i : new ArrayList<>(c)) {
-                    if (i.getName().equals("adapt-ghost-armor")) {
-                        oldArmor = i.getAmount();
-                        oldArmor = Double.isNaN(oldArmor) ? 0 : oldArmor;
-                        p.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(i);
-                    }
-                }
-                p.getAttribute(Attribute.GENERIC_ARMOR)
-                        .addModifier(new AttributeModifier("adapt-ghost-armor", Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))), AttributeModifier.Operation.ADD_NUMBER));
+                oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).getFirst().getAmount();
+                oldArmor = Double.isNaN(oldArmor) ? 0 : oldArmor;
+                attribute.setModifier(MODIFIER, MODIFIER_KEY, Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))), AttributeModifier.Operation.ADD_NUMBER);
             } else if (oldArmor > armor) {
                 Collection<AttributeModifier> c = p.getAttribute(Attribute.GENERIC_ARMOR).getModifiers();
                 for (AttributeModifier i : new ArrayList<>(c)) {
@@ -98,8 +97,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                         p.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(i);
                     }
                 }
-                p.getAttribute(Attribute.GENERIC_ARMOR)
-                        .addModifier(new AttributeModifier("adapt-ghost-armor", armor, AttributeModifier.Operation.ADD_NUMBER));
+                attribute.setModifier(MODIFIER, MODIFIER_KEY, armor, AttributeModifier.Operation.ADD_NUMBER);
             }
         }
     }

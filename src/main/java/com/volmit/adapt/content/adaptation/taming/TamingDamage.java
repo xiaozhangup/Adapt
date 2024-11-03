@@ -23,6 +23,7 @@ import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -34,7 +35,7 @@ import java.util.UUID;
 
 public class TamingDamage extends SimpleAdaptation<TamingDamage.Config> {
     private final UUID attUUID = UUID.nameUUIDFromBytes("tame-damage-boost".getBytes());
-    private final String attid = "att-tame-damage-boost";
+    private final NamespacedKey attid = NamespacedKey.fromString( "adapt:att-tame-damage-boost");
 
 
     public TamingDamage() {
@@ -77,7 +78,7 @@ public class TamingDamage extends SimpleAdaptation<TamingDamage.Config> {
     }
 
     private void update(Tameable j, int level) {
-        AttributeModifier mod = new AttributeModifier(attUUID, attid, getDamageBoost(level), AttributeModifier.Operation.ADD_SCALAR);
+        AttributeModifier mod = new AttributeModifier(attid, getDamageBoost(level), AttributeModifier.Operation.ADD_SCALAR);
         if (j.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null) {
             j.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).removeModifier(mod);
         } else {

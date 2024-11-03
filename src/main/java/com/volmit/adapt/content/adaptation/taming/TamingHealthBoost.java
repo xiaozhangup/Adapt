@@ -23,6 +23,7 @@ import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -34,7 +35,7 @@ import java.util.UUID;
 
 public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config> {
     private final UUID attUUID = UUID.nameUUIDFromBytes("health-boost".getBytes());
-    private final String attid = "att-health-boost";
+    private final NamespacedKey attid = NamespacedKey.fromString( "adapt:att-health-boost");
 
 
     public TamingHealthBoost() {
@@ -78,7 +79,7 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
     }
 
     private void update(Tameable j, int level) {
-        AttributeModifier mod = new AttributeModifier(attUUID, attid, getHealthBoost(level), AttributeModifier.Operation.ADD_SCALAR);
+        AttributeModifier mod = new AttributeModifier(attid, getHealthBoost(level), AttributeModifier.Operation.ADD_SCALAR);
         j.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(mod);
 
         if (level > 0) {
