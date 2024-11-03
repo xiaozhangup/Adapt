@@ -84,19 +84,14 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             armor = Double.isNaN(armor) ? 0 : armor;
 
             var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
-            if (oldArmor < armor) {
-                oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).getFirst().getAmount();
+            var current = attribute.getModifier(MODIFIER, MODIFIER_KEY).getFirst();
+            if (current != null) {
+                oldArmor = current.getAmount();
                 oldArmor = Double.isNaN(oldArmor) ? 0 : oldArmor;
+            }
+            if (oldArmor < armor) {
                 attribute.setModifier(MODIFIER, MODIFIER_KEY, Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))), AttributeModifier.Operation.ADD_NUMBER);
             } else if (oldArmor > armor) {
-                Collection<AttributeModifier> c = p.getAttribute(Attribute.GENERIC_ARMOR).getModifiers();
-                for (AttributeModifier i : new ArrayList<>(c)) {
-                    if (i.getName().equals("adapt-ghost-armor")) {
-                        oldArmor = i.getAmount();
-                        oldArmor = Double.isNaN(oldArmor) ? 0 : oldArmor;
-                        p.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(i);
-                    }
-                }
                 attribute.setModifier(MODIFIER, MODIFIER_KEY, armor, AttributeModifier.Operation.ADD_NUMBER);
             }
         }
