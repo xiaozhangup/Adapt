@@ -18,6 +18,7 @@
 plugins {
     id 'java'
     id 'java-library'
+    id "io.freefair.lombok" version "8.10.2"
     id "com.gradleup.shadow" version "8.3.5"
 }
 
@@ -123,6 +124,9 @@ allprojects {
         // Provided or Classpath
         compileOnly 'org.projectlombok:lombok:1.18.34'
         annotationProcessor 'org.projectlombok:lombok:1.18.34'
+        
+        testCompileOnly 'org.projectlombok:lombok:1.18.34'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 
         // Cancer
         implementation 'com.github.VolmitDev:Fukkit:23.6.1'
@@ -197,27 +201,26 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
+    implementation 'org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT'
 }
 
-//if (JavaVersion.current().toString() != "17") {
-if (false) {
-    System.err.println()
-    System.err.println("=========================================================================================================")
-    System.err.println("You must run gradle on Java 17. You are using " + JavaVersion.current())
-    System.err.println()
-    System.err.println("=== For IDEs ===")
-    System.err.println("1. Configure the project for Java 17")
-    System.err.println("2. Configure the bundled gradle to use Java 17 in settings")
-    System.err.println()
-    System.err.println("=== For Command Line (gradlew) ===")
-    System.err.println("1. Install JDK 17 from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html")
-    System.err.println("2. Set JAVA_HOME environment variable to the new jdk installation folder such as C:/Program Files/Java/jdk-17.0.1")
-    System.err.println("3. Open a new command prompt window to get the new environment variables if need be.")
-    System.err.println("=========================================================================================================")
-    System.err.println()
-    System.exit(69)
-}
+//if (JavaVersion.current().toString() != "21") {
+//    System.err.println()
+//    System.err.println("=========================================================================================================")
+//    System.err.println("You must run gradle on Java 17. You are using " + JavaVersion.current())
+//    System.err.println()
+//    System.err.println("=== For IDEs ===")
+//    System.err.println("1. Configure the project for Java 17")
+//    System.err.println("2. Configure the bundled gradle to use Java 17 in settings")
+//    System.err.println()
+//    System.err.println("=== For Command Line (gradlew) ===")
+//    System.err.println("1. Install JDK 17 from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html")
+//    System.err.println("2. Set JAVA_HOME environment variable to the new jdk installation folder such as C:/Program Files/Java/jdk-17.0.1")
+//    System.err.println("3. Open a new command prompt window to get the new environment variables if need be.")
+//    System.err.println("=========================================================================================================")
+//    System.err.println()
+//    System.exit(69)
+//}
 
 def buildDir = layout.buildDirectory.asFile.get();
 def outputJar = new File(buildDir, "libs/Adapt-" + version + "-all.jar")

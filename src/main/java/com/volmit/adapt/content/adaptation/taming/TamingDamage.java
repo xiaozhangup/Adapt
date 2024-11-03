@@ -29,6 +29,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
+import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -78,7 +79,7 @@ public class TamingDamage extends SimpleAdaptation<TamingDamage.Config> {
     }
 
     private void update(Tameable j, int level) {
-        AttributeModifier mod = new AttributeModifier(attid, getDamageBoost(level), AttributeModifier.Operation.ADD_SCALAR);
+        AttributeModifier mod = new AttributeModifier(attid, getDamageBoost(level), AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.ANY);
         if (j.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null) {
             j.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).removeModifier(mod);
         } else {
