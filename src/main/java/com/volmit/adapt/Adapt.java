@@ -179,6 +179,7 @@ public class Adapt extends VolmitPlugin {
         manager.disable();
         MaterialValue.save();
         WorldData.stop();
+        CustomModel.clear();
     }
 
 

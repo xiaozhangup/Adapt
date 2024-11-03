@@ -173,7 +173,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
                 return true;
             }
             Adapt.verbose("Checking " + p.getName() + " for " + getName());
-            return !this.isEnabled() || hasBlacklistPermission(p, this) || isWorldBlacklisted(p) || isInCreativeOrSpectator(p);
+            return !this.isEnabled() || hasBlacklistPermission(p, this) || isWorldBlacklisted(p) || isInCreativeOrSpectator(p) || getPlayer(p) == null;
         } catch (Exception ignored) {
             return true;
         }
@@ -201,7 +201,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
         }
     }
 
-    protected boolean shouldReturnForWorld(World world, Skill skill) {
+    protected boolean shouldReturnForWorld(World world, Skill<?> skill) {
         try {
             return !skill.isEnabled() || AdaptConfig.get().blacklistedWorlds.contains(world.getName());
         } catch (Exception ignored) {
@@ -246,6 +246,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
                 .title(displayName)
                 .description(getDescription())
                 .icon(getIcon())
+                .model(getModel())
                 .children(a)
                 .visibility(AdvancementVisibility.HIDDEN)
                 .build();

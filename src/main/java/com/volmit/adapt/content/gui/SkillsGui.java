@@ -53,7 +53,8 @@ public class SkillsGui {
         w.setTag("/");
         w.setDecorator((window, position, row) -> new UIElement("bg")
                 .setName(" ")
-                .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE)));
+                .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
+                .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
 
         AdaptPlayer adaptPlayer = Adapt.instance.getAdaptServer().getPlayer(player);
         if (adaptPlayer == null) {
@@ -84,6 +85,7 @@ public class SkillsGui {
 
                 w.setElement(pos, row, new UIElement("skill-" + sk.getName())
                         .setMaterial(new MaterialBlock(sk.getIcon()))
+                        .setModel(sk.getModel())
                         .setName(sk.getDisplayName(i.getLevel()))
                         .setProgress(1D)
                         .addLore(C.UNDERLINE + "" + C.WHITE + i.getKnowledge() + C.RESET + " " + C.GRAY + Localizer.dLocalize("snippets", "gui", "knowledge"))
@@ -97,6 +99,7 @@ public class SkillsGui {
                 if (w.getElement(unlearnAllPos, unlearnAllRow) != null) unlearnAllRow++;
                 w.setElement(unlearnAllPos, unlearnAllRow, new UIElement("unlearn-all")
                         .setMaterial(new MaterialBlock(Material.BARRIER))
+                        .setModel(CustomModel.get(Material.BARRIER, "snippets", "gui", "unlearnall"))
                         .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnall")
                                 + (AdaptConfig.get().isHardcoreNoRefunds()
                                 ? " " + C.DARK_RED + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
