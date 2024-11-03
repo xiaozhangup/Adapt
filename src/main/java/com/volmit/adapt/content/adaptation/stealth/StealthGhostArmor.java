@@ -70,21 +70,15 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
     @Override
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
             if (!hasAdaptation(p)) {
-                Collection<AttributeModifier> c = p.getAttribute(Attribute.GENERIC_ARMOR).getModifiers();
-                for (AttributeModifier i : new ArrayList<>(c)) {
-                    if (i.getName().equals("adapt-ghost-armor")) {
-                        p.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(i);
-                    }
-                }
-                continue;
+                attribute.removeModifier(MODIFIER, MODIFIER_KEY);
             }
             double oldArmor = 0;
             double armor = getMaxArmorPoints(getLevelPercent(p));
             armor = Double.isNaN(armor) ? 0 : armor;
 
-            var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
-            var current = attribute.getModifier(MODIFIER, MODIFIER_KEY).getFirst();
+            var current = attribute.getModifier(MODIFIER, MODIFIER_KEY).isNotEmpty() ? attribute.getModifier(MODIFIER, MODIFIER_KEY).getFirst() : null;
             if (current != null) {
                 oldArmor = current.getAmount();
                 oldArmor = Double.isNaN(oldArmor) ? 0 : oldArmor;
@@ -107,12 +101,8 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             int damageXP = (int) Math.min(10, 2.5 * e.getDamage());
             xp(p,damageXP );
             J.s(() -> {
-                Collection<AttributeModifier> c = p.getAttribute(Attribute.GENERIC_ARMOR).getModifiers();
-                for (AttributeModifier i : new ArrayList<>(c)) {
-                    if (i.getName().equals("adapt-ghost-armor")) {
-                        p.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(i);
-                    }
-                }
+                var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
+                attribute.removeModifier(MODIFIER, MODIFIER_KEY);
             });
         }
     }
