@@ -19,21 +19,22 @@
 package com.volmit.adapt.content.adaptation.stealth;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.version.IAttribute;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
+import com.volmit.adapt.util.reflect.enums.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.UUID;
 import java.util.UUID;
 
 public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config> {
@@ -70,19 +71,21 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
     @Override
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
+            var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
+
             if (!hasAdaptation(p)) {
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+                continue;
             }
-            double oldArmor = 0;
+            double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY)
+                            .stream()
+                            .mapToDouble(IAttribute.Modifier::getAmount)
+                            .filter(d -> !Double.isNaN(d))
+                            .max()
+                            .orElse(0);;
             double armor = getMaxArmorPoints(getLevelPercent(p));
             armor = Double.isNaN(armor) ? 0 : armor;
 
-            var current = attribute.getModifier(MODIFIER, MODIFIER_KEY).isNotEmpty() ? attribute.getModifier(MODIFIER, MODIFIER_KEY).getFirst() : null;
-            if (current != null) {
-                oldArmor = current.getAmount();
-                oldArmor = Double.isNaN(oldArmor) ? 0 : oldArmor;
-            }
             if (oldArmor < armor) {
                 attribute.setModifier(MODIFIER, MODIFIER_KEY, Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))), AttributeModifier.Operation.ADD_NUMBER);
             } else if (oldArmor > armor) {
@@ -101,7 +104,8 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             int damageXP = (int) Math.min(10, 2.5 * e.getDamage());
             xp(p,damageXP );
             J.s(() -> {
-                var attribute = Version.get().getAttribute(p, Attribute.GENERIC_ARMOR);
+                var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
+                if (attribute == null) return;
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
             });
         }

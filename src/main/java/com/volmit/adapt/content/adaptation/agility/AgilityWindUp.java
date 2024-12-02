@@ -22,13 +22,17 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
+import com.volmit.adapt.util.reflect.enums.Attributes;
+import com.volmit.adapt.util.reflect.events.api.ReflectiveHandler;
+import com.volmit.adapt.util.reflect.events.api.entity.EntityDismountEvent;
+import com.volmit.adapt.util.reflect.events.api.entity.EntityMountEvent;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -54,8 +58,6 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
         setInitialCost(getConfig().initialCost);
         setInterval(120);
         ticksRunning = new HashMap<>();
-        Version.get().addEntityMountListener(ticksRunning::remove);
-        Version.get().addEntityDismountListener(ticksRunning::remove);
     }
 
     @Override
@@ -70,6 +72,20 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
         ticksRunning.remove(p);
     }
 
+    @ReflectiveHandler
+    public void on(EntityMountEvent event) {
+        if (event.getEntity().getType() != EntityType.PLAYER)
+            return;
+        ticksRunning.remove((Player) event.getEntity());
+    }
+
+    @ReflectiveHandler
+    public void on(EntityDismountEvent event) {
+        if (event.getEntity().getType() != EntityType.PLAYER)
+            return;
+        ticksRunning.remove((Player) event.getEntity());
+    }
+
     private double getWindupTicks(double factor) {
         return M.lerp(getConfig().windupTicksSlowest, getConfig().windupTicksFastest, factor);
     }
@@ -81,7 +97,7 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
     @Override
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            var attribute = Version.get().getAttribute(p, Attribute.GENERIC_MOVEMENT_SPEED);
+            var attribute = Version.get().getAttribute(p, Attributes.GENERIC_MOVEMENT_SPEED);
             if (attribute == null) continue;
 
             try {

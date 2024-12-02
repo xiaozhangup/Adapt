@@ -513,10 +513,7 @@ public interface Adaptation<T> extends Ticked, Component {
                     .setMaterial(new MaterialBlock(Material.RED_BED))
                     .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
                     .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
-                    .onLeftClick((e) -> {
-                        w.close();
-                        onGuiClose(player, true);
-                    }));
+                    .onLeftClick((e) -> onGuiClose(player, true)));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
@@ -533,6 +530,8 @@ public interface Adaptation<T> extends Ticked, Component {
         spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 0.855f);
         if (openPrevGui) {
             getSkill().openGui(player);
+        } else {
+            Adapt.instance.getGuiLeftovers().remove(player.getUniqueId().toString());
         }
     }
 

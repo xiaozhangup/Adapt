@@ -249,10 +249,7 @@ public interface Skill<T> extends Ticked, Component {
                     .addLore(Form.wrapWordsPrefixed(i.getDescription(), "" + C.GRAY, 45)) // Set to the actual Description
                     .addLore(lvl == 0 ? (C.DARK_GRAY + Localizer.dLocalize("snippets", "gui", "notlearned")) : (C.GRAY + Localizer.dLocalize("snippets", "gui", "level") + " " + C.WHITE + Form.toRoman(lvl)))
                     .setProgress(1D)
-                    .onLeftClick((e) -> {
-                        w.close();
-                        i.openGui(player);
-                    }));
+                    .onLeftClick((e) -> i.openGui(player)));
             ind++;
         }
 
@@ -264,10 +261,7 @@ public interface Skill<T> extends Ticked, Component {
                     .setMaterial(new MaterialBlock(Material.RED_BED))
                     .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
                     .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
-                    .onLeftClick((e) -> {
-                        w.close();
-                        onGuiClose(player, true, false);
-                    }));
+                    .onLeftClick((e) -> onGuiClose(player, true, false)));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
@@ -288,6 +282,8 @@ public interface Skill<T> extends Ticked, Component {
             } else {
                 AllSkillsGui.open(player);
             }
+        } else {
+            Adapt.instance.getGuiLeftovers().remove(player.getUniqueId().toString());
         }
     }
 }
