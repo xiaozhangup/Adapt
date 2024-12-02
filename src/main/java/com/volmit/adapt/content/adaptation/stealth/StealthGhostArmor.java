@@ -102,7 +102,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
         if (e.getEntity() instanceof Player p && hasAdaptation(p) && !e.isCancelled() && e.getDamage() > 0) {
             // Check if 2.5 * e.getDamage() is greater than 10 if so just set it to 10 otherwise use the value of 2.5 * e.getDamage()
             int damageXP = (int) Math.min(10, 2.5 * e.getDamage());
-            xp(p,damageXP );
+            xp(p ,damageXP);
             J.s(() -> {
                 var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
                 if (attribute == null) return;
