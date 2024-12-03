@@ -90,7 +90,10 @@ public class SkillsGui {
                         .setProgress(1D)
                         .addLore(C.UNDERLINE + "" + C.WHITE + i.getKnowledge() + C.RESET + " " + C.GRAY + Localizer.dLocalize("snippets", "gui", "knowledge"))
                         .addLore(C.ITALIC + "" + C.DARK_GREEN + adaptationLevel + " " + C.GRAY + Localizer.dLocalize("snippets", "gui", "powerused"))
-                        .onLeftClick((e) -> sk.openGui(true, player)));
+                        .onLeftClick((e) -> {
+                            w.close();
+                            sk.openGui(true, player);
+                        }));
             }
 
             if (AdaptConfig.get().isUnlearnAllButton()) {
@@ -122,7 +125,6 @@ public class SkillsGui {
                     .setName(C.WHITE + "查看所有属性")
                     .addLore(C.GRAY + "总计 21 种")
                     .onLeftClick((e) -> {
-                        w.close();
                         AllSkillsGui.open(player);
                     }));
 

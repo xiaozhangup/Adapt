@@ -261,12 +261,18 @@ public interface Skill<T> extends Ticked, Component {
                     .setMaterial(new MaterialBlock(Material.RED_BED))
                     .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
                     .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
-                    .onLeftClick((e) -> onGuiClose(player, true, false)));
+                    .onLeftClick((e) -> {
+                        w.close();
+                        onGuiClose(player, true, simple);
+                    }));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
         w.setTitle(getTitleDisplay() + C.BLACK + " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
-        w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple)));
+        w.onClosed((vv) -> J.s(() -> {
+            w.close();
+            onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple);
+        }));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);
     }

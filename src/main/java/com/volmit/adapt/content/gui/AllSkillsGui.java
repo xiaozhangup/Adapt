@@ -113,10 +113,7 @@ public class AllSkillsGui {
                 w.setElement(backPos, backRow, new UIElement("back")
                         .setMaterial(new MaterialBlock(Material.RED_BED))
                         .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
-                        .onLeftClick((e) -> {
-                            w.close();
-                            SkillsGui.open(player);
-                        }));
+                        .onLeftClick((e) -> SkillsGui.open(player)));
             }
 
             for (int slot : locked) { // 未解锁的显示未点亮

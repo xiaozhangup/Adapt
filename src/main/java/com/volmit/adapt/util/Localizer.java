@@ -88,8 +88,8 @@ public class Localizer {
                         || jsonObj.get(s1).getAsJsonObject().get(s2).getAsJsonObject().get(s3) == null
                         || jsonObj.get(s1).getAsJsonObject().get(s2).getAsJsonObject().get(s3).getAsString() == null) {
 
-                    Adapt.verbose("Your Language File is missing the following key: " + s1 + "." + s2 + "." + s3);
-                    Adapt.verbose("Loading English Language File FallBack");
+                    Adapt.warn("Your Language File is missing the following key: " + s1 + "." + s2 + "." + s3);
+                    Adapt.warn("Loading English Language File FallBack");
 
                     JsonObject jsonObjFallback;
                     File langFileFallback = new File(Adapt.instance.getDataFolder() + "/languages", AdaptConfig.get().getFallbackLanguageDontChangeUnlessYouKnowWhatYouAreDoing() + ".json");
