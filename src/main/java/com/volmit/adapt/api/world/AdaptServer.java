@@ -185,7 +185,7 @@ public class AdaptServer extends TickedObject {
             for (Skill<?> i : getSkillRegistry().getSkills()) {
                 for (Adaptation<?> j : i.getAdaptations()) {
                     if (j.isAdaptationRecipe(e.getRecipe()) && !j.hasAdaptation(p)) {
-                        Adapt.actionbar(p, C.RED + "Requires " + j.getDisplayName() + C.RED + " from " + i.getDisplayName());
+                        Adapt.actionbar(p, C.RED + "需要 " + j.getDisplayName() + C.RED + " 来 " + i.getDisplayName());
                         sp.play(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.5f, 1.8f);
                         e.setCancelled(true);
                     }

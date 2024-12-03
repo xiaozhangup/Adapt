@@ -28,6 +28,7 @@ import com.volmit.adapt.api.notification.TitleNotification;
 import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.api.xp.XPMultiplier;
+import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -211,7 +212,7 @@ public class PlayerSkillLine {
                     ActionBarNotification.builder()
                             .duration(450)
                             .group("know" + getLine())
-                            .title(kn + " " + p.getServer().getSkillRegistry().getSkill(getLine()).getShortName() + " Knowledge")
+                            .title(kn + " " + p.getServer().getSkillRegistry().getSkill(getLine()).getShortName() + " " + Localizer.dLocalize("snippets", "gui", "knowledge"))
                             .build());
 
         } else {

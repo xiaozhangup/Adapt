@@ -231,6 +231,34 @@
     "challenge_pickaxe_5m": {
       "title": "一段传奇",
       "description": "破坏 5,000,000 个方块"
+    },
+    "challenge_eat_100": {
+      "title": "这么多东西可以吃！",
+      "description": "吃掉超过 100 个物品！"
+    },
+    "challenge_eat_1000": {
+      "title": "无法满足的饥饿！",
+      "description": "吃掉超过 1,000 个物品！"
+    },
+    "challenge_eat_10000": {
+      "title": "永无止境的饥饿！",
+      "description": "吃掉超过 10,000 个物品！"
+    },
+    "challenge_harvest_100": {
+      "title": "丰收满满",
+      "description": "收获超过 100 株作物！"
+    },
+    "challenge_harvest_1000": {
+      "title": "大丰收",
+      "description": "收获超过 1,000 株作物！"
+    },
+    "challenge_swim_1nm": {
+      "title": "人类潜艇！",
+      "description": "游泳1海里（1,852格）"
+    },
+    "challenge_sneak_1k": {
+      "title": "膝盖疼痛",
+      "description": "潜行超过 1 公里（1,000格）"
     }
   },
   "items": {
@@ -809,6 +837,8 @@
       "lore1": "最大伤害"
     },
     "penalty": {
+      "name": "",
+      "description": "",
       "lore1": "如果饥饿度归零，将给予剧毒效果！"
     },
     "droptoinventory": {
@@ -928,6 +958,12 @@
       "lore1": "按住潜行键，并挖掘矿物",
       "lore2": "连锁挖矿范围",
       "lore3": "此技能不会将掉落物合并在一起！"
+    },
+    "silkspawner": {
+      "name": "精准采集刷怪箱镐",
+      "description": "破坏时使刷怪箱掉落",
+      "lore1": "使用精准破坏时可破坏刷怪箱",
+      "lore2": "潜行时可破坏刷怪箱"
     }
   },
   "ranged": {
@@ -1001,6 +1037,11 @@
       "description": "当使用末影物品或技能时，给予抗性提升",
       "lore1": "+ 被动效果：当你使用末影物品或技能时，给予抗性提升效果。",
       "lore2": "不包含便捷式末影箱。只对实际消耗的物品有效。"
+    },
+    "visage": {
+      "name": "裂隙面庞",
+      "description": "如果你的背包中有末影珍珠，可以防止末影人变得敌对。",
+      "lore1": "如果你的背包中有末影珍珠，末影人不会变得敌对。"
     }
   },
   "seaborn": {
@@ -1055,6 +1096,12 @@
       "name": "潜行加速",
       "description": "当潜行时给予速度效果",
       "lore1": "潜行速度"
+    },
+    "enderveil": {
+      "name": "虚空面纱",
+      "description": "不再需要南瓜来防止末影人攻击",
+      "lore1": "潜行时防止末影人攻击",
+      "lore2": "防止所有末影人攻击"
     }
   },
   "sword": {
