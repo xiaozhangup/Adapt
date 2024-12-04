@@ -12,6 +12,7 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.IO;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.JSONObject;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -35,7 +36,12 @@ public class AdvancementManager {
         player.getData().ensureGranted(key);
         Advancement advancement = advancements.get(key);
         try {
-            J.s(() -> advancement.grant(player.getPlayer(), true), 5);
+            J.s(() -> {
+                Player p = player.getPlayer();
+                if (p.isOnline()) {
+                    advancement.grant(p, true);
+                }
+            }, 5);
         } catch (Exception e) {
             Adapt.error("Failed to grant advancement " + key);
         }
