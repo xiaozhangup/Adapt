@@ -122,7 +122,7 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
 
                 if (!l.exists()) {
                     try {
-                        IO.writeAll(l, new JSONObject(new Gson().toJson(dummy)).toString(4));
+                        IO.writeAll(l, new JSONObject(Adapt.gson.toJson(dummy)).toString(4));
                     } catch (IOException e) {
                         e.printStackTrace();
                         config = dummy;
@@ -131,8 +131,8 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
                 }
 
                 try {
-                    config = new Gson().fromJson(IO.readAll(l), getConfigurationClass());
-                    IO.writeAll(l, new JSONObject(new Gson().toJson(config)).toString(4));
+                    config = Adapt.gson.fromJson(IO.readAll(l), getConfigurationClass());
+                    IO.writeAll(l, new JSONObject(Adapt.gson.toJson(config)).toString(4));
                 } catch (IOException e) {
                     e.printStackTrace();
                     config = dummy;
