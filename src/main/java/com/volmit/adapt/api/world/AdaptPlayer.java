@@ -171,7 +171,6 @@ public class AdaptPlayer extends TickedObject {
         String data = this.data.toJson();
 
         if (AdaptConfig.get().isUseSql()) {
-            Adapt.instance.getRedisSync().publish(uuid, data);
             Adapt.instance.getSqlManager().updateData(uuid, data);
         } else {
             IO.writeAll(getPlayerDataFile(uuid), new JSONObject(data).toString(4));
@@ -185,7 +184,6 @@ public class AdaptPlayer extends TickedObject {
         unregister();
 
         if (AdaptConfig.get().isUseSql()) {
-            Adapt.instance.getRedisSync().publish(uuid, data);
             Adapt.instance.getSqlManager().updateData(uuid, data);
         } else {
             IO.writeAll(getPlayerDataFile(uuid), new JSONObject(data).toString(4));
