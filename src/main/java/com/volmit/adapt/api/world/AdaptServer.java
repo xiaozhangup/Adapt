@@ -35,6 +35,7 @@ import com.volmit.adapt.content.item.ExperienceOrb;
 import com.volmit.adapt.content.item.KnowledgeOrb;
 import com.volmit.adapt.util.*;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,7 +56,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class AdaptServer extends TickedObject {
     private final ReentrantLock clearLock = new ReentrantLock();
-    private final Map<Player, AdaptPlayer> players = new ConcurrentHashMap<>();
+    private final Map<UUID, AdaptPlayer> players = new ConcurrentHashMap<>();
     @Getter
     private final List<SpatialXP> spatialTickets = new ArrayList<>();
     @Getter
@@ -112,16 +113,16 @@ public class AdaptServer extends TickedObject {
 
     public void join(Player p) {
         AdaptPlayer a = new AdaptPlayer(p);
-        players.put(p, a);
+        players.put(p.getUniqueId(), a);
     }
 
-    public void quit(Player p) {
-        Optional.ofNullable(players.remove(p)).ifPresent((ap) -> {
-            ap.unregister();
-            if (AdaptConfig.get().isUseSql()) {
-                Adapt.instance.getSqlManager().updateTime(p.getUniqueId(), 0L);
-            }
-        });
+    public void quit(UUID p) {
+        AdaptPlayer a = players.remove(p);
+        if (a == null) return;
+        a.unregister();
+        if (AdaptConfig.get().isUseSql()) {
+            Adapt.instance.getSqlManager().updateTime(p, 0L);
+        }
     }
 
     @Override
@@ -179,7 +180,7 @@ public class AdaptServer extends TickedObject {
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        quit(p);
+        quit(p.getUniqueId());
     }
 
     @EventHandler
@@ -209,7 +210,7 @@ public class AdaptServer extends TickedObject {
                 return;
 
             try {
-                players.keySet().removeIf(player -> !player.isOnline());
+                players.values().removeIf(AdaptPlayer::shouldUnload);
             } finally {
                 clearLock.unlock();
             }
@@ -240,9 +241,16 @@ public class AdaptServer extends TickedObject {
         return new PlayerData();
     }
 
+    @NonNull
+    public Optional<PlayerData> getPlayerData(@NonNull UUID uuid) {
+        return Optional.ofNullable(players.get(uuid))
+                .map(AdaptPlayer::getData);
+    }
+
     public AdaptPlayer getPlayer(Player p) {
-        if (players.containsKey(p)) {
-            return players.get(p);
+        var u = p.getUniqueId();
+        if (players.containsKey(u)) {
+            return players.get(u);
         }
         Adapt.warn("Failed to find AdaptPlayer for " + p.getName() + " (" + p.getUniqueId() + ")");
         throw new RuntimeException("Failed to find AdaptPlayer for " + p.getName() + " (" + p.getUniqueId() + ")");
@@ -250,9 +258,10 @@ public class AdaptServer extends TickedObject {
 
     public List<Player> getAdaptPlayers() {
         List<Player> result = new ArrayList<>(players.size());
-        for (Map.Entry<Player, AdaptPlayer> entry : players.entrySet()) {
-            if (entry.getValue().isActive()) {
-                result.add(entry.getKey());
+        for (Map.Entry<UUID, AdaptPlayer> entry : players.entrySet()) {
+            var v = entry.getValue();
+            if (v.isActive()) {
+                result.add(v.getPlayer());
             }
         }
         return result;

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.api.world;
 
-import com.google.gson.Gson;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.notification.AdvancementNotification;
@@ -56,6 +55,7 @@ public class AdaptPlayer extends TickedObject {
     private long lastloc;
     private Vector velocity;
     private Location lastpos;
+    private long lastSeen = -1;
 
     public AdaptPlayer(Player p) {
         super("players", p.getUniqueId().toString(), 50);
@@ -168,9 +168,10 @@ public class AdaptPlayer extends TickedObject {
     private void save() {
         UUID uuid = player.getUniqueId();
         if (this.data == null) return;
-        String data = Adapt.gson.toJson(this.data);
+        String data = this.data.toJson();
 
         if (AdaptConfig.get().isUseSql()) {
+            Adapt.instance.getRedisSync().publish(uuid, data);
             Adapt.instance.getSqlManager().updateData(uuid, data);
         } else {
             IO.writeAll(getPlayerDataFile(uuid), new JSONObject(data).toString(4));
@@ -180,10 +181,11 @@ public class AdaptPlayer extends TickedObject {
     @SneakyThrows
     private void unSave() {
         UUID uuid = player.getUniqueId();
-        String data = Adapt.gson.toJson(new PlayerData());
+        String data = new PlayerData().toJson();
         unregister();
 
         if (AdaptConfig.get().isUseSql()) {
+            Adapt.instance.getRedisSync().publish(uuid, data);
             Adapt.instance.getSqlManager().updateData(uuid, data);
         } else {
             IO.writeAll(getPlayerDataFile(uuid), new JSONObject(data).toString(4));
@@ -223,6 +225,15 @@ public class AdaptPlayer extends TickedObject {
         });
     }
 
+    public boolean shouldUnload() {
+        if (player.isOnline()) {
+            lastSeen = M.ms();
+            return false;
+        }
+
+        return lastSeen + 60_000 < System.currentTimeMillis();
+    }
+
     private PlayerData loadPlayerData() {
         boolean upload = false;
         if (AdaptConfig.get().isUseSql()) {
@@ -252,7 +263,7 @@ public class AdaptPlayer extends TickedObject {
                 if (upload) {
                     Adapt.instance.getSqlManager().updateData(player.getUniqueId(), text);
                 }
-                return Adapt.gson.fromJson(text, PlayerData.class);
+                return PlayerData.fromJson(text);
             } catch (Throwable ignored) {
                 Adapt.verbose("Failed to load player data for " + player.getName() + " (" + player.getUniqueId() + ")");
             }
