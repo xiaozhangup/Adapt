@@ -21,7 +21,7 @@ package com.volmit.adapt.content.adaptation.architect;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.enums.Particles;
+import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -41,6 +41,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Painting;
 
 public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Config> {
     private static final BlockData AIR = Material.AIR.createBlockData();
@@ -210,6 +213,13 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         if (!block.getType().isAir()) {
             return false;
         }
+
+        if(!block.getWorld()
+                .getNearbyEntities(block.getLocation()
+                        .add(.5, .5, .5), .5, .5, .5, entity ->
+                        entity instanceof ItemFrame || entity instanceof Painting).isEmpty())
+            return false;
+
 
         J.s(() -> {
             block.setBlockData(BLOCK);

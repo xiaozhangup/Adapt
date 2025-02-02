@@ -29,7 +29,7 @@ import com.volmit.adapt.content.adaptation.seaborrne.*;
 import net.md_5.bungee.api.ChatColor;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.enums.Attributes;
+import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
