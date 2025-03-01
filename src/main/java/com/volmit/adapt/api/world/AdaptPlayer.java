@@ -193,6 +193,8 @@ public class AdaptPlayer extends TickedObject {
     @Override
     public void unregister() {
         isActive = false;
+        not.unregister();
+        actionBarNotifier.unregister();
         super.unregister();
         save();
     }

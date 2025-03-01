@@ -29,9 +29,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -47,8 +47,8 @@ public class Notifier extends TickedObject {
     public Notifier(AdaptPlayer target) {
         super("notifications", target.getPlayer().getUniqueId() + "-notify", 97);
         queue = new ArrayList<>();
-        lastSkills = new HashMap<>();
-        lastSkillValues = new HashMap<>();
+        lastSkills = new ConcurrentHashMap<>();
+        lastSkillValues = new ConcurrentHashMap<>();
         busyTicks = 0;
         delayTicks = 0;
         this.target = target;
