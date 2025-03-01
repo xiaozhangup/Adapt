@@ -165,11 +165,11 @@ allprojects {
     }
 }
 
-dependencies {
-    compileOnly(project(":velocity")) {
-        transitive = false
-    }
-}
+//dependencies {
+//    compileOnly(project(":velocity")) {
+//        transitive = false
+//    }
+//}
 
 /**
  * Configure Adapt for shading
@@ -180,8 +180,8 @@ shadowJar {
         dependsOn(":version:${it.key}:build")
         from(project(":version:${it.key}").tasks.named("jar", Jar).get().archiveFile)
     }
-    dependsOn(":velocity:build")
-    from(project(":velocity").tasks.named("jar", Jar).get().archiveFile)
+//    dependsOn(":velocity:build")
+//    from(project(":velocity").tasks.named("jar", Jar).get().archiveFile)
 
     append("plugin.yml")
     relocate 'manifold', 'com.volmit.adapt.util.manifold'
@@ -301,6 +301,6 @@ if (JavaVersion.current() != JavaVersion.VERSION_1_8 &&
     }
 }
 
-idea.project.settings.taskTriggers {
-    afterSync(":velocity:generateTemplates")
-}
+//idea.project.settings.taskTriggers {
+//    afterSync(":velocity:generateTemplates")
+//}

@@ -40,7 +40,7 @@ public class MultiBurst {
                 corePoolSize,
                 maxPoolSize,
                 10L, TimeUnit.SECONDS,
-                new SynchronousQueue<>(),
+                new LinkedBlockingDeque<>(16),
                 r -> {
                     Thread t = Executors.defaultThreadFactory().newThread(r);
                     t.setName("Adapt Dynamic Workgroup " + tid.incrementAndGet());
@@ -52,7 +52,7 @@ public class MultiBurst {
                 },
                 (r, executor) -> {
                     long now = System.currentTimeMillis();
-                    if (now - lastWarningTime.get() > 10_000) { // 10秒内最多弹出一次
+                    if (now - lastWarningTime.get() > 90_000) { // 90秒内最多弹出一次
                         lastWarningTime.set(now);
                         Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. (Current " + executor.getTaskCount() + " tasks)");
                     }
