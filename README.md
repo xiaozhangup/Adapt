@@ -2,6 +2,23 @@
 
 [![image](https://github.com/VolmitSoftware/Adapt/raw/main/storepage/adapt-tc.png)](https://github.com/VolmitSoftware/Adapt/wiki/Why-did-you-click)
 
+## 修改声明如下
+
+本项目仅针对 HAPPYLAND AssiahLand 服务器的需求进行修改，可能不能直接在其他服务器运行
+### 修改内容如下：
+```
+   - 移除原版的 Redis 同步机制, 改用数据库记录时间戳来进行同步锁避免同步问题
+   - 新增了一个精简的技能面板，书架默认打开精简面板
+   - 移除了自带的保护内容，新增了我们自己的保护插件兼容
+   - 修改了技能的配色和图标，更加统一和美观
+   - 部分技能的代码进行了修改，提高兼容性和性能
+   - 线程执行相关部分被大量修改，减少占用
+   - 修复了原版的各种异常占用的问题，优化了部分地方的实现
+   - 修复了因为使用 Spigot 服务端构建导致在 Paper 上遇到的问题
+   - 移除了我们不需要的版本的支持，提高构建速度
+   - 更多详情见提交记录
+```
+
 ## Overview
 
 [![gitlocalized ](https://gitlocalize.com/repo/8085/whole_project/badge.svg)](https://gitlocalize.com/repo/8085/whole_project?utm_source=badge)
