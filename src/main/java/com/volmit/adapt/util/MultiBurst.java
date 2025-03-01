@@ -21,29 +21,48 @@ package com.volmit.adapt.util;
 import com.volmit.adapt.Adapt;
 import lombok.Getter;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MultiBurst {
-    public static MultiBurst burst = new MultiBurst(Runtime.getRuntime().availableProcessors());
+    public static final MultiBurst burst = new MultiBurst();
     @Getter
     private final ExecutorService service;
-    private int tid;
+    private final AtomicInteger tid = new AtomicInteger(0);
+    private final AtomicLong lastWarningTime = new AtomicLong(0);
 
-    public MultiBurst(int tc) {
-        service = Executors.newFixedThreadPool(tc, r -> {
-            tid++;
-            Thread t = new Thread(r);
-            t.setName("Adapt Workgroup " + tid);
-            t.setPriority(Thread.MAX_PRIORITY);
-            t.setUncaughtExceptionHandler((et, e) ->
-            {
-                Adapt.info("Exception encountered in " + et.getName());
-                e.printStackTrace();
-            });
+    public MultiBurst() {
+        int corePoolSize = 2;
+        int maxPoolSize = 6;
 
-            return t;
-        });
+        service = new ThreadPoolExecutor(
+                corePoolSize,
+                maxPoolSize,
+                10L, TimeUnit.SECONDS,
+                new SynchronousQueue<>(),
+                r -> {
+                    Thread t = Executors.defaultThreadFactory().newThread(r);
+                    t.setName("Adapt Dynamic Workgroup " + tid.incrementAndGet());
+                    t.setUncaughtExceptionHandler((et, e) -> {
+                        Adapt.info("Exception encountered in " + et.getName());
+                        e.printStackTrace();
+                    });
+                    return t;
+                },
+                (r, executor) -> {
+                    long now = System.currentTimeMillis();
+                    if (now - lastWarningTime.get() > 10_000) { // 10秒内最多弹出一次
+                        lastWarningTime.set(now);
+                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread.");
+                    }
+                    if (!executor.isShutdown()) {
+                        r.run(); // 确保任务执行
+                    }
+                }
+        );
+
+        ((ThreadPoolExecutor) service).allowCoreThreadTimeOut(true);
     }
 
     public void burst(Runnable... r) {
