@@ -34,7 +34,7 @@ public class MultiBurst {
 
     public MultiBurst() {
         int corePoolSize = 2;
-        int maxPoolSize = 6;
+        int maxPoolSize = 8;
 
         service = new ThreadPoolExecutor(
                 corePoolSize,
@@ -54,7 +54,7 @@ public class MultiBurst {
                     long now = System.currentTimeMillis();
                     if (now - lastWarningTime.get() > 10_000) { // 10秒内最多弹出一次
                         lastWarningTime.set(now);
-                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread.");
+                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. (Current " + executor.getTaskCount() + " tasks)");
                     }
                     if (!executor.isShutdown()) {
                         r.run(); // 确保任务执行
