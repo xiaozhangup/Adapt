@@ -24,6 +24,8 @@ import lombok.Getter;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.concurrent.atomic.LongAdder;
 
 public class MultiBurst {
     public static final MultiBurst burst = new MultiBurst();
@@ -31,16 +33,17 @@ public class MultiBurst {
     private final ExecutorService service;
     private final AtomicInteger tid = new AtomicInteger(0);
     private final AtomicLong lastWarningTime = new AtomicLong(0);
+    private final QPSCounter qpsCounter = new QPSCounter();
 
     public MultiBurst() {
         int corePoolSize = 2;
-        int maxPoolSize = 8;
+        int maxPoolSize = Math.max(8, Runtime.getRuntime().availableProcessors() - 4);
 
         service = new ThreadPoolExecutor(
                 corePoolSize,
                 maxPoolSize,
                 10L, TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(16),
+                new LinkedBlockingDeque<>(512),
                 r -> {
                     Thread t = Executors.defaultThreadFactory().newThread(r);
                     t.setName("Adapt Dynamic Workgroup " + tid.incrementAndGet());
@@ -52,10 +55,11 @@ public class MultiBurst {
                 },
                 (r, executor) -> {
                     long now = System.currentTimeMillis();
-                    if (now - lastWarningTime.get() > 90_000) { // 90秒内最多弹出一次
+                    if (now - lastWarningTime.get() > 360_000) { // 360秒内最多弹出一次
                         lastWarningTime.set(now);
-                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. (Current " + executor.getTaskCount() + " tasks)");
+                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. (" + qpsCounter.getQPS() + " overloaded tasks / s)");
                     }
+                    qpsCounter.record();
                     if (!executor.isShutdown()) {
                         r.run(); // 确保任务执行
                     }
@@ -85,5 +89,42 @@ public class MultiBurst {
 
     public void lazy(Runnable o) {
         service.execute(o);
+    }
+
+    private static class QPSCounter {
+        private static final int WINDOW_SIZE = 3; // 统计最近 3 秒
+        private final LongAdder[] slots = new LongAdder[WINDOW_SIZE];
+        private volatile long lastSecond;
+
+        public QPSCounter() {
+            for (int i = 0; i < WINDOW_SIZE; i++) {
+                slots[i] = new LongAdder();
+            }
+            lastSecond = System.currentTimeMillis() / 1000;
+        }
+
+        public void record() {
+            long now = System.currentTimeMillis() / 1000;
+            int index = (int) (now % WINDOW_SIZE);
+
+            if (now != lastSecond) {
+                synchronized (this) {
+                    if (now != lastSecond) {
+                        slots[(int) (lastSecond % WINDOW_SIZE)].reset();
+                        lastSecond = now;
+                    }
+                }
+            }
+
+            slots[index].increment();
+        }
+
+        public double getQPS() {
+            long sum = 0;
+            for (LongAdder slot : slots) {
+                sum += slot.sum();
+            }
+            return sum / (double) WINDOW_SIZE;
+        }
     }
 }
