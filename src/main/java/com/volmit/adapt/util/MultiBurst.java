@@ -55,7 +55,7 @@ public class MultiBurst {
                 },
                 (r, executor) -> {
                     long now = System.currentTimeMillis();
-                    if (now - lastWarningTime.get() > 360_000) { // 360秒内最多弹出一次
+                    if (now - lastWarningTime.get() > 1200_000) { // 1200秒内最多弹出一次
                         lastWarningTime.set(now);
                         Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. (" + qpsCounter.getQPS() + " overloaded tasks / s)");
                     }
@@ -119,12 +119,12 @@ public class MultiBurst {
             slots[index].increment();
         }
 
-        public double getQPS() {
+        public int getQPS() {
             long sum = 0;
             for (LongAdder slot : slots) {
                 sum += slot.sum();
             }
-            return sum / (double) WINDOW_SIZE;
+            return (int) (sum / (double) WINDOW_SIZE);
         }
     }
 }
