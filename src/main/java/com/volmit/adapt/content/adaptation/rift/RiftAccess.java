@@ -24,7 +24,9 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.content.item.BoundEnderPearl;
 import com.volmit.adapt.util.*;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import manifold.rt.api.util.Pair;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -37,17 +39,19 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
 
 public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
-    private final Map<Location, List<InventoryView>> activeViewsMap = new ConcurrentHashMap<>();
-
+    private final Map<Pair<ChunkPos, Location>, List<InventoryView>> activeViewsMap = new ConcurrentHashMap<>();
+    private final Map<ChunkPos, AtomicInteger> tickets = new ConcurrentHashMap<>();
 
     public RiftAccess() {
         super("rift-access");
@@ -162,7 +166,8 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         loadChunkAsync(b.getLocation(), chunk -> {
             if (b.getState() instanceof InventoryHolder holder) {
                 InventoryView view = p.openInventory(holder.getInventory());
-                activeViewsMap.computeIfAbsent(b.getLocation(), k -> new ArrayList<>()).add(view);
+                if (view == null) return;
+                activeViewsMap.computeIfAbsent(Pair.make(new ChunkPos(chunk).add(), b.getLocation()), k -> new ArrayList<>()).add(view);
             }
             sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
             sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
@@ -175,15 +180,15 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
     }
 
     private void checkActiveViews() {
-        Iterator<Map.Entry<Location, List<InventoryView>>> mapIterator = activeViewsMap.entrySet().iterator();
+        Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator = activeViewsMap.entrySet().iterator();
         while (mapIterator.hasNext()) {
-            Map.Entry<Location, List<InventoryView>> entry = mapIterator.next();
+            Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry = mapIterator.next();
             removeInvalidViews(entry);
             removeEntryIfViewsEmpty(mapIterator, entry);
         }
     }
 
-    private void removeInvalidViews(Map.Entry<Location, List<InventoryView>> entry) {
+    private void removeInvalidViews(Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry) {
         List<InventoryView> views = entry.getValue();
         for (int ii = views.size() - 1; ii >= 0; ii--) {
             InventoryView i = views.get(ii);
@@ -198,10 +203,11 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         return !i.getPlayer().getOpenInventory().equals(i) || (location == null || !isStorage(location.getBlock().getBlockData()));
     }
 
-    private void removeEntryIfViewsEmpty(Iterator<Map.Entry<Location, List<InventoryView>>> mapIterator, Map.Entry<Location, List<InventoryView>> entry) {
+    private void removeEntryIfViewsEmpty(Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator, Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry) {
         List<InventoryView> views = entry.getValue();
         if (views.isEmpty()) {
             mapIterator.remove();
+            entry.getKey().getFirst().remove();
         }
     }
 
@@ -274,5 +280,41 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         int baseCost = 3;
         double costFactor = 0.2;
         int initialCost = 15;
+    }
+
+    @EqualsAndHashCode
+    private class ChunkPos {
+        @EqualsAndHashCode.Exclude
+        private final WeakReference<World> world;
+        private final String name;
+        private final int x, z;
+
+        private ChunkPos(Chunk chunk) {
+            this.world = new WeakReference<>(chunk.getWorld());
+            this.name = chunk.getWorld().getName();
+            this.x = chunk.getX();
+            this.z = chunk.getZ();
+        }
+
+        public ChunkPos add() {
+            World world = this.world.get();
+            if (world == null) return this;
+            if (tickets.computeIfAbsent(this, k -> new AtomicInteger()).getAndIncrement() == 0)
+                world.addPluginChunkTicket(x, z, Adapt.instance);
+            return this;
+        }
+
+        public void remove() {
+            World world = this.world.get();
+            if (world == null) {
+                tickets.remove(this);
+                return;
+            }
+            if (tickets.computeIfAbsent(this, k -> new AtomicInteger()).decrementAndGet() <= 0) {
+                world.removePluginChunkTicket(x, z, Adapt.instance);
+                world.unloadChunkRequest(x, z);
+                tickets.remove(this);
+            }
+        }
     }
 }
