@@ -91,12 +91,7 @@ public class AdvancementManager {
 
         if (!AdaptConfig.get().isAdvancements() || !enabled.compareAndSet(false, true))
             return;
-        if (AdaptConfig.get().isUseSql()) {
-            AdaptConfig.SqlSettings sql = AdaptConfig.get().getSql();
-            main.enableMySQL(sql.getUsername(), sql.getPassword(), sql.getDatabase(), sql.getHost(), sql.getPort(), sql.getPoolSize(), sql.getConnectionTimeout());
-        } else {
-            main.enableSQLite(instance.getDataFile("data", "advancements.db"));
-        }
+        main.enableInMemory();
 
         for (Skill<?> i : instance.getAdaptServer().getSkillRegistry().getSkills()) {
             AdaptAdvancement aa = i.buildAdvancements();
