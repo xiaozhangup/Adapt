@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.api.adaptation;
 
-import art.arcane.amulet.io.FileWatcher;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
@@ -85,31 +84,6 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
     @Override
     public void registerConfiguration(Class<T> type) {
         this.configType = type;
-        File file = Adapt.instance.getDataFile("adapt", "adaptations", getName() + ".json");
-        FileWatcher fw = new FileWatcher(file);
-        fw.checkModified();
-        J.a(() -> {
-            fw.checkModified();
-            Adapt.instance.getTicker().register(new TickedObject("config", "config-adaptation-" + getName(), 1000) {
-                @Override
-                public void onTick() {
-                    try {
-                        if (!AdaptConfig.get().isHotReload()) {
-                            return;
-                        }
-                        if (fw.checkModified() && file.exists()) {
-                            config = null;
-                            getConfig();
-                            Adapt.info("Hotloaded " + file.getPath());
-                            Adapt.hotloaded();
-                            fw.checkModified();
-                        }
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }, 20);
     }
 
     @Override

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.api.skill;
 
-import art.arcane.amulet.io.FileWatcher;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.Adaptation;
@@ -96,24 +95,6 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     @Override
     public void registerConfiguration(Class<T> type) {
         this.configType = type;
-        File file = Adapt.instance.getDataFile("adapt", "skills", getName() + ".json");
-        FileWatcher fw = new FileWatcher(file);
-        fw.checkModified();
-        J.a(() -> {
-            fw.checkModified();
-            Adapt.instance.getTicker().register(new TickedObject("config", "config-" + getName(), 1000) {
-                @Override
-                public void onTick() {
-                    if (fw.checkModified() && file.exists()) {
-                        config = null;
-                        getConfig();
-                        Adapt.info("Hotloaded " + file.getPath());
-                        Adapt.hotloaded();
-                        fw.checkModified();
-                    }
-                }
-            });
-        }, 20);
     }
 
     @Override

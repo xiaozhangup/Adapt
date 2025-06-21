@@ -19,8 +19,6 @@
 
 package com.volmit.adapt.util.decree.virtual;
 
-
-import art.arcane.amulet.format.Form;
 import art.arcane.chrono.ChronoLatch;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.C;
@@ -40,6 +38,7 @@ import lombok.Data;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +59,7 @@ public class VirtualDecreeCommand {
             "<gradient:#6ad41e:#9a1ed4>"
     };
     private ChronoLatch cl = new ChronoLatch(1000);
+    private static DecimalFormat DF;
 
     private VirtualDecreeCommand(Class<?> type, VirtualDecreeCommand parent, List<VirtualDecreeCommand> nodes, DecreeNode node) {
         this.parent = parent;
@@ -358,7 +358,7 @@ public class VirtualDecreeCommand {
                     return null;
                 }
             } catch (IndexOutOfBoundsException e) {
-                sender.sendMessage(C.YELLOW + "Unknown Parameter: " + stringParam + " (" + Form.getNumberSuffixThStRd(x + 1) + " argument)");
+                sender.sendMessage(C.YELLOW + "Unknown Parameter: " + stringParam + " (" + getNumberSuffixThStRd(x + 1) + " argument)");
             }
         }
 
@@ -454,7 +454,7 @@ public class VirtualDecreeCommand {
             }
 
             if (i.isRequired() && value == null) {
-                sender.sendMessage(C.RED + "Missing argument \"" + i.getName() + "\" (" + i.getType().getSimpleName() + ") as the " + Form.getNumberSuffixThStRd(vm + 1) + " argument.");
+                sender.sendMessage(C.RED + "Missing argument \"" + i.getName() + "\" (" + i.getType().getSimpleName() + ") as the " + getNumberSuffixThStRd(vm + 1) + " argument.");
                 sender.sendDecreeHelpNode(this);
                 return false;
             }
@@ -571,5 +571,47 @@ public class VirtualDecreeCommand {
         }
 
         return false;
+    }
+
+    public static String getNumberSuffixThStRd(int day) {
+        if (day >= 11 && day <= 13) {
+            return f(day) + "th";
+        }
+        return switch (day % 10) {
+            case 1 -> f(day) + "st";
+            case 2 -> f(day) + "nd";
+            case 3 -> f(day) + "rd";
+            default -> f(day) + "th";
+        };
+    }
+
+    public static String f(double i) {
+        return f(i, 1);
+    }
+
+    public static String f(double i, int p) {
+        String form = "#";
+
+        if (p > 0) {
+            form = form + "." + repeat("#", p);
+        }
+
+        DF = new DecimalFormat(form);
+
+        return DF.format(i).replaceAll("\\Q,\\E", ".");
+    }
+
+    public static String repeat(String s, int n) {
+        if (s == null) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < n; i++) {
+            sb.append(s);
+        }
+
+        return sb.toString();
     }
 }

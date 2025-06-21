@@ -18,7 +18,6 @@
 
 package com.volmit.adapt;
 
-import art.arcane.amulet.io.FolderWatcher;
 import com.google.gson.Gson;
 import com.jeff_media.customblockdata.CustomBlockData;
 import com.volmit.adapt.api.advancement.AdvancementManager;
@@ -74,8 +73,6 @@ public class Adapt extends VolmitPlugin {
     private Ticker ticker;
     @Getter
     private AdaptServer adaptServer;
-    @Getter
-    private FolderWatcher configWatcher;
     @Getter
     private SQLManager sqlManager;
     @Getter

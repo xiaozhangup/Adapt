@@ -1,12 +1,10 @@
 package com.volmit.adapt.util;
 
-import art.arcane.amulet.io.FileWatcher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
-import com.volmit.adapt.api.tick.TickedObject;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.collection.KMap;
 import org.bukkit.Material;
@@ -39,7 +37,6 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
     public static void clear() {
         if (updateChecker == null)
             return;
-        updateChecker.unregister();
         updateChecker = null;
     }
 
@@ -57,19 +54,14 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
         return itemStack;
     }
 
-    private static class UpdateChecker extends TickedObject {
+    private static class UpdateChecker {
         private final Object lock = new Object();
         private final File modelsFile;
-        private final FileWatcher fw;
         private final KMap<String, CustomModel> cache = new KMap<>();
         private JsonObject json = new JsonObject();
 
         public UpdateChecker() {
-            super("config", "config-models", 1000);
             modelsFile = instance.getDataFile("adapt", "models.json");
-            fw = new FileWatcher(modelsFile);
-            fw.checkModified();
-            instance.getTicker().register(this);
 
             try {
                 readFile();
@@ -79,26 +71,7 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
             }
         }
 
-        @Override
-        public void onTick() {
-            if (!AdaptConfig.get().isHotReload())
-                return;
 
-            synchronized (lock) {
-                if (!fw.checkModified() || !modelsFile.exists())
-                    return;
-
-                try {
-                    readFile();
-                    cache.clear();
-                    Adapt.info("Hotloaded " + modelsFile.getPath());
-                    fw.checkModified();
-                } catch (IOException e) {
-                    Adapt.error("Failed to read models.json");
-                    e.printStackTrace();
-                }
-            }
-        }
 
         public CustomModel get(Material fallback, String... path) {
             return cache.computeIfAbsent(String.join("", path), k -> {
@@ -165,7 +138,6 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
             synchronized (lock) {
                 var s = GSON.toJson(json);
                 IO.writeAll(modelsFile, s);
-                fw.checkModified();
             }
         }
     }
