@@ -20,14 +20,13 @@ package com.volmit.adapt.content.adaptation.discovery;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.version.IAttribute;
+import com.volmit.adapt.api.version.Modifier;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.collection.KMap;
 import com.volmit.adapt.util.reflect.registries.Attributes;
 import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -135,7 +134,7 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
                 } else {
                     double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY)
                             .stream()
-                            .mapToDouble(IAttribute.Modifier::getAmount)
+                            .mapToDouble(Modifier::getAmount)
                             .max()
                             .orElse(0);
 

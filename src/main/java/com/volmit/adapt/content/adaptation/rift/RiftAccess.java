@@ -22,6 +22,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
+import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.content.item.BoundEnderPearl;
 import com.volmit.adapt.util.*;
 import lombok.EqualsAndHashCode;
@@ -64,7 +65,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         setCostFactor(getConfig().costFactor);
         setInitialCost(getConfig().initialCost);
         setInterval(1000);
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("rift-remote-access")
                 .ingredient(Material.ENDER_PEARL)
                 .ingredient(Material.COMPASS)

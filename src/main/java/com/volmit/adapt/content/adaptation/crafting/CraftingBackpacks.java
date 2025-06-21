@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.crafting;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +44,7 @@ public class CraftingBackpacks extends SimpleAdaptation<CraftingBackpacks.Config
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(17779);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("crafting-backpacks")
                 .ingredient(new MaterialChar('I', Material.LEATHER))
                 .ingredient(new MaterialChar('L', Material.LEAD))

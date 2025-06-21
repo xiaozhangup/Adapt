@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.herbalism;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +44,7 @@ public class HerbalismTerralid extends SimpleAdaptation<HerbalismTerralid.Config
         setInterval(17771);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("herbalism-dirt-terralid")
                 .ingredient(new MaterialChar('S', Material.WHEAT_SEEDS))
                 .ingredient(new MaterialChar('D', Material.DIRT))

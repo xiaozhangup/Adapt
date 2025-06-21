@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.blocking;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +44,7 @@ public class BlockingHorseArmorer extends SimpleAdaptation<BlockingHorseArmorer.
         setInterval(17774);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-horsearmorerleather")
                 .ingredient(new MaterialChar('I', Material.LEATHER))
                 .ingredient(new MaterialChar('U', Material.SADDLE))
@@ -53,7 +54,7 @@ public class BlockingHorseArmorer extends SimpleAdaptation<BlockingHorseArmorer.
                         "III"))
                 .result(new ItemStack(Material.LEATHER_HORSE_ARMOR, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-horsearmoreriron")
                 .ingredient(new MaterialChar('I', Material.IRON_INGOT))
                 .ingredient(new MaterialChar('U', Material.SADDLE))
@@ -63,7 +64,7 @@ public class BlockingHorseArmorer extends SimpleAdaptation<BlockingHorseArmorer.
                         "III"))
                 .result(new ItemStack(Material.IRON_HORSE_ARMOR, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-horsearmorergold")
                 .ingredient(new MaterialChar('I', Material.GOLD_INGOT))
                 .ingredient(new MaterialChar('U', Material.SADDLE))
@@ -73,7 +74,7 @@ public class BlockingHorseArmorer extends SimpleAdaptation<BlockingHorseArmorer.
                         "III"))
                 .result(new ItemStack(Material.GOLDEN_HORSE_ARMOR, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-horsearmorerdiamond")
                 .ingredient(new MaterialChar('I', Material.DIAMOND))
                 .ingredient(new MaterialChar('U', Material.SADDLE))

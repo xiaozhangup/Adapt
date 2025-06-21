@@ -20,6 +20,7 @@ package com.volmit.adapt.content.adaptation.crafting;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
+import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -42,7 +43,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(80248);
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-iron-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.IRON_INGOT)
@@ -55,7 +56,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.IRON_INGOT)
                 .result(new ItemStack(Material.IRON_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-gold-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.GOLD_INGOT)
@@ -68,7 +69,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.GOLD_INGOT)
                 .result(new ItemStack(Material.GOLD_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-copper-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.COPPER_INGOT)
@@ -81,7 +82,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.COPPER_INGOT)
                 .result(new ItemStack(Material.COPPER_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-lapis-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.LAPIS_LAZULI)
@@ -94,7 +95,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.LAPIS_LAZULI)
                 .result(new ItemStack(Material.LAPIS_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-redstone-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.REDSTONE)
@@ -107,7 +108,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.REDSTONE)
                 .result(new ItemStack(Material.REDSTONE_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-emerald-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.EMERALD)
@@ -120,7 +121,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.EMERALD)
                 .result(new ItemStack(Material.EMERALD_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-diamond-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.DIAMOND)
@@ -133,7 +134,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.DIAMOND)
                 .result(new ItemStack(Material.DIAMOND_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-coal-ore")
                 .ingredient(Material.STONE)
                 .ingredient(Material.COAL)
@@ -148,7 +149,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .build());
 
         // Use Deepslate
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-iron-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.IRON_INGOT)
@@ -161,7 +162,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.IRON_INGOT)
                 .result(new ItemStack(Material.DEEPSLATE_IRON_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-gold-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.GOLD_INGOT)
@@ -174,7 +175,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.GOLD_INGOT)
                 .result(new ItemStack(Material.DEEPSLATE_GOLD_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-copper-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.COPPER_INGOT)
@@ -187,7 +188,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.COPPER_INGOT)
                 .result(new ItemStack(Material.DEEPSLATE_COPPER_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-lapis-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.LAPIS_LAZULI)
@@ -200,7 +201,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.LAPIS_LAZULI)
                 .result(new ItemStack(Material.DEEPSLATE_LAPIS_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-redstone-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.REDSTONE)
@@ -213,7 +214,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.REDSTONE)
                 .result(new ItemStack(Material.DEEPSLATE_REDSTONE_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-emerald-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.EMERALD)
@@ -226,7 +227,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.EMERALD)
                 .result(new ItemStack(Material.DEEPSLATE_EMERALD_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-diamond-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.DIAMOND)
@@ -239,7 +240,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.DIAMOND)
                 .result(new ItemStack(Material.DEEPSLATE_DIAMOND_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-deepslate-coal-ore")
                 .ingredient(Material.DEEPSLATE)
                 .ingredient(Material.COAL)
@@ -254,7 +255,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .build());
 
 // Use Nether Bricks
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-nether-gold-ore")
                 .ingredient(Material.NETHER_BRICKS)
                 .ingredient(Material.GOLD_INGOT)
@@ -267,7 +268,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.GOLD_INGOT)
                 .result(new ItemStack(Material.NETHER_GOLD_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-nether-quartz-ore")
                 .ingredient(Material.NETHER_BRICKS)
                 .ingredient(Material.QUARTZ)
@@ -280,7 +281,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
                 .ingredient(Material.QUARTZ)
                 .result(new ItemStack(Material.NETHER_QUARTZ_ORE))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("reconstruction-ancient-debris")
                 .ingredient(Material.NETHER_BRICKS)
                 .ingredient(Material.NETHERITE_SCRAP)

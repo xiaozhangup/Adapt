@@ -24,6 +24,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
+import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.content.item.BoundRedstoneTorch;
 import com.volmit.adapt.util.*;
 
@@ -63,7 +64,7 @@ public class ArchitectWirelessRedstone extends SimpleAdaptation<ArchitectWireles
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("remote-redstone-torch")
                 .ingredient(Material.REDSTONE_TORCH)
                 .ingredient(Material.TARGET)

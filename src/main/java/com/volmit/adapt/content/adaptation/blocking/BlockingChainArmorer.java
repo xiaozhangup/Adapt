@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.blocking;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +44,7 @@ public class BlockingChainArmorer extends SimpleAdaptation<BlockingChainArmorer.
         setInterval(17774);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-chainarmorer-boots")
                 .ingredient(new MaterialChar('I', Material.IRON_NUGGET))
                 .shapes(List.of(
@@ -51,7 +52,7 @@ public class BlockingChainArmorer extends SimpleAdaptation<BlockingChainArmorer.
                         "I I"))
                 .result(new ItemStack(Material.CHAINMAIL_BOOTS, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-chainarmorer-leggings")
                 .ingredient(new MaterialChar('I', Material.IRON_NUGGET))
                 .shapes(List.of(
@@ -60,7 +61,7 @@ public class BlockingChainArmorer extends SimpleAdaptation<BlockingChainArmorer.
                         "I I"))
                 .result(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-chainarmorer-chestplate")
                 .ingredient(new MaterialChar('I', Material.IRON_NUGGET))
                 .shapes(List.of(
@@ -69,7 +70,7 @@ public class BlockingChainArmorer extends SimpleAdaptation<BlockingChainArmorer.
                         "III"))
                 .result(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-chainarmorer-helmet")
                 .ingredient(new MaterialChar('I', Material.IRON_NUGGET))
                 .shapes(List.of(

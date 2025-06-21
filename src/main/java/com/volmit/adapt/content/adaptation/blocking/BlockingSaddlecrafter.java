@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.blocking;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +44,7 @@ public class BlockingSaddlecrafter extends SimpleAdaptation<BlockingSaddlecrafte
         setInterval(17774);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("blocking-saddlecrafter")
                 .ingredient(new MaterialChar('I', Material.LEATHER))
                 .shapes(List.of(

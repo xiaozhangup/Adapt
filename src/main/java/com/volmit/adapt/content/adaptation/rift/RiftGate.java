@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.rift;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
+import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.content.event.AdaptAdaptationTeleportEvent;
 import com.volmit.adapt.content.item.BoundEyeOfEnder;
 import com.volmit.adapt.util.*;
@@ -50,7 +51,7 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         setMaxLevel(1);
         setInitialCost(30);
         setInterval(1322);
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("rift-recall-gate")
                 .ingredient(Material.ENDER_PEARL)
                 .ingredient(Material.AMETHYST_SHARD)

@@ -25,6 +25,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
@@ -72,7 +73,7 @@ public class ArchitectElevator extends SimpleAdaptation<ArchitectElevator.Config
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
 
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("elevator")
                 .shape("XXX")
                 .shape("XYX")

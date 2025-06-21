@@ -20,6 +20,7 @@ package com.volmit.adapt.content.adaptation.crafting;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
+import com.volmit.adapt.api.recipe.type.Campfire;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -42,7 +43,7 @@ public class CraftingLeather extends SimpleAdaptation<CraftingLeather.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(17776);
-        registerRecipe(AdaptRecipe.campfire()
+        registerRecipe(Campfire.builder()
                 .key("crafting-leather")
                 .ingredient(Material.ROTTEN_FLESH)
                 .cookTime(100)

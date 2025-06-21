@@ -20,6 +20,7 @@ package com.volmit.adapt.content.adaptation.herbalism;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
+import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -40,7 +41,7 @@ public class HerbalismMyconid extends SimpleAdaptation<HerbalismMyconid.Config> 
         setInterval(17771);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("herbalism-dirt-myconid")
                 .ingredient(Material.DIRT)
                 .ingredient(Material.RED_MUSHROOM)

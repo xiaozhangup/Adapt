@@ -20,14 +20,11 @@ package com.volmit.adapt.content.adaptation.stealth;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.version.IAttribute;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
@@ -35,7 +32,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.UUID;
 import java.util.UUID;
 
 public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config> {

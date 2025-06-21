@@ -21,6 +21,7 @@ package com.volmit.adapt.content.adaptation.crafting;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +44,7 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(17776);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("crafting-skeletonskull")
                 .ingredient(new MaterialChar('I', Material.BONE))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
@@ -53,7 +54,7 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
                         "III"))
                 .result(new ItemStack(Material.SKELETON_SKULL, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("crafting-witherskeletonskull")
                 .ingredient(new MaterialChar('I', Material.COAL_BLOCK))
                 .ingredient(new MaterialChar('B', Material.NETHER_BRICK))
@@ -64,7 +65,7 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
                         "BBB"))
                 .result(new ItemStack(Material.WITHER_SKELETON_SKULL, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("crafting-zombieskull")
                 .ingredient(new MaterialChar('I', Material.ROTTEN_FLESH))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
@@ -74,7 +75,7 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
                         "III"))
                 .result(new ItemStack(Material.ZOMBIE_HEAD, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("crafting-creeperhead")
                 .ingredient(new MaterialChar('I', Material.GUNPOWDER))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
@@ -84,7 +85,7 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
                         "III"))
                 .result(new ItemStack(Material.CREEPER_HEAD, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("crafting-dragonhead")
                 .ingredient(new MaterialChar('I', Material.DRAGON_BREATH))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))

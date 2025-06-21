@@ -23,48 +23,11 @@ plugins {
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.9"
 }
 
-version '1.16.7-1.19.2-1.21.4'
-def apiVersion = '1.19'
+version '1.16.7'
+def apiVersion = '1.21'
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'
 def manifoldVersion = '2024.1.49'
-
-// ADD YOURSELF AS A NEW LINE IF YOU WANT YOUR OWN BUILD TASK GENERATED
-// ======================== WINDOWS =============================
-registerCustomOutputTask('Cyberpwn', 'C://Users/cyberpwn/Documents/development/server/plugins')
-registerCustomOutputTask('Psycho', 'C://Dan/MinecraftDevelopment/Server/plugins')
-registerCustomOutputTask('ArcaneArts', 'C://Users/arcane/Documents/development/server/plugins')
-registerCustomOutputTask('Vatuu', 'D://Minecraft/Servers/1.20/plugins')
-registerCustomOutputTask('Nowhere', 'E://Desktop/server/plugins')
-registerCustomOutputTask('CrazyDev22', 'C://Users/Julian/Desktop/server/plugins')
-registerCustomOutputTask('Pixel', 'D://Iris Dimension Engine//1.20.4 - Development//plugins')
-// ========================== UNIX ==============================
-registerCustomOutputTaskUnix('CyberpwnLT', '/Users/danielmills/development/server/plugins')
-registerCustomOutputTaskUnix('PsychoLT', '/Users/brianfopiano/Developer/RemoteGit/Server/plugins')
-registerCustomOutputTaskUnix('the456gamer', '/home/the456gamer/projects/minecraft/adapt-testserver/plugins/update/', false)
-// ==============================================================
-
-def VERSIONS = Map.of(
-        "v1_21_2", "1.21.2-R0.1-SNAPSHOT",
-        "v1_21", "1.21-R0.1-SNAPSHOT",
-//        "v1_20_5", "1.20.5-R0.1-SNAPSHOT",
-//        "v1_20_4", "1.20.4-R0.1-SNAPSHOT",
-//        "v1_19_2", "1.19.2-R0.1-SNAPSHOT"
-)
-
-VERSIONS.each {
-    def key = it.key
-    def value = it.value
-    project(":version:${key}") {
-        apply plugin: 'java'
-        apply plugin: 'java-library'
-
-        dependencies {
-            implementation rootProject
-            compileOnly "org.spigotmc:spigot-api:${value}"
-        }
-    }
-}
 
 /**
  * Gradle is weird sometimes, we need to delete the plugin yml from the build folder to actually filter properly.
@@ -86,103 +49,76 @@ processResources {
     }
 }
 
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'java-library'
-
-    repositories {
-        mavenCentral()
-        maven { url "https://repo.papermc.io/repository/maven-public/"}
-        maven { url "https://repo.codemc.org/repository/maven-public" }
-        maven { url "https://mvn.lumine.io/repository/maven-public/" }
-        maven { url "https://nexus.frengor.com/repository/public/"}
-        maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-        maven { url "https://repo.glaremasters.me/repository/bloodshot/" }
-        maven { url "https://maven.enginehub.org/repo/" }
-        maven { url "https://repo.oraxen.com/releases" }
-        maven { url "https://repo.alessiodp.com/releases" }
-        maven { url 'https://jitpack.io' }
-    }
-
-    /**
-     * We need parameter meta for the decree command system
-     */
-    compileJava {
-        options.compilerArgs << '-parameters'
-    }
-
-    dependencies {
-        // Provided or Classpath
-        compileOnly 'org.projectlombok:lombok:1.18.34'
-        annotationProcessor 'org.projectlombok:lombok:1.18.34'
-
-        testCompileOnly 'org.projectlombok:lombok:1.18.34'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
-
-        // Cancer
-        implementation 'com.github.VolmitDev:Fukkit:23.6.1'
-        implementation 'com.github.VolmitDev:Amulet:23.5.1'
-        implementation 'com.github.VolmitDev:Chrono:22.9.10'
-        implementation 'com.github.VolmitDev:Spatial:22.11.1'
-        implementation 'net.byteflux:libby-velocity:1.3.1'
-
-        implementation "io.papermc:paperlib:1.0.7"
-        annotationProcessor 'systems.manifold:manifold-ext:' + manifoldVersion
-        testAnnotationProcessor 'systems.manifold:manifold-ext:' + manifoldVersion
-        implementation 'systems.manifold:manifold-rt:' + manifoldVersion
-        compileOnly 'io.lettuce:lettuce-core:6.5.1.RELEASE'
-
-        //Random Api's
-//        compileOnly 'com.github.DeadSilenceIV:AdvancedChestsAPI:2.9-BETA'
-//        compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.8'
-//        compileOnly "com.github.FrancoBM12:API-MagicCosmetics:2.2.8"
-        compileOnly 'me.clip:placeholderapi:2.11.6'
-//        compileOnly 'com.github.LoneDev6:api-itemsadder:3.2.5'
-//        compileOnly 'io.th0rgal:oraxen:1.182.0'
-//        compileOnly 'com.massivecraft:Factions:1.6.9.5-U0.6.21'
-//        compileOnly "com.github.angeschossen:ChestProtectAPI:3.9.1"
-//        compileOnly "com.github.TechFortress:GriefPrevention:16.18.1"
-        implementation 'xyz.xenondevs:particle:1.8.4'
-        implementation "com.frengor:ultimateadvancementapi-shadeable:2.4.3"
-        implementation 'com.jeff-media:custom-block-data:2.2.3'
-//        compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
-        compileOnly 'io.netty:netty-all:4.1.68.Final'
-
-        // Dynamically Loaded
-        compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
-        compileOnly 'org.apache.commons:commons-lang3:3.12.0'
-        compileOnly 'com.google.code.gson:gson:2.10'
-        compileOnly 'com.elmakers.mine.bukkit:EffectLib:10.4'
-        compileOnly 'net.kyori:adventure-text-minimessage:4.18.0'
-        compileOnly 'net.kyori:adventure-platform-bukkit:4.3.4'
-        compileOnly 'it.unimi.dsi:fastutil:8.5.13'
-        compileOnly "fr.skytasul:glowingentities:1.4.3"
-        compileOnly 'com.google.guava:guava:30.1-jre'
-        compileOnly 'com.github.ben-manes.caffeine:caffeine:3.0.6'
-//        compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.0:api'
-//        compileOnly 'me.xiaozhangup:OrangDomain:1.0.0:api'
-        compileOnly fileTree(dir: 'libs', include: ['*.jar'])
-    }
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://repo.papermc.io/repository/maven-public/"}
+    maven { url "https://repo.codemc.org/repository/maven-public" }
+    maven { url "https://mvn.lumine.io/repository/maven-public/" }
+    maven { url "https://nexus.frengor.com/repository/public/"}
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url "https://repo.glaremasters.me/repository/bloodshot/" }
+    maven { url "https://maven.enginehub.org/repo/" }
+    maven { url "https://repo.oraxen.com/releases" }
+    maven { url "https://repo.alessiodp.com/releases" }
+    maven { url 'https://jitpack.io' }
 }
 
-//dependencies {
-//    compileOnly(project(":velocity")) {
-//        transitive = false
-//    }
-//}
+/**
+ * We need parameter meta for the decree command system
+ */
+compileJava {
+    options.encoding = "UTF-8"
+    options.compilerArgs << '-parameters' << '-Xplugin:Manifold'
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+
+dependencies {
+    // Provided or Classpath
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.34'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // Cancer
+    implementation 'com.github.VolmitDev:Fukkit:23.6.1'
+    implementation 'com.github.VolmitDev:Amulet:23.5.1'
+    implementation 'com.github.VolmitDev:Chrono:22.9.10'
+    implementation 'com.github.VolmitDev:Spatial:22.11.1'
+    implementation 'net.byteflux:libby-velocity:1.3.1'
+
+    implementation "io.papermc:paperlib:1.0.7"
+    annotationProcessor 'systems.manifold:manifold-ext:' + manifoldVersion
+    testAnnotationProcessor 'systems.manifold:manifold-ext:' + manifoldVersion
+    implementation 'systems.manifold:manifold-rt:' + manifoldVersion
+
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+    implementation 'xyz.xenondevs:particle:1.8.4'
+    implementation "com.frengor:ultimateadvancementapi-shadeable:2.4.3"
+    implementation 'com.jeff-media:custom-block-data:2.2.3'
+    compileOnly 'io.netty:netty-all:4.1.68.Final'
+
+    // Dynamically Loaded
+    compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'
+    compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
+    compileOnly 'org.apache.commons:commons-lang3:3.12.0'
+    compileOnly 'com.google.code.gson:gson:2.10'
+    compileOnly 'com.elmakers.mine.bukkit:EffectLib:10.4'
+    compileOnly 'net.kyori:adventure-text-minimessage:4.18.0'
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.3.4'
+    compileOnly 'it.unimi.dsi:fastutil:8.5.13'
+    compileOnly "fr.skytasul:glowingentities:1.4.3"
+    compileOnly 'com.google.guava:guava:30.1-jre'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.0.6'
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
 
 /**
  * Configure Adapt for shading
  */
 shadowJar {
-//    minimize()
-    VERSIONS.each {
-        dependsOn(":version:${it.key}:build")
-        from(project(":version:${it.key}").tasks.named("jar", Jar).get().archiveFile)
-    }
-//    dependsOn(":velocity:build")
-//    from(project(":velocity").tasks.named("jar", Jar).get().archiveFile)
-
     append("plugin.yml")
     relocate 'manifold', 'com.volmit.adapt.util.manifold'
     relocate 'art.arcane', 'com.volmit.adapt.util.arcane'
@@ -208,28 +144,6 @@ configurations.configureEach {
     resolutionStrategy.cacheDynamicVersionsFor 60, 'minutes'
 }
 
-dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT'
-}
-
-//if (JavaVersion.current().toString() != "21") {
-//    System.err.println()
-//    System.err.println("=========================================================================================================")
-//    System.err.println("You must run gradle on Java 17. You are using " + JavaVersion.current())
-//    System.err.println()
-//    System.err.println("=== For IDEs ===")
-//    System.err.println("1. Configure the project for Java 17")
-//    System.err.println("2. Configure the bundled gradle to use Java 17 in settings")
-//    System.err.println()
-//    System.err.println("=== For Command Line (gradlew) ===")
-//    System.err.println("1. Install JDK 17 from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html")
-//    System.err.println("2. Set JAVA_HOME environment variable to the new jdk installation folder such as C:/Program Files/Java/jdk-17.0.1")
-//    System.err.println("3. Open a new command prompt window to get the new environment variables if need be.")
-//    System.err.println("=========================================================================================================")
-//    System.err.println()
-//    System.exit(69)
-//}
-
 def buildDir = layout.buildDirectory.asFile.get()
 def outputJar = new File(buildDir, "libs/Adapt-" + version + "-all.jar")
 
@@ -237,10 +151,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-compileJava {
-    options.encoding = "UTF-8"
 }
 
 tasks.build.dependsOn(shadowJar)
@@ -255,54 +165,3 @@ task adapt(type: Copy)
     }
     dependsOn(build)
 }
-
-def registerCustomOutputTask(name, path) {
-    if (!System.properties['os.name'].toLowerCase().contains('windows')) {
-        return
-    }
-
-    tasks.register('build' + name, Copy) {
-        group('development')
-        outputs.upToDateWhen { false }
-        dependsOn(adapt)
-        from(new File(buildDir, "Adapt-" + version + ".jar"))
-        into(file(path))
-        rename { String fileName ->
-            fileName.replace("Adapt-" + version + ".jar", "Adapt.jar")
-        }
-    }
-}
-
-def registerCustomOutputTaskUnix(name, path, doRename=true) {
-    if (System.properties['os.name'].toLowerCase().contains('windows')) {
-        return
-    }
-
-    tasks.register('build' + name, Copy) {
-        group('development')
-        outputs.upToDateWhen { false }
-        dependsOn(adapt)
-        from(new File(buildDir, "Adapt-" + version + ".jar"))
-        into(file(path))
-        if (doRename) {
-            rename { String fileName ->
-                fileName.replace("Adapt-" + version + ".jar", "Adapt.jar")
-            }
-        }
-    }
-}
-
-if (JavaVersion.current() != JavaVersion.VERSION_1_8 &&
-        sourceSets.main.allJava.files.any { it.name == "module-info.java" }) {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
-    }
-} else {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs += ['-Xplugin:Manifold']
-    }
-}
-
-//idea.project.settings.taskTriggers {
-//    afterSync(":velocity:generateTemplates")
-//}

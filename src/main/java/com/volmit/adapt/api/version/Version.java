@@ -1,52 +1,24 @@
 package com.volmit.adapt.api.version;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class Version {
-    private static final List<Entry> BINDINGS = List.of(
-        of("1.21.2"),
-        of("1.21"),
-        of("1.20.5"),
-        of("1.20.4"),
-        of("1.19.2")
-    );
-    private static final IBindings bindings = bind();
     public static final boolean SET_TITLE;
-
-    public static IBindings get() {
-        return bindings;
-    }
+    private static final Bindings bindings = new Bindings();
 
     static {
         boolean titleMethod = false;
         try {
             InventoryView.class.getDeclaredMethod("setTitle", String.class);
             titleMethod = true;
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         SET_TITLE = titleMethod;
     }
 
-    private static IBindings bind() {
-        Entry entry = of(Bukkit.getServer().getBukkitVersion().split("-")[0]);
-        Entry version = BINDINGS.stream()
-                .filter(o -> o.compareTo(entry) <= 0)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No version found for " + entry));
-
-        try {
-            Class<?> clazz = version.getClass("Bindings");
-            try {
-                return (IBindings) clazz.getConstructor().newInstance();
-            } catch (Throwable e) {
-                throw new IllegalStateException("Could not create bindings for " + entry, e);
-            }
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Could not find bindings for " + entry, e);
-        }
+    public static Bindings get() {
+        return bindings;
     }
 
     private static Entry of(String version) {

@@ -21,6 +21,8 @@ package com.volmit.adapt.content.adaptation.herbalism;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
+import com.volmit.adapt.api.recipe.type.Shaped;
+import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -43,7 +45,7 @@ public class HerbalismCraftableMushroomBlocks extends SimpleAdaptation<Herbalism
         setInterval(17772);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("herbalism-redmushblock")
                 .ingredient(new MaterialChar('I', Material.RED_MUSHROOM))
                 .shapes(List.of(
@@ -51,7 +53,7 @@ public class HerbalismCraftableMushroomBlocks extends SimpleAdaptation<Herbalism
                         "II"))
                 .result(new ItemStack(Material.RED_MUSHROOM_BLOCK, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shaped()
+        registerRecipe(Shaped.builder()
                 .key("herbalism-brownmushblock")
                 .ingredient(new MaterialChar('I', Material.BROWN_MUSHROOM))
                 .shapes(List.of(
@@ -59,12 +61,12 @@ public class HerbalismCraftableMushroomBlocks extends SimpleAdaptation<Herbalism
                         "II"))
                 .result(new ItemStack(Material.BROWN_MUSHROOM_BLOCK, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("herbalism-mushstemred")
                 .ingredient(Material.RED_MUSHROOM_BLOCK)
                 .result(new ItemStack(Material.MUSHROOM_STEM, 1))
                 .build());
-        registerRecipe(AdaptRecipe.shapeless()
+        registerRecipe(Shapeless.builder()
                 .key("herbalism-mushstembrown")
                 .ingredient(Material.BROWN_MUSHROOM_BLOCK)
                 .result(new ItemStack(Material.MUSHROOM_STEM, 1))
