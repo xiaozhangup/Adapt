@@ -27,23 +27,30 @@ import java.util.Map;
 public class SpatialMatter implements Matter {
     protected static final Map<Class<?>, MatterSlice<?>> slicers = new HashMap<>();
 
+    static {
+        registerSliceType(new DoubleMatter());
+        registerSliceType(new ByteMatter());
+        registerSliceType(new FloatMatter());
+        registerSliceType(new ShortMatter());
+        registerSliceType(new BooleanMatter());
+        registerSliceType(new IntMatter());
+        registerSliceType(new LongMatter());
+        registerSliceType(new StringMatter());
+    }
+
     @Getter
     private final MatterHeader header;
-
     @Getter
     private final int width;
-
     @Getter
     private final int height;
-
     @Getter
     private final int depth;
-
     @Getter
     private final Map<Class<?>, MatterSlice<?>> sliceMap;
 
     public SpatialMatter(int width, int height, int depth) {
-        if(width < 1 || height < 1 || depth < 1) {
+        if (width < 1 || height < 1 || depth < 1) {
             throw new RuntimeException("Invalid Matter Size " + width + "x" + height + "x" + depth);
         }
 
@@ -66,27 +73,16 @@ public class SpatialMatter implements Matter {
     public <T> MatterSlice<T> createSlice(Class<T> type, Matter m) {
         MatterSlice<?> slice = slicers.get(getClass(type));
 
-        if(slice == null) {
+        if (slice == null) {
             return null;
         }
 
         try {
             return slice.getClass().getConstructor(int.class, int.class, int.class).newInstance(getWidth(), getHeight(), getDepth());
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    static {
-        registerSliceType(new DoubleMatter());
-        registerSliceType(new ByteMatter());
-        registerSliceType(new FloatMatter());
-        registerSliceType(new ShortMatter());
-        registerSliceType(new BooleanMatter());
-        registerSliceType(new IntMatter());
-        registerSliceType(new LongMatter());
-        registerSliceType(new StringMatter());
     }
 }

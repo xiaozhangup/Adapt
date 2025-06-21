@@ -24,11 +24,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static org.bukkit.Material.*;
-import static org.bukkit.Material.MANGROVE_ROOTS;
-import static org.bukkit.Material.MUDDY_MANGROVE_ROOTS;
 
 public class ItemListings {
     public static final List<EntityType> additionalInvalid = List.of(
@@ -39,22 +38,6 @@ public class ItemListings {
             EntityType.EVOKER_FANGS,
             EntityType.MARKER
     );
-
-    public static boolean isFlowers(Material material) {
-        return flowers.contains(material);
-    }
-
-    public static boolean isLeaves(Material material) {
-        return material.name().endsWith("_LEAVES");
-    }
-
-    public static boolean isLog(Material material) {
-        return List.of(MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS).contains(material)
-                    || material.name().endsWith("_LOG")
-                    || material.name().endsWith("_WOOD");
-
-    }
-
     public static List<Material> flowers = List.of(
             Material.DANDELION,
             Material.POPPY,
@@ -73,11 +56,6 @@ public class ItemListings {
             Material.PEONY,
             Material.WITHER_ROSE
     );
-
-    public static boolean isFood(Material material) {
-        return food.contains(material);
-    }
-
     public static List<Material> food = List.of(
             Material.APPLE,
             Material.BAKED_POTATO,
@@ -119,11 +97,6 @@ public class ItemListings {
             Material.TROPICAL_FISH
 
     );
-
-    public static boolean isFarmable(Material material) {
-        return farmable.contains(material);
-    }
-
     public static List<Material> farmable = List.of(
             Material.GRASS_BLOCK,
             Material.DIRT,
@@ -140,14 +113,6 @@ public class ItemListings {
             Material.BEETROOTS,
             Material.DIRT_PATH
     );
-
-    public static boolean isTool(Material material) {
-        if (material == Material.SHEARS) return true;
-        if (material == Material.MACE) return true;
-        Set<String> invalidSuffixes = Set.of("_PICKAXE", "_AXE", "_SWORD", "_SHOVEL", "_HOE");
-        return invalidSuffixes.stream().anyMatch(s -> material.name().endsWith(s));
-    }
-
     @Getter
     public static List<Material> fishingDrops = List.of(
             Material.COD,
@@ -228,6 +193,36 @@ public class ItemListings {
             Material.INK_SAC,
             Material.TRIPWIRE_HOOK
     );
+
+    public static boolean isFlowers(Material material) {
+        return flowers.contains(material);
+    }
+
+    public static boolean isLeaves(Material material) {
+        return material.name().endsWith("_LEAVES");
+    }
+
+    public static boolean isLog(Material material) {
+        return List.of(MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS).contains(material)
+                || material.name().endsWith("_LOG")
+                || material.name().endsWith("_WOOD");
+
+    }
+
+    public static boolean isFood(Material material) {
+        return food.contains(material);
+    }
+
+    public static boolean isFarmable(Material material) {
+        return farmable.contains(material);
+    }
+
+    public static boolean isTool(Material material) {
+        if (material == Material.SHEARS) return true;
+        if (material == Material.MACE) return true;
+        Set<String> invalidSuffixes = Set.of("_PICKAXE", "_AXE", "_SWORD", "_SHOVEL", "_HOE");
+        return invalidSuffixes.stream().anyMatch(s -> material.name().endsWith(s));
+    }
 
     public static boolean isAxePreference(Block block) {
         return block.isPreferredTool(new ItemStack(Material.NETHERITE_AXE));

@@ -81,7 +81,7 @@ public class GridLock {
     public boolean tryLock(int x, int z, long timeout) {
         try {
             return locks.get(x, 0, z).tryLock(timeout, TimeUnit.MILLISECONDS);
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

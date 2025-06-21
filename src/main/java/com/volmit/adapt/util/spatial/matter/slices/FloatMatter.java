@@ -32,13 +32,13 @@ public class FloatMatter extends RawMatter<Float> {
         this(1, 1, 1);
     }
 
+    public FloatMatter(int width, int height, int depth) {
+        super(width, height, depth, Float.class);
+    }
+
     @Override
     public Palette<Float> getGlobalPalette() {
         return null;
-    }
-
-    public FloatMatter(int width, int height, int depth) {
-        super(width, height, depth, Float.class);
     }
 
     @Override

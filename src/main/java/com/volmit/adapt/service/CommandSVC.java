@@ -40,7 +40,8 @@ public class CommandSVC implements AdaptService, DecreeSystem {
     private CompletableFuture<String> consoleFuture = null;
 
     @Override
-    public void onEnable() {Adapt.verbose("Initializing Commands...");
+    public void onEnable() {
+        Adapt.verbose("Initializing Commands...");
         Adapt.verbose("Initializing Commands...");
         PluginCommand command = Adapt.instance.getCommand("adapt");
         if (command == null) {

@@ -32,13 +32,13 @@ public class ByteMatter extends RawMatter<Byte> {
         this(1, 1, 1);
     }
 
+    public ByteMatter(int width, int height, int depth) {
+        super(width, height, depth, Byte.class);
+    }
+
     @Override
     public Palette<Byte> getGlobalPalette() {
         return null;
-    }
-
-    public ByteMatter(int width, int height, int depth) {
-        super(width, height, depth, Byte.class);
     }
 
     @Override

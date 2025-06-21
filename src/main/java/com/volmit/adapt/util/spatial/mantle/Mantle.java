@@ -57,10 +57,8 @@ public class Mantle {
     /**
      * Create a new mantle
      *
-     * @param dataFolder
-     *     the data folder
-     * @param worldHeight
-     *     the world's height (in blocks)
+     * @param dataFolder  the data folder
+     * @param worldHeight the world's height (in blocks)
      */
     public Mantle(File dataFolder, int worldHeight) {
         this.hyperLock = new HyperLock();
@@ -74,30 +72,12 @@ public class Mantle {
         ioBurst = MultiBurst.burst;
     }
 
-    public void clear() {
-        loadedRegions.clear();
-        lastUse.clear();
-        unload.clear();
-        hyperLock.clear();
-
-        if(dataFolder.exists() && dataFolder.isDirectory()) {
-            for(File i : dataFolder.listFiles()) {
-                i.delete();
-            }
-        }
-
-        dataFolder.delete();
-    }
-
     /**
      * Get the file for a region
      *
-     * @param folder
-     *     the folder
-     * @param x
-     *     the x coord
-     * @param z
-     *     the z coord
+     * @param folder the folder
+     * @param x      the x coord
+     * @param z      the z coord
      * @return the file
      */
     public static File fileForRegion(File folder, int x, int z) {
@@ -107,15 +87,13 @@ public class Mantle {
     /**
      * Get the file for the given region
      *
-     * @param folder
-     *     the data folder
-     * @param key
-     *     the region key
+     * @param folder the data folder
+     * @param key    the region key
      * @return the file
      */
     public static File fileForRegion(File folder, Long key) {
         File f = new File(folder, "p." + key + ".ttp");
-        if(!f.getParentFile().exists()) {
+        if (!f.getParentFile().exists()) {
             f.getParentFile().mkdirs();
         }
         return f;
@@ -124,14 +102,27 @@ public class Mantle {
     /**
      * Get the long value representing a chunk or region coordinate
      *
-     * @param x
-     *     the x
-     * @param z
-     *     the z
+     * @param x the x
+     * @param z the z
      * @return the value
      */
     public static Long key(int x, int z) {
         return CompressedNumbers.i2(x, z);
+    }
+
+    public void clear() {
+        loadedRegions.clear();
+        lastUse.clear();
+        unload.clear();
+        hyperLock.clear();
+
+        if (dataFolder.exists() && dataFolder.isDirectory()) {
+            for (File i : dataFolder.listFiles()) {
+                i.delete();
+            }
+        }
+
+        dataFolder.delete();
     }
 
     public MantleChunk getChunk(int x, int z) {
@@ -145,10 +136,8 @@ public class Mantle {
     /**
      * Check very quickly if a tectonic plate exists via cached or the file system
      *
-     * @param x
-     *     the x region coordinate
-     * @param z
-     *     the z region coordinate
+     * @param x the x region coordinate
+     * @param z the z region coordinate
      * @return true if it exists
      */
     public boolean hasTectonicPlate(int x, int z) {
@@ -159,19 +148,14 @@ public class Mantle {
     /**
      * Iterate data in a chunk
      *
-     * @param x
-     *     the chunk x
-     * @param z
-     *     the chunk z
-     * @param type
-     *     the type of data to iterate
-     * @param iterator
-     *     the iterator (x,y,z,data) -> do stuff
-     * @param <T>
-     *     the type of data to iterate
+     * @param x        the chunk x
+     * @param z        the chunk z
+     * @param type     the type of data to iterate
+     * @param iterator the iterator (x,y,z,data) -> do stuff
+     * @param <T>      the type of data to iterate
      */
     public <T> void iterateChunk(int x, int z, Class<T> type, Consume.Four<Integer, Integer, Integer, T> iterator) {
-        if(!hasTectonicPlate(x >> 5, z >> 5)) {
+        if (!hasTectonicPlate(x >> 5, z >> 5)) {
             return;
         }
 
@@ -186,49 +170,44 @@ public class Mantle {
      * reading & writing other regions. Hyperlocks are slow sync, but in multicore
      * environments, they drastically speed up loading & saving large counts of plates
      *
-     * @param x
-     *     the block's x coordinate
-     * @param y
-     *     the block's y coordinate
-     * @param z
-     *     the block's z coordinate
-     * @param t
-     *     the data to set at the block
-     * @param <T>
-     *     the type of data (generic method)
+     * @param x   the block's x coordinate
+     * @param y   the block's y coordinate
+     * @param z   the block's z coordinate
+     * @param t   the data to set at the block
+     * @param <T> the type of data (generic method)
      */
 
     public <T> void set(int x, int y, int z, T t) {
-        if(closed.get()) {
+        if (closed.get()) {
             throw new RuntimeException("The Mantle is closed");
         }
 
-        if(y < 0 || y >= worldHeight) {
+        if (y < 0 || y >= worldHeight) {
             return;
         }
 
         Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5)
-            .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
-            .getOrCreate(y >> 4);
+                .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
+                .getOrCreate(y >> 4);
         matter.slice(matter.getClass(t))
-            .set(x & 15, y & 15, z & 15, t);
+                .set(x & 15, y & 15, z & 15, t);
     }
 
 
     public <T> void remove(int x, int y, int z, Class<T> t) {
-        if(closed.get()) {
+        if (closed.get()) {
             throw new RuntimeException("The Mantle is closed");
         }
 
-        if(y < 0 || y >= worldHeight) {
+        if (y < 0 || y >= worldHeight) {
             return;
         }
 
         Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5)
-            .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
-            .getOrCreate(y >> 4);
+                .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
+                .getOrCreate(y >> 4);
         matter.slice(t)
-            .set(x & 15, y & 15, z & 15, null);
+                .set(x & 15, y & 15, z & 15, null);
     }
 
     /**
@@ -239,37 +218,32 @@ public class Mantle {
      * reading & writing other regions. Hyperlocks are slow sync, but in multicore
      * environments, they drastically speed up loading & saving large counts of plates
      *
-     * @param x
-     *     the block's x coordinate
-     * @param y
-     *     the block's y coordinate
-     * @param z
-     *     the block's z coordinate
-     * @param t
-     *     the class representing the type of data being requested
-     * @param <T>
-     *     the type assumed from the provided class
+     * @param x   the block's x coordinate
+     * @param y   the block's y coordinate
+     * @param z   the block's z coordinate
+     * @param t   the class representing the type of data being requested
+     * @param <T> the type assumed from the provided class
      * @return the returned result (or null) if it doesnt exist
      */
     @SuppressWarnings("unchecked")
 
     public <T> T get(int x, int y, int z, Class<T> t) {
-        if(closed.get()) {
+        if (closed.get()) {
             throw new RuntimeException("The Mantle is closed");
         }
 
-        if(!hasTectonicPlate((x >> 4) >> 5, (z >> 4) >> 5)) {
+        if (!hasTectonicPlate((x >> 4) >> 5, (z >> 4) >> 5)) {
             return null;
         }
 
-        if(y < 0 || y >= worldHeight) {
+        if (y < 0 || y >= worldHeight) {
             return null;
         }
 
         return (T) get((x >> 4) >> 5, (z >> 4) >> 5)
-            .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
-            .getOrCreate(y >> 4).slice(t)
-            .get(x & 15, y & 15, z & 15);
+                .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
+                .getOrCreate(y >> 4).slice(t)
+                .get(x & 15, y & 15, z & 15);
     }
 
     /**
@@ -287,7 +261,7 @@ public class Mantle {
      * loaded regions to the disk in parallel.
      */
     public synchronized void close() {
-        if(closed.get()) {
+        if (closed.get()) {
             return;
         }
 
@@ -300,33 +274,32 @@ public class Mantle {
      * Save & unload regions that have not been used for more than the
      * specified amount of milliseconds
      *
-     * @param idleDuration
-     *     the duration
+     * @param idleDuration the duration
      */
     public synchronized void trim(long idleDuration) {
-        if(closed.get()) {
+        if (closed.get()) {
             throw new RuntimeException("The Mantle is closed");
         }
 
         io.set(true);
         unload.clear();
 
-        for(Long i : lastUse.keySet()) {
+        for (Long i : lastUse.keySet()) {
             hyperLock.withLong(i, () -> {
-                if(System.currentTimeMillis() - lastUse.get(i) >= idleDuration) {
+                if (System.currentTimeMillis() - lastUse.get(i) >= idleDuration) {
                     unload.add(i);
                 }
             });
         }
 
-        for(Long i : unload) {
+        for (Long i : unload) {
             hyperLock.withLong(i, () -> {
                 MantleRegion m = loadedRegions.remove(i);
                 lastUse.remove(i);
 
                 try {
                     m.write(fileForRegion(dataFolder, i));
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
@@ -338,32 +311,30 @@ public class Mantle {
      * This retreives a future of the Tectonic Plate at the given coordinates.
      * All methods accessing tectonic plates should go through this method
      *
-     * @param x
-     *     the region x
-     * @param z
-     *     the region z
+     * @param x the region x
+     * @param z the region z
      * @return the future of a tectonic plate.
      */
     private MantleRegion get(int x, int z) {
-        if(io.get()) {
+        if (io.get()) {
             try {
                 return getSafe(x, z).get();
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch(ExecutionException e) {
+            } catch (ExecutionException e) {
                 e.printStackTrace();
             }
         }
 
         MantleRegion p = loadedRegions.get(key(x, z));
 
-        if(p != null) {
+        if (p != null) {
             return p;
         }
 
         try {
             return getSafe(x, z).get();
-        } catch(InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
@@ -374,17 +345,15 @@ public class Mantle {
      * This retreives a future of the Tectonic Plate at the given coordinates.
      * All methods accessing tectonic plates should go through this method
      *
-     * @param x
-     *     the region x
-     * @param z
-     *     the region z
+     * @param x the region x
+     * @param z the region z
      * @return the future of a tectonic plate.
      */
     private Future<MantleRegion> getSafe(int x, int z) {
         Long k = key(x, z);
         MantleRegion p = loadedRegions.get(k);
 
-        if(p != null) {
+        if (p != null) {
             lastUse.put(k, System.currentTimeMillis());
             return CompletableFuture.completedFuture(p);
         }
@@ -419,19 +388,19 @@ public class Mantle {
     }
 
     public void saveAll() {
-        if(loadedRegions.isEmpty()) {
+        if (loadedRegions.isEmpty()) {
             return;
         }
 
         BurstExecutor b = ioBurst.burst(loadedRegions.size());
-        for(Long i : loadedRegions.keySet()) {
+        for (Long i : loadedRegions.keySet()) {
             b.queue(() -> {
                 try {
-                    if(!dataFolder.exists()) {
+                    if (!dataFolder.exists()) {
                         dataFolder.mkdirs();
                     }
                     loadedRegions.get(i).write(fileForRegion(dataFolder, i));
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
@@ -439,7 +408,7 @@ public class Mantle {
 
         try {
             b.complete();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -457,7 +426,7 @@ public class Mantle {
     }
 
     public <T> void set(int x, int y, int z, MatterSlice<T> slice) {
-        if(slice.isEmpty()) {
+        if (slice.isEmpty()) {
             return;
         }
 

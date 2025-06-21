@@ -59,12 +59,6 @@ public interface Matter {
         return m;
     }
 
-    default Matter copy() {
-        Matter m = new SpatialMatter(getWidth(), getHeight(), getDepth());
-        getSliceMap().forEach((k, v) -> m.slice(k).forceInject(v));
-        return m;
-    }
-
     static Matter read(InputStream in) throws IOException, ClassNotFoundException {
         return read(in, (b) -> new SpatialMatter(b.getX(), b.getY(), b.getZ()));
     }
@@ -77,13 +71,10 @@ public interface Matter {
      * Reads the input stream into a matter object using a matter factory.
      * Does not close the input stream. Be a man, close it yourself.
      *
-     * @param in
-     *     the input stream
-     * @param matterFactory
-     *     the matter factory (size) -> new MatterImpl(size);
+     * @param in            the input stream
+     * @param matterFactory the matter factory (size) -> new MatterImpl(size);
      * @return the matter object
-     * @throws IOException
-     *     shit happens yo
+     * @throws IOException shit happens yo
      */
     static Matter read(InputStream in, Function<Pos, Matter> matterFactory) throws IOException, ClassNotFoundException {
         return readDin(new DataInputStream(in), matterFactory);
@@ -91,27 +82,33 @@ public interface Matter {
 
     static Matter readDin(DataInputStream din, Function<Pos, Matter> matterFactory) throws IOException, ClassNotFoundException {
         Matter matter = matterFactory.apply(new Pos(
-            din.readInt(),
-            din.readInt(),
-            din.readInt()));
+                din.readInt(),
+                din.readInt(),
+                din.readInt()));
         int sliceCount = din.readByte();
 
         matter.getHeader().read(din);
 
-        for(int i = 0; i < sliceCount; i++) {
+        for (int i = 0; i < sliceCount; i++) {
             String cn = din.readUTF();
             try {
                 Class<?> type = Class.forName(cn);
                 MatterSlice<?> slice = matter.createSlice(matter.getClass(type), matter);
                 slice.read(din);
                 matter.putSlice(matter.getClass(type), slice);
-            } catch(Throwable e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 throw new IOException("Can't read class '" + cn + "' (slice count reverse at " + sliceCount + ")");
             }
         }
 
         return matter;
+    }
+
+    default Matter copy() {
+        Matter m = new SpatialMatter(getWidth(), getHeight(), getDepth());
+        getSliceMap().forEach((k, v) -> m.slice(k).forceInject(v));
+        return m;
     }
 
     /**
@@ -154,12 +151,9 @@ public interface Matter {
     /**
      * Create a slice from the given type (full is false)
      *
-     * @param type
-     *     the type class
-     * @param matter
-     *     the matter this slice will go into (size provider)
-     * @param <T>
-     *     the type
+     * @param type   the type class
+     * @param matter the matter this slice will go into (size provider)
+     * @param <T>    the type
      * @return the slice (or null if not supported)
      */
     <T> MatterSlice<T> createSlice(Class<T> type, Matter matter);
@@ -203,10 +197,8 @@ public interface Matter {
     /**
      * Return the slice for the given type
      *
-     * @param t
-     *     the type class
-     * @param <T>
-     *     the type
+     * @param t   the type class
+     * @param <T> the type
      * @return the slice or null
      */
     default <T> MatterSlice<T> getSlice(Class<T> t) {
@@ -216,10 +208,8 @@ public interface Matter {
     /**
      * Delete the slice for the given type
      *
-     * @param c
-     *     the type class
-     * @param <T>
-     *     the type
+     * @param c   the type class
+     * @param <T> the type
      * @return the deleted slice, or null if it diddn't exist
      */
     default <T> MatterSlice<T> deleteSlice(Class<?> c) {
@@ -229,12 +219,9 @@ public interface Matter {
     /**
      * Put a given slice type
      *
-     * @param c
-     *     the slice type class
-     * @param slice
-     *     the slice to assign to the type
-     * @param <T>
-     *     the slice type
+     * @param c     the slice type class
+     * @param slice the slice to assign to the type
+     * @param <T>   the slice type
      * @return the overwritten slice if there was an existing slice of that type
      */
     default <T> MatterSlice<T> putSlice(Class<?> c, MatterSlice<T> slice) {
@@ -242,28 +229,28 @@ public interface Matter {
     }
 
     default Class<?> getClass(Object w) {
-        if(w instanceof Integer) {
+        if (w instanceof Integer) {
             return Integer.class;
         }
-        if(w instanceof Double) {
+        if (w instanceof Double) {
             return Double.class;
         }
-        if(w instanceof Boolean) {
+        if (w instanceof Boolean) {
             return Boolean.class;
         }
-        if(w instanceof Short) {
+        if (w instanceof Short) {
             return Short.class;
         }
-        if(w instanceof Long) {
+        if (w instanceof Long) {
             return Long.class;
         }
-        if(w instanceof Float) {
+        if (w instanceof Float) {
             return Float.class;
         }
-        if(w instanceof Byte) {
+        if (w instanceof Byte) {
             return Byte.class;
         }
-        if(w instanceof Character) {
+        if (w instanceof Character) {
             return Character.class;
         }
 
@@ -271,28 +258,28 @@ public interface Matter {
     }
 
     default Class<?> getClass(Class<?> w) {
-        if(w.equals(int.class)) {
+        if (w.equals(int.class)) {
             return Integer.class;
         }
-        if(w.equals(double.class)) {
+        if (w.equals(double.class)) {
             return Double.class;
         }
-        if(w.equals(boolean.class)) {
+        if (w.equals(boolean.class)) {
             return Boolean.class;
         }
-        if(w.equals(short.class)) {
+        if (w.equals(short.class)) {
             return Short.class;
         }
-        if(w.equals(long.class)) {
+        if (w.equals(long.class)) {
             return Long.class;
         }
-        if(w.equals(float.class)) {
+        if (w.equals(float.class)) {
             return Float.class;
         }
-        if(w.equals(byte.class)) {
+        if (w.equals(byte.class)) {
             return Byte.class;
         }
-        if(w.equals(char.class)) {
+        if (w.equals(char.class)) {
             return Character.class;
         }
 
@@ -301,12 +288,12 @@ public interface Matter {
 
     default <T> MatterSlice<T> slice(Class<?> c) {
         MatterSlice<T> slice = (MatterSlice<T>) getSlice(getClass(c));
-        if(slice == null) {
+        if (slice == null) {
             slice = (MatterSlice<T>) createSlice(getClass(c), this);
-            if(slice == null) {
+            if (slice == null) {
                 try {
                     throw new RuntimeException("Bad slice " + c.getCanonicalName() + ". Did you use SpatialMatter.register?");
-                } catch(Throwable e) {
+                } catch (Throwable e) {
                     e.printStackTrace();
                 }
 
@@ -322,8 +309,7 @@ public interface Matter {
     /**
      * Check if a slice exists for a given type
      *
-     * @param c
-     *     the slice class type
+     * @param c the slice class type
      * @return true if it exists
      */
     default boolean hasSlice(Class<?> c) {
@@ -371,9 +357,9 @@ public interface Matter {
     default void trimSlices() {
         Set<Class<?>> drop = null;
 
-        for(Class<?> i : getSliceTypes()) {
-            if(getSlice(i).getEntryCount() == 0) {
-                if(drop == null) {
+        for (Class<?> i : getSliceTypes()) {
+            if (getSlice(i).getEntryCount() == 0) {
+                if (drop == null) {
                     drop = new HashSet<>();
                 }
 
@@ -381,8 +367,8 @@ public interface Matter {
             }
         }
 
-        if(drop != null) {
-            for(Class<?> i : drop) {
+        if (drop != null) {
+            for (Class<?> i : drop) {
                 deleteSlice(i);
             }
         }
@@ -392,10 +378,8 @@ public interface Matter {
      * Writes the data to the output stream. The data will be flushed to the provided output
      * stream however the provided stream will NOT BE CLOSED, so be sure to actually close it
      *
-     * @param out
-     *     the output stream
-     * @throws IOException
-     *     shit happens yo
+     * @param out the output stream
+     * @throws IOException shit happens yo
      */
     default void write(OutputStream out) throws IOException {
         writeDos(new DataOutputStream(out));
@@ -409,7 +393,7 @@ public interface Matter {
         dos.writeByte(getSliceTypes().size());
         getHeader().write(dos);
 
-        for(Class<?> i : getSliceTypes()) {
+        for (Class<?> i : getSliceTypes()) {
             getSlice(i).write(dos);
         }
     }
@@ -417,7 +401,7 @@ public interface Matter {
     default int getTotalCount() {
         int m = 0;
 
-        for(MatterSlice<?> i : getSliceMap().values()) {
+        for (MatterSlice<?> i : getSliceMap().values()) {
             m += i.getEntryCount();
         }
 

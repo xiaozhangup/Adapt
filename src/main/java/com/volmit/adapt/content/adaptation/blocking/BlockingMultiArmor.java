@@ -19,7 +19,6 @@
 package com.volmit.adapt.content.adaptation.blocking;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.content.item.multiItems.MultiArmor;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;

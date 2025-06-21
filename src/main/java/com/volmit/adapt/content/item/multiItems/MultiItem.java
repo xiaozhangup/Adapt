@@ -34,6 +34,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public interface MultiItem {
+    static String serializeStack(ItemStack is) {
+        return Base64.getUrlEncoder().encodeToString(is.serializeAsBytes());
+    }
+
+    static ItemStack deserializeStack(String s) {
+        return ItemStack.deserializeBytes(Base64.getUrlDecoder().decode(s));
+    }
+
     boolean supportsItem(ItemStack itemStack);
 
     String getKey();
@@ -180,13 +188,5 @@ public interface MultiItem {
         void setItems(List<ItemStack> is) {
             rawItems = is.stream().map(MultiItem::serializeStack).collect(Collectors.toList());
         }
-    }
-
-    static String serializeStack(ItemStack is) {
-        return Base64.getUrlEncoder().encodeToString(is.serializeAsBytes());
-    }
-
-    static ItemStack deserializeStack(String s) {
-        return ItemStack.deserializeBytes(Base64.getUrlDecoder().decode(s));
     }
 }

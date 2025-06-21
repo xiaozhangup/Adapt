@@ -32,13 +32,13 @@ public class ShortMatter extends RawMatter<Short> {
         this(1, 1, 1);
     }
 
+    public ShortMatter(int width, int height, int depth) {
+        super(width, height, depth, Short.class);
+    }
+
     @Override
     public Palette<Short> getGlobalPalette() {
         return null;
-    }
-
-    public ShortMatter(int width, int height, int depth) {
-        super(width, height, depth, Short.class);
     }
 
     @Override

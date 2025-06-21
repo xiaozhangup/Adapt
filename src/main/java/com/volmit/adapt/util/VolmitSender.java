@@ -457,7 +457,7 @@ public class VolmitSender implements CommandSender {
                     + " <#00CED1>"
                     + i.getName() + " "
                     + String.join(
-                            " ",
+                    " ",
                     i.getNode().getParameters().shuffleCopy(RNG.r).kConvert((f)
                             -> (f.isRequired() || RNG.r.b(0.5)
                             ? "<#f2e15e>" + f.getNames().getRandom() + "="

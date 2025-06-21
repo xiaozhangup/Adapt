@@ -72,7 +72,6 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
         }
 
 
-
         public CustomModel get(Material fallback, String... path) {
             return cache.computeIfAbsent(String.join("", path), k -> {
                 var json = this.json;

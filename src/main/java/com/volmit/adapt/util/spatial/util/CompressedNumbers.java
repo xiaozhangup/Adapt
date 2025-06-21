@@ -40,7 +40,7 @@ public class CompressedNumbers {
         idx -= (z * w * h);
         final int y = idx / w;
         final int x = idx % w;
-        return new int[] {x, y, z};
+        return new int[]{x, y, z};
     }
 
     public static int index2Dto1D(int x, int y, int w) {

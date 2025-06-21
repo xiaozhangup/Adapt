@@ -66,6 +66,8 @@ public class Adapt extends VolmitPlugin {
     private static VolmitSender sender;
     public final EffectManager adaptEffectManager = new EffectManager(this);
     private final KList<Runnable> postShutdown = new KList<>();
+    @Getter
+    private final Map<String, Window> guiLeftovers = new HashMap<>();
     private KMap<Class<? extends AdaptService>, AdaptService> services;
     @Getter
     private GlowingEntities glowingEntities;
@@ -77,8 +79,6 @@ public class Adapt extends VolmitPlugin {
     private SQLManager sqlManager;
     @Getter
     private ProtectorRegistry protectorRegistry;
-    @Getter
-    private final Map<String, Window> guiLeftovers = new HashMap<>();
     @Getter
     private AdvancementManager manager;
 

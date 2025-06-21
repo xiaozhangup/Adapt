@@ -32,13 +32,13 @@ public class DoubleMatter extends RawMatter<Double> {
         this(1, 1, 1);
     }
 
+    public DoubleMatter(int width, int height, int depth) {
+        super(width, height, depth, Double.class);
+    }
+
     @Override
     public Palette<Double> getGlobalPalette() {
         return null;
-    }
-
-    public DoubleMatter(int width, int height, int depth) {
-        super(width, height, depth, Double.class);
     }
 
     @Override

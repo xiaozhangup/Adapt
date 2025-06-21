@@ -166,8 +166,8 @@ public class ConcurrentSpaceMap<T> implements Space<T>, Weigher<SpaceNode<T>>, E
 
     @Override
     public T get(int x, int z) {
-        T t= getOrNull(x, z);
-        return  t == null ? load(x, z) : t;
+        T t = getOrNull(x, z);
+        return t == null ? load(x, z) : t;
     }
 
     @Override

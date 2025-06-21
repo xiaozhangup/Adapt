@@ -40,7 +40,7 @@ public class HashPalette<T> implements Palette<T> {
 
     @Override
     public T get(int id) {
-        if(id < 0 || id >= size.get()) {
+        if (id < 0 || id >= size.get()) {
             return null;
         }
 
@@ -52,7 +52,7 @@ public class HashPalette<T> implements Palette<T> {
         int index = size.getAndIncrement();
         palette.put(t, index);
 
-        if(t != null) {
+        if (t != null) {
             lookup.put(index, t);
         }
 
@@ -61,7 +61,7 @@ public class HashPalette<T> implements Palette<T> {
 
     @Override
     public int id(T t) {
-        if(t == null) {
+        if (t == null) {
             return 0;
         }
 
@@ -76,8 +76,8 @@ public class HashPalette<T> implements Palette<T> {
 
     @Override
     public void iterate(Consume.Two<T, Integer> c) {
-        for(T i : palette.keySet()) {
-            if(i == null) {
+        for (T i : palette.keySet()) {
+            if (i == null) {
                 continue;
             }
 

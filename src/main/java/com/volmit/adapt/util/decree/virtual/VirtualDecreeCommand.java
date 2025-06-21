@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class VirtualDecreeCommand {
+    private static DecimalFormat DF;
     private final Class<?> type;
     private final VirtualDecreeCommand parent;
     private final List<VirtualDecreeCommand> nodes;
@@ -55,7 +56,6 @@ public class VirtualDecreeCommand {
             "<gradient:#6ad41e:#9a1ed4>"
     };
     private ChronoLatch cl = new ChronoLatch(1000);
-    private static DecimalFormat DF;
 
     private VirtualDecreeCommand(Class<?> type, VirtualDecreeCommand parent, List<VirtualDecreeCommand> nodes, DecreeNode node) {
         this.parent = parent;
@@ -104,6 +104,48 @@ public class VirtualDecreeCommand {
         }
 
         return c;
+    }
+
+    public static String getNumberSuffixThStRd(int day) {
+        if (day >= 11 && day <= 13) {
+            return f(day) + "th";
+        }
+        return switch (day % 10) {
+            case 1 -> f(day) + "st";
+            case 2 -> f(day) + "nd";
+            case 3 -> f(day) + "rd";
+            default -> f(day) + "th";
+        };
+    }
+
+    public static String f(double i) {
+        return f(i, 1);
+    }
+
+    public static String f(double i, int p) {
+        String form = "#";
+
+        if (p > 0) {
+            form = form + "." + repeat("#", p);
+        }
+
+        DF = new DecimalFormat(form);
+
+        return DF.format(i).replaceAll("\\Q,\\E", ".");
+    }
+
+    public static String repeat(String s, int n) {
+        if (s == null) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < n; i++) {
+            sb.append(s);
+        }
+
+        return sb.toString();
     }
 
     public void cacheAll() {
@@ -569,47 +611,5 @@ public class VirtualDecreeCommand {
         }
 
         return false;
-    }
-
-    public static String getNumberSuffixThStRd(int day) {
-        if (day >= 11 && day <= 13) {
-            return f(day) + "th";
-        }
-        return switch (day % 10) {
-            case 1 -> f(day) + "st";
-            case 2 -> f(day) + "nd";
-            case 3 -> f(day) + "rd";
-            default -> f(day) + "th";
-        };
-    }
-
-    public static String f(double i) {
-        return f(i, 1);
-    }
-
-    public static String f(double i, int p) {
-        String form = "#";
-
-        if (p > 0) {
-            form = form + "." + repeat("#", p);
-        }
-
-        DF = new DecimalFormat(form);
-
-        return DF.format(i).replaceAll("\\Q,\\E", ".");
-    }
-
-    public static String repeat(String s, int n) {
-        if (s == null) {
-            return null;
-        }
-
-        final StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < n; i++) {
-            sb.append(s);
-        }
-
-        return sb.toString();
     }
 }

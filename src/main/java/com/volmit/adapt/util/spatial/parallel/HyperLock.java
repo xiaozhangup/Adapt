@@ -38,16 +38,6 @@ public class HyperLock {
         this(1024, false);
     }
 
-    public void clear() {
-        for(Long i : new HashSet<>(locks.keySet())) {
-            if(locks.get(i).isLocked()) {
-                continue;
-            }
-
-            locks.remove(i);
-        }
-    }
-
     public HyperLock(int capacity) {
         this(capacity, false);
     }
@@ -55,10 +45,20 @@ public class HyperLock {
     public HyperLock(int capacity, boolean fair) {
         this.fair = fair;
         locks = new ConcurrentLinkedHashMap.Builder<Long, ReentrantLock>()
-            .initialCapacity(capacity)
-            .maximumWeightedCapacity(capacity)
-            .concurrencyLevel(32)
-            .build();
+                .initialCapacity(capacity)
+                .maximumWeightedCapacity(capacity)
+                .concurrencyLevel(32)
+                .build();
+    }
+
+    public void clear() {
+        for (Long i : new HashSet<>(locks.keySet())) {
+            if (locks.get(i).isLocked()) {
+                continue;
+            }
+
+            locks.remove(i);
+        }
     }
 
     public void with(int x, int z, Runnable r) {
@@ -78,12 +78,12 @@ public class HyperLock {
         Throwable ee = null;
         try {
             r.run();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             ee = e;
         } finally {
             unlock(x, z);
 
-            if(ee != null) {
+            if (ee != null) {
                 throw ee;
             }
         }
@@ -94,12 +94,12 @@ public class HyperLock {
         IOException ee = null;
         try {
             r.run();
-        } catch(IOException e) {
+        } catch (IOException e) {
             ee = e;
         } finally {
             unlock(x, z);
 
-            if(ee != null) {
+            if (ee != null) {
                 throw ee;
             }
         }
@@ -119,7 +119,7 @@ public class HyperLock {
     public boolean tryLock(int x, int z, long timeout) {
         try {
             return getLock(x, z).tryLock(timeout, TimeUnit.MILLISECONDS);
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -131,7 +131,7 @@ public class HyperLock {
     }
 
     public void lock(int x, int z) {
-        if(!enabled) {
+        if (!enabled) {
             return;
         }
 
@@ -139,7 +139,7 @@ public class HyperLock {
     }
 
     public void unlock(int x, int z) {
-        if(!enabled) {
+        if (!enabled) {
             return;
         }
 

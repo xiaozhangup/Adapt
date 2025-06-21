@@ -19,15 +19,12 @@
 package com.volmit.adapt.api.world;
 
 import com.volmit.adapt.Adapt;
-import com.volmit.adapt.util.reflect.registries.Materials;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-
-import static org.bukkit.Material.*;
 
 // TODO 唐氏，移动到 ItemListings
 public interface AdaptComponent {
