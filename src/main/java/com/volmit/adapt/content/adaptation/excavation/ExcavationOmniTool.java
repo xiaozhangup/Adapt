@@ -180,7 +180,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                                 sp.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 0.25f, 0.77f);
                             }
                         }
-                    } else if (ItemListings.burnable.contains(block.getType())) {
+                    } else if (block.getType().isBurnable()) {
                         J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextFnS(hand)));
                         spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
                         if (imHand != null && imHand.hasDamage()) {

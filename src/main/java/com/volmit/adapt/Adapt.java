@@ -107,16 +107,17 @@ public class Adapt extends VolmitPlugin {
     }
 
     public static KList<Object> initialize(String s, Class<? extends Annotation> slicedClass) {
-        File jar = new File(instance.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
-        JarScanner js = new JarScanner(jar, s);
+        JarScanner js = new JarScanner(instance.getFile(), s);
         KList<Object> v = new KList<>();
         J.attempt(js::scan);
         for (Class<?> i : js.getClasses()) {
             if (slicedClass == null || i.isAnnotationPresent(slicedClass)) {
                 try {
+                    Adapt.verbose("Found class: " + i.getName());
                     v.add(i.getDeclaredConstructor().newInstance());
-                } catch (Throwable ignored) {
-
+                } catch (Throwable e) {
+                    Adapt.verbose("Failed to load class: " + i.getName());
+                    e.printStackTrace();
                 }
             }
         }

@@ -28,6 +28,7 @@ import org.bukkit.entity.EntityType;
 import java.util.HashMap;
 import java.util.List;
 
+// TODO 设计过于智熄，需要重写
 public class ItemListings {
 
     @Getter
@@ -39,7 +40,9 @@ public class ItemListings {
             Material.JUNGLE_LEAVES,
             Material.OAK_LEAVES,
             Material.SPRUCE_LEAVES,
-            Material.MANGROVE_LEAVES
+            Material.MANGROVE_LEAVES,
+            Material.CHERRY_LEAVES,
+            Material.PALE_OAK_LEAVES
     );
 
     @Getter
@@ -219,26 +222,43 @@ public class ItemListings {
             Material.ACACIA_LOG,
             Material.ACACIA_WOOD,
             Material.STRIPPED_ACACIA_LOG,
+            Material.STRIPPED_ACACIA_WOOD,
             Material.BIRCH_LOG,
             Material.BIRCH_WOOD,
             Material.STRIPPED_BIRCH_LOG,
+            Material.STRIPPED_BIRCH_WOOD,
             Material.DARK_OAK_LOG,
             Material.DARK_OAK_WOOD,
             Material.STRIPPED_DARK_OAK_LOG,
+            Material.STRIPPED_DARK_OAK_WOOD,
             Material.JUNGLE_LOG,
             Material.JUNGLE_WOOD,
             Material.STRIPPED_JUNGLE_LOG,
+            Material.STRIPPED_JUNGLE_WOOD,
             Material.OAK_LOG,
             Material.OAK_WOOD,
             Material.STRIPPED_OAK_LOG,
+            Material.STRIPPED_OAK_WOOD,
             Material.SPRUCE_LOG,
             Material.SPRUCE_WOOD,
             Material.STRIPPED_SPRUCE_LOG,
+            Material.STRIPPED_SPRUCE_WOOD,
             Material.MANGROVE_LOG,
             Material.MANGROVE_WOOD,
             Material.STRIPPED_MANGROVE_LOG,
+            Material.STRIPPED_MANGROVE_WOOD,
             Material.CRIMSON_STEM,
-            Material.CRIMSON_HYPHAE
+            Material.CRIMSON_HYPHAE,
+            Material.CHERRY_LOG,
+            Material.CHERRY_WOOD,
+            Material.STRIPPED_CHERRY_LOG,
+            Material.STRIPPED_CHERRY_WOOD,
+            Material.BAMBOO_BLOCK,
+            Material.STRIPPED_BAMBOO_BLOCK,
+            Material.PALE_OAK_LOG,
+            Material.PALE_OAK_WOOD,
+            Material.STRIPPED_PALE_OAK_LOG,
+            Material.STRIPPED_PALE_OAK_WOOD
     );
 
 
@@ -278,40 +298,6 @@ public class ItemListings {
             Material.BEETROOTS,
             Material.DIRT_PATH
 
-    );
-
-    @Getter
-    public static List<Material> tillable = List.of(
-    );
-
-    @Getter
-    public static List<Material> burnable = List.of(
-            Material.OBSIDIAN,
-            Material.NETHERRACK,
-            Material.SOUL_SAND,
-            Material.ACACIA_LEAVES,
-            Material.BIRCH_LEAVES,
-            Material.DARK_OAK_LEAVES,
-            Material.JUNGLE_LEAVES,
-            Material.OAK_LEAVES,
-            Material.SPRUCE_LEAVES,
-            Material.MANGROVE_LEAVES,
-            Material.WHITE_WOOL,
-            Material.ORANGE_WOOL,
-            Material.MAGENTA_WOOL,
-            Material.LIGHT_BLUE_WOOL,
-            Material.YELLOW_WOOL,
-            Material.LIME_WOOL,
-            Material.PINK_WOOL,
-            Material.GRAY_WOOL,
-            Material.LIGHT_GRAY_WOOL,
-            Material.CYAN_WOOL,
-            Material.PURPLE_WOOL,
-            Material.BLUE_WOOL,
-            Material.BROWN_WOOL,
-            Material.GREEN_WOOL,
-            Material.RED_WOOL,
-            Material.BLACK_WOOL
     );
 
     @Getter
@@ -415,11 +401,14 @@ public class ItemListings {
             Material.MYCELIUM,
             Material.SAND,
             Material.SOUL_SAND,
+            Material.SOUL_SOIL,
             Material.SNOW,
             Material.SNOW_BLOCK,
             Material.POWDER_SNOW,
             Material.PODZOL,
-            Material.RED_SAND
+            Material.RED_SAND,
+            Material.MUD,
+            Material.MUDDY_MANGROVE_ROOTS
     );
 
     @Getter
@@ -515,6 +504,9 @@ public class ItemListings {
             Material.OAK_FENCE,
             Material.CRIMSON_FENCE,
             Material.WARPED_FENCE,
+            Material.CHERRY_FENCE,
+            Material.BAMBOO_FENCE,
+            Material.PALE_OAK_FENCE,
             //GATES
             Material.ACACIA_FENCE_GATE,
             Material.BIRCH_FENCE_GATE,
@@ -525,21 +517,9 @@ public class ItemListings {
             Material.OAK_FENCE_GATE,
             Material.CRIMSON_FENCE_GATE,
             Material.WARPED_FENCE_GATE,
-            //SIGNS
-            Material.ACACIA_SIGN,
-            Material.ACACIA_WALL_SIGN,
-            Material.BIRCH_SIGN,
-            Material.BIRCH_WALL_SIGN,
-            Material.DARK_OAK_SIGN,
-            Material.DARK_OAK_WALL_SIGN,
-            Material.JUNGLE_SIGN,
-            Material.JUNGLE_WALL_SIGN,
-            Material.OAK_SIGN,
-            Material.OAK_WALL_SIGN,
-            Material.SPRUCE_SIGN,
-            Material.SPRUCE_WALL_SIGN,
-            Material.MANGROVE_SIGN,
-            Material.MANGROVE_WALL_SIGN,
+            Material.CHERRY_FENCE_GATE,
+            Material.BAMBOO_FENCE_GATE,
+            Material.PALE_OAK_FENCE_GATE,
             //WOODS
             Material.ACACIA_LOG,
             Material.ACACIA_WOOD,
@@ -564,26 +544,65 @@ public class ItemListings {
             Material.STRIPPED_MANGROVE_LOG,
             Material.CRIMSON_STEM,
             Material.CRIMSON_HYPHAE,
-            Material.WARPED_SIGN,
+            Material.CHERRY_LOG,
+            Material.CHERRY_WOOD,
+            Material.STRIPPED_CHERRY_LOG,
+            Material.STRIPPED_CHERRY_WOOD,
+            Material.BAMBOO_BLOCK,
+            Material.STRIPPED_BAMBOO_BLOCK,
+            Material.PALE_OAK_LOG,
+            Material.PALE_OAK_WOOD,
+            Material.STRIPPED_PALE_OAK_LOG,
+            Material.STRIPPED_PALE_OAK_WOOD,
             //SIGNS
             Material.ACACIA_SIGN,
             Material.ACACIA_WALL_SIGN,
+            Material.ACACIA_HANGING_SIGN,
+            Material.ACACIA_WALL_HANGING_SIGN,
             Material.BIRCH_SIGN,
             Material.BIRCH_WALL_SIGN,
+            Material.BIRCH_HANGING_SIGN,
+            Material.BIRCH_WALL_HANGING_SIGN,
             Material.DARK_OAK_SIGN,
             Material.DARK_OAK_WALL_SIGN,
+            Material.DARK_OAK_HANGING_SIGN,
+            Material.DARK_OAK_WALL_HANGING_SIGN,
             Material.JUNGLE_SIGN,
             Material.JUNGLE_WALL_SIGN,
+            Material.JUNGLE_HANGING_SIGN,
+            Material.JUNGLE_WALL_HANGING_SIGN,
             Material.OAK_SIGN,
             Material.OAK_WALL_SIGN,
+            Material.OAK_HANGING_SIGN,
+            Material.OAK_WALL_HANGING_SIGN,
             Material.SPRUCE_SIGN,
             Material.SPRUCE_WALL_SIGN,
+            Material.SPRUCE_HANGING_SIGN,
+            Material.SPRUCE_WALL_HANGING_SIGN,
             Material.MANGROVE_SIGN,
             Material.MANGROVE_WALL_SIGN,
+            Material.MANGROVE_HANGING_SIGN,
+            Material.MANGROVE_WALL_HANGING_SIGN,
             Material.CRIMSON_SIGN,
             Material.CRIMSON_WALL_SIGN,
+            Material.CRIMSON_HANGING_SIGN,
+            Material.CRIMSON_WALL_HANGING_SIGN,
             Material.WARPED_SIGN,
             Material.WARPED_WALL_SIGN,
+            Material.WARPED_HANGING_SIGN,
+            Material.WARPED_WALL_HANGING_SIGN,
+            Material.CHERRY_SIGN,
+            Material.CHERRY_WALL_SIGN,
+            Material.CHERRY_HANGING_SIGN,
+            Material.CHERRY_WALL_HANGING_SIGN,
+            Material.BAMBOO_SIGN,
+            Material.BAMBOO_WALL_SIGN,
+            Material.BAMBOO_HANGING_SIGN,
+            Material.BAMBOO_WALL_HANGING_SIGN,
+            Material.PALE_OAK_SIGN,
+            Material.PALE_OAK_WALL_SIGN,
+            Material.PALE_OAK_HANGING_SIGN,
+            Material.PALE_OAK_WALL_HANGING_SIGN,
             //WOODEN_BUTTONS
             Material.ACACIA_BUTTON,
             Material.BIRCH_BUTTON,
@@ -594,6 +613,9 @@ public class ItemListings {
             Material.MANGROVE_BUTTON,
             Material.CRIMSON_BUTTON,
             Material.WARPED_BUTTON,
+            Material.CHERRY_BUTTON,
+            Material.BAMBOO_BUTTON,
+            Material.PALE_OAK_BUTTON,
             //WOODEN_DOORS
             Material.ACACIA_DOOR,
             Material.BIRCH_DOOR,
@@ -604,6 +626,9 @@ public class ItemListings {
             Material.MANGROVE_DOOR,
             Material.CRIMSON_DOOR,
             Material.WARPED_DOOR,
+            Material.CHERRY_DOOR,
+            Material.BAMBOO_DOOR,
+            Material.PALE_OAK_DOOR,
             //WOODEN_PRESSURE_PLATES
             Material.ACACIA_PRESSURE_PLATE,
             Material.BIRCH_PRESSURE_PLATE,
@@ -614,6 +639,9 @@ public class ItemListings {
             Material.MANGROVE_PRESSURE_PLATE,
             Material.CRIMSON_PRESSURE_PLATE,
             Material.WARPED_PRESSURE_PLATE,
+            Material.CHERRY_PRESSURE_PLATE,
+            Material.BAMBOO_PRESSURE_PLATE,
+            Material.PALE_OAK_PRESSURE_PLATE,
             //WOODEN_TRAPDOORS
             Material.ACACIA_TRAPDOOR,
             Material.BIRCH_TRAPDOOR,
@@ -624,6 +652,9 @@ public class ItemListings {
             Material.MANGROVE_TRAPDOOR,
             Material.CRIMSON_TRAPDOOR,
             Material.WARPED_TRAPDOOR,
+            Material.CHERRY_TRAPDOOR,
+            Material.BAMBOO_TRAPDOOR,
+            Material.PALE_OAK_TRAPDOOR,
             //WOODEN_STAIRS
             Material.ACACIA_STAIRS,
             Material.BIRCH_STAIRS,
@@ -634,6 +665,10 @@ public class ItemListings {
             Material.MANGROVE_STAIRS,
             Material.CRIMSON_STAIRS,
             Material.WARPED_STAIRS,
+            Material.CHERRY_STAIRS,
+            Material.BAMBOO_STAIRS,
+            Material.BAMBOO_MOSAIC_STAIRS,
+            Material.PALE_OAK_STAIRS,
             //WOODEN_SLABS
             Material.ACACIA_SLAB,
             Material.BIRCH_SLAB,
@@ -644,6 +679,10 @@ public class ItemListings {
             Material.MANGROVE_SLAB,
             Material.CRIMSON_SLAB,
             Material.WARPED_SLAB,
+            Material.CHERRY_SLAB,
+            Material.BAMBOO_SLAB,
+            Material.BAMBOO_MOSAIC_SLAB,
+            Material.PALE_OAK_SLAB,
             //PLANKS
             Material.ACACIA_PLANKS,
             Material.BIRCH_PLANKS,
@@ -654,6 +693,10 @@ public class ItemListings {
             Material.MANGROVE_PLANKS,
             Material.CRIMSON_PLANKS,
             Material.WARPED_PLANKS,
+            Material.CHERRY_PLANKS,
+            Material.BAMBOO_PLANKS,
+            Material.BAMBOO_MOSAIC,
+            Material.PALE_OAK_PLANKS,
             //MISC
             Material.BEE_NEST,
             Material.DRIED_KELP_BLOCK,
