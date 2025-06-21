@@ -44,6 +44,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.*;
@@ -439,6 +440,11 @@ public class VolmitSender implements CommandSender {
     @Override
     public Spigot spigot() {
         return s.spigot();
+    }
+
+    @Override
+    public @NotNull Component name() {
+        return Component.text("Adapt");
     }
 
     private String pickRandoms(int max, VirtualDecreeCommand i) {

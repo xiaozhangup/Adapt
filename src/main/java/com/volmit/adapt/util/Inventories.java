@@ -31,15 +31,6 @@ import java.util.List;
  * @author cyberpwn
  */
 public class Inventories {
-    /**
-     * Does the inventory have any space (empty slots)
-     *
-     * @param i the inventory
-     * @return true if it has at least one slot empty
-     */
-    public static boolean hasSpace(Inventory i) {
-        return new PhantomInventory(i).hasSpace();
-    }
 
     /**
      * Does the inventory have a given amount of empty space (or more)

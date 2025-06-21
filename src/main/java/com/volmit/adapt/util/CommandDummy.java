@@ -19,6 +19,7 @@
 
 package com.volmit.adapt.util;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
@@ -68,6 +69,11 @@ public class CommandDummy implements CommandSender {
     @Override
     public Spigot spigot() {
         return null;
+    }
+
+    @Override
+    public @NotNull Component name() {
+        return Component.text("Dummy");
     }
 
     @Override

@@ -20,6 +20,7 @@ package com.volmit.adapt.content.adaptation.stealth;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.version.Modifier;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.reflect.registries.Attributes;
@@ -76,7 +77,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             }
             double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY)
                             .stream()
-                            .mapToDouble(IAttribute.Modifier::getAmount)
+                            .mapToDouble(Modifier::getAmount)
                             .filter(d -> !Double.isNaN(d))
                             .max()
                             .orElse(0);;

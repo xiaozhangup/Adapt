@@ -123,7 +123,6 @@ public class Adapt extends VolmitPlugin {
         startSim();
         CustomBlockData.registerListener(this);
         registerListener(new BrewingManager());
-        registerListener(Version.get());
         // setupMetrics();
         // startupPrint(); // Splash screen
         if (AdaptConfig.get().isAutoUpdateCheck()) {
@@ -244,7 +243,8 @@ public class Adapt extends VolmitPlugin {
     }
 
     public static KList<Object> initialize(String s, Class<? extends Annotation> slicedClass) {
-        JarScanner js = new JarScanner(instance.jar(), s);
+        File jar = new File(instance.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+        JarScanner js = new JarScanner(jar, s);
         KList<Object> v = new KList<>();
         J.attempt(js::scan);
         for (Class<?> i : js.getClasses()) {

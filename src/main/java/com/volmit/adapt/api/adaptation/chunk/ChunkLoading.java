@@ -20,24 +20,20 @@ package com.volmit.adapt.api.adaptation.chunk;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.J;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.util.function.Consumer;
 
 public class ChunkLoading {
     public static void loadChunkAsync(Location l, Consumer<Chunk> chunk) {
-        if (l.getWorld().isChunkLoaded(l.getBlockX() >> 4, l.getBlockZ() >> 4)) {
+        World world = l.getWorld();
+        if (world.isChunkLoaded(l.getBlockX() >> 4, l.getBlockZ() >> 4)) {
             chunk.accept(l.getChunk());
             return;
         }
         Adapt.verbose("Loading chunk async for " + l);
-        if (PaperLib.isPaper()) {
-            PaperLib.getChunkAtAsync(l, false).thenAccept(c -> J.s(() -> chunk.accept(c)));
-        } else { // :(
-            Adapt.verbose("Shitty server software");
-            chunk.accept(l.getChunk());
-        }
+        world.getChunkAtAsync(l).thenAccept(c -> J.s(() -> chunk.accept(c)));
     }
 }

@@ -20,6 +20,7 @@ package com.volmit.adapt.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -209,5 +210,10 @@ public class MortarSender implements CommandSender {
     @Override
     public Spigot spigot() {
         return s.spigot();
+    }
+
+    @Override
+    public @NotNull Component name() {
+        return Component.text("Mortar");
     }
 }
