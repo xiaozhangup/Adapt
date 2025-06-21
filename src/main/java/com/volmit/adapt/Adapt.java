@@ -36,10 +36,8 @@ import com.volmit.adapt.util.collection.KList;
 import com.volmit.adapt.util.collection.KMap;
 import com.volmit.adapt.util.secret.SecretSplash;
 import de.slikey.effectlib.EffectManager;
-import fr.skytasul.glowingentities.GlowingEntities;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -62,15 +60,12 @@ public class Adapt extends VolmitPlugin {
     public static Adapt instance;
     public static Gson gson;
     public static HashMap<String, String> wordKey = new HashMap<>();
-    public static BukkitAudiences audiences;
     private static VolmitSender sender;
     public final EffectManager adaptEffectManager = new EffectManager(this);
     private final KList<Runnable> postShutdown = new KList<>();
     @Getter
     private final Map<String, Window> guiLeftovers = new HashMap<>();
     private KMap<Class<? extends AdaptService>, AdaptService> services;
-    @Getter
-    private GlowingEntities glowingEntities;
     @Getter
     private Ticker ticker;
     @Getter
@@ -265,7 +260,6 @@ public class Adapt extends VolmitPlugin {
 
     @Override
     public void start() {
-        audiences = BukkitAudiences.create(this);
         services = new KMap<>();
         initialize("com.volmit.adapt.service").forEach((i) -> services.put((Class<? extends AdaptService>) i.getClass(), (AdaptService) i));
 
@@ -317,7 +311,6 @@ public class Adapt extends VolmitPlugin {
             protectorRegistry.registerProtector(new WorldProtector());
             info("Enabled OrangDomainProtector!");
         }
-        glowingEntities = new GlowingEntities(this);
         initializeAdaptationListings();
         services.values().forEach(AdaptService::onEnable);
         services.values().forEach(this::registerListener);
@@ -348,7 +341,6 @@ public class Adapt extends VolmitPlugin {
         services.values().forEach(AdaptService::onDisable);
         sqlManager.closeConnection();
         stopSim();
-        glowingEntities.disable();
         protectorRegistry.unregisterAll();
         services.clear();
     }

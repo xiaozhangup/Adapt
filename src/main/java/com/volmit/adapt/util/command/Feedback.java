@@ -32,7 +32,7 @@ public class Feedback {
 
         for (TextComponent i : messages) {
             String prefix = C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "]";
-            Adapt.audiences.sender(serverOrPlayer).sendMessage(i.content(prefix + " " + i.content()));
+            serverOrPlayer.sendMessage(i.content(prefix + " " + i.content()));
         }
     }
 
