@@ -293,7 +293,6 @@
       "welcomeback": "欢迎回来！",
       "maxabilitypower": "最大能力值",
       "xpbonusfortime": "经验增益，持续",
-      "maxabilitypower": "最大能力数量",
       "unlockthisbyclicking": "右键该方块以解锁：",
       "back": "返回上一页",
       "unlearnall": "忘却全部技能",
@@ -928,12 +927,6 @@
       "lore1": "按住潜行键，并挖掘矿物",
       "lore2": "连锁挖矿范围",
       "lore3": "此技能不会将掉落物合并在一起！"
-    },
-    "silkspawner": {
-      "name": "精准采集刷怪箱镐",
-      "description": "破坏时使刷怪箱掉落",
-      "lore1": "使用精准破坏时可破坏刷怪箱",
-      "lore2": "潜行时可破坏刷怪箱"
     }
   },
   "ranged": {
