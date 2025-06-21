@@ -166,7 +166,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                 if (block != null) {
                     SoundPlayer sp = SoundPlayer.of(p);
                     SoundPlayer spw = SoundPlayer.of(p.getWorld());
-                    if (ItemListings.farmable.contains(block.getType())) {
+                    if (ItemListings.isFarmable(block.getType())) {
                         if (isShovel(hand)) {
                             J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextHoe(hand)));
                             spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
@@ -255,7 +255,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             }
 
             Damageable imHand = (Damageable) hand.getItemMeta();
-            if (ItemListings.getAxePreference().contains(b.getType())) {
+            if (ItemListings.isAxePreference(b)) {
                 if (!isAxe(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to axe");
                     J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextAxe(hand)));
@@ -263,7 +263,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                 } else {
                     Adapt.verbose("Omnitool for " + p.getName() + " is already axe");
                 }
-            } else if (ItemListings.getShovelPreference().contains(b.getType())) {
+            } else if (ItemListings.isShovelPreference(b)) {
                 if (!isShovel(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to shovel");
                     J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextShovel(hand)));
@@ -271,7 +271,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                 } else {
                     Adapt.verbose("Omnitool for " + p.getName() + " is already shovel");
                 }
-            } else if (ItemListings.getSwordPreference().contains(b.getType())) {
+            } else if (ItemListings.isSwordPreference(b)) {
                 if (!isSword(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to sword");
                     J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextSword(hand)));
@@ -307,7 +307,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                     return;
                 }
             }
-            if (ItemListings.tool.contains(cursor.getType()) && ItemListings.tool.contains(clicked.getType())) { // TOOLS ONLY
+            if (ItemListings.isTool(cursor.getType()) && ItemListings.isTool(clicked.getType())) { // TOOLS ONLY
                 if (!cursor.getType().isAir() && !clicked.getType().isAir() && omniTool.supportsItem(cursor) && omniTool.supportsItem(clicked)) {
                     e.setCancelled(true);
                     e.getWhoClicked().setItemOnCursor(new ItemStack(Material.AIR));

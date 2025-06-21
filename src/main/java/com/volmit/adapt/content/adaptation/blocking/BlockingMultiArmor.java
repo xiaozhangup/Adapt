@@ -43,6 +43,15 @@ import java.util.Map;
 public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Config> {
     private static final MultiArmor multiarmor = new MultiArmor();
     private final Map<Player, Long> cooldowns;
+    private final List<Material> multiArmorable = List.of(
+            Material.ELYTRA,
+            Material.CHAINMAIL_CHESTPLATE,
+            Material.DIAMOND_CHESTPLATE,
+            Material.GOLDEN_CHESTPLATE,
+            Material.IRON_CHESTPLATE,
+            Material.LEATHER_CHESTPLATE,
+            Material.NETHERITE_CHESTPLATE
+    );
 
 
     public BlockingMultiArmor() {
@@ -171,7 +180,7 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
                         return;
                     }
                 }
-                if (ItemListings.getMultiArmorable().contains(cursor.getType()) && ItemListings.getMultiArmorable().contains(clicked.getType())) { // Chest/Elytra Only
+                if (multiArmorable.contains(cursor.getType()) && multiArmorable.contains(clicked.getType())) { // Chest/Elytra Only
 
                     if (!cursor.getType().isAir() && !clicked.getType().isAir() && multiarmor.supportsItem(cursor) && multiarmor.supportsItem(clicked)) {
                         e.setCancelled(true);

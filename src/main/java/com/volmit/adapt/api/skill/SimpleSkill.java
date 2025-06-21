@@ -142,7 +142,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
         if (!e.isAlive() || e.equals(EntityType.PARROT)) {
             return false;
         }
-        return !ItemListings.getInvalidDamageableEntities().contains(e);
+        return !ItemListings.isInvalidDamageableEntities(e);
     }
 
     protected boolean shouldReturnForPlayer(Player p) {

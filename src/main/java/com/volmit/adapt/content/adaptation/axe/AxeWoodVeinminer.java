@@ -20,6 +20,7 @@ package com.volmit.adapt.content.adaptation.axe;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+// TODO 等级为 V 时清理树叶
 public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> {
     public AxeWoodVeinminer() {
         super("axe-wood-veinminer");
@@ -83,7 +85,7 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                 return;
             }
 
-            if (isLog(new ItemStack(e.getBlock().getType()))) {
+            if (ItemListings.isLog(e.getBlock().getType())) {
                 Block block = e.getBlock();
                 Set<Block> blockMap = new HashSet<>();
                 int blockCount = 0;
@@ -123,7 +125,7 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                             }
                             blocks.setType(Material.AIR);
                         } else {
-                            blocks.breakNaturally(p.getItemInUse());
+                            blocks.breakNaturally(p.getInventory().getItemInMainHand());
                             SoundPlayer spw = SoundPlayer.of(blocks.getWorld());
                             spw.play(e.getBlock().getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.01f, 0.25f);
                             if (getConfig().showParticles) {
@@ -158,7 +160,7 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
         int maxLevel = 5;
         int initialCost = 4;
         double costFactor = 2.325;
-        int maxBlocks = 20;
+        int maxBlocks = 128;
         int baseRange = 3;
     }
 }

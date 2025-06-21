@@ -27,7 +27,6 @@ import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulGlobe;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulHealing;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulLance;
-import com.volmit.adapt.content.adaptation.tragoul.TragoulThorns;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
 import com.volmit.adapt.util.reflect.registries.Particles;
@@ -58,7 +57,6 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
         setInterval(2755);
         setIcon(Material.CRIMSON_ROOTS);
         cooldowns = new HashMap<>();
-        registerAdaptation(new TragoulThorns());
         registerAdaptation(new TragoulGlobe());
         registerAdaptation(new TragoulHealing());
         registerAdaptation(new TragoulLance());

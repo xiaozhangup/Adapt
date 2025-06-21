@@ -51,7 +51,6 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
         registerAdaptation(new RangedPiercing());
         registerAdaptation(new RangedArrowRecovery());
         registerAdaptation(new RangedLungeShot());
-        registerAdaptation(new RangedWebBomb());
         setIcon(Material.CROSSBOW);
         cooldowns = new HashMap<>();
     }

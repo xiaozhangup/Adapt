@@ -166,7 +166,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
         if (!hasAdaptation(p)) {
             return;
         }
-        if (!e.getBlock().getBlockData().getMaterial().name().endsWith("_ORE") && !ItemListings.getSmeltOre().contains(e.getBlock().getType())) {
+        if (!e.getBlock().getBlockData().getMaterial().name().endsWith("_ORE") && !ItemListings.isSmeltOre(e.getBlock().getType())) {
             return;
         }
         if (!canBlockBreak(p, e.getBlock().getLocation())) {

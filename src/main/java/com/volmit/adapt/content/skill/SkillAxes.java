@@ -25,6 +25,7 @@ import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.axe.*;
+import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
@@ -54,9 +55,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
         setIcon(Material.GOLDEN_AXE);
         cooldowns = new HashMap<>();
         registerAdaptation(new AxeGroundSmash());
-        registerAdaptation(new AxeChop());
         registerAdaptation(new AxeDropToInventory());
-        registerAdaptation(new AxeLeafVeinminer());
         registerAdaptation(new AxeWoodVeinminer());
         registerAdaptation(new AxeCraftLogSwap());
         registerAdvancement(AdaptAdvancement.builder()
@@ -140,7 +139,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
         }
         Player p = e.getPlayer();
         shouldReturnForPlayer(p, () -> {
-            if (isAxe(p.getInventory().getItemInMainHand()) && isLog(new ItemStack(e.getBlock().getType()))) {
+            if (isAxe(p.getInventory().getItemInMainHand()) && ItemListings.isLog(e.getBlock().getType())) {
                 double v = getValue(e.getBlock().getType());
                 AdaptPlayer a = getPlayer(p);
                 a.getData().addStat("axes.blocks.broken", 1);

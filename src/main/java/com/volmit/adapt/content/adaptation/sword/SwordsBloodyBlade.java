@@ -77,7 +77,7 @@ public class SwordsBloodyBlade extends SimpleAdaptation<SwordsBloodyBlade.Config
         if (e.isCancelled()) {
             return;
         }
-        if (e.getDamager() instanceof Player p && hasAdaptation(p) && ItemListings.getToolSwords().contains(p.getInventory().getItemInMainHand().getType())) {
+        if (e.getDamager() instanceof Player p && hasAdaptation(p) && p.getInventory().getItemInMainHand().getType().name().endsWith("_SWORD")) {
             Long cooldown = cooldowns.get(p);
             if (cooldown != null && cooldown > System.currentTimeMillis())
                 return;

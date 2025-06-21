@@ -57,7 +57,6 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
         registerAdaptation(new RiftGate());
         registerAdaptation(new RiftBlink());
         registerAdaptation(new RiftDescent());
-        registerAdaptation(new RiftVisage());
         lasttp = new HashMap<>();
     }
 

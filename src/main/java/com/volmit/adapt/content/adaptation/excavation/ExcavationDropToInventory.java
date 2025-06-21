@@ -80,7 +80,7 @@ public class ExcavationDropToInventory extends SimpleAdaptation<ExcavationDropTo
         if (!canBlockBreak(p, e.getBlock().getLocation())) {
             return;
         }
-        if (ItemListings.toolShovels.contains(p.getInventory().getItemInMainHand().getType())) {
+        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_SHOVEL")) {
             List<Item> items = e.getItems().copy();
             e.getItems().clear();
             for (Item i : items) {

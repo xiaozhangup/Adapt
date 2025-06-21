@@ -57,7 +57,6 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
         registerAdaptation(new CraftingXP());
         registerAdaptation(new CraftingLeather());
         registerAdaptation(new CraftingSkulls());
-        registerAdaptation(new CraftingBackpacks());
         registerAdaptation(new CraftingStations());
         registerAdaptation(new CraftingReconstruction());
         registerAdvancement(AdaptAdvancement.builder()

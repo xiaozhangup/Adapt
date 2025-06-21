@@ -33,7 +33,20 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class HerbalismLuck extends SimpleAdaptation<HerbalismLuck.Config> {
+    private static final List<Material> herbalLuckFood = List.of(
+            Material.POTATOES,
+            Material.CARROTS,
+            Material.BEETROOTS,
+            Material.APPLE
+    );
+    private static final List<Material> herbalLuckSeeds = List.of(
+            Material.MELON_SEEDS,
+            Material.PUMPKIN_SEEDS,
+            Material.COCOA_BEANS
+    );
 
     public HerbalismLuck() {
         super("herbalism-luck");
@@ -72,7 +85,7 @@ public class HerbalismLuck extends SimpleAdaptation<HerbalismLuck.Config> {
         Block broken = e.getBlock();
         if (broken.getType() == Materials.GRASS || broken.getType() == Material.TALL_GRASS) {
             var d = Math.random() * 100;
-            Material m = ItemListings.getHerbalLuckSeeds().getRandom();
+            Material m = herbalLuckSeeds.getRandom();
             if (d < getEffectiveness(getLevel(p))) {
                 xp(p, 100);
                 ItemStack luckDrop = new ItemStack(m, 1);
@@ -80,9 +93,9 @@ public class HerbalismLuck extends SimpleAdaptation<HerbalismLuck.Config> {
             }
         }
 
-        if (ItemListings.getFlowers().contains(broken.getType())) {
+        if (ItemListings.isFlowers(broken.getType())) {
             var d = Math.random() * 100;
-            Material m = ItemListings.getHerbalLuckFood().getRandom();
+            Material m = herbalLuckFood.getRandom();
             if (d < getEffectiveness(getLevel(p))) {
                 xp(p, 100);
                 ItemStack luckDrop = new ItemStack(m, 1);

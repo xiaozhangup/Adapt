@@ -21,7 +21,6 @@ package com.volmit.adapt.content.skill;
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.adaptation.sword.SwordsBloodyBlade;
-import com.volmit.adapt.content.adaptation.sword.SwordsMachete;
 import com.volmit.adapt.content.adaptation.sword.SwordsPoisonedBlade;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -48,7 +47,6 @@ public class SkillSwords extends SimpleSkill<SkillSwords.Config> {
         setInterval(2150);
         setIcon(Material.DIAMOND_SWORD);
         cooldowns = new HashMap<>();
-        registerAdaptation(new SwordsMachete());
         registerAdaptation(new SwordsPoisonedBlade());
         registerAdaptation(new SwordsBloodyBlade());
     }

@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.bukkit.Material.*;
 
+// TODO 唐氏，移动到 ItemListings
 public interface AdaptComponent {
     default AdaptServer getServer() {
         return Adapt.instance.getAdaptServer();
@@ -134,16 +135,6 @@ public interface AdaptComponent {
 //            };
 //        }
 //        return false;
-    }
-
-    default boolean isLog(ItemStack it) {
-        if (isItem(it)) {
-            return List.of(MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS).contains(it.getType())
-                    || it.getType().name().endsWith("_LOG")
-                    || it.getType().name().endsWith("_WOOD");
-        }
-
-        return false;
     }
 
     default boolean isLeaves(ItemStack it) {

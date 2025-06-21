@@ -18,143 +18,43 @@
 
 package com.volmit.adapt.content.item;
 
-import com.volmit.adapt.api.version.Version;
-import com.volmit.adapt.util.C;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-// TODO 设计过于智熄，需要重写
+import static org.bukkit.Material.*;
+import static org.bukkit.Material.MANGROVE_ROOTS;
+import static org.bukkit.Material.MUDDY_MANGROVE_ROOTS;
+
 public class ItemListings {
-
-    @Getter
-    public static final List<Material> shearList = List.of(
-            Material.ACACIA_LEAVES,
-            Material.AZALEA_LEAVES,
-            Material.BIRCH_LEAVES,
-            Material.DARK_OAK_LEAVES,
-            Material.JUNGLE_LEAVES,
-            Material.OAK_LEAVES,
-            Material.SPRUCE_LEAVES,
-            Material.MANGROVE_LEAVES,
-            Material.CHERRY_LEAVES,
-            Material.PALE_OAK_LEAVES
+    public static final List<EntityType> additionalInvalid = List.of(
+            EntityType.ARMOR_STAND,
+            EntityType.ITEM_FRAME,
+            EntityType.PAINTING,
+            EntityType.LEASH_KNOT,
+            EntityType.EVOKER_FANGS,
+            EntityType.MARKER
     );
 
-    @Getter
-    public static final List<EntityType> invalidDamageableEntities = Version.get().getInvalidDamageableEntities();
+    public static boolean isFlowers(Material material) {
+        return flowers.contains(material);
+    }
 
-    @Getter
-    public static final List<Material> smeltOre = List.of(
-            Material.NETHER_GOLD_ORE,
-            Material.IRON_ORE,
-            Material.GOLD_ORE,
-            Material.COPPER_ORE,
-            Material.DEEPSLATE_IRON_ORE,
-            Material.DEEPSLATE_GOLD_ORE,
-            Material.DEEPSLATE_COPPER_ORE
-    );
+    public static boolean isLeaves(Material material) {
+        return material.name().endsWith("_LEAVES");
+    }
 
-    @Getter
-    public static final List<Material> ores = List.of(
-            Material.IRON_ORE,
-            Material.GOLD_ORE,
-            Material.COPPER_ORE,
-            Material.LAPIS_ORE,
-            Material.REDSTONE_ORE,
-            Material.EMERALD_ORE,
-            Material.DIAMOND_ORE,
-            Material.COAL_ORE,
-            Material.DEEPSLATE_IRON_ORE,
-            Material.DEEPSLATE_GOLD_ORE,
-            Material.DEEPSLATE_COPPER_ORE,
-            Material.DEEPSLATE_LAPIS_ORE,
-            Material.DEEPSLATE_REDSTONE_ORE,
-            Material.DEEPSLATE_EMERALD_ORE,
-            Material.DEEPSLATE_DIAMOND_ORE,
-            Material.DEEPSLATE_COAL_ORE,
-            Material.NETHER_GOLD_ORE,
-            Material.NETHER_QUARTZ_ORE,
-            Material.ANCIENT_DEBRIS
-    );
+    public static boolean isLog(Material material) {
+        return List.of(MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS).contains(material)
+                    || material.name().endsWith("_LOG")
+                    || material.name().endsWith("_WOOD");
 
-    @Getter
-    public static HashMap<Material, ChatColor> oreColorsChatColor = new HashMap<>() {{
-        put(Material.IRON_ORE, ChatColor.GRAY);
-        put(Material.GOLD_ORE, ChatColor.YELLOW);
-        put(Material.COPPER_ORE, ChatColor.GOLD);
-        put(Material.LAPIS_ORE, ChatColor.BLUE);
-        put(Material.REDSTONE_ORE, ChatColor.RED);
-        put(Material.EMERALD_ORE, ChatColor.GREEN);
-        put(Material.DIAMOND_ORE, ChatColor.AQUA);
-        put(Material.COAL_ORE, ChatColor.DARK_GRAY);
-        put(Material.DEEPSLATE_IRON_ORE, ChatColor.GRAY);
-        put(Material.DEEPSLATE_GOLD_ORE, ChatColor.YELLOW);
-        put(Material.DEEPSLATE_COPPER_ORE, ChatColor.GOLD);
-        put(Material.DEEPSLATE_LAPIS_ORE, ChatColor.BLUE);
-        put(Material.DEEPSLATE_REDSTONE_ORE, ChatColor.RED);
-        put(Material.DEEPSLATE_EMERALD_ORE, ChatColor.GREEN);
-        put(Material.DEEPSLATE_DIAMOND_ORE, ChatColor.AQUA);
-        put(Material.DEEPSLATE_COAL_ORE, ChatColor.DARK_GRAY);
-        put(Material.NETHER_GOLD_ORE, ChatColor.YELLOW);
-        put(Material.NETHER_QUARTZ_ORE, ChatColor.WHITE);
-        put(Material.ANCIENT_DEBRIS, ChatColor.DARK_PURPLE);
-    }};
+    }
 
-    @Getter
-    public static HashMap<Material, C> oreColorColor = new HashMap<>() {{
-        put(Material.IRON_ORE, C.GRAY);
-        put(Material.GOLD_ORE, C.YELLOW);
-        put(Material.COPPER_ORE, C.GOLD);
-        put(Material.LAPIS_ORE, C.BLUE);
-        put(Material.REDSTONE_ORE, C.RED);
-        put(Material.EMERALD_ORE, C.GREEN);
-        put(Material.DIAMOND_ORE, C.AQUA);
-        put(Material.COAL_ORE, C.DARK_GRAY);
-        put(Material.DEEPSLATE_IRON_ORE, C.GRAY);
-        put(Material.DEEPSLATE_GOLD_ORE, C.YELLOW);
-        put(Material.DEEPSLATE_COPPER_ORE, C.GOLD);
-        put(Material.DEEPSLATE_LAPIS_ORE, C.BLUE);
-        put(Material.DEEPSLATE_REDSTONE_ORE, C.RED);
-        put(Material.DEEPSLATE_EMERALD_ORE, C.GREEN);
-        put(Material.DEEPSLATE_DIAMOND_ORE, C.AQUA);
-        put(Material.DEEPSLATE_COAL_ORE, C.DARK_GRAY);
-        put(Material.NETHER_GOLD_ORE, C.YELLOW);
-        put(Material.NETHER_QUARTZ_ORE, C.WHITE);
-        put(Material.ANCIENT_DEBRIS, C.DARK_PURPLE);
-    }};
-
-    @Getter
-    public static List<Material> herbalLuckSeeds = List.of(
-            Material.MELON_SEEDS,
-            Material.PUMPKIN_SEEDS,
-            Material.COCOA_BEANS
-    );
-
-    @Getter
-    public static List<Material> swordPreference = List.of(
-            Material.COBWEB,
-            Material.CAVE_VINES,
-            Material.CAVE_VINES_PLANT,
-            Material.BAMBOO,
-            Material.COCOA,
-            Material.COCOA_BEANS,
-            Material.HAY_BLOCK
-    );
-
-    @Getter
-    public static List<Material> herbalLuckFood = List.of(
-            Material.POTATOES,
-            Material.CARROTS,
-            Material.BEETROOTS,
-            Material.APPLE
-    );
-
-    @Getter
     public static List<Material> flowers = List.of(
             Material.DANDELION,
             Material.POPPY,
@@ -174,7 +74,10 @@ public class ItemListings {
             Material.WITHER_ROSE
     );
 
-    @Getter
+    public static boolean isFood(Material material) {
+        return food.contains(material);
+    }
+
     public static List<Material> food = List.of(
             Material.APPLE,
             Material.BAKED_POTATO,
@@ -217,71 +120,10 @@ public class ItemListings {
 
     );
 
-    @Getter
-    public static List<Material> stripList = List.of(
-            Material.ACACIA_LOG,
-            Material.ACACIA_WOOD,
-            Material.STRIPPED_ACACIA_LOG,
-            Material.STRIPPED_ACACIA_WOOD,
-            Material.BIRCH_LOG,
-            Material.BIRCH_WOOD,
-            Material.STRIPPED_BIRCH_LOG,
-            Material.STRIPPED_BIRCH_WOOD,
-            Material.DARK_OAK_LOG,
-            Material.DARK_OAK_WOOD,
-            Material.STRIPPED_DARK_OAK_LOG,
-            Material.STRIPPED_DARK_OAK_WOOD,
-            Material.JUNGLE_LOG,
-            Material.JUNGLE_WOOD,
-            Material.STRIPPED_JUNGLE_LOG,
-            Material.STRIPPED_JUNGLE_WOOD,
-            Material.OAK_LOG,
-            Material.OAK_WOOD,
-            Material.STRIPPED_OAK_LOG,
-            Material.STRIPPED_OAK_WOOD,
-            Material.SPRUCE_LOG,
-            Material.SPRUCE_WOOD,
-            Material.STRIPPED_SPRUCE_LOG,
-            Material.STRIPPED_SPRUCE_WOOD,
-            Material.MANGROVE_LOG,
-            Material.MANGROVE_WOOD,
-            Material.STRIPPED_MANGROVE_LOG,
-            Material.STRIPPED_MANGROVE_WOOD,
-            Material.CRIMSON_STEM,
-            Material.CRIMSON_HYPHAE,
-            Material.CHERRY_LOG,
-            Material.CHERRY_WOOD,
-            Material.STRIPPED_CHERRY_LOG,
-            Material.STRIPPED_CHERRY_WOOD,
-            Material.BAMBOO_BLOCK,
-            Material.STRIPPED_BAMBOO_BLOCK,
-            Material.PALE_OAK_LOG,
-            Material.PALE_OAK_WOOD,
-            Material.STRIPPED_PALE_OAK_LOG,
-            Material.STRIPPED_PALE_OAK_WOOD
-    );
+    public static boolean isFarmable(Material material) {
+        return farmable.contains(material);
+    }
 
-
-    @Getter
-    public static List<Material> ignitable = List.of(
-            Material.OBSIDIAN,
-            Material.NETHERRACK,
-            Material.SOUL_SAND,
-            Material.TNT
-    );
-
-    @Getter
-    public static List<Material> multiArmorable = List.of(
-            Material.ELYTRA,
-            Material.CHAINMAIL_CHESTPLATE,
-            Material.DIAMOND_CHESTPLATE,
-            Material.GOLDEN_CHESTPLATE,
-            Material.IRON_CHESTPLATE,
-            Material.LEATHER_CHESTPLATE,
-            Material.NETHERITE_CHESTPLATE
-    );
-
-    @Getter
     public static List<Material> farmable = List.of(
             Material.GRASS_BLOCK,
             Material.DIRT,
@@ -297,119 +139,14 @@ public class ItemListings {
             Material.CARROTS,
             Material.BEETROOTS,
             Material.DIRT_PATH
-
     );
 
-    @Getter
-    public static List<Material> toolPickaxes = List.of(
-            Material.WOODEN_PICKAXE,
-            Material.STONE_PICKAXE,
-            Material.IRON_PICKAXE,
-            Material.GOLDEN_PICKAXE,
-            Material.DIAMOND_PICKAXE,
-            Material.NETHERITE_PICKAXE
-    );
-
-    @Getter
-    public static List<Material> toolAxes = List.of(
-            Material.WOODEN_AXE,
-            Material.STONE_AXE,
-            Material.IRON_AXE,
-            Material.GOLDEN_AXE,
-            Material.DIAMOND_AXE,
-            Material.NETHERITE_AXE
-    );
-
-    @Getter
-    public static List<Material> toolSwords = List.of(
-            Material.WOODEN_SWORD,
-            Material.STONE_SWORD,
-            Material.IRON_SWORD,
-            Material.GOLDEN_SWORD,
-            Material.DIAMOND_SWORD,
-            Material.NETHERITE_SWORD
-    );
-
-    @Getter
-    public static List<Material> toolShovels = List.of(
-            Material.WOODEN_SHOVEL,
-            Material.STONE_SHOVEL,
-            Material.IRON_SHOVEL,
-            Material.GOLDEN_SHOVEL,
-            Material.DIAMOND_SHOVEL,
-            Material.NETHERITE_SHOVEL
-    );
-
-    @Getter
-    public static List<Material> toolHoes = List.of(
-            Material.WOODEN_HOE,
-            Material.STONE_HOE,
-            Material.IRON_HOE,
-            Material.GOLDEN_HOE,
-            Material.DIAMOND_HOE,
-            Material.NETHERITE_HOE
-    );
-
-    @Getter
-    public static List<Material> tool = List.of(
-            Material.WOODEN_PICKAXE,
-            Material.STONE_PICKAXE,
-            Material.IRON_PICKAXE,
-            Material.GOLDEN_PICKAXE,
-            Material.DIAMOND_PICKAXE,
-            Material.NETHERITE_PICKAXE,
-            //AXE
-            Material.WOODEN_AXE,
-            Material.STONE_AXE,
-            Material.IRON_AXE,
-            Material.GOLDEN_AXE,
-            Material.DIAMOND_AXE,
-            Material.NETHERITE_AXE,
-            //SWORD
-            Material.WOODEN_SWORD,
-            Material.STONE_SWORD,
-            Material.IRON_SWORD,
-            Material.GOLDEN_SWORD,
-            Material.DIAMOND_SWORD,
-            Material.NETHERITE_SWORD,
-            //SHOVEL
-            Material.WOODEN_SHOVEL,
-            Material.STONE_SHOVEL,
-            Material.IRON_SHOVEL,
-            Material.GOLDEN_SHOVEL,
-            Material.DIAMOND_SHOVEL,
-            Material.NETHERITE_SHOVEL,
-            //HOE
-            Material.WOODEN_HOE,
-            Material.STONE_HOE,
-            Material.IRON_HOE,
-            Material.GOLDEN_HOE,
-            Material.DIAMOND_HOE,
-            Material.NETHERITE_HOE,
-
-            //EXTRA
-            Material.SHEARS
-    );
-
-    @Getter
-    public static List<Material> shovelPreference = List.of(
-            Material.CLAY,
-            Material.DIRT,
-            Material.FARMLAND,
-            Material.GRASS_BLOCK,
-            Material.GRAVEL,
-            Material.MYCELIUM,
-            Material.SAND,
-            Material.SOUL_SAND,
-            Material.SOUL_SOIL,
-            Material.SNOW,
-            Material.SNOW_BLOCK,
-            Material.POWDER_SNOW,
-            Material.PODZOL,
-            Material.RED_SAND,
-            Material.MUD,
-            Material.MUDDY_MANGROVE_ROOTS
-    );
+    public static boolean isTool(Material material) {
+        if (material == Material.SHEARS) return true;
+        if (material == Material.MACE) return true;
+        Set<String> invalidSuffixes = Set.of("_PICKAXE", "_AXE", "_SWORD", "_SHOVEL", "_HOE");
+        return invalidSuffixes.stream().anyMatch(s -> material.name().endsWith(s));
+    }
 
     @Getter
     public static List<Material> fishingDrops = List.of(
@@ -492,233 +229,29 @@ public class ItemListings {
             Material.TRIPWIRE_HOOK
     );
 
-    @Getter
-    public static List<Material> axePreference = List.of(
-            //FENCES
-            Material.ACACIA_FENCE,
-            Material.BIRCH_FENCE,
-            Material.DARK_OAK_FENCE,
-            Material.JUNGLE_FENCE,
-            Material.SPRUCE_FENCE,
-            Material.MANGROVE_FENCE,
-            Material.OAK_FENCE,
-            Material.CRIMSON_FENCE,
-            Material.WARPED_FENCE,
-            Material.CHERRY_FENCE,
-            Material.BAMBOO_FENCE,
-            Material.PALE_OAK_FENCE,
-            //GATES
-            Material.ACACIA_FENCE_GATE,
-            Material.BIRCH_FENCE_GATE,
-            Material.DARK_OAK_FENCE_GATE,
-            Material.JUNGLE_FENCE_GATE,
-            Material.SPRUCE_FENCE_GATE,
-            Material.MANGROVE_FENCE_GATE,
-            Material.OAK_FENCE_GATE,
-            Material.CRIMSON_FENCE_GATE,
-            Material.WARPED_FENCE_GATE,
-            Material.CHERRY_FENCE_GATE,
-            Material.BAMBOO_FENCE_GATE,
-            Material.PALE_OAK_FENCE_GATE,
-            //WOODS
-            Material.ACACIA_LOG,
-            Material.ACACIA_WOOD,
-            Material.STRIPPED_ACACIA_LOG,
-            Material.BIRCH_LOG,
-            Material.BIRCH_WOOD,
-            Material.STRIPPED_BIRCH_LOG,
-            Material.DARK_OAK_LOG,
-            Material.DARK_OAK_WOOD,
-            Material.STRIPPED_DARK_OAK_LOG,
-            Material.JUNGLE_LOG,
-            Material.JUNGLE_WOOD,
-            Material.STRIPPED_JUNGLE_LOG,
-            Material.OAK_LOG,
-            Material.OAK_WOOD,
-            Material.STRIPPED_OAK_LOG,
-            Material.SPRUCE_LOG,
-            Material.SPRUCE_WOOD,
-            Material.STRIPPED_SPRUCE_LOG,
-            Material.MANGROVE_LOG,
-            Material.MANGROVE_WOOD,
-            Material.STRIPPED_MANGROVE_LOG,
-            Material.CRIMSON_STEM,
-            Material.CRIMSON_HYPHAE,
-            Material.CHERRY_LOG,
-            Material.CHERRY_WOOD,
-            Material.STRIPPED_CHERRY_LOG,
-            Material.STRIPPED_CHERRY_WOOD,
-            Material.BAMBOO_BLOCK,
-            Material.STRIPPED_BAMBOO_BLOCK,
-            Material.PALE_OAK_LOG,
-            Material.PALE_OAK_WOOD,
-            Material.STRIPPED_PALE_OAK_LOG,
-            Material.STRIPPED_PALE_OAK_WOOD,
-            //SIGNS
-            Material.ACACIA_SIGN,
-            Material.ACACIA_WALL_SIGN,
-            Material.ACACIA_HANGING_SIGN,
-            Material.ACACIA_WALL_HANGING_SIGN,
-            Material.BIRCH_SIGN,
-            Material.BIRCH_WALL_SIGN,
-            Material.BIRCH_HANGING_SIGN,
-            Material.BIRCH_WALL_HANGING_SIGN,
-            Material.DARK_OAK_SIGN,
-            Material.DARK_OAK_WALL_SIGN,
-            Material.DARK_OAK_HANGING_SIGN,
-            Material.DARK_OAK_WALL_HANGING_SIGN,
-            Material.JUNGLE_SIGN,
-            Material.JUNGLE_WALL_SIGN,
-            Material.JUNGLE_HANGING_SIGN,
-            Material.JUNGLE_WALL_HANGING_SIGN,
-            Material.OAK_SIGN,
-            Material.OAK_WALL_SIGN,
-            Material.OAK_HANGING_SIGN,
-            Material.OAK_WALL_HANGING_SIGN,
-            Material.SPRUCE_SIGN,
-            Material.SPRUCE_WALL_SIGN,
-            Material.SPRUCE_HANGING_SIGN,
-            Material.SPRUCE_WALL_HANGING_SIGN,
-            Material.MANGROVE_SIGN,
-            Material.MANGROVE_WALL_SIGN,
-            Material.MANGROVE_HANGING_SIGN,
-            Material.MANGROVE_WALL_HANGING_SIGN,
-            Material.CRIMSON_SIGN,
-            Material.CRIMSON_WALL_SIGN,
-            Material.CRIMSON_HANGING_SIGN,
-            Material.CRIMSON_WALL_HANGING_SIGN,
-            Material.WARPED_SIGN,
-            Material.WARPED_WALL_SIGN,
-            Material.WARPED_HANGING_SIGN,
-            Material.WARPED_WALL_HANGING_SIGN,
-            Material.CHERRY_SIGN,
-            Material.CHERRY_WALL_SIGN,
-            Material.CHERRY_HANGING_SIGN,
-            Material.CHERRY_WALL_HANGING_SIGN,
-            Material.BAMBOO_SIGN,
-            Material.BAMBOO_WALL_SIGN,
-            Material.BAMBOO_HANGING_SIGN,
-            Material.BAMBOO_WALL_HANGING_SIGN,
-            Material.PALE_OAK_SIGN,
-            Material.PALE_OAK_WALL_SIGN,
-            Material.PALE_OAK_HANGING_SIGN,
-            Material.PALE_OAK_WALL_HANGING_SIGN,
-            //WOODEN_BUTTONS
-            Material.ACACIA_BUTTON,
-            Material.BIRCH_BUTTON,
-            Material.DARK_OAK_BUTTON,
-            Material.JUNGLE_BUTTON,
-            Material.OAK_BUTTON,
-            Material.SPRUCE_BUTTON,
-            Material.MANGROVE_BUTTON,
-            Material.CRIMSON_BUTTON,
-            Material.WARPED_BUTTON,
-            Material.CHERRY_BUTTON,
-            Material.BAMBOO_BUTTON,
-            Material.PALE_OAK_BUTTON,
-            //WOODEN_DOORS
-            Material.ACACIA_DOOR,
-            Material.BIRCH_DOOR,
-            Material.DARK_OAK_DOOR,
-            Material.JUNGLE_DOOR,
-            Material.OAK_DOOR,
-            Material.SPRUCE_DOOR,
-            Material.MANGROVE_DOOR,
-            Material.CRIMSON_DOOR,
-            Material.WARPED_DOOR,
-            Material.CHERRY_DOOR,
-            Material.BAMBOO_DOOR,
-            Material.PALE_OAK_DOOR,
-            //WOODEN_PRESSURE_PLATES
-            Material.ACACIA_PRESSURE_PLATE,
-            Material.BIRCH_PRESSURE_PLATE,
-            Material.DARK_OAK_PRESSURE_PLATE,
-            Material.JUNGLE_PRESSURE_PLATE,
-            Material.OAK_PRESSURE_PLATE,
-            Material.SPRUCE_PRESSURE_PLATE,
-            Material.MANGROVE_PRESSURE_PLATE,
-            Material.CRIMSON_PRESSURE_PLATE,
-            Material.WARPED_PRESSURE_PLATE,
-            Material.CHERRY_PRESSURE_PLATE,
-            Material.BAMBOO_PRESSURE_PLATE,
-            Material.PALE_OAK_PRESSURE_PLATE,
-            //WOODEN_TRAPDOORS
-            Material.ACACIA_TRAPDOOR,
-            Material.BIRCH_TRAPDOOR,
-            Material.DARK_OAK_TRAPDOOR,
-            Material.JUNGLE_TRAPDOOR,
-            Material.OAK_TRAPDOOR,
-            Material.SPRUCE_TRAPDOOR,
-            Material.MANGROVE_TRAPDOOR,
-            Material.CRIMSON_TRAPDOOR,
-            Material.WARPED_TRAPDOOR,
-            Material.CHERRY_TRAPDOOR,
-            Material.BAMBOO_TRAPDOOR,
-            Material.PALE_OAK_TRAPDOOR,
-            //WOODEN_STAIRS
-            Material.ACACIA_STAIRS,
-            Material.BIRCH_STAIRS,
-            Material.DARK_OAK_STAIRS,
-            Material.JUNGLE_STAIRS,
-            Material.OAK_STAIRS,
-            Material.SPRUCE_STAIRS,
-            Material.MANGROVE_STAIRS,
-            Material.CRIMSON_STAIRS,
-            Material.WARPED_STAIRS,
-            Material.CHERRY_STAIRS,
-            Material.BAMBOO_STAIRS,
-            Material.BAMBOO_MOSAIC_STAIRS,
-            Material.PALE_OAK_STAIRS,
-            //WOODEN_SLABS
-            Material.ACACIA_SLAB,
-            Material.BIRCH_SLAB,
-            Material.DARK_OAK_SLAB,
-            Material.JUNGLE_SLAB,
-            Material.OAK_SLAB,
-            Material.SPRUCE_SLAB,
-            Material.MANGROVE_SLAB,
-            Material.CRIMSON_SLAB,
-            Material.WARPED_SLAB,
-            Material.CHERRY_SLAB,
-            Material.BAMBOO_SLAB,
-            Material.BAMBOO_MOSAIC_SLAB,
-            Material.PALE_OAK_SLAB,
-            //PLANKS
-            Material.ACACIA_PLANKS,
-            Material.BIRCH_PLANKS,
-            Material.DARK_OAK_PLANKS,
-            Material.JUNGLE_PLANKS,
-            Material.OAK_PLANKS,
-            Material.SPRUCE_PLANKS,
-            Material.MANGROVE_PLANKS,
-            Material.CRIMSON_PLANKS,
-            Material.WARPED_PLANKS,
-            Material.CHERRY_PLANKS,
-            Material.BAMBOO_PLANKS,
-            Material.BAMBOO_MOSAIC,
-            Material.PALE_OAK_PLANKS,
-            //MISC
-            Material.BEE_NEST,
-            Material.DRIED_KELP_BLOCK,
-            Material.BEEHIVE,
-            Material.CHEST,
-            Material.CRAFTING_TABLE,
-            Material.JUKEBOX,
-            Material.LADDER,
-            Material.LOOM,
-            Material.NOTE_BLOCK,
-            Material.BARREL,
-            Material.BOOKSHELF,
-            Material.CARTOGRAPHY_TABLE,
-            Material.FLETCHING_TABLE,
-            Material.CAMPFIRE,
-            Material.SOUL_CAMPFIRE,
-            Material.HONEYCOMB,
-            Material.LECTERN,
-            Material.COCOA,
-            Material.JACK_O_LANTERN,
-            Material.PUMPKIN,
-            Material.MELON,
-            Material.TRAPPED_CHEST
-    );
+    public static boolean isAxePreference(Block block) {
+        return block.isPreferredTool(new ItemStack(Material.NETHERITE_AXE));
+    }
+
+    public static boolean isShovelPreference(Block block) {
+        return block.isPreferredTool(new ItemStack(Material.NETHERITE_SHOVEL));
+    }
+
+    public static boolean isSwordPreference(Block block) {
+        return block.isPreferredTool(new ItemStack(Material.NETHERITE_SWORD));
+    }
+
+    public static boolean isInvalidDamageableEntities(EntityType type) {
+        Set<String> invalidSuffixes = Set.of("_BOAT", "_RAFT", "MINECART");
+        if (invalidSuffixes.stream().anyMatch(s -> type.name().endsWith(s))) {
+            return true;
+        }
+
+        return additionalInvalid.contains(type);
+    }
+
+    public static boolean isSmeltOre(Material material) {
+        if (material == Material.ANCIENT_DEBRIS) return true;
+        return material.name().endsWith("_ORE");
+    }
 }

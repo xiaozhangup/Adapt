@@ -75,7 +75,7 @@ public class PickaxeDropToInventory extends SimpleAdaptation<PickaxeDropToInvent
         if (!canBlockBreak(p, e.getBlock().getLocation())) {
             return;
         }
-        if (ItemListings.toolPickaxes.contains(p.getInventory().getItemInMainHand().getType())) {
+        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_PICKAXE")) {
             List<Item> items = e.getItems().copy();
             e.getItems().clear();
             for (Item i : items) {

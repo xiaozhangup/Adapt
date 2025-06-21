@@ -11,8 +11,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Bindings {
 
@@ -62,44 +61,5 @@ public class Bindings {
             meta.setDisplayName("§r" + builder.getName());
         stack.setItemMeta(meta);
         return stack;
-    }
-
-    @Unmodifiable
-    public List<EntityType> getInvalidDamageableEntities() {
-        return List.of(
-                EntityType.ARMOR_STAND,
-
-                EntityType.BIRCH_BOAT,
-                EntityType.ACACIA_BOAT,
-                EntityType.CHERRY_BOAT,
-                EntityType.JUNGLE_BOAT,
-                EntityType.DARK_OAK_BOAT,
-                EntityType.MANGROVE_BOAT,
-                EntityType.SPRUCE_BOAT,
-                EntityType.OAK_BOAT,
-
-                EntityType.ITEM_FRAME,
-                EntityType.MINECART,
-                EntityType.CHEST_MINECART,
-                EntityType.COMMAND_BLOCK_MINECART,
-                EntityType.FURNACE_MINECART,
-                EntityType.HOPPER_MINECART,
-                EntityType.SPAWNER_MINECART,
-                EntityType.TNT_MINECART,
-                EntityType.PAINTING,
-
-                EntityType.BIRCH_CHEST_BOAT,
-                EntityType.ACACIA_CHEST_BOAT,
-                EntityType.CHERRY_CHEST_BOAT,
-                EntityType.JUNGLE_CHEST_BOAT,
-                EntityType.DARK_OAK_CHEST_BOAT,
-                EntityType.MANGROVE_CHEST_BOAT,
-                EntityType.SPRUCE_CHEST_BOAT,
-                EntityType.OAK_CHEST_BOAT,
-
-                EntityType.LEASH_KNOT,
-                EntityType.EVOKER_FANGS,
-                EntityType.MARKER
-        );
     }
 }

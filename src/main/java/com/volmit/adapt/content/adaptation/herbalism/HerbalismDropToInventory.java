@@ -73,7 +73,7 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
         if (p.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
-        if (ItemListings.toolHoes.contains(p.getInventory().getItemInMainHand().getType())) {
+        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_HOE")) {
             List<Item> items = e.getItems().copy();
             e.getItems().clear();
             for (Item i : items) {

@@ -49,7 +49,6 @@ public class SkillStealth extends SimpleSkill<SkillStealth.Config> {
         setDescription(Localizer.dLocalize("skill", "stealth", "description"));
         setDisplayName(Localizer.dLocalize("skill", "stealth", "name"));
         registerAdaptation(new StealthSpeed());
-        registerAdaptation(new StealthSnatch());
         registerAdaptation(new StealthGhostArmor());
         registerAdaptation(new StealthSight());
         registerAdaptation(new StealthEnderVeil());

@@ -82,7 +82,7 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
         if (!canPVP(p, e.getBlock().getLocation())) {
             return;
         }
-        if (ItemListings.toolSwords.contains(p.getInventory().getItemInMainHand().getType())) {
+        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_SWORD")) {
             List<Item> items = e.getItems().copy();
             e.getItems().clear();
             sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
