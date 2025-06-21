@@ -18,7 +18,6 @@
 
 package extensions.java.util.List;
 
-import art.arcane.amulet.functional.Consume;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.Self;
 import manifold.ext.rt.api.This;
@@ -28,9 +27,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import static art.arcane.amulet.MagicalSugar.index;
-import static art.arcane.amulet.MagicalSugar.reverse;
 
 @Extension
 public class XList {
@@ -71,15 +67,6 @@ public class XList {
 
     public static <E> @Self List<E> where(@This List<E> self, Predicate<E> pred) {
         return self.stream().where(pred).toList();
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <E> @Self List<E> forceAdd(@This List<E> self, Object[] values) {
-        for (Object i : values) {
-            self.add((E) i);
-        }
-
-        return self;
     }
 
     @SuppressWarnings("unchecked")
@@ -169,46 +156,6 @@ public class XList {
         return self.size() % 2 == 0 ? (self.size() / 2) : ((self.size() / 2) + 1);
     }
 
-    public static <E> @Self List<E> forEachIndex(@This List<E> self, Consume.Two<List<E>, Integer> itr) {
-        for (int i : index self) {
-            itr.accept(self, i);
-        }
-
-        return self;
-    }
-
-    public static <E> @Self List<E> forEachReverseIndex(@This List<E> self, Consume.Two<List<E>, Integer> itr) {
-        for (int i : reverse index self) {
-            itr.accept(self, i);
-        }
-
-        return self;
-    }
-
-    public static <E> @Self List<E> evenValues(@This List<E> self) {
-        List<E> even = new ArrayList<>();
-
-        for (int i : reverse index self) {
-            if (i % 2 == 0) {
-                even.addFirst(self.remove(i));
-            }
-        }
-
-        return even;
-    }
-
-    public static <E> @Self List<E> oddValues(@This List<E> self) {
-        List<E> odd = new ArrayList<>();
-
-        for (int i : reverse index self) {
-            if (i % 2 != 0) {
-                odd.addFirst(self.remove(i));
-            }
-        }
-
-        return odd;
-    }
-
     public static <E> @Self List<E> copy(@This List<E> self) {
         return self.copy(ArrayList::new);
     }
@@ -293,28 +240,6 @@ public class XList {
         self.remove(b);
         self.add(b, aa);
         return self;
-    }
-
-    public static <E> @Self List<E> removeWhere(@This List<E> self, Predicate<E> predicate) {
-        if (self.isEmpty()) {
-            return self;
-        }
-
-        List<E> drop = new ArrayList<>();
-
-        for (int i : reverse index self) {
-            if (predicate.test(self[i])) {
-                drop.add(self[i]);
-            }
-        }
-
-        self.removeAll(drop);
-
-        return self;
-    }
-
-    public static <E> @Self List<E> keepWhere(@This List<E> self, Predicate<E> predicate) {
-        return self.removeWhere(predicate.negate());
     }
 
     public static <E, R> @Self List<R> convert(@This List<E> self, Function<E, R> converter) {

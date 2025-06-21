@@ -18,7 +18,6 @@
 
 package extensions.java.lang.String;
 
-import art.arcane.amulet.io.IO;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
@@ -34,9 +33,6 @@ public class XString {
         return s.toUpperCase(Locale.ROOT);
     }
 
-    public static byte[] md5(@This String s) {
-        return IO.hashMD5(s);
-    }
 
     public static String fromBase64(@This String s) {
         return new String(Base64.getUrlDecoder().decode(s), StandardCharsets.UTF_8);
@@ -48,26 +44,6 @@ public class XString {
 
     public static byte[] toBase64(@This String s) {
         return Base64.getUrlEncoder().encode(s.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static byte[] sha1(@This String s) {
-        return IO.hashSHA1(s);
-    }
-
-    public static byte[] sha512(@This String s) {
-        return IO.hashSHA512(s);
-    }
-
-    public static byte[] sha384(@This String s) {
-        return IO.hashSHA384(s);
-    }
-
-    public static byte[] sha256(@This String s) {
-        return IO.hashSHA256(s);
-    }
-
-    public static byte[] hash(@This String s, String algo) {
-        return IO.hash(s, algo);
     }
 
     public static String lower(@This String s) {

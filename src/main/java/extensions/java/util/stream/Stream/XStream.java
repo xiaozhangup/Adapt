@@ -18,7 +18,6 @@
 
 package extensions.java.util.stream.Stream;
 
-import art.arcane.amulet.functional.Function;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.Self;
 import manifold.ext.rt.api.This;
@@ -30,11 +29,6 @@ import java.util.stream.*;
 
 @Extension
 public class XStream {
-    public static <T, R> R splitInterlace(@This Stream<T> thiz, Function.Two<Stream<T>, Stream<T>, R> s) {
-        List<T> f = thiz.toList();
-        return s.apply(f.evenValues().stream(), f.oddValues().stream());
-    }
-
     public static <T> Set<T> toSet(@This Stream<T> thiz) {
         return thiz.collect(Collectors.toSet());
     }

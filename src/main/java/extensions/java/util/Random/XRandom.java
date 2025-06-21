@@ -18,6 +18,7 @@
 
 package extensions.java.util.Random;
 
+import extensions.java.lang.Math.XMath;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
@@ -93,10 +94,10 @@ public class XRandom {
 
     public static double d(@This Random self, double lowerBound, double upperBound) {
         if (lowerBound > upperBound) {
-            return Math.lerp(upperBound, lowerBound, self.nextDouble());
+            return XMath.lerp(upperBound, lowerBound, self.nextDouble());
         }
 
-        return Math.lerp(lowerBound, upperBound, self.nextDouble());
+        return XMath.lerp(lowerBound, upperBound, self.nextDouble());
     }
 
     public static double d(@This Random self, double upperBound) {

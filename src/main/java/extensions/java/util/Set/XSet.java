@@ -77,21 +77,6 @@ public class XSet {
         return self;
     }
 
-    public static <E> @Self Set<E> removeWhere(@This Set<E> self, Predicate<E> predicate) {
-        if (self.isEmpty()) {
-            return self;
-        }
-
-        var s = self.stream().filter(predicate.negate()).toSet();
-        self.clear();
-        self.addAll(s);
-        return self;
-    }
-
-    public static <E> @Self Set<E> keepWhere(@This Set<E> self, Predicate<E> predicate) {
-        return self.removeWhere(predicate.negate());
-    }
-
     public static <E, R> @Self Set<R> convert(@This Set<E> self, Function<E, R> converter) {
         Set<R> f = new HashSet<>();
 

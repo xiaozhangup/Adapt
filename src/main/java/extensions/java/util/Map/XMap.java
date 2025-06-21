@@ -18,14 +18,12 @@
 
 package extensions.java.util.Map;
 
-import art.arcane.amulet.functional.Consume;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.Self;
 import manifold.ext.rt.api.This;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Extension
@@ -60,7 +58,7 @@ public class XMap {
         List<K> k = new ArrayList<>();
         List<V> v = self.v();
 
-        Collections.sort(v, (v1, t1) -> {
+        v.sort((v1, t1) -> {
             Number n1 = (Number) v1;
             Number n2 = (Number) t1;
             return (int) ((n1.doubleValue() - n2.doubleValue()) * 1_000);
@@ -98,33 +96,6 @@ public class XMap {
         return self.copy().put(map);
     }
 
-    public static <K, V> @Self Map<K, V> removeWhere(@This Map<K, V> self, Predicate<K> predicate) {
-        self.keySet().removeWhere(predicate);
-        return self;
-    }
-
-    /**
-     * Force map creation with every other object in the collection
-     *
-     * @param collection the collection of K,V,K,V...
-     * @param <K>        the key type
-     * @param <V>        the value type
-     * @return the new map
-     */
-    @Extension
-    public static <K, V> Map<K, V> from(Object... collection) {
-        return Arrays.stream(collection).splitInterlace((e, o) ->
-                Map.from(e.map((i) -> (K) i).toList(),
-                        o.map((i) -> (V) i).toList()));
-    }
-
-    @Extension
-    public static <K, V> Map<K, V> from(List<K> k, List<V> v) {
-        Map<K, V> map = new HashMap<>();
-        k.forEachIndex((m, i) -> map.put(m[i], v[i]));
-        return map;
-    }
-
     @Extension
     public static <K, V> ConcurrentHashMap<K, V> concurrent() {
         return new ConcurrentHashMap<>();
@@ -150,19 +121,6 @@ public class XMap {
     @Extension
     public static <K, V> IdentityHashMap<K, V> identityHash() {
         return new IdentityHashMap<>();
-    }
-
-    public static <K, V> @Self Map<K, V> keepWhere(@This Map<K, V> self, Predicate<K> predicate) {
-        self.keySet().keepWhere(predicate);
-        return self;
-    }
-
-    public static <K, V> @Self Map<K, V> minus(@This Map<K, V> self, Map<K, V> map) {
-        return self.copy().removeWhere(map::containsKey);
-    }
-
-    public static <K, V> @Self Map<K, V> minus(@This Map<K, V> self, Collection<K> collection) {
-        return self.copy().removeWhere(collection::contains);
     }
 
     public static <K, V> @Self Map<K, V> minus(@This Map<K, V> self, K v) {
@@ -201,36 +159,6 @@ public class XMap {
      */
     public static <K, V> @Self Map<K, V> copy(@This Map<K, V> self) {
         return self.copy(HashMap::new);
-    }
-
-    /**
-     * Loop through each keyvalue set (copy of it) with the map parameter
-     *
-     * @param f the function
-     * @return the same gmap
-     */
-    public static <K, V> @Self Map<K, V> rewrite(@This Map<K, V> self, Consume.Three<K, V, Map<K, V>> f) {
-        Map<K, V> m = self.copy();
-
-        for (K i : m.k()) {
-            f.accept(i, self.get(i), self);
-        }
-
-        return self;
-    }
-
-    /**
-     * Loop through each keyvalue set (copy of it)
-     *
-     * @param f the function
-     * @return the same gmap
-     */
-    public static <K, V> @Self Map<K, V> each(@This Map<K, V> self, Consume.Two<K, V> f) {
-        for (K i : self.k()) {
-            f.accept(i, self.get(i));
-        }
-
-        return self;
     }
 
     /**
