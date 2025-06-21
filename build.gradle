@@ -55,7 +55,7 @@ processResources {
 }
 
 manifold {
-    manifoldVersion = '2024.1.49'
+    manifoldVersion = '2025.1.20'
 }
 
 repositories {
@@ -128,7 +128,8 @@ shadowJar {
     relocate 'art.arcane', 'com.volmit.adapt.util.arcane'
     relocate 'com.fren_gor.ultimateAdvancementAPI', 'com.volmit.adapt.util.advancements'
     relocate 'net.byteflux.libby', 'com.volmit.adapt.util.libby'
-    relocate 'com.jeff_media.customblockdata', 'com.volmit.util.customblocks'
+    relocate 'com.jeff_media.customblockdata', 'com.volmit.adapt.util.customblocks'
+    relocate 'xyz.xenondevs.particle', 'com.volmit.adapt.util.particle'
     dependencies {
         include(dependency('xyz.xenondevs:'))
         include(dependency('com.github.VolmitDev:'))

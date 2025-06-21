@@ -31,17 +31,7 @@ import org.bukkit.entity.Player;
  */
 public final class FastParticle {
 
-    private static final ParticleSender PARTICLE_SENDER;
-
-    static {
-        if (FastReflection.optionalClass("org.bukkit.Particle$DustOptions").isPresent()) {
-            PARTICLE_SENDER = new ParticleSender.ParticleSender1_13();
-        } else if (FastReflection.optionalClass("org.bukkit.Particle").isPresent()) {
-            PARTICLE_SENDER = new ParticleSender.ParticleSenderImpl();
-        } else {
-            PARTICLE_SENDER = new ParticleSenderLegacy();
-        }
-    }
+    private static final ParticleSender PARTICLE_SENDER = new ParticleSender.ParticleSenderImpl();
 
     private FastParticle() {
         throw new UnsupportedOperationException();
@@ -62,8 +52,7 @@ public final class FastParticle {
         spawnParticle(world, particle, location.getX(), location.getY(), location.getZ(), count, data);
     }
 
-    public static <T> void spawnParticle(World world, ParticleType particle, double x, double y, double z, int count,
-                                         T data) {
+    public static <T> void spawnParticle(World world, ParticleType particle, double x, double y, double z, int count, T data) {
         spawnParticle(world, particle, x, y, z, count, 0.0D, 0.0D, 0.0D, data);
     }
 

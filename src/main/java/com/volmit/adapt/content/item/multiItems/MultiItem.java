@@ -19,7 +19,6 @@
 package com.volmit.adapt.content.item.multiItems;
 
 import com.volmit.adapt.Adapt;
-import com.volmit.adapt.nms.NMS;
 import com.volmit.adapt.util.BukkitGson;
 import com.volmit.adapt.util.WindowResolution;
 import lombok.*;
@@ -29,6 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -104,7 +104,7 @@ public interface MultiItem {
     default void setItems(ItemStack multi, List<ItemStack> itemStacks) {
         setMultiItemData(multi, MultiItemData.builder()
                 .rawItems(itemStacks.stream().filter(this::supportsItem)
-                        .map(NMS::serializeStack)
+                        .map(MultiItem::serializeStack)
                         .collect(Collectors.toList()))
                 .build());
     }
@@ -174,11 +174,19 @@ public interface MultiItem {
         List<String> rawItems;
 
         List<ItemStack> getItems() {
-            return rawItems.stream().map(NMS::deserializeStack).collect(Collectors.toList());
+            return rawItems.stream().map(MultiItem::deserializeStack).collect(Collectors.toList());
         }
 
         void setItems(List<ItemStack> is) {
-            rawItems = is.stream().map(NMS::serializeStack).collect(Collectors.toList());
+            rawItems = is.stream().map(MultiItem::serializeStack).collect(Collectors.toList());
         }
+    }
+
+    static String serializeStack(ItemStack is) {
+        return Base64.getUrlEncoder().encodeToString(is.serializeAsBytes());
+    }
+
+    static ItemStack deserializeStack(String s) {
+        return ItemStack.deserializeBytes(Base64.getUrlDecoder().decode(s));
     }
 }
