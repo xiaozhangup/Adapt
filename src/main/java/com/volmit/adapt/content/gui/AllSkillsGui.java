@@ -92,7 +92,7 @@ public class AllSkillsGui {
                         .setMaterial(new MaterialBlock(Material.BARRIER))
                         .setName("" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnall")
                                 + (AdaptConfig.get().isHardcoreNoRefunds()
-                                ? " " + C.DARK_RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
+                                ? " " + C.DARK_RED + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
                                 : ""))
                         .onLeftClick((e) -> {
                             Adapt.instance.getAdaptServer().getSkillRegistry().getSkills().forEach(skill -> skill.getAdaptations().forEach(adaptation -> adaptation.unlearn(player, 1, false)));

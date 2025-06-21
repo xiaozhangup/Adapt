@@ -22,9 +22,9 @@ package com.volmit.adapt.util.data;
 import java.awt.*;
 
 public class TinyColor {
-    private int r;
-    private int g;
-    private int b;
+    private final int r;
+    private final int g;
+    private final int b;
 
     public TinyColor(int color) {
         this.r = (color >> 16) & 0xFF;
@@ -83,7 +83,7 @@ public class TinyColor {
     }
 
     public TinyColor spin(int amount) {
-        int h = (int) Math.round(getHue() * 360);
+        int h = Math.round(getHue() * 360);
         h = (h + amount) % 360;
         return hue((float) h / 360.0f);
     }

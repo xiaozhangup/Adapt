@@ -142,7 +142,6 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             //deny if they dont have the adaptation
             if (!hasAdaptation(p)) {
                 e.setCancelled(true);
-                return;
             }
         }
     }

@@ -93,8 +93,7 @@ public class HerbalismGrowthAura extends SimpleAdaptation<HerbalismGrowthAura.Co
                         }
 
                         SoundPlayer spw = SoundPlayer.of(a.getWorld());
-                        if (a.getBlockData() instanceof Ageable) {
-                            Ageable ab = (Ageable) a.getBlockData();
+                        if (a.getBlockData() instanceof Ageable ab) {
                             int toGrowLeft = ab.getMaximumAge() - ab.getAge();
 
                             if (toGrowLeft > 0) {

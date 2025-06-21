@@ -42,8 +42,7 @@ public class Violator {
             return ((Class<?>) o).getCanonicalName();
         }
 
-        if (o instanceof Constructor<?>) {
-            Constructor<?> co = (Constructor<?>) o;
+        if (o instanceof Constructor<?> co) {
 
             String mx = "";
 
@@ -68,8 +67,7 @@ public class Violator {
             return id(((Method) o).getDeclaringClass(), null) + "." + ((Method) o).getName() + "(" + mx + ")";
         }
 
-        if (o instanceof Annotation) {
-            Annotation a = (Annotation) o;
+        if (o instanceof Annotation a) {
             return "@" + a.annotationType().getCanonicalName() + "[" + id(h, null) + "]";
         }
 

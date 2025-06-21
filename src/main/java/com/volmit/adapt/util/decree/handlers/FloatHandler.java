@@ -56,6 +56,6 @@ public class FloatHandler implements DecreeParameterHandler<Float> {
 
     @Override
     public String getRandomDefault() {
-        return Form.f(RNG.r.d(0, 99.99), 1) + "";
+        return Form.f(RNG.r.d(0, 99.99), 1);
     }
 }

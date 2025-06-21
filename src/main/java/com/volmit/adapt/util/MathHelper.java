@@ -293,7 +293,7 @@ public class MathHelper {
     }
 
     public static long c(int var0, int var1, int var2) {
-        long var3 = (long) (var0 * 3129871) ^ (long) var2 * 116129781L ^ (long) var1;
+        long var3 = (long) (var0 * 3129871L) ^ (long) var2 * 116129781L ^ (long) var1;
         var3 = var3 * var3 * 42317861L + var3 * 11L;
         return var3 >> 16;
     }

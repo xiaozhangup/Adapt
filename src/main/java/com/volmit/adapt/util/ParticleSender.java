@@ -50,9 +50,8 @@ interface ParticleSender {
         public void spawnParticle(Object receiver, ParticleType particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, Object data) {
             Particle bukkitParticle = Particle.valueOf(particle.toString());
 
-            if (data instanceof Color) {
+            if (data instanceof Color color) {
                 if (particle.getDataType() == Color.class) {
-                    Color color = (Color) data;
                     count = 0;
                     offsetX = color(color.getRed());
                     offsetY = color(color.getGreen());

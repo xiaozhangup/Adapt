@@ -160,11 +160,11 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
             if (isSafe(loc)) {
                 canBlink.put(p, true);
                 p.setAllowFlight(true);
-                Adapt.verbose("Allowing flight for " + p.getName() + "");
+                Adapt.verbose("Allowing flight for " + p.getName());
                 J.a(() -> {
                     if (!canFlight) p.setAllowFlight(false);
                     p.setFlying(false);
-                    Adapt.verbose("Disabling flight for " + p.getName() + "");
+                    Adapt.verbose("Disabling flight for " + p.getName());
                     canBlink.remove(p);
                 }, 25);
             }

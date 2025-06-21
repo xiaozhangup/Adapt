@@ -169,8 +169,8 @@ public class Area {
             int chunkRadius = (int) (radius < 16 ? 1 : (radius - (radius % 16)) / 16);
             HashSet<Entity> radiusEntities = new HashSet<Entity>();
 
-            for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
-                for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+            for (int chX = -chunkRadius; chX <= chunkRadius; chX++) {
+                for (int chZ = -chunkRadius; chZ <= chunkRadius; chZ++) {
                     int x = (int) location.getX(), y = (int) location.getY(), z = (int) location.getZ();
 
                     for (Entity e : new Location(location.getWorld(), x + (chX * 16), y, z + (chZ * 16)).getChunk().getEntities()) {

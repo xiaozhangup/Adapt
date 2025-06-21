@@ -171,8 +171,7 @@ public class ExcavationSpelunker extends SimpleAdaptation<ExcavationSpelunker.Co
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Slime && e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
-            Slime slime = (Slime) e.getEntity();
+        if (e.getEntity() instanceof Slime slime && e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
             if (slime.hasMetadata("preventSuffocation")) {
                 e.setCancelled(true);
             } else {

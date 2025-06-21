@@ -92,9 +92,8 @@ class ParticleSenderLegacy implements ParticleSender {
         try {
             int[] datas = toData(particle, data);
 
-            if (data instanceof Color) {
+            if (data instanceof Color color) {
                 if (particle.getDataType() == Color.class) {
-                    Color color = (Color) data;
                     count = 0;
                     offsetX = color(color.getRed());
                     offsetY = color(color.getGreen());
@@ -158,20 +157,18 @@ class ParticleSenderLegacy implements ParticleSender {
     private int[] toData(ParticleType particle, Object data) {
         Class<?> dataType = particle.getDataType();
         if (dataType == ItemStack.class) {
-            if (!(data instanceof ItemStack)) {
+            if (!(data instanceof ItemStack itemStack)) {
                 return SERVER_IS_1_8 ? new int[2] : new int[]{1, 0};
             }
 
-            ItemStack itemStack = (ItemStack) data;
             return new int[]{itemStack.getType().getId(), itemStack.getDurability()};
         }
 
         if (dataType == MaterialData.class) {
-            if (!(data instanceof MaterialData)) {
+            if (!(data instanceof MaterialData materialData)) {
                 return SERVER_IS_1_8 ? new int[1] : new int[]{1, 0};
             }
 
-            MaterialData materialData = (MaterialData) data;
             if (SERVER_IS_1_8) {
                 return new int[]{materialData.getItemType().getId() + (materialData.getData() << 12)};
             } else {

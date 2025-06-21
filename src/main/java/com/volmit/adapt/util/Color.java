@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Color {
-    private static HashMap<String, List<String>> colorCache = new HashMap<>();
+    private static final HashMap<String, List<String>> colorCache = new HashMap<>();
 
     public static String modifiedColorCode(String colorCode, float ratio) {
         String colorStr = colorCode.replaceFirst("#", "");

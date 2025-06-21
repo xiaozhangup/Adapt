@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
-    private Map<UUID, Location> lastLocations;
+    private final Map<UUID, Location> lastLocations;
 
     public SkillAgility() {
         super("agility", Localizer.dLocalize("skill", "agility", "icon"));

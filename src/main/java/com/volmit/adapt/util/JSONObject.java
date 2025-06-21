@@ -1642,7 +1642,7 @@ public class JSONObject {
          * @return NULL.
          */
         @Override
-        protected final Object clone() {
+        protected Object clone() {
             return this;
         }
 

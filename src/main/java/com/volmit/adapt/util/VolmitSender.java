@@ -253,12 +253,12 @@ public class VolmitSender implements CommandSender {
             int l = 44;
             int g = (int) (1D * l);
             sendTitle(C.ADAPT + thing + " ", 0, 500, 250);
-            sendActionNoProcessing("" + "" + pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>" + Form.repeat(" ", l - g));
+            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>" + Form.repeat(" ", l - g));
         } else {
             int l = 44;
             int g = (int) (percent * l);
             sendTitle(C.ADAPT + thing + " " + C.BLUE + "<font:minecraft:uniform>" + Form.pc(percent, 0), 0, 500, 250);
-            sendActionNoProcessing("" + "" + pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>" + Form.repeat(" ", l - g));
+            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>" + Form.repeat(" ", l - g));
         }
     }
 

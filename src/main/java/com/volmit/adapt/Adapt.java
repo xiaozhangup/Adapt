@@ -81,7 +81,7 @@ public class Adapt extends VolmitPlugin {
     @Getter
     private ProtectorRegistry protectorRegistry;
     @Getter
-    private Map<String, Window> guiLeftovers = new HashMap<>();
+    private final Map<String, Window> guiLeftovers = new HashMap<>();
     @Getter
     private AdvancementManager manager;
 
@@ -379,7 +379,7 @@ public class Adapt extends VolmitPlugin {
 
     @Override
     public String getTag(String subTag) {
-        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET + "" + C.GRAY + ": ";
+        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET + C.GRAY + ": ";
     }
 
     private void setupMetrics() {

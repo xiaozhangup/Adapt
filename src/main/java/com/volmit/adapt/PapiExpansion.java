@@ -61,7 +61,7 @@ public class PapiExpansion extends PlaceholderExpansion {
         // where adaptation is the adaptation id (e.g. %adapt_adaptation_stealth-ghost-armor_level%)
         adaptationMap.put("maxlevel", (playerData, adaptation) -> String.valueOf(adaptation.getMaxLevel()));
         adaptationMap.put("level", (playerData, adaptation) -> String.valueOf(getAdaptionLevel(adaptation, playerData)));
-        adaptationMap.put("name", (playerData, adaptation) -> String.valueOf(getAdaptionLocalizedName(adaptation)));
+        adaptationMap.put("name", (playerData, adaptation) -> getAdaptionLocalizedName(adaptation));
     }
 
     private static <T> List<T> getElementsFromSecond(List<T> list) {

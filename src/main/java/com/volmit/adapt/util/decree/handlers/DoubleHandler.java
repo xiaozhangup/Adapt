@@ -56,6 +56,6 @@ public class DoubleHandler implements DecreeParameterHandler<Double> {
 
     @Override
     public String getRandomDefault() {
-        return Form.f(RNG.r.d(0, 99.99), 1) + "";
+        return Form.f(RNG.r.d(0, 99.99), 1);
     }
 }

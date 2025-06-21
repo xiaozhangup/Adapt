@@ -81,7 +81,6 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                     .filter(d -> !Double.isNaN(d))
                     .max()
                     .orElse(0);
-            ;
             double armor = getMaxArmorPoints(getLevelPercent(p));
             armor = Double.isNaN(armor) ? 0 : armor;
 
