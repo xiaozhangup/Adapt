@@ -131,7 +131,9 @@ public class VirtualDecreeCommand {
             n.add(cursor.getName());
         }
 
-        return "/" + n.reverse().qadd(getName()).toString(" ");
+        List<String> reversed = n.reversed();
+        reversed.add(getName());
+        return "/" + String.join(" ", reversed);
     }
 
     public String getParentPath() {
@@ -370,9 +372,9 @@ public class VirtualDecreeCommand {
     }
 
     public boolean invoke(VolmitSender sender, List<String> args, List<Integer> skip) {
-        Adapt.debug("@ " + getPath() + " with " + args.toString(", "));
+        Adapt.debug("@ " + getPath() + " with " + String.join(", ", args));
         if (isNode()) {
-            Adapt.debug("Invoke " + getPath() + "(" + args.toString(",") + ") at ");
+            Adapt.debug("Invoke " + getPath() + "(" + String.join(",", args) + ") at ");
             if (invokeNode(sender, map(sender, args))) {
                 return true;
             }

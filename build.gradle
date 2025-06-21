@@ -20,14 +20,13 @@ plugins {
     id 'java-library'
     id "io.freefair.lombok" version "8.10.2"
     id "com.gradleup.shadow" version "8.3.5"
-    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.9"
+    id 'systems.manifold.manifold-gradle-plugin' version '0.0.2-alpha'
 }
 
 version '1.16.7'
 def apiVersion = '1.21'
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'
-def manifoldVersion = '2024.1.49'
 
 /**
  * Gradle is weird sometimes, we need to delete the plugin yml from the build folder to actually filter properly.
@@ -55,6 +54,10 @@ processResources {
     }
 }
 
+manifold {
+    manifoldVersion = '2024.1.49'
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -75,18 +78,13 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.34'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
-
     // Cancer
-    implementation 'com.github.VolmitDev:Amulet:23.5.1'
     implementation 'com.github.VolmitDev:Chrono:22.9.10'
     implementation 'com.github.VolmitDev:Spatial:22.11.1'
     implementation 'net.byteflux:libby-velocity:1.3.1'
 
-    annotationProcessor 'systems.manifold:manifold-ext:' + manifoldVersion
-    testAnnotationProcessor 'systems.manifold:manifold-ext:' + manifoldVersion
-    implementation 'systems.manifold:manifold-rt:' + manifoldVersion
+    implementation "systems.manifold:manifold-ext:${manifold.manifoldVersion.get()}"
+    annotationProcessor "systems.manifold:manifold-ext:${manifold.manifoldVersion.get()}"
 
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'xyz.xenondevs:particle:1.8.4'
@@ -119,12 +117,7 @@ configurations.configureEach {
  */
 compileJava {
     options.encoding = "UTF-8"
-    def args = ['-parameters', '-Xplugin:Manifold']
-
-    if (JavaVersion.current().isJava9Compatible()) {
-        args.addAll(['--module-path', classpath.asPath])
-    }
-    options.compilerArgs.addAll(args)
+    options.compilerArgs.add('-parameters')
 }
 
 /**
@@ -132,14 +125,11 @@ compileJava {
  */
 shadowJar {
     append("plugin.yml")
-    relocate 'manifold', 'com.volmit.adapt.util.manifold'
     relocate 'art.arcane', 'com.volmit.adapt.util.arcane'
-    relocate 'Amulet.extensions', 'com.volmit.adapt.util.extensions'
     relocate 'com.fren_gor.ultimateAdvancementAPI', 'com.volmit.adapt.util.advancements'
     relocate 'net.byteflux.libby', 'com.volmit.adapt.util.libby'
     relocate 'com.jeff_media.customblockdata', 'com.volmit.util.customblocks'
     dependencies {
-        include(dependency('systems.manifold:'))
         include(dependency('xyz.xenondevs:'))
         include(dependency('com.github.VolmitDev:'))
         include(dependency('com.frengor:ultimateadvancementapi-shadeable:'))

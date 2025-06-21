@@ -274,7 +274,7 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
     public File getDataFile(String... strings) {
         List<String> s = new ArrayList<>();
         s.add(strings);
-        File f = new File(getDataFolder(), s.toString(File.separator));
+        File f = new File(getDataFolder(), String.join(File.separator, s));
         f.getParentFile().mkdirs();
         return f;
     }
@@ -283,7 +283,7 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         List<String> v = new ArrayList<>();
         v.add(strings);
         v.add(0, pre);
-        File f = new File(getDataFolder(), v.toString(File.separator));
+        File f = new File(getDataFolder(), String.join(File.separator, v));
         f.getParentFile().mkdirs();
         return f;
     }
@@ -295,7 +295,7 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
 
         List<String> s = new ArrayList<>();
         s.add(strings);
-        File f = new File(getDataFolder(), s.toString(File.separator));
+        File f = new File(getDataFolder(), String.join(File.separator, s));
         f.mkdirs();
 
         return f;
@@ -305,7 +305,7 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         List<String> v = new ArrayList<>();
         v.add(strings);
         v.add(0, pre);
-        File f = new File(getDataFolder(), v.toString(File.separator));
+        File f = new File(getDataFolder(), String.join(File.separator, v));
         f.mkdirs();
 
         return f;

@@ -163,7 +163,9 @@ public abstract class MortarCommand implements ICommand {
 
     @Override
     public List<String> getAllNodes() {
-        return getNodes().copy().qadd(getNode());
+        List<String> copy = getNodes().copy();
+        copy.add(getNode());
+        return copy;
     }
 
     @Override

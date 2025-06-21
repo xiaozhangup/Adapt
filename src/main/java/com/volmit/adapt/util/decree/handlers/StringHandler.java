@@ -25,6 +25,8 @@ import com.volmit.adapt.util.decree.DecreeParameterHandler;
 import com.volmit.adapt.util.decree.exceptions.DecreeParsingException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Abstraction can sometimes breed stupidity
@@ -52,7 +54,8 @@ public class StringHandler implements DecreeParameterHandler<String> {
 
     @Override
     public String getRandomDefault() {
-        return new ArrayList<String>().qadd("text").qadd("string")
-                .qadd("blah").qadd("derp").qadd("yolo").getRandom();
+        return List.of("text", "string", "blah", "derp", "yolo").get(
+                ThreadLocalRandom.current().nextInt(5)
+        );
     }
 }

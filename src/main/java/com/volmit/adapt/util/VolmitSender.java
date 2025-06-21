@@ -456,17 +456,19 @@ public class VolmitSender implements CommandSender {
                     + i.getParentPath()
                     + " <#00CED1>"
                     + i.getName() + " "
-                    + i.getNode().getParameters().shuffleCopy(RNG.r).kConvert((f)
+                    + String.join(
+                            " ",
+                    i.getNode().getParameters().shuffleCopy(RNG.r).kConvert((f)
                             -> (f.isRequired() || RNG.r.b(0.5)
                             ? "<#f2e15e>" + f.getNames().getRandom() + "="
                             + "<#9370DB>" + f.example()
                             : ""))
-                    .toString(" ")
+            )
                     : ""
                     : ""));
         }
 
-        return m.removeDuplicates().kConvert((iff) -> iff.replaceAll("\\Q  \\E", " ")).toString("\n");
+        return String.join("\n", m.removeDuplicates().kConvert((iff) -> iff.replaceAll("\\Q  \\E", " ")));
     }
 
     public void sendHeader(String name, int overrideLength) {
@@ -544,7 +546,7 @@ public class VolmitSender implements CommandSender {
                 /// Command
                 // Contains main command & aliases
                 String realText = i.getPath() + " >" + "<#E6F2FF>⇀<gradient:#00BFFF:#003366> " + i.getName();
-                String hoverTitle = i.getNames().copy().reverse().kConvert((f) -> "<#00BFFF>" + f).toString(", ");
+                String hoverTitle = String.join(", ", i.getNames().copy().reverse().kConvert((f) -> "<#00BFFF>" + f));
                 String description = "<#3fe05a>✎ <#6ad97d><font:minecraft:uniform>" + i.getDescription();
                 String usage = "<#FF0000>✒ <#A52A2A><font:minecraft:uniform>";
 
@@ -565,8 +567,11 @@ public class VolmitSender implements CommandSender {
                 String suggestion = "";
                 String suggestions = "";
                 if (i.isNode() && i.getNode().getParameters().isNotEmpty()) {
-                    suggestion += newline + "<#B0E0E6>✦ <#00FA9A><font:minecraft:uniform>" + i.getParentPath() + " <#00CED1>" + i.getName() + " "
-                            + i.getNode().getParameters().kConvert((f) -> "<#9370DB>" + f.example()).toString(" ");
+                    suggestion += String.join(
+                            "",
+                            newline + "<#B0E0E6>✦ <#00FA9A><font:minecraft:uniform>" + i.getParentPath() + " <#00CED1>" + i.getName() + " "
+                                    + i.getNode().getParameters().kConvert((f) -> "<#9370DB>" + f.example())
+                    );
                     suggestions += newline + "<font:minecraft:uniform>" + pickRandoms(Math.min(i.getNode().getParameters().size() + 1, 5), i);
                 }
 
@@ -576,7 +581,7 @@ public class VolmitSender implements CommandSender {
                     for (DecreeParameter p : i.getNode().getParameters()) {
 
                         String nTitle = "<gradient:#9370DB:#BA55D3>" + p.getName();
-                        String nHoverTitle = p.getNames().kConvert((ff) -> "<#ff9900>" + ff).toString(", ");
+                        String nHoverTitle = String.join(", ", p.getNames().kConvert((ff) -> "<#ff9900>" + ff));
                         String nDescription = "<#2E8B57>✎ <#3CB371><font:minecraft:uniform>" + p.getDescription();
                         String nUsage;
                         String fullTitle;

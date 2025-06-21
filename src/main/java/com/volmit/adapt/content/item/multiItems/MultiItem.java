@@ -72,7 +72,9 @@ public interface MultiItem {
         if (isMultiItem(item)) {
             explode(item).forEach(i -> add(multi, i));
         } else {
-            setItems(multi, getItems(multi).qadd(item));
+            List<ItemStack> items = getItems(multi);
+            items.add(item);
+            setItems(multi, items);
         }
     }
 
