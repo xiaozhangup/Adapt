@@ -30,7 +30,7 @@ import com.volmit.adapt.content.matter.BrewingStandOwner;
 import com.volmit.adapt.content.matter.BrewingStandOwnerMatter;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.SpatialMatter;
+import com.volmit.adapt.util.spatial.matter.SpatialMatter;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;

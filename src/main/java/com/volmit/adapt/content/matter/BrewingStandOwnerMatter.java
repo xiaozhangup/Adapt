@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.matter;
 
-import com.volmit.adapt.util.RawMatter;
+import com.volmit.adapt.util.spatial.matter.slices.RawMatter;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

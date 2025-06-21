@@ -121,7 +121,6 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
             sp.play(entity, Sound.ENTITY_WITHER_SHOOT, 1, 1);
             entity.setRotation(p.getEyeLocation().getYaw(), p.getEyeLocation().getPitch());
             entity.setCharged(false);
-            entity.setBounce(false);
             entity.setDirection(dir);
             entity.setShooter(p);
             entity.setVelocity(entity.getLocation().getDirection().normalize().multiply(1));

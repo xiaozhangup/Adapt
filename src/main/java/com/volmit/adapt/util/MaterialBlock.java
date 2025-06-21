@@ -49,25 +49,6 @@ public class MaterialBlock {
         data = 0;
     }
 
-    public MaterialBlock(Location location) {
-        this(location.getBlock());
-    }
-
-    public MaterialBlock(BlockState state) {
-        material = state.getType();
-        data = state.getData().getData();
-    }
-
-    public MaterialBlock(Block block) {
-        material = block.getType();
-        data = block.getData();
-    }
-
-    public MaterialBlock() {
-        material = Material.AIR;
-        data = 0;
-    }
-
     public Material getMaterial() {
         return material;
     }

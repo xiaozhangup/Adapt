@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.block;
 
-import com.volmit.adapt.util.RawMatter;
+import com.volmit.adapt.util.spatial.matter.slices.RawMatter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
