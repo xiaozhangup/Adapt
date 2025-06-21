@@ -59,8 +59,8 @@ public class BrewingDarkness extends SimpleAdaptation<BrewingDarkness.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "darkness", "lore1"));
-        v.addLore(C.GRAY + "- " + Localizer.dLocalize("brewing", "darkness", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "darkness", "lore1"));
+        v.addLore(C.GRAY + Localizer.dLocalize("brewing", "darkness", "lore2"));
     }
 
 

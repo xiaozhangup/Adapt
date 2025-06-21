@@ -102,7 +102,7 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
         boolean enabled = true;
         int baseCost = 1;
         int maxLevel = 1;
-        int initialCost = 2;
+        int initialCost = 4;
         double costFactor = 1;
     }
 }

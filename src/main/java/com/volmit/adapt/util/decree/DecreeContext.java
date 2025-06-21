@@ -19,7 +19,7 @@
 
 package com.volmit.adapt.util.decree;
 
-import art.arcane.chrono.ChronoLatch;
+import com.volmit.adapt.util.ChronoLatch;
 import com.volmit.adapt.util.VolmitSender;
 
 import java.util.HashMap;

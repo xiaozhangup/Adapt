@@ -71,8 +71,8 @@ public class BrewingResistance extends SimpleAdaptation<BrewingResistance.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "resistance", "lore1"));
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "resistance", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "resistance", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "resistance", "lore2"));
     }
 
 

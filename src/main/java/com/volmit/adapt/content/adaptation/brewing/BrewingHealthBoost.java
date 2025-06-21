@@ -71,8 +71,8 @@ public class BrewingHealthBoost extends SimpleAdaptation<BrewingHealthBoost.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "healthboost", "lore1"));
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "healthboost", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "healthboost", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "healthboost", "lore2"));
     }
 
 

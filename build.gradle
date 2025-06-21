@@ -78,10 +78,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    // Cancer
-    implementation 'com.github.VolmitDev:Chrono:22.9.10'
-    implementation 'com.github.VolmitDev:Spatial:22.11.1'
-
     implementation "systems.manifold:manifold-ext-rt:${manifold.manifoldVersion.get()}"
     annotationProcessor "systems.manifold:manifold-ext:${manifold.manifoldVersion.get()}"
 
@@ -102,7 +98,6 @@ dependencies {
     compileOnly 'it.unimi.dsi:fastutil:8.5.13'
     compileOnly "fr.skytasul:glowingentities:1.4.3"
     compileOnly 'com.google.guava:guava:30.1-jre'
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.0.6'
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 }
 
@@ -125,14 +120,12 @@ compileJava {
 shadowJar {
     append("plugin.yml")
     relocate 'manifold', 'com.volmit.adapt.util.manifold'
-    relocate 'art.arcane', 'com.volmit.adapt.util.arcane'
     relocate 'com.fren_gor.ultimateAdvancementAPI', 'com.volmit.adapt.util.advancements'
     relocate 'com.jeff_media.customblockdata', 'com.volmit.adapt.util.customblocks'
     relocate 'xyz.xenondevs.particle', 'com.volmit.adapt.util.particle'
     dependencies {
         include(dependency('systems.manifold:'))
         include(dependency('xyz.xenondevs:'))
-        include(dependency('com.github.VolmitDev:'))
         include(dependency('com.frengor:ultimateadvancementapi-shadeable:'))
         include(dependency('net.byteflux:'))
         include(dependency('com.jeff-media:custom-block-data:'))

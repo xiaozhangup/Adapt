@@ -71,8 +71,8 @@ public class BrewingSaturation extends SimpleAdaptation<BrewingSaturation.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "saturation", "lore1"));
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "saturation", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "saturation", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "saturation", "lore2"));
     }
 
 

@@ -38,7 +38,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO 等级为 V 时清理树叶
 public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> {
     public AxeWoodVeinminer() {
         super("axe-wood-veinminer");
@@ -85,11 +84,12 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                 return;
             }
 
-            if (ItemListings.isLog(e.getBlock().getType())) {
-                Block block = e.getBlock();
+            Block block = e.getBlock();
+            int level = getLevel(p);
+            if (ItemListings.isLog(block.getType()) || (level >= 5 && ItemListings.isLeaves(block.getType()))) {
                 Set<Block> blockMap = new HashSet<>();
                 int blockCount = 0;
-                for (int i = 0; i < getRadius(getLevel(p)); i++) {
+                for (int i = 0; i < getRadius(level); i++) {
                     for (int x = -i; x <= i; x++) {
                         for (int y = -i; y <= i; y++) {
                             for (int z = -i; z <= i; z++) {
@@ -98,10 +98,10 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                                     blockCount++;
                                     if (blockCount > getConfig().maxBlocks) {
                                         Adapt.verbose("Block: " + blockCount + " > " + getConfig().maxBlocks);
-                                        continue;
+                                        break;
                                     }
-                                    if (block.getLocation().distance(b.getLocation()) > getRadius(getLevel(p))) {
-                                        Adapt.verbose("Block: " + b.getLocation() + " is too far away from " + block.getLocation() + " (" + getRadius(getLevel(p)) + ")");
+                                    if (block.getLocation().distance(b.getLocation()) > getRadius(level)) {
+                                        Adapt.verbose("Block: " + b.getLocation() + " is too far away from " + block.getLocation() + " (" + getRadius(level) + ")");
                                         continue;
                                     }
                                     if (!canBlockBreak(p, b.getLocation())) {
@@ -160,7 +160,7 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
         int maxLevel = 5;
         int initialCost = 4;
         double costFactor = 2.325;
-        int maxBlocks = 128;
+        int maxBlocks = 72;
         int baseRange = 3;
     }
 }

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.content.skill;
 
-import art.arcane.spatial.matter.SpatialMatter;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
@@ -31,6 +30,7 @@ import com.volmit.adapt.content.matter.BrewingStandOwner;
 import com.volmit.adapt.content.matter.BrewingStandOwnerMatter;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.SpatialMatter;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;

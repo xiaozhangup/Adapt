@@ -18,12 +18,12 @@
 
 package com.volmit.adapt.api.data;
 
-import art.arcane.spatial.mantle.Mantle;
-import art.arcane.spatial.matter.SpatialMatter;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.data.unit.Earnings;
 import com.volmit.adapt.api.tick.TickedObject;
 import com.volmit.adapt.util.J;
+import com.volmit.adapt.util.SpatialMatter;
+import com.volmit.adapt.util.mantle.Mantle;
 import lombok.Getter;
 import org.bukkit.World;
 import org.bukkit.block.Block;

@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.api.data.unit;
 
-import art.arcane.spatial.matter.slices.RawMatter;
+import com.volmit.adapt.util.RawMatter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

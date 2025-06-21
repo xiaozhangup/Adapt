@@ -76,7 +76,7 @@ public class AxeDropToInventory extends SimpleAdaptation<AxeDropToInventory.Conf
         if (!canBlockBreak(p, e.getBlock().getLocation())) {
             return;
         }
-        if (ItemListings.toolAxes.contains(p.getInventory().getItemInMainHand().getType())) {
+        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_AXE")) {
             List<Item> items = e.getItems().copy();
             e.getItems().clear();
             for (Item i : items) {
@@ -104,7 +104,7 @@ public class AxeDropToInventory extends SimpleAdaptation<AxeDropToInventory.Conf
         boolean enabled = true;
         int baseCost = 1;
         int maxLevel = 1;
-        int initialCost = 3;
+        int initialCost = 5;
         double costFactor = 1;
     }
 }

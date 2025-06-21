@@ -71,8 +71,8 @@ public class BrewingNausea extends SimpleAdaptation<BrewingNausea.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "nausea", "lore1"));
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "nausea", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "nausea", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "nausea", "lore2"));
     }
 
 

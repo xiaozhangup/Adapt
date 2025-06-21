@@ -71,8 +71,8 @@ public class BrewingDecay extends SimpleAdaptation<BrewingDecay.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "decay", "lore1"));
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "decay", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "decay", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "decay", "lore2"));
     }
 
 

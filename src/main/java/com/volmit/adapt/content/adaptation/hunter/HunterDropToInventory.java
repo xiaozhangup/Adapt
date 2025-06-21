@@ -135,7 +135,7 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
         boolean enabled = true;
         int baseCost = 1;
         int maxLevel = 1;
-        int initialCost = 2;
+        int initialCost = 4;
         double costFactor = 1;
     }
 }

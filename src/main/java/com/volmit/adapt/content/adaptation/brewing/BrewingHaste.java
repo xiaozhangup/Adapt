@@ -71,8 +71,8 @@ public class BrewingHaste extends SimpleAdaptation<BrewingHaste.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "haste", "lore1"));
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "haste", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "haste", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "haste", "lore2"));
     }
 
 

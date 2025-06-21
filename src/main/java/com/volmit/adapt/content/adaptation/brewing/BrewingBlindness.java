@@ -71,8 +71,8 @@ public class BrewingBlindness extends SimpleAdaptation<BrewingBlindness.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "blindness", "lore1"));
-//        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("brewing", "blindness", "lore2"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "blindness", "lore1"));
+        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "blindness", "lore2"));
     }
 
 
