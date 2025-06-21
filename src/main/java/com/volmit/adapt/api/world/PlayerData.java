@@ -31,7 +31,6 @@ import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import manifold.util.concurrent.ConcurrentHashSet;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -50,7 +49,7 @@ public class PlayerData {
     private final Map<String, PlayerSkillLine> skillLines = new ConcurrentHashMap<>();
     private Map<String, Double> stats = new ConcurrentHashMap<>();
     private String last = "none";
-    private Set<String> advancements = new ConcurrentHashSet<>();
+    private Set<String> advancements = ConcurrentHashMap.newKeySet();
     private Discovery<String> seenBiomes = new Discovery<>();
     private Discovery<EntityType> seenMobs = new Discovery<>();
     private Discovery<Material> seenFoods = new Discovery<>();

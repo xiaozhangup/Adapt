@@ -26,7 +26,7 @@ import com.volmit.adapt.content.item.BoundEnderPearl;
 import com.volmit.adapt.util.*;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import manifold.rt.api.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -167,7 +167,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
             if (b.getState() instanceof InventoryHolder holder) {
                 InventoryView view = p.openInventory(holder.getInventory());
                 if (view == null) return;
-                activeViewsMap.computeIfAbsent(Pair.make(new ChunkPos(chunk).add(), b.getLocation()), k -> new ArrayList<>()).add(view);
+                activeViewsMap.computeIfAbsent(Pair.of(new ChunkPos(chunk).add(), b.getLocation()), k -> new ArrayList<>()).add(view);
             }
             sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
             sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
@@ -207,7 +207,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         List<InventoryView> views = entry.getValue();
         if (views.isEmpty()) {
             mapIterator.remove();
-            entry.getKey().getFirst().remove();
+            entry.getKey().getLeft().remove();
         }
     }
 
