@@ -19,9 +19,8 @@
 package com.volmit.adapt.api.notification;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import com.volmit.adapt.util.AdvancementUtils;
 import com.volmit.adapt.api.world.AdaptPlayer;
-
+import com.volmit.adapt.util.AdvancementUtils;
 import com.volmit.adapt.util.CustomModel;
 import lombok.Builder;
 import lombok.Data;

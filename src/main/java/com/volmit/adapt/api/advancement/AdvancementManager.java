@@ -10,12 +10,12 @@ import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.J;
-import com.volmit.adapt.util.JSONObject;
-import org.bukkit.entity.Player;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.volmit.adapt.Adapt.instance;

@@ -91,15 +91,12 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
     }
 
 
-
-
     private void outputPluginInfo() throws IOException {
         FileConfiguration fc = new YamlConfiguration();
         fc.set("version", getDescription().getVersion());
         fc.set("name", getDescription().getName());
         fc.save(getDataFile("info", "plugin.yml"));
     }
-
 
 
     @Override

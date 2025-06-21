@@ -18,25 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.architect;
 
-import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
-
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.content.item.BoundRedstoneTorch;
 import com.volmit.adapt.util.*;
-
-import java.util.HashMap;
-import java.util.Map;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.block.data.BlockData;
@@ -48,6 +38,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
 
 
 public class ArchitectWirelessRedstone extends SimpleAdaptation<ArchitectWirelessRedstone.Config> {
@@ -102,7 +97,7 @@ public class ArchitectWirelessRedstone extends SimpleAdaptation<ArchitectWireles
         }
 
         boolean specialItem =
-            isRedstoneTorch(itemInHand) && BoundRedstoneTorch.hasItemData(itemInHand);
+                isRedstoneTorch(itemInHand) && BoundRedstoneTorch.hasItemData(itemInHand);
         if (!specialItem) {
             return;
         }
@@ -253,7 +248,7 @@ public class ArchitectWirelessRedstone extends SimpleAdaptation<ArchitectWireles
             ItemStack hand = p.getInventory().getItemInMainHand();
             ItemStack offhand = p.getInventory().getItemInOffHand();
             if ((isRedstoneTorch(hand) && BoundRedstoneTorch.hasItemData(hand)) || (
-                isRedstoneTorch(offhand) && BoundRedstoneTorch.hasItemData(offhand))) {
+                    isRedstoneTorch(offhand) && BoundRedstoneTorch.hasItemData(offhand))) {
                 J.s(() -> updatePlayerCooldown(p, false));
             } else {
                 J.s(() -> updatePlayerCooldown(p, true));

@@ -19,7 +19,6 @@
 package com.volmit.adapt.api.skill;
 
 import art.arcane.amulet.io.FileWatcher;
-import com.google.gson.Gson;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.Adaptation;
@@ -180,6 +179,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
             return true;
         }
     }
+
     protected void shouldReturnForPlayer(Player p, Runnable r) {
         try {
             if (shouldReturnForPlayer(p)) {

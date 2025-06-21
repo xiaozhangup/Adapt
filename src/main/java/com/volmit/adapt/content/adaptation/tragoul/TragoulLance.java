@@ -53,7 +53,7 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
     }
 
 
-    @EventHandler (priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent e) {
             if (e.getDamager() instanceof Player p && hasAdaptation(p)) {
@@ -110,7 +110,6 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
     }
 
 
-
     @Override
     public boolean isEnabled() {
         return getConfig().enabled;
@@ -128,7 +127,7 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
     @Override
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + Localizer.dLocalize("tragoul", "lance", "lore1"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "lance", "lore2") );
+        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "lance", "lore2"));
         v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "lance", "lore3") + level);
     }
 

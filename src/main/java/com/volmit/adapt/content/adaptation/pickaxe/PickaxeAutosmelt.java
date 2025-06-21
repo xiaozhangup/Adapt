@@ -138,13 +138,13 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
     private static int getFortuneOreMultiplier(Integer fortuneLevel) {
         if (fortuneLevel == null || fortuneLevel < 1) return 1;
 
-        double averageBonusMultiplier = (1.0/(fortuneLevel+2) + (fortuneLevel+1)/2.0) - 1;
-        int sumOfBonusMultipliers = (fortuneLevel*(fortuneLevel+1))/2;
-        double chancePerMultiplier = averageBonusMultiplier/sumOfBonusMultipliers;
+        double averageBonusMultiplier = (1.0 / (fortuneLevel + 2) + (fortuneLevel + 1) / 2.0) - 1;
+        int sumOfBonusMultipliers = (fortuneLevel * (fortuneLevel + 1)) / 2;
+        double chancePerMultiplier = averageBonusMultiplier / sumOfBonusMultipliers;
 
-        int bonusMultiplier = ((int) (RANDOM.nextDouble()/chancePerMultiplier)) + 1;
+        int bonusMultiplier = ((int) (RANDOM.nextDouble() / chancePerMultiplier)) + 1;
 
-        return bonusMultiplier <= fortuneLevel ? bonusMultiplier+1 : 1;
+        return bonusMultiplier <= fortuneLevel ? bonusMultiplier + 1 : 1;
     }
 
     @Override

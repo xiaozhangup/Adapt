@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-discovery-armor".getBytes());
-    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString( "adapt:discovery-armor");
+    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:discovery-armor");
     private static final long UPDATE_COOLDOWN = TimeUnit.SECONDS.toMillis(3);
     private static final Sphere SPHERE = new Sphere(5);
 

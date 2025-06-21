@@ -62,7 +62,7 @@ public class AdaptationListingHandler {
 
         for (Skill<?> skill : SkillRegistry.skills.sortV()) {
             for (Adaptation<?> adaptation : skill.getAdaptations()) {
-                AdaptationProvider suggestion = new AdaptationProvider(skill.getName() + ":" +adaptation.getName());
+                AdaptationProvider suggestion = new AdaptationProvider(skill.getName() + ":" + adaptation.getName());
                 adaptationProviders.add(suggestion);
             }
         }

@@ -89,7 +89,6 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
     }
 
 
-
     @Override
     public boolean isEnabled() {
         return getConfig().enabled;

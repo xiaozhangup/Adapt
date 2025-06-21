@@ -26,18 +26,14 @@ import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.util.*;
-import manifold.rt.api.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.volmit.adapt.util.M.clip;
 
 public class SkillsGui {
     private static final List<Integer> slots = Arrays.asList(11, 12, 13, 14, 15, 20, 21, 22);

@@ -18,12 +18,10 @@
 
 package com.volmit.adapt.content.item.multiItems;
 
-import com.volmit.adapt.Adapt;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,6 +31,40 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MultiArmor implements MultiItem {
+    public static List<String> getLoreWithout(ItemMeta meta) {
+        List<String> list = meta.getLore();
+        if (list == null) {
+            return null;
+        }
+
+        String targetText = "复合盔甲";
+        List<String> removeList = new ArrayList<>();
+
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            String current = iterator.next();
+            if (current.contains(targetText)) {
+                removeList.add(current);
+                while (iterator.hasNext()) {
+                    String next = iterator.next();
+                    if (next.contains("-> ") || next.contains("-  ") || next.equals(" ")) {
+                        removeList.add(next);
+                    } else {
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        list.removeAll(removeList);
+        return list;
+    }
+
+    private static String legacy(Component component) {
+        return LegacyComponentSerializer.legacySection().serialize(component);
+    }
+
     @Override
     public boolean supportsItem(ItemStack itemStack) {
         return true;
@@ -84,40 +116,6 @@ public class MultiArmor implements MultiItem {
 
     public ItemStack nextChestplate(ItemStack item) {
         return nextMatching(item, i -> i.getType().name().endsWith("_CHESTPLATE"));
-    }
-
-    public static List<String> getLoreWithout(ItemMeta meta) {
-        List<String> list = meta.getLore();
-        if (list == null) {
-            return null;
-        }
-
-        String targetText = "复合盔甲";
-        List<String> removeList = new ArrayList<>();
-
-        Iterator<String> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            String current = iterator.next();
-            if (current.contains(targetText)) {
-                removeList.add(current);
-                while (iterator.hasNext()) {
-                    String next = iterator.next();
-                    if (next.contains("-> ") || next.contains("-  ") || next.equals(" ")) {
-                        removeList.add(next);
-                    } else {
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-
-        list.removeAll(removeList);
-        return list;
-    }
-
-    private static String legacy(Component component) {
-        return LegacyComponentSerializer.legacySection().serialize(component);
     }
 
 }

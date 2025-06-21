@@ -21,7 +21,6 @@ package com.volmit.adapt.content.adaptation.rift;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.content.item.BoundEnderPearl;
 import com.volmit.adapt.util.*;
@@ -259,8 +258,6 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
             activeViewsMap.remove(block.getLocation());
         }
     }
-
-
 
 
     @Override

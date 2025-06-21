@@ -6,7 +6,6 @@ import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.skill.SkillRegistry;
 import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.api.world.PlayerSkillLine;
-import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Color;
 import com.volmit.adapt.util.Localizer;
@@ -65,6 +64,14 @@ public class PapiExpansion extends PlaceholderExpansion {
         adaptationMap.put("name", (playerData, adaptation) -> String.valueOf(getAdaptionLocalizedName(adaptation)));
     }
 
+    private static <T> List<T> getElementsFromSecond(List<T> list) {
+        if (list == null || list.size() < 2) {
+            return new ArrayList<>();
+        }
+
+        return list.subList(1, list.size());
+    }
+
     private Integer getAdaptionLevel(Adaptation<?> adaptation, PlayerData playerData) {
         List<Skill<?>> skills = Adapt.instance.getAdaptServer().getSkillRegistry().getSkills();
         for (Skill<?> skill : skills) {
@@ -89,14 +96,6 @@ public class PapiExpansion extends PlaceholderExpansion {
             }
         }
         return "Unknown";
-    }
-
-    private static <T> List<T> getElementsFromSecond(List<T> list) {
-        if (list == null || list.size() < 2) {
-            return new ArrayList<>();
-        }
-
-        return list.subList(1, list.size());
     }
 
     @Override

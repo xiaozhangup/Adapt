@@ -30,14 +30,13 @@ import org.bukkit.World;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
-import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.util.Collection;
 import java.util.UUID;
 
 public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-tame-health-boost".getBytes());
-    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString( "adapt:tame-health-boost");
+    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:tame-health-boost");
 
     public TamingHealthBoost() {
         super("tame-health");

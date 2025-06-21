@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,9 +43,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Painting;
 
 public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Config> {
     private static final BlockData AIR = Material.AIR.createBlockData();
@@ -214,7 +213,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
             return false;
         }
 
-        if(!block.getWorld()
+        if (!block.getWorld()
                 .getNearbyEntities(block.getLocation()
                         .add(.5, .5, .5), .5, .5, .5, entity ->
                         entity instanceof ItemFrame || entity instanceof Painting).isEmpty())

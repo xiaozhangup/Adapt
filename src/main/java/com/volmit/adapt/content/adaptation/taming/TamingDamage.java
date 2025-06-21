@@ -30,14 +30,13 @@ import org.bukkit.World;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
-import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.util.Collection;
 import java.util.UUID;
 
 public class TamingDamage extends SimpleAdaptation<TamingDamage.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-tame-damage-boost".getBytes());
-    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString( "adapt:tame-damage-boost");
+    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:tame-damage-boost");
 
     public TamingDamage() {
         super("tame-damage");

@@ -24,7 +24,6 @@ import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
@@ -39,7 +38,7 @@ import java.util.UUID;
 
 public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-armor-up".getBytes());
-    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString( "adapt:armor-up");
+    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:armor-up");
     private final Map<Player, Integer> ticksRunning;
 
 

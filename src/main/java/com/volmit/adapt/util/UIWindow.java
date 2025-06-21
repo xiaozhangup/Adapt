@@ -68,6 +68,36 @@ public class UIWindow implements Window, Listener {
         setViewportPosition(0);
     }
 
+    private static Inventory createInventory(UIWindow window) {
+        var holder = new Holder();
+        Inventory inventory;
+        if (window.getResolution().getType().equals(InventoryType.CHEST)) {
+            inventory = Bukkit.createInventory(holder, window.getViewportHeight() * 9, window.getTitle());
+        } else {
+            inventory = Bukkit.createInventory(holder, window.getResolution().getType(), window.getTitle());
+        }
+        holder.setResolution(window.getResolution());
+        holder.setInventory(inventory);
+        holder.setWindow(window);
+
+        window.viewer.openInventory(inventory);
+        return inventory;
+    }
+
+    private static Inventory getCurrentInventory(UIWindow window, Holder holder) {
+        if (!Version.SET_TITLE || holder.getResolution() != window.getResolution()) {
+            holder.window.close();
+            return createInventory(window);
+        }
+
+        var openInventory = holder.inventory;
+        holder.unregister();
+        holder.setWindow(window);
+
+        openInventory.clear();
+        return openInventory;
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(InventoryClickEvent e) {
         if (!e.getWhoClicked().equals(viewer)) {
@@ -475,35 +505,5 @@ public class UIWindow implements Window, Listener {
             HandlerList.unregisterAll(window);
             window.visible = false;
         }
-    }
-
-    private static Inventory createInventory(UIWindow window) {
-        var holder = new Holder();
-        Inventory inventory;
-        if (window.getResolution().getType().equals(InventoryType.CHEST)) {
-            inventory = Bukkit.createInventory(holder, window.getViewportHeight() * 9, window.getTitle());
-        } else {
-            inventory = Bukkit.createInventory(holder, window.getResolution().getType(), window.getTitle());
-        }
-        holder.setResolution(window.getResolution());
-        holder.setInventory(inventory);
-        holder.setWindow(window);
-
-        window.viewer.openInventory(inventory);
-        return inventory;
-    }
-
-    private static Inventory getCurrentInventory(UIWindow window, Holder holder) {
-        if (!Version.SET_TITLE || holder.getResolution() != window.getResolution()) {
-            holder.window.close();
-            return createInventory(window);
-        }
-
-        var openInventory = holder.inventory;
-        holder.unregister();
-        holder.setWindow(window);
-
-        openInventory.clear();
-        return openInventory;
     }
 }

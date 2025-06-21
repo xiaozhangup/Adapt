@@ -23,7 +23,6 @@ import com.volmit.adapt.api.world.AdaptServer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 public class AdaptEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
@@ -33,6 +32,10 @@ public class AdaptEvent extends Event implements Cancellable {
     public AdaptEvent(boolean async) {
         super(async);
         canceled = false;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public AdaptServer getServer() {
@@ -47,10 +50,6 @@ public class AdaptEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean b) {
         canceled = b;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
     }
 
     @Override

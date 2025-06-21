@@ -20,7 +20,8 @@ package com.volmit.adapt.api.recipe;
 
 import com.volmit.adapt.Adapt;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 public interface AdaptRecipe {
     ItemStack getResult();

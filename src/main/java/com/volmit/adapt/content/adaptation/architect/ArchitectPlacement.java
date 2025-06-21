@@ -93,10 +93,10 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
 
         double v = getValue(e.getBlock());
         Block ignored = blocks.keySet()
-                        .stream()
-                        .filter(b -> b.getRelative(blocks.get(b)).equals(e.getBlock()))
-                        .findFirst()
-                        .orElse(null);
+                .stream()
+                .filter(b -> b.getRelative(blocks.get(b)).equals(e.getBlock()))
+                .findFirst()
+                .orElse(null);
 
         if (hand.getAmount() < blocks.size()) {
             Adapt.messagePlayer(p, C.RED + Localizer.dLocalize("architect", "placement", "lore1") + " " + C.GREEN + blocks.size() + C.RED + " " + Localizer.dLocalize("architect", "placement", "lore2"));

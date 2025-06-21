@@ -28,13 +28,16 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.CustomModel;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Singular;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data

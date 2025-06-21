@@ -23,13 +23,14 @@ import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent;
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.MaterialChar;
 import com.volmit.adapt.api.recipe.type.Shaped;
-import com.volmit.adapt.util.*;
+import com.volmit.adapt.util.CustomModel;
+import com.volmit.adapt.util.Element;
+import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.SoundPlayer;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -37,7 +38,9 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -48,7 +51,10 @@ import org.bukkit.util.BoundingBox;
 import org.bukkit.util.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class ArchitectElevator extends SimpleAdaptation<ArchitectElevator.Config> {
     private static final NamespacedKey ELEVATOR_KEY = new NamespacedKey(Adapt.instance, "elevator");
@@ -84,6 +90,39 @@ public class ArchitectElevator extends SimpleAdaptation<ArchitectElevator.Config
                 .build());
     }
 
+    private static boolean isElevator(Block b) {
+        return b.getType() == Material.NOTE_BLOCK
+                && CustomBlockData.hasCustomBlockData(b, Adapt.instance)
+                && new CustomBlockData(b, Adapt.instance)
+                .has(ELEVATOR_KEY, PersistentDataType.INTEGER);
+    }
+
+    private static boolean hasEnoughSpace(Player player, int targetY) {
+        BoundingBox box = player.getBoundingBox()
+                .shift(0, -player.getLocation().y(), 0)
+                .shift(0, targetY, 0);
+
+        double maxX = Math.ceil(box.getMaxX());
+        double maxY = Math.ceil(box.getMaxY());
+        double maxZ = Math.ceil(box.getMaxZ());
+        World world = player.getWorld();
+        for (int x = (int) box.getMinX(); x <= maxX; x++) {
+            for (int z = (int) box.getMinZ(); z <= maxZ; z++) {
+                for (int y = (int) box.getMinY(); y <= maxY; y++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (block.isPassable() || block.isLiquid())
+                        continue;
+                    VoxelShape shape = block.getCollisionShape();
+                    box.shift(-x, -y, -z);
+                    if (shape.overlaps(box))
+                        return false;
+                    box.shift(x, y, z);
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public void addStats(int level, Element v) {
 
@@ -91,7 +130,7 @@ public class ArchitectElevator extends SimpleAdaptation<ArchitectElevator.Config
 
     public ItemStack getElevatorItem() {
         ItemStack elevatorItem = CustomModel.get(Material.NOTE_BLOCK, "architect", "elevator", "item")
-                        .toItemStack();
+                .toItemStack();
         ItemMeta meta = elevatorItem.getItemMeta();
         if (meta != null) {
             meta.getPersistentDataContainer().set(ELEVATOR_KEY, PersistentDataType.BYTE, (byte) 0);
@@ -315,39 +354,6 @@ public class ArchitectElevator extends SimpleAdaptation<ArchitectElevator.Config
             return;
 
         teleportPlayer(player, loc);
-    }
-
-    private static boolean isElevator(Block b) {
-        return b.getType() == Material.NOTE_BLOCK
-                && CustomBlockData.hasCustomBlockData(b, Adapt.instance)
-                && new CustomBlockData(b, Adapt.instance)
-                .has(ELEVATOR_KEY, PersistentDataType.INTEGER);
-    }
-
-    private static boolean hasEnoughSpace(Player player, int targetY) {
-        BoundingBox box = player.getBoundingBox()
-                .shift(0, -player.getLocation().y(), 0)
-                .shift(0, targetY, 0);
-
-        double maxX = Math.ceil(box.getMaxX());
-        double maxY = Math.ceil(box.getMaxY());
-        double maxZ = Math.ceil(box.getMaxZ());
-        World world = player.getWorld();
-        for (int x = (int) box.getMinX(); x <= maxX; x++) {
-            for (int z = (int) box.getMinZ(); z <= maxZ; z++) {
-                for (int y = (int) box.getMinY(); y <= maxY; y++) {
-                    Block block = world.getBlockAt(x, y, z);
-                    if (block.isPassable() || block.isLiquid())
-                        continue;
-                    VoxelShape shape = block.getCollisionShape();
-                    box.shift(-x, -y, -z);
-                    if (shape.overlaps(box))
-                        return false;
-                    box.shift(x, y, z);
-                }
-            }
-        }
-        return true;
     }
 
     private void teleportPlayer(Player p, Location l) {

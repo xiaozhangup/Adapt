@@ -13,7 +13,7 @@ public class NMS {
 
     public static String serializeStack(ItemStack is) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (BukkitObjectOutputStream oos = new BukkitObjectOutputStream(out)){
+        try (BukkitObjectOutputStream oos = new BukkitObjectOutputStream(out)) {
             oos.writeObject(is);
             return Base64.getUrlEncoder().encodeToString(out.toByteArray());
         } catch (IOException e) {

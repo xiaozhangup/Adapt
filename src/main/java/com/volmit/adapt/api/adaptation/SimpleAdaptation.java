@@ -19,7 +19,6 @@
 package com.volmit.adapt.api.adaptation;
 
 import art.arcane.amulet.io.FileWatcher;
-import com.google.gson.Gson;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;

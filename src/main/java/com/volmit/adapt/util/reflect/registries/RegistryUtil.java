@@ -135,24 +135,6 @@ public class RegistryUtil {
 
     }
 
-    @FunctionalInterface
-    public interface Lookup<T> {
-        @NonNull
-        T find(@NonNull Class<T> typeClass, @NonNull NamespacedKey... keys);
-
-        static <T> Lookup<T> combine(@NonNull Lookup<T>... lookups) {
-            if (lookups.length == 0) throw new IllegalArgumentException("Need at least one lookup");
-            return (typeClass, keys) -> {
-                for (Lookup<T> lookup : lookups) {
-                    try {
-                        return lookup.find(typeClass, keys);
-                    } catch (IllegalArgumentException ignored) {}
-                }
-                throw new IllegalArgumentException("No element found for keys: " + Arrays.toString(keys));
-            };
-        }
-    }
-
     @Nullable
     private static <T extends Keyed> Registry<T> getRegistry(@NotNull Class<T> type) {
         RegistryLookup lookup = registryLookup.aquire(() -> {
@@ -165,6 +147,25 @@ public class RegistryUtil {
             return new DefaultRegistryLookup(bukkit);
         });
         return lookup.find(type);
+    }
+
+    @FunctionalInterface
+    public interface Lookup<T> {
+        static <T> Lookup<T> combine(@NonNull Lookup<T>... lookups) {
+            if (lookups.length == 0) throw new IllegalArgumentException("Need at least one lookup");
+            return (typeClass, keys) -> {
+                for (Lookup<T> lookup : lookups) {
+                    try {
+                        return lookup.find(typeClass, keys);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                }
+                throw new IllegalArgumentException("No element found for keys: " + Arrays.toString(keys));
+            };
+        }
+
+        @NonNull
+        T find(@NonNull Class<T> typeClass, @NonNull NamespacedKey... keys);
     }
 
     private interface RegistryLookup {

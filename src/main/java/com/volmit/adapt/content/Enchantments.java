@@ -19,12 +19,6 @@
 package com.volmit.adapt.content;
 
 
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
 public class Enchantments {
 
     /*

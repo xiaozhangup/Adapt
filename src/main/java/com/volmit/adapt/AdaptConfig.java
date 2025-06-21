@@ -35,7 +35,6 @@ import java.util.Map;
 @Getter
 public class AdaptConfig {
     private static AdaptConfig config = null;
-    private boolean hotReload = false;
     public boolean debug = false;
     public boolean autoUpdateCheck = true;
     public boolean autoUpdateLanguage = true;
@@ -47,6 +46,7 @@ public class AdaptConfig {
     public List<String> blacklistedWorlds = List.of("some_world_adapt_should_not_run_in", "anotherWorldFolderName");
     public int experienceMaxLevel = 1000;
     boolean preventHunterSkillsWhenHungerApplied = true;
+    private boolean hotReload = false;
     private ValueConfig value = new ValueConfig();
     private boolean metrics = true;
     private String language = "zh_CN";

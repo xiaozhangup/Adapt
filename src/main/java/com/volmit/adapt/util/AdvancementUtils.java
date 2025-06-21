@@ -36,9 +36,9 @@ public class AdvancementUtils {
      * Displays a custom toast to a player.
      *
      * @param player A player to show the toast.
-     * @param icon The displayed item of the toast.
-     * @param title The displayed title of the toast.
-     * @param frame The {@link AdvancementFrameType} of the toast.
+     * @param icon   The displayed item of the toast.
+     * @param title  The displayed title of the toast.
+     * @param frame  The {@link AdvancementFrameType} of the toast.
      * @see UltimateAdvancementAPI#displayCustomToast(Player, ItemStack, String, AdvancementFrameType)
      */
     public static void displayToast(@NotNull Player player, @NotNull ItemStack icon, @NotNull String title, @NotNull String description, @NotNull AdvancementFrameType frame) {

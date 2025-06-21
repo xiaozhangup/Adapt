@@ -22,12 +22,11 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import com.volmit.adapt.util.reflect.events.api.ReflectiveHandler;
 import com.volmit.adapt.util.reflect.events.api.entity.EntityDismountEvent;
 import com.volmit.adapt.util.reflect.events.api.entity.EntityMountEvent;
+import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
@@ -43,7 +42,7 @@ import java.util.UUID;
 
 public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-wind-up".getBytes());
-    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString( "adapt:wind-up");
+    private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:wind-up");
 
     private final Map<Player, Integer> ticksRunning;
 

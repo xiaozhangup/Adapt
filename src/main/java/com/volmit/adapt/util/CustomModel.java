@@ -21,25 +21,11 @@ import static com.volmit.adapt.Adapt.instance;
 
 public record CustomModel(Material material, int model, NamespacedKey modelKey) {
     public static final NamespacedKey EMPTY_KEY = NamespacedKey.minecraft("empty");
-    private static UpdateChecker updateChecker = null;
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .setPrettyPrinting()
             .create();
-
-    public ItemStack toItemStack() {
-        return toItemStack(new ItemStack(material));
-    }
-
-    public ItemStack toItemStack(ItemStack itemStack) {
-        var meta = itemStack.getItemMeta();
-        if (meta == null || model == 0)
-            return itemStack;
-
-        Version.get().applyModel(this, meta);
-        itemStack.setItemMeta(meta);
-        return itemStack;
-    }
+    private static UpdateChecker updateChecker = null;
 
     public static CustomModel get(Material fallback, String... path) {
         if (!AdaptConfig.get().isCustomModels())
@@ -55,6 +41,20 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
             return;
         updateChecker.unregister();
         updateChecker = null;
+    }
+
+    public ItemStack toItemStack() {
+        return toItemStack(new ItemStack(material));
+    }
+
+    public ItemStack toItemStack(ItemStack itemStack) {
+        var meta = itemStack.getItemMeta();
+        if (meta == null || model == 0)
+            return itemStack;
+
+        Version.get().applyModel(this, meta);
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 
     private static class UpdateChecker extends TickedObject {

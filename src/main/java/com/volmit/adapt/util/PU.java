@@ -7,12 +7,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
-import java.util.function.Predicate;
-
 public class PU {
     public static int dropTo(Player player, Location location, double range) {
         var drops = location.getWorld().getNearbyEntities(location, range, range, range);
-        drops.forEach( entity -> {
+        drops.forEach(entity -> {
             if (entity instanceof Item item) {
                 player.playSound(location, Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
 

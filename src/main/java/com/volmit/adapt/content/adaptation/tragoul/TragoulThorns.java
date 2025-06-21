@@ -60,7 +60,6 @@ public class TragoulThorns extends SimpleAdaptation<TragoulThorns.Config> {
     }
 
 
-
     @EventHandler
     public void on(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) {

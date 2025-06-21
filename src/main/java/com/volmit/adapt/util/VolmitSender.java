@@ -25,7 +25,7 @@ package com.volmit.adapt.util;
 //import com.volmit.Adapt.util.collection.Map;
 //import com.volmit.Adapt.util.decree.DecreeParameter;
 //import com.volmit.Adapt.util.decree.virtual.VirtualDecreeCommand;
-import static art.arcane.amulet.MagicalSugar.*;
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.collection.KList;
 import com.volmit.adapt.util.decree.DecreeParameter;

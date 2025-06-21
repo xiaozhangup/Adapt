@@ -92,10 +92,10 @@ public class M {
     /**
      * Bilinear interpolation
      *
-     * @param a  the first point (0, 0)
-     * @param b  the second point (1, 0)
-     * @param c  the third point (0, 1)
-     * @param d  the fourth point (1, 1)
+     * @param a the first point (0, 0)
+     * @param b the second point (1, 0)
+     * @param c the third point (0, 1)
+     * @param d the fourth point (1, 1)
      * @param x the x
      * @param y the y
      * @return the bilerped value

@@ -24,7 +24,7 @@ libraries:
   - com.github.ben-manes.caffeine:caffeine:3.0.6
 
 commands:
-  adapt: {}
+  adapt: { }
 
 permissions:
   adapt.idontknowwhatimdoingiswear:

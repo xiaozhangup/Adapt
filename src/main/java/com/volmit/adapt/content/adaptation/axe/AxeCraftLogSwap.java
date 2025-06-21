@@ -19,7 +19,6 @@
 package com.volmit.adapt.content.adaptation.axe;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.recipe.type.Shapeless;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;

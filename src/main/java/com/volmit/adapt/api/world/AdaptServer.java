@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.api.world;
 
-import com.google.gson.Gson;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.Adaptation;
@@ -141,30 +140,30 @@ public class AdaptServer extends TickedObject {
                 Skill<?> skill = getSkillRegistry().getSkill(data.getSkill());
                 data.apply(p);
                 SoundNotification.builder()
-                    .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
-                    .volume(0.35f).pitch(1.455f)
-                    .build().play(getPlayer(p));
+                        .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
+                        .volume(0.35f).pitch(1.455f)
+                        .build().play(getPlayer(p));
                 SoundNotification.builder()
-                    .sound(Sound.ENTITY_SHULKER_OPEN)
-                    .volume(1f).pitch(1.655f)
-                    .build().play(getPlayer(p));
+                        .sound(Sound.ENTITY_SHULKER_OPEN)
+                        .volume(1f).pitch(1.655f)
+                        .build().play(getPlayer(p));
                 getPlayer(p).getNot().queue(AdvancementNotification.builder()
-                    .icon(Material.BOOK)
-                    .model(CustomModel.get(Material.BOOK, "snippets", "gui", "knowledge"))
-                    .title(C.GRAY + "+ " + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
-                    .build());
+                        .icon(Material.BOOK)
+                        .model(CustomModel.get(Material.BOOK, "snippets", "gui", "knowledge"))
+                        .title(C.GRAY + "+ " + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
+                        .build());
             } else {
                 ExperienceOrb.Data datax = ExperienceOrb.get(s.getItem());
                 if (datax != null) {
                     datax.apply(p);
                     SoundNotification.builder()
-                        .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
-                        .volume(0.35f).pitch(1.455f)
-                        .build().play(getPlayer(p));
+                            .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
+                            .volume(0.35f).pitch(1.455f)
+                            .build().play(getPlayer(p));
                     SoundNotification.builder()
-                        .sound(Sound.ENTITY_SHULKER_OPEN)
-                        .volume(1f).pitch(1.655f)
-                        .build().play(getPlayer(p));
+                            .sound(Sound.ENTITY_SHULKER_OPEN)
+                            .volume(1f).pitch(1.655f)
+                            .build().play(getPlayer(p));
                 }
             }
         }

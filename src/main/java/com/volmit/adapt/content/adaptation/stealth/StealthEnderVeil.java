@@ -41,7 +41,7 @@ public class StealthEnderVeil extends SimpleAdaptation<StealthEnderVeil.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("stealth", "enderveil",  "lore" + (level < 2 ? 1 : 2)));
+        v.addLore(C.GRAY + Localizer.dLocalize("stealth", "enderveil", "lore" + (level < 2 ? 1 : 2)));
     }
 
     @Override

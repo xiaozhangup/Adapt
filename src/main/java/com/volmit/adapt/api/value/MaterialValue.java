@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.api.value;
 
-import com.google.gson.Gson;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
