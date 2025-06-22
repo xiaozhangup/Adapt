@@ -93,7 +93,4 @@ public class Average {
         return values.length;
     }
 
-    public boolean isDirty() {
-        return dirty;
-    }
 }

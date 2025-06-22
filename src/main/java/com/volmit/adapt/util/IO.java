@@ -31,26 +31,6 @@ import java.util.zip.ZipFile;
 
 public class IO {
     /**
-     * The Unix directory separator character.
-     */
-    public static final char DIR_SEPARATOR_UNIX = '/';
-    /**
-     * The Windows directory separator character.
-     */
-    public static final char DIR_SEPARATOR_WINDOWS = '\\';
-    /**
-     * The system directory separator character.
-     */
-    public static final char DIR_SEPARATOR = File.separatorChar;
-    /**
-     * The Unix line separator string.
-     */
-    public static final String LINE_SEPARATOR_UNIX = "\n";
-    /**
-     * The Windows line separator string.
-     */
-    public static final String LINE_SEPARATOR_WINDOWS = "\r\n";
-    /**
      * The system line separator string.
      */
     public static final String LINE_SEPARATOR;
@@ -102,20 +82,6 @@ public class IO {
             MessageDigest d = MessageDigest.getInstance("SHA-256");
             return bytesToHex(d.digest(b.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        return "¯\\_(ツ)_/¯";
-    }
-
-    public static String hash(File b) {
-        try {
-            MessageDigest d = MessageDigest.getInstance("SHA-256");
-            DigestInputStream din = new DigestInputStream(new FileInputStream(b), d);
-            fullTransfer(din, new VoidOutputStream(), 8192);
-            din.close();
-            return bytesToHex(din.getMessageDigest().digest());
-        } catch (Throwable e) {
             e.printStackTrace();
         }
 

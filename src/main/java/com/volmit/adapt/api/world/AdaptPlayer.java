@@ -71,7 +71,12 @@ public class AdaptPlayer extends TickedObject {
         velocity = new Vector();
 
         if (AdaptConfig.get().isUseSql()) {
-            FinalInteger fi = new FinalInteger(0);
+            final class MutableInt {
+                private int value = 0;
+                public void increment() { value++; }
+                public int get() { return value; }
+            }
+            final MutableInt fi = new MutableInt();
             BukkitRunnable fr = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -84,7 +89,7 @@ public class AdaptPlayer extends TickedObject {
                     if (l == 0) {
                         cancelAndFinishInitial();
                     } else {
-                        fi.add(1);
+                        fi.increment();
                         if (fi.get() > 9) {
                             Adapt.error("Failed to load player data for " + player.getName() + " after 10 tries. Fallback to local file.");
 

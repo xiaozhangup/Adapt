@@ -371,10 +371,4 @@ public class Adapt extends VolmitPlugin {
     public String getTag(String subTag) {
         return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET + C.GRAY + ": ";
     }
-
-    private void setupMetrics() {
-        if (AdaptConfig.get().isMetrics()) {
-            new Metrics(this, 24221);
-        }
-    }
 }

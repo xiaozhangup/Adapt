@@ -246,15 +246,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     }
 
     /**
-     * Get the cuboid dimensions
-     *
-     * @return the dimensions
-     */
-    public Dimension getDimension() {
-        return new Dimension(getSizeX(), getSizeY(), getSizeZ());
-    }
-
-    /**
      * Get the minimum X co-ordinate of this Cuboid
      *
      * @return the minimum X co-ordinate
@@ -353,16 +344,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             default:
                 throw new IllegalArgumentException("invalid direction " + dir);
         }
-    }
-
-    public Cuboid expand(Direction dir, int amount) {
-        int ax = dir.toVector().getBlockX() == 1 ? amount : 0;
-        int sx = dir.toVector().getBlockX() == -1 ? -amount : 0;
-        int ay = dir.toVector().getBlockY() == 1 ? amount : 0;
-        int sy = dir.toVector().getBlockY() == -1 ? -amount : 0;
-        int az = dir.toVector().getBlockZ() == 1 ? amount : 0;
-        int sz = dir.toVector().getBlockZ() == -1 ? -amount : 0;
-        return new Cuboid(worldName, x1 + sx, y1 + sy, z1 + sz, x2 + ax, y2 + ay, z2 + az);
     }
 
     /**

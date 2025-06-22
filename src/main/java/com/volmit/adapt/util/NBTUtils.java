@@ -22,6 +22,8 @@ package com.volmit.adapt.util;
  * Changes : Neil Wightman - Support 19133 Tag_Int_Array tag
  */
 
+import com.volmit.adapt.util.tag.*;
+
 /**
  * A class which contains NBT-related utility methods. This currently supports reading 19133 but <b>only</b> writing
  * 19132.

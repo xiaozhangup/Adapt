@@ -20,6 +20,7 @@ package com.volmit.adapt.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,31 +48,35 @@ public class JarScanner {
      *
      * @throws IOException bad things happen
      */
-    public void scan() throws IOException {
-        classes.clear();
-        FileInputStream fin = new FileInputStream(jar);
-        ZipInputStream zip = new ZipInputStream(fin);
+    public void scan() {
+        try {
+            classes.clear();
+            FileInputStream fin = new FileInputStream(jar);
+            ZipInputStream zip = new ZipInputStream(fin);
 
-        for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
-            if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
-                if (entry.getName().contains("$")) {
-                    continue;
-                }
+            for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+                if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
+                    if (entry.getName().contains("$")) {
+                        continue;
+                    }
 
-                String c = entry.getName().replaceAll("/", ".").replace(".class", "");
+                    String c = entry.getName().replaceAll("/", ".").replace(".class", "");
 
-                if (c.startsWith(superPackage)) {
-                    try {
-                        Class<?> clazz = Class.forName(c);
-                        classes.add(clazz);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                    if (c.startsWith(superPackage)) {
+                        try {
+                            Class<?> clazz = Class.forName(c);
+                            classes.add(clazz);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-        }
 
-        zip.close();
+            zip.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

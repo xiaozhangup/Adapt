@@ -36,7 +36,7 @@ public class Form {
     private static DecimalFormat DF;
 
     static {
-        MAP = new TreeMap<BigInteger, String>();
+        MAP = new TreeMap<>();
         for (int i = 0; i < NAMES.length; i++) {
             MAP.put(THOUSAND.pow(i + 1), NAMES[i]);
         }
@@ -309,73 +309,6 @@ public class Form {
 
             arg7.append(s.substring(arg6));
             return arg7.toString();
-        }
-    }
-
-    /**
-     * Returns a fancy duration up to Years
-     *
-     * @param duration the duration in ms
-     * @return the fancy duration
-     */
-    public static String duration(RollingSequence rollingSequence, long duration) {
-        String suffix = "Millisecond";
-        double phantom = duration;
-        int div = 1000;
-
-        if (phantom > div) {
-            phantom /= div;
-            suffix = "Second";
-            div = 60;
-
-            if (phantom > div) {
-                phantom /= div;
-                suffix = "Minute";
-
-                if (phantom > div) {
-                    phantom /= div;
-                    suffix = "Hour";
-                    div = 24;
-
-                    if (phantom > 24) {
-                        phantom /= div;
-                        suffix = "Day";
-                        div = 7;
-
-                        if (phantom > div) {
-                            phantom /= div;
-                            suffix = "Week";
-                            div = 4;
-
-                            if (phantom > div) {
-                                phantom /= div;
-                                suffix = "Month";
-                                div = 12;
-
-                                if (phantom > div) {
-                                    phantom /= div;
-                                    suffix = "Year";
-                                    return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-                                } else {
-                                    return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-                                }
-                            } else {
-                                return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-                            }
-                        } else {
-                            return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-                        }
-                    } else {
-                        return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-                    }
-                } else {
-                    return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-                }
-            } else {
-                return Form.fd(phantom, 0) + " " + suffix + ((int) phantom == 1 ? "" : "s");
-            }
-        } else {
-            return "Under a Second";
         }
     }
 

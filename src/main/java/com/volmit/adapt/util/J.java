@@ -58,39 +58,21 @@ public class J {
         return MultiBurst.burst.getService().submit(a);
     }
 
-    public static void attemptAsync(NastyRunnable r) {
-        J.a(() -> J.attempt(r));
+    public static void sleep(long ms) {
+        J.attempt(() -> {
+            try {
+                Thread.sleep(ms);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-    public static <R> R attemptResult(NastyFuture<R> r, R onError) {
-        try {
-            return r.run();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
-        return onError;
-    }
-
-    public static <T, R> R attemptFunction(NastyFunction<T, R> r, T param, R onError) {
-        try {
-            return r.run(param);
-        } catch (Throwable e) {
-            Adapt.verbose("Failed to run function: " + e.getMessage());
-        }
-
-        return onError;
-    }
-
-    public static boolean sleep(long ms) {
-        return J.attempt(() -> Thread.sleep(ms));
-    }
-
-    public static boolean attempt(NastyRunnable r) {
+    public static boolean attempt(Runnable r) {
         return attemptCatch(r) == null;
     }
 
-    public static Throwable attemptCatch(NastyRunnable r) {
+    public static Throwable attemptCatch(Runnable r) {
         try {
             r.run();
         } catch (Throwable e) {
@@ -204,29 +186,6 @@ public class J {
     }
 
     /**
-     * Start a sync repeating task for a limited amount of ticks
-     *
-     * @param r         the runnable
-     * @param interval  the interval in ticks
-     * @param intervals the maximum amount of intervals to run
-     */
-    public static void sr(Runnable r, int interval, int intervals) {
-        FinalInteger fi = new FinalInteger(0);
-
-        new SR() {
-            @Override
-            public void run() {
-                fi.add(1);
-                r.run();
-
-                if (fi.get() >= intervals) {
-                    cancel();
-                }
-            }
-        };
-    }
-
-    /**
      * Call an async task dealyed
      *
      * @param r     the runnable
@@ -256,28 +215,5 @@ public class J {
     @SuppressWarnings("deprecation")
     public static int ar(Runnable r, int interval) {
         return Bukkit.getScheduler().scheduleAsyncRepeatingTask(Adapt.instance, r, 0, interval);
-    }
-
-    /**
-     * Start an async repeating task for a limited time
-     *
-     * @param r         the runnable
-     * @param interval  the interval
-     * @param intervals the intervals to run
-     */
-    public static void ar(Runnable r, int interval, int intervals) {
-        FinalInteger fi = new FinalInteger(0);
-
-        new AR() {
-            @Override
-            public void run() {
-                fi.add(1);
-                r.run();
-
-                if (fi.get() >= intervals) {
-                    cancel();
-                }
-            }
-        };
     }
 }

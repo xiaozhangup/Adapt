@@ -22,7 +22,6 @@ package com.volmit.adapt.util.data;
 //import com.volmit.react.util.collection.KList;
 //import com.volmit.react.util.math.Direction;
 
-import com.volmit.adapt.util.Direction;
 import com.volmit.adapt.util.collection.KList;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -352,16 +351,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             case Up -> new Cuboid(worldName, x1, y1, z1, x2, y2 + amount, z2);
             default -> throw new IllegalArgumentException("invalid direction " + dir);
         };
-    }
-
-    public Cuboid expand(Direction dir, int amount) {
-        int ax = dir.toVector().getBlockX() == 1 ? amount : 0;
-        int sx = dir.toVector().getBlockX() == -1 ? -amount : 0;
-        int ay = dir.toVector().getBlockY() == 1 ? amount : 0;
-        int sy = dir.toVector().getBlockY() == -1 ? -amount : 0;
-        int az = dir.toVector().getBlockZ() == 1 ? amount : 0;
-        int sz = dir.toVector().getBlockZ() == -1 ? -amount : 0;
-        return new Cuboid(worldName, x1 + sx, y1 + sy, z1 + sz, x2 + ax, y2 + ay, z2 + az);
     }
 
     /**

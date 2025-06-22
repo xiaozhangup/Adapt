@@ -7,28 +7,6 @@ import java.util.List;
 public class Color {
     private static final HashMap<String, List<String>> colorCache = new HashMap<>();
 
-    public static String modifiedColorCode(String colorCode, float ratio) {
-        String colorStr = colorCode.replaceFirst("#", "");
-
-        int red = Integer.parseInt(colorStr.substring(0, 2), 16);
-        int green = Integer.parseInt(colorStr.substring(2, 4), 16);
-        int blue = Integer.parseInt(colorStr.substring(4, 6), 16);
-
-        int newRed = (int) (red * ratio);
-        int newGreen = (int) (green * ratio);
-        int newBlue = (int) (blue * ratio);
-
-        int finalRed = Math.min(newRed + 30, 255);
-        int finalGreen = Math.min(newGreen + 30, 255);
-        int finalBlue = Math.min(newBlue + 30, 255);
-
-        return String.format("#%02x%02x%02x", finalRed, finalGreen, finalBlue);
-    }
-
-    public static String whiteColorCode(String colorCode) {
-        return gradientColors(colorCode, "#ffffff", 10).get(8);
-    }
-
     public static List<String> gradientColors(String cA, String cB, int number) {
         int[] a = hex2RGB(cA);
         int[] b = hex2RGB(cB);
