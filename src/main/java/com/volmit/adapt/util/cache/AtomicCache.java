@@ -19,12 +19,7 @@
 
 package com.volmit.adapt.util.cache;
 
-
-//import com.volmit.react.React;
-//import com.volmit.react.util.function.NastySupplier;
-
 import com.volmit.adapt.Adapt;
-import com.volmit.adapt.util.function.NastySupplier;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -54,27 +49,6 @@ public class AtomicCache<T> {
         if (nullSupport) {
             set.set(false);
         }
-    }
-
-    public T aquireNasty(NastySupplier<T> t) {
-        return aquire(() -> {
-            try {
-                return t.get();
-            } catch (Throwable e) {
-                return null;
-            }
-        });
-    }
-
-    public T aquireNastyPrint(NastySupplier<T> t) {
-        return aquire(() -> {
-            try {
-                return t.get();
-            } catch (Throwable e) {
-                e.printStackTrace();
-                return null;
-            }
-        });
     }
 
     public T aquire(Supplier<T> t) {
