@@ -51,7 +51,10 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.volmit.adapt.util.decree.context.AdaptationListingHandler.initializeAdaptationListings;
 

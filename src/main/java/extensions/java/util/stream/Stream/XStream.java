@@ -22,7 +22,6 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.Self;
 import manifold.ext.rt.api.This;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.*;

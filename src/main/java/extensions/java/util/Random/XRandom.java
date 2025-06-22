@@ -27,8 +27,8 @@ import java.util.Random;
 
 @Extension
 public class XRandom {
-    private static final char[] CHARGEN = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-=!@#$%^&*()_+`~[];',./<>?:\\\"{}|\\\\".toCharArray();
     public static final Random r = new Random();
+    private static final char[] CHARGEN = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-=!@#$%^&*()_+`~[];',./<>?:\\\"{}|\\\\".toCharArray();
 
     public static String s(@This Random self, int length) {
         StringBuilder sb = new StringBuilder();

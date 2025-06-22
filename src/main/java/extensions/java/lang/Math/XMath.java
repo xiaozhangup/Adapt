@@ -32,6 +32,12 @@ public class XMath {
     private static final float[] sin = new float[modulus];
     public static int tick = 0;
 
+    static {
+        for (int i = 0; i < sin.length; i++) {
+            sin[i] = (float) Math.sin((i * Math.PI) / (precision * 180));
+        }
+    }
+
     /**
      * Scales B by an external range change so that <br/>
      * <br/>
@@ -172,7 +178,6 @@ public class XMath {
         return (ns / 50000000.0);
     }
 
-
     /**
      * Get system Nanoseconds
      *
@@ -266,12 +271,6 @@ public class XMath {
     @Extension
     public static long epochDays(long ms) {
         return ms / 1000 / 60 / 60 / 24;
-    }
-
-    static {
-        for (int i = 0; i < sin.length; i++) {
-            sin[i] = (float) Math.sin((i * Math.PI) / (precision * 180));
-        }
     }
 
     @Extension

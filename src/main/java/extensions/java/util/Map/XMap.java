@@ -53,8 +53,7 @@ public class XMap {
         return k;
     }
 
-    public static <K, V> List<K> sortKNumber(@This Map<K, V> self)
-    {
+    public static <K, V> List<K> sortKNumber(@This Map<K, V> self) {
         List<K> k = new ArrayList<>();
         List<V> v = self.v();
 
@@ -64,12 +63,9 @@ public class XMap {
             return (int) ((n1.doubleValue() - n2.doubleValue()) * 1_000);
         });
 
-        for(V i : v)
-        {
-            for(K j : self.k())
-            {
-                if(self.get(j).equals(i))
-                {
+        for (V i : v) {
+            for (K j : self.k()) {
+                if (self.get(j).equals(i)) {
                     k.add(j);
                 }
             }

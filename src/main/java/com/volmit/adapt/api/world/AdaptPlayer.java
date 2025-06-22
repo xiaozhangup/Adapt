@@ -73,8 +73,14 @@ public class AdaptPlayer extends TickedObject {
         if (AdaptConfig.get().isUseSql()) {
             final class MutableInt {
                 private int value = 0;
-                public void increment() { value++; }
-                public int get() { return value; }
+
+                public void increment() {
+                    value++;
+                }
+
+                public int get() {
+                    return value;
+                }
             }
             final MutableInt fi = new MutableInt();
             BukkitRunnable fr = new BukkitRunnable() {

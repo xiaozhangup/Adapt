@@ -1,6 +1,5 @@
 package com.volmit.adapt.util.command;
 
-import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.VolmitSender;
 import lombok.Builder;

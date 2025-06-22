@@ -26,7 +26,6 @@ import manifold.util.concurrent.ConcurrentHashSet;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Extension
