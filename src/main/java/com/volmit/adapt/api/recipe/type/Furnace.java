@@ -17,8 +17,8 @@ public class Furnace implements AdaptRecipe {
     private String key;
     private ItemStack result;
     private Material ingredient;
-    //        private float experience = 1;
-//        private int cookTime = 20;
+    // private float experience = 1;
+    // private int cookTime = 20;
     private float experience;
     private int cookTime;
 
@@ -28,7 +28,8 @@ public class Furnace implements AdaptRecipe {
     }
 
     public void register() {
-        FurnaceRecipe s = new FurnaceRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient, experience, cookTime);
+        FurnaceRecipe s = new FurnaceRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient, experience,
+                cookTime);
         Bukkit.getServer().addRecipe(s);
         Adapt.verbose("Registered Furnace Recipe " + s.getKey());
     }
@@ -37,7 +38,6 @@ public class Furnace implements AdaptRecipe {
     public boolean is(Recipe recipe) {
         return recipe instanceof FurnaceRecipe s && s.getKey().equals(getNSKey());
     }
-
 
     @Override
     public void unregister() {

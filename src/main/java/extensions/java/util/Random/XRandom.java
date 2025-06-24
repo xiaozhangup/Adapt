@@ -28,7 +28,8 @@ import java.util.Random;
 @Extension
 public class XRandom {
     public static final Random r = new Random();
-    private static final char[] CHARGEN = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-=!@#$%^&*()_+`~[];',./<>?:\\\"{}|\\\\".toCharArray();
+    private static final char[] CHARGEN = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-=!@#$%^&*()_+`~[];',./<>?:\\\"{}|\\\\"
+            .toCharArray();
 
     public static String s(@This Random self, int length) {
         StringBuilder sb = new StringBuilder();
@@ -52,7 +53,8 @@ public class XRandom {
     /**
      * Pick a random enum
      *
-     * @param t the enum class
+     * @param t
+     *            the enum class
      * @return the enum
      */
     public static <T> T e(@This Random self, Class<T> t) {

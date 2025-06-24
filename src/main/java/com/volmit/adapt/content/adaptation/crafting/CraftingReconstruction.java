@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.crafting;
 
@@ -29,7 +29,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-
 public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruction.Config> {
     public CraftingReconstruction() {
         super("crafting-reconstruction");
@@ -42,257 +41,104 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(80248);
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-iron-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .result(new ItemStack(Material.IRON_ORE))
+        registerRecipe(Shapeless.builder().key("reconstruction-iron-ore").ingredient(Material.STONE)
+                .ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT)
+                .ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT)
+                .ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT)
+                .result(new ItemStack(Material.IRON_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-gold-ore").ingredient(Material.STONE)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .result(new ItemStack(Material.GOLD_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-copper-ore").ingredient(Material.STONE)
+                .ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT)
+                .ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT)
+                .ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT)
+                .result(new ItemStack(Material.COPPER_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-lapis-ore").ingredient(Material.STONE)
+                .ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI)
+                .ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI)
+                .ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI)
+                .result(new ItemStack(Material.LAPIS_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-redstone-ore").ingredient(Material.STONE)
+                .ingredient(Material.REDSTONE).ingredient(Material.REDSTONE).ingredient(Material.REDSTONE)
+                .ingredient(Material.REDSTONE).ingredient(Material.REDSTONE).ingredient(Material.REDSTONE)
+                .ingredient(Material.REDSTONE).ingredient(Material.REDSTONE)
+                .result(new ItemStack(Material.REDSTONE_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-emerald-ore").ingredient(Material.STONE)
+                .ingredient(Material.EMERALD).ingredient(Material.EMERALD).ingredient(Material.EMERALD)
+                .ingredient(Material.EMERALD).ingredient(Material.EMERALD).ingredient(Material.EMERALD)
+                .ingredient(Material.EMERALD).ingredient(Material.EMERALD).result(new ItemStack(Material.EMERALD_ORE))
                 .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-gold-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .result(new ItemStack(Material.GOLD_ORE))
+        registerRecipe(Shapeless.builder().key("reconstruction-diamond-ore").ingredient(Material.STONE)
+                .ingredient(Material.DIAMOND).ingredient(Material.DIAMOND).ingredient(Material.DIAMOND)
+                .ingredient(Material.DIAMOND).ingredient(Material.DIAMOND).ingredient(Material.DIAMOND)
+                .ingredient(Material.DIAMOND).ingredient(Material.DIAMOND).result(new ItemStack(Material.DIAMOND_ORE))
                 .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-copper-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .result(new ItemStack(Material.COPPER_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-lapis-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .result(new ItemStack(Material.LAPIS_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-redstone-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .result(new ItemStack(Material.REDSTONE_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-emerald-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .result(new ItemStack(Material.EMERALD_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-diamond-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .result(new ItemStack(Material.DIAMOND_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-coal-ore")
-                .ingredient(Material.STONE)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .result(new ItemStack(Material.COAL_ORE))
-                .build());
+        registerRecipe(Shapeless.builder().key("reconstruction-coal-ore").ingredient(Material.STONE)
+                .ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL)
+                .ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL)
+                .result(new ItemStack(Material.COAL_ORE)).build());
 
         // Use Deepslate
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-iron-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .ingredient(Material.IRON_INGOT)
-                .result(new ItemStack(Material.DEEPSLATE_IRON_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-gold-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .result(new ItemStack(Material.DEEPSLATE_GOLD_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-copper-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .ingredient(Material.COPPER_INGOT)
-                .result(new ItemStack(Material.DEEPSLATE_COPPER_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-lapis-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .ingredient(Material.LAPIS_LAZULI)
-                .result(new ItemStack(Material.DEEPSLATE_LAPIS_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-redstone-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .ingredient(Material.REDSTONE)
-                .result(new ItemStack(Material.DEEPSLATE_REDSTONE_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-emerald-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .ingredient(Material.EMERALD)
-                .result(new ItemStack(Material.DEEPSLATE_EMERALD_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-diamond-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .ingredient(Material.DIAMOND)
-                .result(new ItemStack(Material.DEEPSLATE_DIAMOND_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-deepslate-coal-ore")
-                .ingredient(Material.DEEPSLATE)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .ingredient(Material.COAL)
-                .result(new ItemStack(Material.DEEPSLATE_COAL_ORE))
-                .build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-iron-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT)
+                .ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT)
+                .ingredient(Material.IRON_INGOT).ingredient(Material.IRON_INGOT)
+                .result(new ItemStack(Material.DEEPSLATE_IRON_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-gold-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .result(new ItemStack(Material.DEEPSLATE_GOLD_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-copper-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT)
+                .ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT)
+                .ingredient(Material.COPPER_INGOT).ingredient(Material.COPPER_INGOT)
+                .result(new ItemStack(Material.DEEPSLATE_COPPER_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-lapis-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI)
+                .ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI)
+                .ingredient(Material.LAPIS_LAZULI).ingredient(Material.LAPIS_LAZULI)
+                .result(new ItemStack(Material.DEEPSLATE_LAPIS_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-redstone-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.REDSTONE).ingredient(Material.REDSTONE).ingredient(Material.REDSTONE)
+                .ingredient(Material.REDSTONE).ingredient(Material.REDSTONE).ingredient(Material.REDSTONE)
+                .ingredient(Material.REDSTONE).ingredient(Material.REDSTONE)
+                .result(new ItemStack(Material.DEEPSLATE_REDSTONE_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-emerald-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.EMERALD).ingredient(Material.EMERALD).ingredient(Material.EMERALD)
+                .ingredient(Material.EMERALD).ingredient(Material.EMERALD).ingredient(Material.EMERALD)
+                .ingredient(Material.EMERALD).ingredient(Material.EMERALD)
+                .result(new ItemStack(Material.DEEPSLATE_EMERALD_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-diamond-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.DIAMOND).ingredient(Material.DIAMOND).ingredient(Material.DIAMOND)
+                .ingredient(Material.DIAMOND).ingredient(Material.DIAMOND).ingredient(Material.DIAMOND)
+                .ingredient(Material.DIAMOND).ingredient(Material.DIAMOND)
+                .result(new ItemStack(Material.DEEPSLATE_DIAMOND_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-deepslate-coal-ore").ingredient(Material.DEEPSLATE)
+                .ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL)
+                .ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL).ingredient(Material.COAL)
+                .result(new ItemStack(Material.DEEPSLATE_COAL_ORE)).build());
 
-// Use Nether Bricks
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-nether-gold-ore")
-                .ingredient(Material.NETHER_BRICKS)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .ingredient(Material.GOLD_INGOT)
-                .result(new ItemStack(Material.NETHER_GOLD_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-nether-quartz-ore")
-                .ingredient(Material.NETHER_BRICKS)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .ingredient(Material.QUARTZ)
-                .result(new ItemStack(Material.NETHER_QUARTZ_ORE))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("reconstruction-ancient-debris")
-                .ingredient(Material.NETHER_BRICKS)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .ingredient(Material.NETHERITE_SCRAP)
-                .result(new ItemStack(Material.ANCIENT_DEBRIS))
-                .build());
+        // Use Nether Bricks
+        registerRecipe(Shapeless.builder().key("reconstruction-nether-gold-ore").ingredient(Material.NETHER_BRICKS)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .ingredient(Material.GOLD_INGOT).ingredient(Material.GOLD_INGOT)
+                .result(new ItemStack(Material.NETHER_GOLD_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-nether-quartz-ore").ingredient(Material.NETHER_BRICKS)
+                .ingredient(Material.QUARTZ).ingredient(Material.QUARTZ).ingredient(Material.QUARTZ)
+                .ingredient(Material.QUARTZ).ingredient(Material.QUARTZ).ingredient(Material.QUARTZ)
+                .ingredient(Material.QUARTZ).ingredient(Material.QUARTZ)
+                .result(new ItemStack(Material.NETHER_QUARTZ_ORE)).build());
+        registerRecipe(Shapeless.builder().key("reconstruction-ancient-debris").ingredient(Material.NETHER_BRICKS)
+                .ingredient(Material.NETHERITE_SCRAP).ingredient(Material.NETHERITE_SCRAP)
+                .ingredient(Material.NETHERITE_SCRAP).ingredient(Material.NETHERITE_SCRAP)
+                .ingredient(Material.NETHERITE_SCRAP).ingredient(Material.NETHERITE_SCRAP)
+                .ingredient(Material.NETHERITE_SCRAP).ingredient(Material.NETHERITE_SCRAP)
+                .result(new ItemStack(Material.ANCIENT_DEBRIS)).build());
     }
 
     @Override

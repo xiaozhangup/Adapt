@@ -37,23 +37,15 @@ public record Attribute(AttributeInstance instance) {
     }
 
     public boolean hasModifier(UUID uuid, NamespacedKey key) {
-        return instance.getModifiers()
-                .stream()
-                .anyMatch(m -> m.getKey().equals(key));
+        return instance.getModifiers().stream().anyMatch(m -> m.getKey().equals(key));
     }
 
     public void removeModifier(UUID uuid, NamespacedKey key) {
-        instance.getModifiers()
-                .stream()
-                .filter(m -> m.getKey().equals(key))
-                .forEach(instance::removeModifier);
+        instance.getModifiers().stream().filter(m -> m.getKey().equals(key)).forEach(instance::removeModifier);
     }
 
     public KList<Modifier> getModifier(UUID uuid, NamespacedKey key) {
-        return instance.getModifiers()
-                .stream()
-                .filter(m -> m.getKey().equals(key))
-                .map(Attribute::wrap)
+        return instance.getModifiers().stream().filter(m -> m.getKey().equals(key)).map(Attribute::wrap)
                 .collect(Collectors.toCollection(KList::new));
     }
 

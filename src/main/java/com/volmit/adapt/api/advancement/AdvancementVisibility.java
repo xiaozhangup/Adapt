@@ -7,7 +7,6 @@ import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
-
 public interface AdvancementVisibility {
 
     /**
@@ -16,7 +15,8 @@ public interface AdvancementVisibility {
     AdvancementVisibility ALWAYS = (advancement, progression) -> true;
 
     /**
-     * Advancements with this Visibility will be visible once their parent or any of their children is granted
+     * Advancements with this Visibility will be visible once their parent or any of
+     * their children is granted
      */
     AdvancementVisibility PARENT_GRANTED = (advancement, progression) -> {
         Preconditions.checkNotNull(advancement, "Advancement is null.");
@@ -34,7 +34,8 @@ public interface AdvancementVisibility {
     };
 
     /**
-     * Advancements with this Visibility will be visible once they are granted or any of their children is granted (Similar to Vanilla "hidden")
+     * Advancements with this Visibility will be visible once they are granted or
+     * any of their children is granted (Similar to Vanilla "hidden")
      */
     AdvancementVisibility HIDDEN = (advancement, progression) -> {
         Preconditions.checkNotNull(advancement, "Advancement is null.");
@@ -43,7 +44,8 @@ public interface AdvancementVisibility {
     };
 
     /**
-     * Advancements with this Visibility will be visible once their parent or grandparent or any of their children is granted (Similar to Vanilla behavior)
+     * Advancements with this Visibility will be visible once their parent or
+     * grandparent or any of their children is granted (Similar to Vanilla behavior)
      */
     AdvancementVisibility VANILLA = (advancement, progression) -> {
         Preconditions.checkNotNull(advancement, "Advancement is null.");
@@ -70,10 +72,13 @@ public interface AdvancementVisibility {
     };
 
     /**
-     * Do not call this method directly, use {@link AdvancementVisibility} to get accurate visibility data
+     * Do not call this method directly, use {@link AdvancementVisibility} to get
+     * accurate visibility data
      *
-     * @param advancement Advancement to check
-     * @param progression Progression to check
+     * @param advancement
+     *            Advancement to check
+     * @param progression
+     *            Progression to check
      * @return true if advancement should be visible
      */
     boolean isVisible(@NotNull Advancement advancement, @NotNull TeamProgression progression);

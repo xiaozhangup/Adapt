@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.rift;
 
@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
-
 
 public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
     private final Map<Player, Long> lastJump = new HashMap<>();
@@ -69,8 +68,10 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + (getBlinkDistance(level)) + C.GRAY + " " + Localizer.dLocalize("rift", "blink", "lore1"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "blink", "lore2") + C.DARK_PURPLE + Localizer.dLocalize("rift", "blink", "lore3"));
+        v.addLore(C.GREEN + "+ " + (getBlinkDistance(level)) + C.GRAY + " "
+                + Localizer.dLocalize("rift", "blink", "lore1"));
+        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "blink", "lore2") + C.DARK_PURPLE
+                + Localizer.dLocalize("rift", "blink", "lore3"));
     }
 
     @EventHandler
@@ -107,19 +108,22 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
                     lastJump.put(p, M.ms());
                     return;
                 }
-                if (getPlayer(p).getData().getSkillLines().get("rift").getAdaptations().get("rift-resist") != null &&
-                        getPlayer(p).getData().getSkillLines().get("rift").getAdaptations().get("rift-resist").getLevel() > 0) {
+                if (getPlayer(p).getData().getSkillLines().get("rift").getAdaptations().get("rift-resist") != null
+                        && getPlayer(p).getData().getSkillLines().get("rift").getAdaptations().get("rift-resist")
+                                .getLevel() > 0) {
                     RiftResist.riftResistStackAdd(p, 10, 5);
                 }
                 if (getConfig().showParticles) {
 
-                    vfxParticleLine(locOG, loc, Particle.REVERSE_PORTAL, 50, 8, 0.1D, 1D, 0.1D, 0D, null, false, l -> l.getBlock().isPassable());
+                    vfxParticleLine(locOG, loc, Particle.REVERSE_PORTAL, 50, 8, 0.1D, 1D, 0.1D, 0D, null, false,
+                            l -> l.getBlock().isPassable());
                 }
                 Vector v = p.getVelocity().clone();
                 loadChunkAsync(loc, chunk -> {
                     Location toLoc = loc.add(0, 1, 0);
 
-                    AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(), getPlayer(p), this, locOG, loc);
+                    AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(),
+                            getPlayer(p), this, locOG, loc);
                     Bukkit.getPluginManager().callEvent(event);
                     if (event.isCancelled()) {
                         return;
@@ -140,9 +144,11 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
         Player p = e.getPlayer();
         boolean isJumping = p.getVelocity().getY() > jumpVelocity;
         boolean canFlight = p.getAllowFlight();
-        if (isJumping && !canBlink.containsKey(p) && hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL) && p.isSprinting() && !p.isFlying()) {
+        if (isJumping && !canBlink.containsKey(p) && hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL)
+                && p.isSprinting() && !p.isFlying()) {
             if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration()) {
-                if (!canFlight) p.setAllowFlight(false);
+                if (!canFlight)
+                    p.setAllowFlight(false);
                 return;
             }
             Location loc = p.getLocation().clone();
@@ -162,7 +168,8 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
                 p.setAllowFlight(true);
                 Adapt.verbose("Allowing flight for " + p.getName());
                 J.a(() -> {
-                    if (!canFlight) p.setAllowFlight(false);
+                    if (!canFlight)
+                        p.setAllowFlight(false);
                     p.setFlying(false);
                     Adapt.verbose("Disabling flight for " + p.getName());
                     canBlink.remove(p);
@@ -174,11 +181,9 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
     }
 
     private boolean isSafe(Location l) {
-        return l.getBlock().getType().isSolid()
-                && !l.getBlock().getRelative(BlockFace.UP).getType().isSolid()
+        return l.getBlock().getType().isSolid() && !l.getBlock().getRelative(BlockFace.UP).getType().isSolid()
                 && !l.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType().isSolid();
     }
-
 
     @Override
     public void onTick() {

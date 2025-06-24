@@ -26,7 +26,8 @@ public class Smoker implements AdaptRecipe {
     }
 
     public void register() {
-        SmokingRecipe s = new SmokingRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient, experience, cookTime);
+        SmokingRecipe s = new SmokingRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient, experience,
+                cookTime);
         Bukkit.getServer().addRecipe(s);
         Adapt.verbose("Registered Smoker Recipe " + s.getKey());
     }
@@ -35,7 +36,6 @@ public class Smoker implements AdaptRecipe {
     public boolean is(Recipe recipe) {
         return recipe instanceof SmokingRecipe s && s.getKey().equals(getNSKey());
     }
-
 
     @Override
     public void unregister() {

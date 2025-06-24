@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.seaborrne;
 
@@ -48,7 +48,8 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("seaborn", "dolphingrace", "lore1") + C.GREEN + (level) + C.GRAY + Localizer.dLocalize("seaborn", "dolphingrace", "lore2"));
+        v.addLore(C.GRAY + Localizer.dLocalize("seaborn", "dolphingrace", "lore1") + C.GREEN + (level) + C.GRAY
+                + Localizer.dLocalize("seaborn", "dolphingrace", "lore2"));
         v.addLore(C.ITALIC + Localizer.dLocalize("seaborn", "dolphingrace", "lore3"));
     }
 
@@ -57,10 +58,12 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
         for (Player player : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (player.isInWater() && hasAdaptation(player)) {
                 if (player.getLocation().getBlock().isLiquid()) {
-                    if (player.getInventory().getBoots() != null && player.getInventory().getBoots().containsEnchantment(Enchantment.DEPTH_STRIDER)) {
+                    if (player.getInventory().getBoots() != null
+                            && player.getInventory().getBoots().containsEnchantment(Enchantment.DEPTH_STRIDER)) {
                         return;
                     } else {
-                        J.s(() -> player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 62, getLevel(player))));
+                        J.s(() -> player.addPotionEffect(
+                                new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 62, getLevel(player))));
                     }
                 }
             }

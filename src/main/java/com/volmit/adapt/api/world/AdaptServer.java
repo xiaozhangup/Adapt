@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.world;
 
@@ -117,7 +117,8 @@ public class AdaptServer extends TickedObject {
 
     public void quit(UUID p) {
         AdaptPlayer a = players.remove(p);
-        if (a == null) return;
+        if (a == null)
+            return;
         a.unregister();
         if (AdaptConfig.get().isUseSql()) {
             Adapt.instance.getSqlManager().updateTime(p, 0L);
@@ -139,31 +140,22 @@ public class AdaptServer extends TickedObject {
             if (data != null) {
                 Skill<?> skill = getSkillRegistry().getSkill(data.getSkill());
                 data.apply(p);
-                SoundNotification.builder()
-                        .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
-                        .volume(0.35f).pitch(1.455f)
+                SoundNotification.builder().sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM).volume(0.35f).pitch(1.455f)
                         .build().play(getPlayer(p));
-                SoundNotification.builder()
-                        .sound(Sound.ENTITY_SHULKER_OPEN)
-                        .volume(1f).pitch(1.655f)
-                        .build().play(getPlayer(p));
-                getPlayer(p).getNot().queue(AdvancementNotification.builder()
-                        .icon(Material.BOOK)
-                        .model(CustomModel.get(Material.BOOK, "snippets", "gui", "knowledge"))
-                        .title(C.GRAY + "+ " + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
+                SoundNotification.builder().sound(Sound.ENTITY_SHULKER_OPEN).volume(1f).pitch(1.655f).build()
+                        .play(getPlayer(p));
+                getPlayer(p).getNot().queue(AdvancementNotification.builder().icon(Material.BOOK)
+                        .model(CustomModel.get(Material.BOOK, "snippets", "gui", "knowledge")).title(C.GRAY + "+ "
+                                + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
                         .build());
             } else {
                 ExperienceOrb.Data datax = ExperienceOrb.get(s.getItem());
                 if (datax != null) {
                     datax.apply(p);
-                    SoundNotification.builder()
-                            .sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM)
-                            .volume(0.35f).pitch(1.455f)
-                            .build().play(getPlayer(p));
-                    SoundNotification.builder()
-                            .sound(Sound.ENTITY_SHULKER_OPEN)
-                            .volume(1f).pitch(1.655f)
-                            .build().play(getPlayer(p));
+                    SoundNotification.builder().sound(Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM).volume(0.35f)
+                            .pitch(1.455f).build().play(getPlayer(p));
+                    SoundNotification.builder().sound(Sound.ENTITY_SHULKER_OPEN).volume(1f).pitch(1.655f).build()
+                            .play(getPlayer(p));
                 }
             }
         }
@@ -242,8 +234,7 @@ public class AdaptServer extends TickedObject {
 
     @NonNull
     public Optional<PlayerData> getPlayerData(@NonNull UUID uuid) {
-        return Optional.ofNullable(players.get(uuid))
-                .map(AdaptPlayer::getData);
+        return Optional.ofNullable(players.get(uuid)).map(AdaptPlayer::getData);
     }
 
     public AdaptPlayer getPlayer(Player p) {
@@ -296,6 +287,7 @@ public class AdaptServer extends TickedObject {
 
     @SneakyThrows
     public void save() {
-        IO.writeAll(new File(Adapt.instance.getDataFolder("data"), "server-data.json"), new JSONObject(data).toString(4));
+        IO.writeAll(new File(Adapt.instance.getDataFolder("data"), "server-data.json"),
+                new JSONObject(data).toString(4));
     }
 }

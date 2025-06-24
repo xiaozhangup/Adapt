@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.world;
 
@@ -86,7 +86,8 @@ public class AdaptPlayer extends TickedObject {
             BukkitRunnable fr = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!player.isOnline()) cancel();
+                    if (!player.isOnline())
+                        cancel();
                     Long l = Adapt.instance.getSqlManager().fetchTime(player.getUniqueId());
                     if (l == null) {
                         cancelAndFinishInitial();
@@ -97,7 +98,8 @@ public class AdaptPlayer extends TickedObject {
                     } else {
                         fi.increment();
                         if (fi.get() > 9) {
-                            Adapt.error("Failed to load player data for " + player.getName() + " after 10 tries. Fallback to local file.");
+                            Adapt.error("Failed to load player data for " + player.getName()
+                                    + " after 10 tries. Fallback to local file.");
 
                             cancelAndFinishInitial();
                         }
@@ -177,7 +179,8 @@ public class AdaptPlayer extends TickedObject {
     @SneakyThrows
     private void save() {
         UUID uuid = player.getUniqueId();
-        if (this.data == null) return;
+        if (this.data == null)
+            return;
         String data = this.data.toJson();
 
         if (AdaptConfig.get().isUseSql()) {
@@ -256,10 +259,12 @@ public class AdaptPlayer extends TickedObject {
                     try {
                         IO.writeAll(getPlayerDataBackupFile(player.getUniqueId()), sqlData);
                     } catch (Throwable ee) {
-                        Adapt.error("Failed to backup player data for " + player.getName() + " (" + player.getUniqueId() + ")");
+                        Adapt.error("Failed to backup player data for " + player.getName() + " (" + player.getUniqueId()
+                                + ")");
                         ee.printStackTrace();
                     }
-                    Adapt.error("Encountered an error while loading player " + player.getName() + "'s data, loading failed, data was overwritten by local file");
+                    Adapt.error("Encountered an error while loading player " + player.getName()
+                            + "'s data, loading failed, data was overwritten by local file");
                     e.printStackTrace();
                 }
             }
@@ -371,17 +376,20 @@ public class AdaptPlayer extends TickedObject {
             if (!AdaptConfig.get().isWelcomeMessage())
                 return;
             getNot().queue(AdvancementNotification.builder()
-                    .title(
-                            first ? Localizer.dLocalize("snippets", "gui", "welcome") : Localizer.dLocalize("snippets", "gui", "welcomeback")
-                                    + "\n" + C.GREEN + "+" + Form.pc(boostAmount, 0) + C.GRAY + " " + Localizer.dLocalize("snippets", "gui", "xpbonusfortime") + " " + C.AQUA + Form.duration(boostTime, 0)
-                    )
+                    .title(first
+                            ? Localizer.dLocalize("snippets", "gui", "welcome")
+                            : Localizer.dLocalize("snippets", "gui", "welcomeback") + "\n" + C.GREEN + "+"
+                                    + Form.pc(boostAmount, 0) + C.GRAY + " "
+                                    + Localizer.dLocalize("snippets", "gui", "xpbonusfortime") + " " + C.AQUA
+                                    + Form.duration(boostTime, 0))
                     .model(CustomModel.get(Material.DIAMOND, "snippets", "gui", first ? "welcome" : "welcomeback"))
                     .build());
         }
     }
 
     public boolean hasSkill(Skill s) {
-        return getData().getSkillLines().containsKey(s.getName()) && getData().getSkillLines().get(s.getId()).getXp() > 1;
+        return getData().getSkillLines().containsKey(s.getName())
+                && getData().getSkillLines().get(s.getId()).getXp() > 1;
     }
 
     public PlayerData getData() {

@@ -18,14 +18,16 @@ public class Color {
             int bR = b[0];
             int bG = b[1];
             int bB = b[2];
-            colors.add(rgb2Hex(calculateColor(aR, bR, number - 1, i), calculateColor(aG, bG, number - 1, i), calculateColor(aB, bB, number - 1, i)));
+            colors.add(rgb2Hex(calculateColor(aR, bR, number - 1, i), calculateColor(aG, bG, number - 1, i),
+                    calculateColor(aB, bB, number - 1, i)));
         }
         return colors;
     }
 
     public static List<String> gradientWhiteColors(String cA, int number) {
         var cached = colorCache.getOrDefault(cA, null);
-        if (cached != null) return cached;
+        if (cached != null)
+            return cached;
         var colors = gradientColors("#ffffff", cA, number);
         colorCache.put(cA, colors);
         return colors;

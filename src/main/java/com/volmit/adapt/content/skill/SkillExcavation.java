@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -57,53 +57,58 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
         registerAdaptation(new ExcavationHaste());
         registerAdaptation(new ExcavationOmniTool());
         registerAdaptation(new ExcavationDropToInventory());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.WOODEN_SHOVEL).key("challenge_excavate_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.WOODEN_SHOVEL).key("challenge_excavate_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_excavate_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_excavate_1k", "description"))
                 .model(CustomModel.get(Material.WOODEN_SHOVEL, "advancement", "excavation", "challenge_excavate_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                        .icon(Material.KNOWLEDGE_BOOK)
-                        .key("challenge_excavate_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_excavate_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_excavate_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_excavate_5k", "description"))
-                        .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "excavation", "challenge_excavate_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.STONE_SHOVEL)
-                                .key("challenge_excavate_50k")
+                        .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "excavation",
+                                "challenge_excavate_5k"))
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.STONE_SHOVEL).key("challenge_excavate_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_excavate_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_excavate_50k", "description"))
-                                .model(CustomModel.get(Material.STONE_SHOVEL, "advancement", "excavation", "challenge_excavate_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                        .icon(Material.IRON_SHOVEL)
+                                .description(
+                                        Localizer.dLocalize("advancement", "challenge_excavate_50k", "description"))
+                                .model(CustomModel.get(Material.STONE_SHOVEL, "advancement", "excavation",
+                                        "challenge_excavate_50k"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.IRON_SHOVEL)
                                         .key("challenge_excavate_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_excavate_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_excavate_500k", "description"))
-                                        .model(CustomModel.get(Material.IRON_SHOVEL, "advancement", "excavation", "challenge_excavate_500k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_excavate_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.IRON_SHOVEL, "advancement", "excavation",
+                                                "challenge_excavate_500k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
-                                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                                .icon(Material.DIAMOND_SHOVEL)
+                                        .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                        .child(AdaptAdvancement.builder().icon(Material.DIAMOND_SHOVEL)
                                                 .key("challenge_excavate_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_excavate_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_excavate_5m", "description"))
-                                                .model(CustomModel.get(Material.DIAMOND_SHOVEL, "advancement", "excavation", "challenge_excavate_5m"))
+                                                .title(Localizer.dLocalize("advancement", "challenge_excavate_5m",
+                                                        "title"))
+                                                .description(Localizer.dLocalize("advancement", "challenge_excavate_5m",
+                                                        "description"))
+                                                .model(CustomModel.get(Material.DIAMOND_SHOVEL, "advancement",
+                                                        "excavation", "challenge_excavate_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_1k").goal(1000).stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_5k").goal(5000).stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_50k").goal(50000).stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_500k").goal(500000).stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_5m").goal(5000000).stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_1k").goal(1000)
+                .stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_5k").goal(5000)
+                .stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_50k").goal(50000)
+                .stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_500k").goal(500000)
+                .stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_excavate_5m").goal(5000000)
+                .stat("excavation.blocks.broken").reward(getConfig().challengeExcavationReward).build());
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(EntityDamageByEntityEvent e) {
@@ -163,7 +168,6 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
         value += Math.min(getConfig().maxBlastResistanceBonus, type.getBlastResistance());
         return value;
     }
-
 
     @Override
     public void onTick() {

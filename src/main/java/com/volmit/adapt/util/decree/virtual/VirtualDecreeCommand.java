@@ -47,17 +47,13 @@ public class VirtualDecreeCommand {
     private final VirtualDecreeCommand parent;
     private final List<VirtualDecreeCommand> nodes;
     private final DecreeNode node;
-    String[] gradients = new String[]{
-            "<gradient:#f5bc42:#45b32d>",
-            "<gradient:#1ed43f:#1ecbd4>",
-            "<gradient:#1e2ad4:#821ed4>",
-            "<gradient:#d41ea7:#611ed4>",
-            "<gradient:#1ed473:#1e55d4>",
-            "<gradient:#6ad41e:#9a1ed4>"
-    };
+    String[] gradients = new String[]{"<gradient:#f5bc42:#45b32d>", "<gradient:#1ed43f:#1ecbd4>",
+            "<gradient:#1e2ad4:#821ed4>", "<gradient:#d41ea7:#611ed4>", "<gradient:#1ed473:#1e55d4>",
+            "<gradient:#6ad41e:#9a1ed4>"};
     private ChronoLatch cl = new ChronoLatch(1000);
 
-    private VirtualDecreeCommand(Class<?> type, VirtualDecreeCommand parent, List<VirtualDecreeCommand> nodes, DecreeNode node) {
+    private VirtualDecreeCommand(Class<?> type, VirtualDecreeCommand parent, List<VirtualDecreeCommand> nodes,
+            DecreeNode node) {
         this.parent = parent;
         this.type = type;
         this.nodes = nodes;
@@ -72,7 +68,8 @@ public class VirtualDecreeCommand {
         VirtualDecreeCommand c = new VirtualDecreeCommand(v.getClass(), parent, new KList<>(), null);
 
         for (Field i : v.getClass().getDeclaredFields()) {
-            if (Modifier.isStatic(i.getModifiers()) || Modifier.isFinal(i.getModifiers()) || Modifier.isTransient(i.getModifiers()) || Modifier.isVolatile(i.getModifiers())) {
+            if (Modifier.isStatic(i.getModifiers()) || Modifier.isFinal(i.getModifiers())
+                    || Modifier.isTransient(i.getModifiers()) || Modifier.isVolatile(i.getModifiers())) {
                 continue;
             }
 
@@ -92,7 +89,8 @@ public class VirtualDecreeCommand {
         }
 
         for (Method i : v.getClass().getDeclaredMethods()) {
-            if (Modifier.isStatic(i.getModifiers()) || Modifier.isFinal(i.getModifiers()) || Modifier.isPrivate(i.getModifiers())) {
+            if (Modifier.isStatic(i.getModifiers()) || Modifier.isFinal(i.getModifiers())
+                    || Modifier.isPrivate(i.getModifiers())) {
                 continue;
             }
 
@@ -262,10 +260,10 @@ public class VirtualDecreeCommand {
                     String sea = a.contains("=") ? a.split("\\Q=\\E")[0] : a;
                     sea = sea.trim();
 
-                    searching:
-                    for (DecreeParameter i : getNode().getParameters()) {
+                    searching : for (DecreeParameter i : getNode().getParameters()) {
                         for (String m : i.getNames()) {
-                            if (m.equalsIgnoreCase(sea) || m.toLowerCase().contains(sea.toLowerCase()) || sea.toLowerCase().contains(m.toLowerCase())) {
+                            if (m.equalsIgnoreCase(sea) || m.toLowerCase().contains(sea.toLowerCase())
+                                    || sea.toLowerCase().contains(m.toLowerCase())) {
                                 ignore.add(i);
                                 continue searching;
                             }
@@ -287,12 +285,14 @@ public class VirtualDecreeCommand {
                     if (last.contains("=")) {
                         String[] vv = last.trim().split("\\Q=\\E");
                         String vx = vv.length == 2 ? vv[1] : "";
-                        for (String f : i.getHandler().getPossibilities(vx).kConvert((v) -> i.getHandler().toStringForce(v))) {
+                        for (String f : i.getHandler().getPossibilities(vx)
+                                .kConvert((v) -> i.getHandler().toStringForce(v))) {
                             g++;
                             tabs.add(i.getName() + "=" + f);
                         }
                     } else {
-                        for (String f : i.getHandler().getPossibilities("").kConvert((v) -> i.getHandler().toStringForce(v))) {
+                        for (String f : i.getHandler().getPossibilities("")
+                                .kConvert((v) -> i.getHandler().toStringForce(v))) {
                             g++;
                             tabs.add(i.getName() + "=" + f);
                         }
@@ -305,7 +305,8 @@ public class VirtualDecreeCommand {
             } else {
                 for (VirtualDecreeCommand i : getNodes()) {
                     String m = i.getName();
-                    if (m.equalsIgnoreCase(last) || m.toLowerCase().contains(last.toLowerCase()) || last.toLowerCase().contains(m.toLowerCase())) {
+                    if (m.equalsIgnoreCase(last) || m.toLowerCase().contains(last.toLowerCase())
+                            || last.toLowerCase().contains(m.toLowerCase())) {
                         tabs.addAll(i.getNames());
                     }
                 }
@@ -316,18 +317,22 @@ public class VirtualDecreeCommand {
     /**
      * Maps the input a player typed to the parameters of this command
      *
-     * @param sender The sender
-     * @param in     The input
+     * @param sender
+     *            The sender
+     * @param in
+     *            The input
      * @return A map of all the parameter names and their values
      */
     private KMap<String, Object> map(VolmitSender sender, List<String> in) {
         KMap<String, Object> data = new KMap<>();
         List<Integer> nowhich = new ArrayList<>();
 
-        List<String> unknownInputs = new ArrayList<>(in.stream().filter(s -> !s.contains("=")).collect(Collectors.toList()));
-        List<String> knownInputs = new ArrayList<>(in.stream().filter(s -> s.contains("=")).collect(Collectors.toList()));
+        List<String> unknownInputs = new ArrayList<>(
+                in.stream().filter(s -> !s.contains("=")).collect(Collectors.toList()));
+        List<String> knownInputs = new ArrayList<>(
+                in.stream().filter(s -> s.contains("=")).collect(Collectors.toList()));
 
-        //Loop known inputs
+        // Loop known inputs
         for (int x = 0; x < knownInputs.size(); x++) {
             String stringParam = knownInputs.get(x);
             int original = in.indexOf(stringParam);
@@ -337,7 +342,7 @@ public class VirtualDecreeCommand {
             String value = v[1];
             DecreeParameter param = null;
 
-            //Find decree parameter from string param
+            // Find decree parameter from string param
             for (DecreeParameter j : getNode().getParameters()) {
                 for (String k : j.getNames()) {
                     if (k.equalsIgnoreCase(key)) {
@@ -347,11 +352,13 @@ public class VirtualDecreeCommand {
                 }
             }
 
-            //If it failed, see if we can find it by checking if the names contain the param
+            // If it failed, see if we can find it by checking if the names contain the
+            // param
             if (param == null) {
                 for (DecreeParameter j : getNode().getParameters()) {
                     for (String k : j.getNames()) {
-                        if (k.toLowerCase().contains(key.toLowerCase()) || key.toLowerCase().contains(k.toLowerCase())) {
+                        if (k.toLowerCase().contains(key.toLowerCase())
+                                || key.toLowerCase().contains(k.toLowerCase())) {
                             param = j;
                             break;
                         }
@@ -359,30 +366,33 @@ public class VirtualDecreeCommand {
                 }
             }
 
-            //Still failed to find, error them
+            // Still failed to find, error them
             if (param == null) {
                 Adapt.debug("Can't find parameter key for " + key + "=" + value + " in " + getPath());
                 sender.sendMessage(C.YELLOW + "Unknown Parameter: " + key);
-                unknownInputs.add(value); //Add the value to the unknowns and see if we can assume it later
+                unknownInputs.add(value); // Add the value to the unknowns and see if we can assume it later
                 continue;
             }
 
             key = param.getName();
 
             try {
-                data.put(key, param.getHandler().parse(value, nowhich.contains(original))); //Parse and put
+                data.put(key, param.getHandler().parse(value, nowhich.contains(original))); // Parse and put
             } catch (DecreeParsingException e) {
-                Adapt.debug("Can't parse parameter value for " + key + "=" + value + " in " + getPath() + " using handler " + param.getHandler().getClass().getSimpleName());
-                sender.sendMessage(C.RED + "Cannot convert \"" + value + "\" into a " + param.getType().getSimpleName());
+                Adapt.debug("Can't parse parameter value for " + key + "=" + value + " in " + getPath()
+                        + " using handler " + param.getHandler().getClass().getSimpleName());
+                sender.sendMessage(
+                        C.RED + "Cannot convert \"" + value + "\" into a " + param.getType().getSimpleName());
                 e.printStackTrace();
                 return null;
             }
         }
 
-        //Make a list of decree params that haven't been identified
-        List<DecreeParameter> decreeParameters = new KList<>(getNode().getParameters().stream().filter(param -> !data.contains(param.getName())).collect(Collectors.toList()));
+        // Make a list of decree params that haven't been identified
+        List<DecreeParameter> decreeParameters = new KList<>(getNode().getParameters().stream()
+                .filter(param -> !data.contains(param.getName())).collect(Collectors.toList()));
 
-        //Loop Unknown inputs
+        // Loop Unknown inputs
         for (int x = 0; x < unknownInputs.size(); x++) {
             String stringParam = unknownInputs.get(x);
             int original = in.indexOf(stringParam);
@@ -392,13 +402,16 @@ public class VirtualDecreeCommand {
                 try {
                     data.put(par.getName(), par.getHandler().parse(stringParam, nowhich.contains(original)));
                 } catch (DecreeParsingException e) {
-                    Adapt.debug("Can't parse parameter value for " + par.getName() + "=" + stringParam + " in " + getPath() + " using handler " + par.getHandler().getClass().getSimpleName());
-                    sender.sendMessage(C.RED + "Cannot convert \"" + stringParam + "\" into a " + par.getType().getSimpleName());
+                    Adapt.debug("Can't parse parameter value for " + par.getName() + "=" + stringParam + " in "
+                            + getPath() + " using handler " + par.getHandler().getClass().getSimpleName());
+                    sender.sendMessage(
+                            C.RED + "Cannot convert \"" + stringParam + "\" into a " + par.getType().getSimpleName());
                     e.printStackTrace();
                     return null;
                 }
             } catch (IndexOutOfBoundsException e) {
-                sender.sendMessage(C.YELLOW + "Unknown Parameter: " + stringParam + " (" + getNumberSuffixThStRd(x + 1) + " argument)");
+                sender.sendMessage(C.YELLOW + "Unknown Parameter: " + stringParam + " (" + getNumberSuffixThStRd(x + 1)
+                        + " argument)");
             }
         }
 
@@ -462,8 +475,10 @@ public class VirtualDecreeCommand {
                     value = i.getDefaultValue();
                 }
             } catch (DecreeParsingException e) {
-                Adapt.debug("Can't parse parameter value for " + i.getName() + "=" + i.getParam().defaultValue() + " in " + getPath() + " using handler " + i.getHandler().getClass().getSimpleName());
-                sender.sendMessage(C.RED + "Cannot convert \"" + i.getParam().defaultValue() + "\" into a " + i.getType().getSimpleName());
+                Adapt.debug("Can't parse parameter value for " + i.getName() + "=" + i.getParam().defaultValue()
+                        + " in " + getPath() + " using handler " + i.getHandler().getClass().getSimpleName());
+                sender.sendMessage(C.RED + "Cannot convert \"" + i.getParam().defaultValue() + "\" into a "
+                        + i.getType().getSimpleName());
                 return false;
             }
 
@@ -475,18 +490,22 @@ public class VirtualDecreeCommand {
                     value = ch.handle(sender);
 
                     if (value != null) {
-                        Adapt.debug("Parameter \"" + i.getName() + "\" derived a value of \"" + i.getHandler().toStringForce(value) + "\" from " + ch.getClass().getSimpleName());
+                        Adapt.debug("Parameter \"" + i.getName() + "\" derived a value of \""
+                                + i.getHandler().toStringForce(value) + "\" from " + ch.getClass().getSimpleName());
                     } else {
-                        Adapt.debug("Parameter \"" + i.getName() + "\" could not derive a value from \"" + ch.getClass().getSimpleName());
+                        Adapt.debug("Parameter \"" + i.getName() + "\" could not derive a value from \""
+                                + ch.getClass().getSimpleName());
                     }
                 } else {
-                    Adapt.debug("Parameter \"" + i.getName() + "\" is contextual but has no context handler for \"" + i.getType().getCanonicalName() + "\"");
+                    Adapt.debug("Parameter \"" + i.getName() + "\" is contextual but has no context handler for \""
+                            + i.getType().getCanonicalName() + "\"");
                 }
             }
 
             if (i.hasDefault() && value == null) {
                 try {
-                    Adapt.debug("Parameter \"" + i.getName() + "\" is using default value \"" + i.getParam().defaultValue() + "\"");
+                    Adapt.debug("Parameter \"" + i.getName() + "\" is using default value \""
+                            + i.getParam().defaultValue() + "\"");
                     value = i.getDefaultValue();
                 } catch (Throwable e) {
                     e.printStackTrace();
@@ -494,7 +513,8 @@ public class VirtualDecreeCommand {
             }
 
             if (i.isRequired() && value == null) {
-                sender.sendMessage(C.RED + "Missing argument \"" + i.getName() + "\" (" + i.getType().getSimpleName() + ") as the " + getNumberSuffixThStRd(vm + 1) + " argument.");
+                sender.sendMessage(C.RED + "Missing argument \"" + i.getName() + "\" (" + i.getType().getSimpleName()
+                        + ") as the " + getNumberSuffixThStRd(vm + 1) + " argument.");
                 sender.sendDecreeHelpNode(this);
                 return false;
             }

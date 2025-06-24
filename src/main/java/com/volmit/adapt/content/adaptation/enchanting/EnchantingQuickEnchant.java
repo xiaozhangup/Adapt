@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.enchanting;
 
@@ -66,7 +66,8 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + getTotalLevelCount(level) + C.GRAY + " " + Localizer.dLocalize("enchanting", "quickenchant", "lore1"));
+        v.addLore(C.GREEN + "+ " + getTotalLevelCount(level) + C.GRAY + " "
+                + Localizer.dLocalize("enchanting", "quickenchant", "lore1"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -74,22 +75,17 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
         if (e.getClickedInventory() == null || e.isCancelled()) {
             return;
         }
-        if (e.getWhoClicked() instanceof Player p
-                && hasAdaptation(p)
-                && e.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)
-                && e.getClick().equals(ClickType.LEFT)
+        if (e.getWhoClicked() instanceof Player p && hasAdaptation(p)
+                && e.getAction().equals(InventoryAction.SWAP_WITH_CURSOR) && e.getClick().equals(ClickType.LEFT)
                 && (e.getSlotType().equals(InventoryType.SlotType.CONTAINER)
-                || e.getSlotType().equals(InventoryType.SlotType.ARMOR)
-                || e.getSlotType().equals(InventoryType.SlotType.QUICKBAR))
-                && e.getCursor() != null
-                && e.getCurrentItem() != null
+                        || e.getSlotType().equals(InventoryType.SlotType.ARMOR)
+                        || e.getSlotType().equals(InventoryType.SlotType.QUICKBAR))
+                && e.getCursor() != null && e.getCurrentItem() != null
                 && e.getCursor().getType().equals(Material.ENCHANTED_BOOK)
                 && !e.getCurrentItem().getType().equals(Material.BOOK)
-                && !e.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK)
-                && e.getCursor().getItemMeta() != null
+                && !e.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK) && e.getCursor().getItemMeta() != null
                 && e.getCursor().getItemMeta() instanceof EnchantmentStorageMeta eb
-                && e.getCurrentItem().getItemMeta() != null
-                && e.getCurrentItem().getAmount() == 1
+                && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getAmount() == 1
                 && e.getCursor().getAmount() == 1) {
             ItemStack item = e.getCurrentItem();
             ItemStack book = e.getCursor();
@@ -118,7 +114,10 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
 
             SoundPlayer sp = SoundPlayer.of(p);
             if (power > getTotalLevelCount(getLevel(p))) {
-                Adapt.actionbar(p, C.RED + Localizer.dLocalize("enchanting", "quickenchant", "lore2") + getTotalLevelCount(getLevel(p)) + " " + Localizer.dLocalize("enchanting", "quickenchant", "lore3"));
+                Adapt.actionbar(p,
+                        C.RED + Localizer.dLocalize("enchanting", "quickenchant", "lore2")
+                                + getTotalLevelCount(getLevel(p)) + " "
+                                + Localizer.dLocalize("enchanting", "quickenchant", "lore3"));
                 sp.play(p.getLocation(), Sound.BLOCK_CONDUIT_DEACTIVATE, 0.5f, 1.7f);
                 return;
             }

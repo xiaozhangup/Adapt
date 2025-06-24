@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.sword;
 
@@ -58,8 +58,10 @@ public class SwordsBloodyBlade extends SimpleAdaptation<SwordsBloodyBlade.Config
     @Override
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + "+ " + C.GRAY + " " + Localizer.dLocalize("sword", "bloodyblade", "lore1"));
-        v.addLore(C.YELLOW + "* " + Form.duration(getDurationOfEffect(level), 1) + C.GRAY + " " + Localizer.dLocalize("sword", "bloodyblade", "lore2"));
-        v.addLore(C.RED + "* " + Form.duration(getCooldown(level), 1) + C.GRAY + " " + Localizer.dLocalize("sword", "bloodyblade", "lore3"));
+        v.addLore(C.YELLOW + "* " + Form.duration(getDurationOfEffect(level), 1) + C.GRAY + " "
+                + Localizer.dLocalize("sword", "bloodyblade", "lore2"));
+        v.addLore(C.RED + "* " + Form.duration(getCooldown(level), 1) + C.GRAY + " "
+                + Localizer.dLocalize("sword", "bloodyblade", "lore3"));
     }
 
     public long getCooldown(int level) {
@@ -70,50 +72,55 @@ public class SwordsBloodyBlade extends SimpleAdaptation<SwordsBloodyBlade.Config
         return getConfig().effectDuration * level;
     }
 
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) {
             return;
         }
-        if (e.getDamager() instanceof Player p && hasAdaptation(p) && p.getInventory().getItemInMainHand().getType().name().endsWith("_SWORD")) {
+        if (e.getDamager() instanceof Player p && hasAdaptation(p)
+                && p.getInventory().getItemInMainHand().getType().name().endsWith("_SWORD")) {
             Long cooldown = cooldowns.get(p);
             if (cooldown != null && cooldown > System.currentTimeMillis())
                 return;
             Entity victim = e.getEntity();
             cooldowns.put(p, System.currentTimeMillis() + getCooldown(getLevel(p)));
             if (victim instanceof Player pvic) {
-                if (!canPVP(p, pvic.getLocation())) return;
+                if (!canPVP(p, pvic.getLocation()))
+                    return;
             } else {
-                if (!canPVE(p, victim.getLocation())) return;
+                if (!canPVE(p, victim.getLocation()))
+                    return;
             }
             if (getConfig().showParticles) {
-                BleedEffect blood = victim instanceof LivingEntity l ? new DamagingBleedEffect(Adapt.instance.adaptEffectManager, getConfig().damagePerBleedProc, l) : new BleedEffect(Adapt.instance.adaptEffectManager);
+                BleedEffect blood = victim instanceof LivingEntity l
+                        ? new DamagingBleedEffect(Adapt.instance.adaptEffectManager, getConfig().damagePerBleedProc, l)
+                        : new BleedEffect(Adapt.instance.adaptEffectManager);
                 blood.setEntity(victim);
                 blood.material = Material.CRIMSON_ROOTS;
                 blood.height = -1;
                 blood.iterations = Math.toIntExact(2 * (3 + (getDurationOfEffect(getLevel(p)) / 1000)));
-                blood.period = 5; //5 Every second, make a proc
+                blood.period = 5; // 5 Every second, make a proc
                 blood.hurt = false;
-//                blood.callback = () -> {
-//                    Adapt.mAdapt.msgp(sender.player(),(p,"You bled out..");
-//                    p.setHealth(1d);
-//                };
+                // blood.callback = () -> {
+                // Adapt.mAdapt.msgp(sender.player(),(p,"You bled out..");
+                // p.setHealth(1d);
+                // };
                 blood.start();
             } else {
-                BleedEffect blood = victim instanceof LivingEntity l ? new DamagingBleedEffect(Adapt.instance.adaptEffectManager, getConfig().damagePerBleedProc, l) : new BleedEffect(Adapt.instance.adaptEffectManager);
+                BleedEffect blood = victim instanceof LivingEntity l
+                        ? new DamagingBleedEffect(Adapt.instance.adaptEffectManager, getConfig().damagePerBleedProc, l)
+                        : new BleedEffect(Adapt.instance.adaptEffectManager);
                 blood.setEntity(victim);
                 blood.material = Material.VOID_AIR;
                 blood.height = -1;
                 blood.iterations = Math.toIntExact(2 * (3 + (getDurationOfEffect(getLevel(p)) / 1000)));
-                blood.period = 5; //5 Every second, make a proc
+                blood.period = 5; // 5 Every second, make a proc
                 blood.hurt = false;
                 blood.start();
             }
 
         }
     }
-
 
     @Override
     public void onTick() {

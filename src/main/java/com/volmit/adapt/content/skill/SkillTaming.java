@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -61,7 +61,8 @@ public class SkillTaming extends SimpleSkill<SkillTaming.Config> {
         }
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             shouldReturnForPlayer(p, e, () -> {
-                if (p.getWorld() == e.getEntity().getWorld() && p.getLocation().distance(e.getEntity().getLocation()) <= 15) {
+                if (p.getWorld() == e.getEntity().getWorld()
+                        && p.getLocation().distance(e.getEntity().getLocation()) <= 15) {
                     if (!isOnCooldown(p)) {
                         setCooldown(p);
                         xp(p, getConfig().tameXpBase);
@@ -76,7 +77,8 @@ public class SkillTaming extends SimpleSkill<SkillTaming.Config> {
         if (e.isCancelled()) {
             return;
         }
-        if (e.getDamager() instanceof Tameable tameable && tameable.isTamed() && tameable.getOwner() instanceof Player p) {
+        if (e.getDamager() instanceof Tameable tameable && tameable.isTamed()
+                && tameable.getOwner() instanceof Player p) {
             shouldReturnForPlayer(p, e, () -> {
                 if (!isOnCooldown(p)) {
                     setCooldown(p);
@@ -94,7 +96,6 @@ public class SkillTaming extends SimpleSkill<SkillTaming.Config> {
     private void setCooldown(Player p) {
         cooldowns.put(p, System.currentTimeMillis());
     }
-
 
     @Override
     public void onTick() {

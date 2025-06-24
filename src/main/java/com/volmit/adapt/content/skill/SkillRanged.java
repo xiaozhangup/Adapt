@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -67,12 +67,14 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
             return;
         }
         shouldReturnForPlayer(p, e, () -> {
-            if (e.getEntity() instanceof Snowball || e.getEntity().getType().name().toLowerCase(Locale.ROOT).contains("hook")) {
+            if (e.getEntity() instanceof Snowball
+                    || e.getEntity().getType().name().toLowerCase(Locale.ROOT).contains("hook")) {
                 return; // Ignore snowballs and fishing hooks
             }
 
             getPlayer(p).getData().addStat("ranged.shotsfired", 1);
-            getPlayer(p).getData().addStat("ranged.shotsfired." + e.getEntity().getType().name().toLowerCase(Locale.ROOT), 1);
+            getPlayer(p).getData()
+                    .addStat("ranged.shotsfired." + e.getEntity().getType().name().toLowerCase(Locale.ROOT), 1);
             Long cooldown = cooldowns.get(p);
             if (cooldown != null && cooldown + getConfig().cooldownDelay > System.currentTimeMillis())
                 return;
@@ -86,7 +88,8 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
         if (e.isCancelled()) {
             return;
         }
-        if (!(e.getDamager() instanceof Projectile) || !(((Projectile) e.getDamager()).getShooter() instanceof Player p) || !checkValidEntity(e.getEntity().getType())) {
+        if (!(e.getDamager() instanceof Projectile) || !(((Projectile) e.getDamager()).getShooter() instanceof Player p)
+                || !checkValidEntity(e.getEntity().getType())) {
             return;
         }
         shouldReturnForPlayer(p, e, () -> {
@@ -94,20 +97,24 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
                 return; // Ignore snowballs and fishing hooks
             }
             if (e.getEntity().getLocation().getWorld().equals(p.getLocation().getWorld())) {
-                getPlayer(p).getData().addStat("ranged.distance", e.getEntity().getLocation().distance(p.getLocation()));
-                getPlayer(p).getData().addStat("ranged.distance." + e.getDamager().getType().name().toLowerCase(Locale.ROOT), e.getEntity().getLocation().distance(p.getLocation()));
+                getPlayer(p).getData().addStat("ranged.distance",
+                        e.getEntity().getLocation().distance(p.getLocation()));
+                getPlayer(p).getData().addStat(
+                        "ranged.distance." + e.getDamager().getType().name().toLowerCase(Locale.ROOT),
+                        e.getEntity().getLocation().distance(p.getLocation()));
             }
             getPlayer(p).getData().addStat("ranged.damage", e.getDamage());
-            getPlayer(p).getData().addStat("ranged.damage." + e.getDamager().getType().name().toLowerCase(Locale.ROOT), e.getDamage());
+            getPlayer(p).getData().addStat("ranged.damage." + e.getDamager().getType().name().toLowerCase(Locale.ROOT),
+                    e.getDamage());
             Long cooldown = cooldowns.get(p);
             if (cooldown != null && cooldown + getConfig().cooldownDelay > System.currentTimeMillis())
                 return;
             cooldowns.put(p, System.currentTimeMillis());
-            xp(p, e.getEntity().getLocation(), (getConfig().hitDamageXPMultiplier * e.getDamage()) + (e.getEntity().getLocation().distance(p.getLocation()) * getConfig().hitDistanceXPMultiplier));
+            xp(p, e.getEntity().getLocation(), (getConfig().hitDamageXPMultiplier * e.getDamage())
+                    + (e.getEntity().getLocation().distance(p.getLocation()) * getConfig().hitDistanceXPMultiplier));
 
         });
     }
-
 
     @Override
     public void onTick() {

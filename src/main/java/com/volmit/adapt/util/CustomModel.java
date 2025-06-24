@@ -19,10 +19,7 @@ import static com.volmit.adapt.Adapt.instance;
 
 public record CustomModel(Material material, int model, NamespacedKey modelKey) {
     public static final NamespacedKey EMPTY_KEY = NamespacedKey.minecraft("empty");
-    private static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .setPrettyPrinting()
-            .create();
+    private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
     private static UpdateChecker updateChecker = null;
 
     public static CustomModel get(Material fallback, String... path) {
@@ -71,7 +68,6 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
             }
         }
 
-
         public CustomModel get(Material fallback, String... path) {
             return cache.computeIfAbsent(String.join("", path), k -> {
                 var json = this.json;
@@ -89,8 +85,9 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
                 return new CustomModel(
                         json.has("material") ? Material.valueOf(json.get("material").getAsString()) : fallback,
                         json.has("model") ? json.get("model").getAsInt() : 0,
-                        json.has("modelKey") ? NamespacedKey.fromString(json.get("modelKey").getAsString()) : EMPTY_KEY
-                );
+                        json.has("modelKey")
+                                ? NamespacedKey.fromString(json.get("modelKey").getAsString())
+                                : EMPTY_KEY);
             });
         }
 

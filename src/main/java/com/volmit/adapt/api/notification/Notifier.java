@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.notification;
 
@@ -65,18 +65,13 @@ public class Notifier extends TickedObject {
             lastSkillValues.put(line, lastSkillValues.get(line) + value);
             lastInstance = M.ms();
 
-
             StringBuilder sb = new StringBuilder();
 
             for (String i : lastSkills.sortKNumber().reverse()) {
                 Skill sk = getServer().getSkillRegistry().getSkill(i);
-                sb.append(i.equals(line) ? sk.getDisplayName() : sk.getShortName())
-                        .append(C.RESET).append(C.GRAY)
-                        .append(" +").append(C.WHITE)
-                        .append(line.equals(i) ? C.UNDERLINE : "")
-                        .append(Form.f(lastSkillValues.get(i).intValue()))
-                        .append(C.RESET).append(C.GRAY)
-                        .append("XP ");
+                sb.append(i.equals(line) ? sk.getDisplayName() : sk.getShortName()).append(C.RESET).append(C.GRAY)
+                        .append(" +").append(C.WHITE).append(line.equals(i) ? C.UNDERLINE : "")
+                        .append(Form.f(lastSkillValues.get(i).intValue())).append(C.RESET).append(C.GRAY).append("XP ");
             }
 
             while (lastSkills.size() > 5) {
@@ -85,12 +80,8 @@ public class Notifier extends TickedObject {
                 lastSkillValues.remove(s);
             }
 
-            target.getActionBarNotifier().queue(ActionBarNotification.builder()
-                    .duration(0)
-                    .maxTTL(M.ms() + 100)
-                    .title(sb.toString())
-                    .group("xp")
-                    .build());
+            target.getActionBarNotifier().queue(ActionBarNotification.builder().duration(0).maxTTL(M.ms() + 100)
+                    .title(sb.toString()).group("xp").build());
         } catch (Throwable e) {
             Adapt.verbose("Failed to notify xp: " + e.getMessage());
         }
@@ -129,7 +120,6 @@ public class Notifier extends TickedObject {
             delayTicks = 0;
         }
 
-
         if (!isBusy()) {
             cleanupStackedNotifications();
         }
@@ -154,7 +144,8 @@ public class Notifier extends TickedObject {
             if (lastSkills.get(i) == null) { // Shouldn't happen, but just in case I guess.
                 return;
             }
-            if (M.ms() - lastSkills.get(i) > 10000 || (M.ms() - lastInstance > 3100 && M.ms() - lastSkills.get(i) > 3100)) {
+            if (M.ms() - lastSkills.get(i) > 10000
+                    || (M.ms() - lastInstance > 3100 && M.ms() - lastSkills.get(i) > 3100)) {
                 lastSkills.remove(i);
                 lastSkillValues.remove(i);
             }

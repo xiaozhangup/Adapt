@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.brewing;
 
@@ -30,7 +30,6 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.potion.PotionEffectType;
 
-
 public class BrewingSaturation extends SimpleAdaptation<BrewingSaturation.Config> {
     public BrewingSaturation() {
         super("brewing-saturation");
@@ -43,29 +42,17 @@ public class BrewingSaturation extends SimpleAdaptation<BrewingSaturation.Config
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(1334);
-        registerBrewingRecipe(BrewingRecipe.builder()
-                .id("brewing-saturation-1")
-                .brewingTime(320)
-                .fuelCost(16)
+        registerBrewingRecipe(BrewingRecipe.builder().id("brewing-saturation-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.BAKED_POTATO)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionTypes.REGEN, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR)
-                        .setName("Bottled Saturation")
-                        .setColor(Color.ORANGE)
-                        .addEffect(PotionEffectType.SATURATION, 1, 4, true, true, true)
-                        .build())
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Saturation")
+                        .setColor(Color.ORANGE).addEffect(PotionEffectType.SATURATION, 1, 4, true, true, true).build())
                 .build());
-        registerBrewingRecipe(BrewingRecipe.builder()
-                .id("brewing-saturation-2")
-                .brewingTime(320)
-                .fuelCost(32)
+        registerBrewingRecipe(BrewingRecipe.builder().id("brewing-saturation-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.HAY_BLOCK)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionTypes.REGEN, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR)
-                        .setName("Bottled Saturation 2")
-                        .setColor(Color.ORANGE)
-                        .addEffect(PotionEffectType.SATURATION, 1, 8, true, true, true)
-                        .build())
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Saturation 2")
+                        .setColor(Color.ORANGE).addEffect(PotionEffectType.SATURATION, 1, 8, true, true, true).build())
                 .build());
     }
 
@@ -75,11 +62,9 @@ public class BrewingSaturation extends SimpleAdaptation<BrewingSaturation.Config
         v.addLore(C.GREEN + Localizer.dLocalize("brewing", "saturation", "lore2"));
     }
 
-
     @Override
     public void onTick() {
     }
-
 
     @Override
     public boolean isEnabled() {

@@ -12,7 +12,6 @@ public class AdaptationListingHandler {
     private static KList<AdaptationProvider> adaptationProviders;
     private static KList<SkillProvider> skillProviders;
 
-
     public static void initializeAdaptationListings() {
         adaptationLists = new KList<>();
         adaptationSkillLists = new KList<>();
@@ -26,7 +25,8 @@ public class AdaptationListingHandler {
     }
 
     public static KList<AdaptationList> getAdaptionListings() {
-        if (adaptationLists.isNotEmpty()) return adaptationLists;
+        if (adaptationLists.isNotEmpty())
+            return adaptationLists;
 
         AdaptationList main = new AdaptationList("[Main]");
         adaptationLists.add(main);
@@ -44,7 +44,8 @@ public class AdaptationListingHandler {
     }
 
     public static KList<AdaptationSkillList> getAdaptionSkillListings() {
-        if (adaptationSkillLists.isNotEmpty()) return adaptationSkillLists;
+        if (adaptationSkillLists.isNotEmpty())
+            return adaptationSkillLists;
 
         AdaptationSkillList t1 = new AdaptationSkillList("[all]");
         adaptationSkillLists.add(t1);
@@ -58,7 +59,8 @@ public class AdaptationListingHandler {
     }
 
     public static KList<AdaptationProvider> getAdaptationProviders() {
-        if (adaptationProviders.isNotEmpty()) return adaptationProviders;
+        if (adaptationProviders.isNotEmpty())
+            return adaptationProviders;
 
         for (Skill<?> skill : SkillRegistry.skills.sortV()) {
             for (Adaptation<?> adaptation : skill.getAdaptations()) {
@@ -70,7 +72,8 @@ public class AdaptationListingHandler {
     }
 
     public static KList<SkillProvider> getSkillProvider() {
-        if (skillProviders.isNotEmpty()) return skillProviders;
+        if (skillProviders.isNotEmpty())
+            return skillProviders;
 
         for (Skill<?> skill : SkillRegistry.skills.sortV()) {
             SkillProvider t1 = new SkillProvider(skill.getName());

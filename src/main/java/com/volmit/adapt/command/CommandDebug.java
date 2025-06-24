@@ -35,11 +35,9 @@ public class CommandDebug implements DecreeExecutor {
         }
 
         StringBuilder builder = new StringBuilder();
-        Adapt.instance.getAdaptServer().getSkillRegistry().getSkills().forEach(skill -> skill.getAdaptations().forEach(adaptation -> builder
-                .append("adapt.blacklist.")
-                .append(adaptation.getName()
-                        .replaceAll("-", ""))
-                .append("\n")));
+        Adapt.instance.getAdaptServer().getSkillRegistry().getSkills()
+                .forEach(skill -> skill.getAdaptations().forEach(adaptation -> builder.append("adapt.blacklist.")
+                        .append(adaptation.getName().replaceAll("-", "")).append("\n")));
         Adapt.info("Permissions: \n" + builder);
         FConst.success("Permissions have been printed to console.").send(sender());
     }
@@ -52,11 +50,8 @@ public class CommandDebug implements DecreeExecutor {
         }
 
         StringBuilder builder = new StringBuilder();
-        Adapt.instance.getAdaptServer().getSkillRegistry().getSkills().forEach(skill -> builder
-                .append("adapt.blacklist.")
-                .append(skill.getName()
-                        .replaceAll("-", ""))
-                .append("\n"));
+        Adapt.instance.getAdaptServer().getSkillRegistry().getSkills().forEach(
+                skill -> builder.append("adapt.blacklist.").append(skill.getName().replaceAll("-", "")).append("\n"));
         Adapt.info("Permissions: \n" + builder);
         FConst.success("Permissions have been printed to console.").send(sender());
     }

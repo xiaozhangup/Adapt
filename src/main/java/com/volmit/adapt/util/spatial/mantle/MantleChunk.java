@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /**
- * Represents a mantle chunk. Mantle chunks contain sections of matter (see matter api)
- * Mantle Chunks are fully atomic & thread safe
+ * Represents a mantle chunk. Mantle chunks contain sections of matter (see
+ * matter api) Mantle Chunks are fully atomic & thread safe
  */
 public class MantleChunk {
     @Getter
@@ -43,7 +43,8 @@ public class MantleChunk {
     /**
      * Create a mantle chunk
      *
-     * @param sectionHeight the height of the world in sections (blocks >> 4)
+     * @param sectionHeight
+     *            the height of the world in sections (blocks >> 4)
      */
     public MantleChunk(int sectionHeight, int x, int z) {
         sections = new AtomicReferenceArray<>(sectionHeight);
@@ -54,10 +55,14 @@ public class MantleChunk {
     /**
      * Load a mantle chunk from a data stream
      *
-     * @param sectionHeight the height of the world in sections (blocks >> 4)
-     * @param din           the data input
-     * @throws IOException            shit happens
-     * @throws ClassNotFoundException shit happens
+     * @param sectionHeight
+     *            the height of the world in sections (blocks >> 4)
+     * @param din
+     *            the data input
+     * @throws IOException
+     *             shit happens
+     * @throws ClassNotFoundException
+     *             shit happens
      */
     public MantleChunk(int sectionHeight, DataInputStream din) throws IOException, ClassNotFoundException {
         this(sectionHeight, din.readByte(), din.readByte());
@@ -73,7 +78,8 @@ public class MantleChunk {
     /**
      * Check if a section exists (same as get(section) != null)
      *
-     * @param section the section (0 - (worldHeight >> 4))
+     * @param section
+     *            the section (0 - (worldHeight >> 4))
      * @return true if it exists
      */
     public boolean exists(int section) {
@@ -83,7 +89,8 @@ public class MantleChunk {
     /**
      * Get thje matter at the given section or null if it doesnt exist
      *
-     * @param section the section (0 - (worldHeight >> 4))
+     * @param section
+     *            the section (0 - (worldHeight >> 4))
      * @return the matter or null if it doesnt exist
      */
     public Matter get(int section) {
@@ -102,7 +109,8 @@ public class MantleChunk {
     /**
      * Delete the matter from the given section
      *
-     * @param section the section (0 - (worldHeight >> 4))
+     * @param section
+     *            the section (0 - (worldHeight >> 4))
      */
     public void delete(int section) {
         sections.set(section, null);
@@ -111,7 +119,8 @@ public class MantleChunk {
     /**
      * Get or create a new matter section at the given section
      *
-     * @param section the section (0 - (worldHeight >> 4))
+     * @param section
+     *            the section (0 - (worldHeight >> 4))
      * @return the matter
      */
     public Matter getOrCreate(int section) {
@@ -128,8 +137,10 @@ public class MantleChunk {
     /**
      * Write this chunk to a data stream
      *
-     * @param dos the stream
-     * @throws IOException shit happens
+     * @param dos
+     *            the stream
+     * @throws IOException
+     *             shit happens
      */
     public void write(DataOutputStream dos) throws IOException {
         dos.writeByte(x);

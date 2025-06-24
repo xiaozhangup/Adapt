@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.architect;
 
@@ -64,7 +64,8 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
 
     private BlockFace getBlockFace(Player player) {
         List<Block> lastTwoTargetBlocks = player.getLastTwoTargetBlocks(null, 5);
-        if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding()) return null;
+        if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding())
+            return null;
         Block targetBlock = lastTwoTargetBlocks.get(1);
         Block adjacentBlock = lastTwoTargetBlocks.get(0);
         return targetBlock.getFace(adjacentBlock);
@@ -92,14 +93,12 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
             return;
 
         double v = getValue(e.getBlock());
-        Block ignored = blocks.keySet()
-                .stream()
-                .filter(b -> b.getRelative(blocks.get(b)).equals(e.getBlock()))
-                .findFirst()
-                .orElse(null);
+        Block ignored = blocks.keySet().stream().filter(b -> b.getRelative(blocks.get(b)).equals(e.getBlock()))
+                .findFirst().orElse(null);
 
         if (hand.getAmount() < blocks.size()) {
-            Adapt.messagePlayer(p, C.RED + Localizer.dLocalize("architect", "placement", "lore1") + " " + C.GREEN + blocks.size() + C.RED + " " + Localizer.dLocalize("architect", "placement", "lore2"));
+            Adapt.messagePlayer(p, C.RED + Localizer.dLocalize("architect", "placement", "lore1") + " " + C.GREEN
+                    + blocks.size() + C.RED + " " + Localizer.dLocalize("architect", "placement", "lore2"));
             return;
         }
 
@@ -131,14 +130,15 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
             xp(p, 2);
 
             hand.setAmount(hand.getAmount() - 1);
-        } else e.setCancelled(true);
+        } else
+            e.setCancelled(true);
 
         totalMap.remove(p);
         if (hand.getAmount() > 0) {
-            runPlayerViewport(getBlockFace(p), p.getTargetBlock(null, 5), p.getInventory().getItemInMainHand().getType(), p);
+            runPlayerViewport(getBlockFace(p), p.getTargetBlock(null, 5),
+                    p.getInventory().getItemInMainHand().getType(), p);
         }
     }
-
 
     @EventHandler
     public void on(PlayerToggleSneakEvent e) {
@@ -163,7 +163,6 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
             runPlayerViewport(viewPortBlock, block, handMaterial, p);
         }
     }
-
 
     @EventHandler
     public void on(PlayerMoveEvent e) {
@@ -191,7 +190,8 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
     }
 
     public void runPlayerViewport(BlockFace viewPortBlock, Block block, Material handMaterial, Player p) {
-        if (viewPortBlock != null && (viewPortBlock.getDirection().equals(BlockFace.NORTH.getDirection()) || viewPortBlock.getDirection().equals(BlockFace.SOUTH.getDirection()))) { // North & South = X
+        if (viewPortBlock != null && (viewPortBlock.getDirection().equals(BlockFace.NORTH.getDirection())
+                || viewPortBlock.getDirection().equals(BlockFace.SOUTH.getDirection()))) { // North & South = X
             for (int x = block.getX() - 1; x <= block.getX() + 1; x++) { // 1 is the radius of the blocks
                 for (int y = block.getY() - 1; y <= block.getY() + 1; y++) {
                     if (handMaterial == block.getWorld().getBlockAt(x, y, block.getZ()).getType()) {
@@ -205,7 +205,8 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
                     }
                 }
             }
-        } else if (viewPortBlock != null && (viewPortBlock.getDirection().equals(BlockFace.EAST.getDirection()) || viewPortBlock.getDirection().equals(BlockFace.WEST.getDirection()))) { // East & West = Z
+        } else if (viewPortBlock != null && (viewPortBlock.getDirection().equals(BlockFace.EAST.getDirection())
+                || viewPortBlock.getDirection().equals(BlockFace.WEST.getDirection()))) { // East & West = Z
             for (int z = block.getZ() - 1; z <= block.getZ() + 1; z++) { // 1 is the radius of the blocks
                 for (int y = block.getY() - 1; y <= block.getY() + 1; y++) {
                     if (handMaterial == block.getWorld().getBlockAt(block.getX(), y, z).getType()) {
@@ -219,7 +220,8 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
                     }
                 }
             }
-        } else if (viewPortBlock != null && (viewPortBlock.getDirection().equals(BlockFace.UP.getDirection()) || viewPortBlock.getDirection().equals(BlockFace.DOWN.getDirection()))) { // Up & Down = Y
+        } else if (viewPortBlock != null && (viewPortBlock.getDirection().equals(BlockFace.UP.getDirection())
+                || viewPortBlock.getDirection().equals(BlockFace.DOWN.getDirection()))) { // Up & Down = Y
             for (int z = block.getZ() - 1; z <= block.getZ() + 1; z++) { // 1 is the radius of the blocks
                 for (int x = block.getX() - 1; x <= block.getX() + 1; x++) {
                     if (handMaterial == block.getWorld().getBlockAt(x, block.getY(), z).getType()) {
@@ -245,7 +247,6 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
     public boolean isPermanent() {
         return getConfig().permanent;
     }
-
 
     @Override
     public void onTick() {

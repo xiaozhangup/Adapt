@@ -105,8 +105,10 @@ public class KList<T> extends ArrayList<T> implements List<T> {
      * returned map. You must specify each key for each value in this list. In the
      * function, returning null will not add the keyval pair.
      *
-     * @param <K> the inferred key type
-     * @param f   the function
+     * @param <K>
+     *            the inferred key type
+     * @param f
+     *            the function
      * @return the new map
      */
     public <K> KMap<K, T> asValues(Function<T, K> f) {
@@ -120,8 +122,10 @@ public class KList<T> extends ArrayList<T> implements List<T> {
      * returned map. You must specify each value for each key in this list. In the
      * function, returning null will not add the keyval pair.
      *
-     * @param <V> the inferred value type
-     * @param f   the function
+     * @param <V>
+     *            the inferred value type
+     * @param f
+     *            the function
      * @return the new map
      */
     public <V> KMap<T, V> asKeys(Function<T, V> f) {
@@ -133,7 +137,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Cut this list into targetCount sublists
      *
-     * @param targetCount the target count of sublists
+     * @param targetCount
+     *            the target count of sublists
      * @return the list of sublists
      */
     public KList<KList<T>> divide(int targetCount) {
@@ -144,7 +149,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
      * Split this list into a list of sublists with roughly targetSize elements of T
      * per sublist
      *
-     * @param targetSize the target size
+     * @param targetSize
+     *            the target size
      * @return the list of sublists
      */
     public KList<KList<T>> split(int targetSize) {
@@ -172,7 +178,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
      * Rewrite this list by checking each value and changing the value (or not).
      * Return null to remove the element in the function
      *
-     * @param t the function
+     * @param t
+     *            the function
      * @return the same list (not a copy)
      */
     public KList<T> rewrite(Function<T, T> t) {
@@ -248,7 +255,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Tostring with a seperator for each item in the list
      *
-     * @param split the seperator
+     * @param split
+     *            the seperator
      * @return the string representing this object
      */
     public String toString(String split) {
@@ -281,9 +289,12 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Add the contents of the given list (v) into this list using a converter
      *
-     * @param <V>       the type of the forign list
-     * @param v         the forign (given) list
-     * @param converter the converter that converts the forign type into this list type
+     * @param <V>
+     *            the type of the forign list
+     * @param v
+     *            the forign (given) list
+     * @param converter
+     *            the converter that converts the forign type into this list type
      * @return this list (builder)
      */
     public <V> KList<T> addFrom(List<V> v, Function<V, T> converter) {
@@ -314,7 +325,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Adds T to the list, ignores if null
      *
-     * @param t the value to add
+     * @param t
+     *            the value to add
      * @return the same list
      */
     public KList<T> addNonNull(T t) {
@@ -329,8 +341,10 @@ public class KList<T> extends ArrayList<T> implements List<T> {
      * Swaps the values of index a and b. For example "hello", "world", "!" swap(1,
      * 2) would change the list to "hello", "!", "world"
      *
-     * @param a the first index
-     * @param b the second index
+     * @param a
+     *            the first index
+     * @param b
+     *            the second index
      * @return the same list (builder), not a copy
      */
     public KList<T> swapIndexes(int a, int b) {
@@ -346,7 +360,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Remove a number of elements from the list
      *
-     * @param t the elements
+     * @param t
+     *            the elements
      * @return this list
      */
     @SuppressWarnings("unchecked")
@@ -361,7 +376,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Add another glist's contents to this one (addall builder)
      *
-     * @param t the list
+     * @param t
+     *            the list
      * @return the same list
      */
     public KList<T> add(KList<T> t) {
@@ -372,7 +388,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Add a number of values to this list
      *
-     * @param t the list
+     * @param t
+     *            the list
      * @return this list
      */
     @SuppressWarnings("unchecked")
@@ -387,7 +404,8 @@ public class KList<T> extends ArrayList<T> implements List<T> {
     /**
      * Check if this list has an index at the given index
      *
-     * @param index the given index
+     * @param index
+     *            the given index
      * @return true if size > index
      */
     public boolean hasIndex(int index) {

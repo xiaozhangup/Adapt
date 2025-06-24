@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -36,11 +36,11 @@ import java.util.List;
 public class VectorMath {
     public static Vector scaleStatic(Axis x, Vector v, double amt) {
         switch (x) {
-            case X:
+            case X :
                 return scaleX(v, amt);
-            case Y:
+            case Y :
                 return scaleY(v, amt);
-            case Z:
+            case Z :
                 return scaleZ(v, amt);
         }
 
@@ -156,9 +156,12 @@ public class VectorMath {
         u = axis.getX();
         v = axis.getY();
         w = axis.getZ();
-        double xPrime = u * (u * x + v * y + w * z) * (1d - Math.cos(theta)) + x * Math.cos(theta) + (-w * y + v * z) * Math.sin(theta);
-        double yPrime = v * (u * x + v * y + w * z) * (1d - Math.cos(theta)) + y * Math.cos(theta) + (w * x - u * z) * Math.sin(theta);
-        double zPrime = w * (u * x + v * y + w * z) * (1d - Math.cos(theta)) + z * Math.cos(theta) + (-v * x + u * y) * Math.sin(theta);
+        double xPrime = u * (u * x + v * y + w * z) * (1d - Math.cos(theta)) + x * Math.cos(theta)
+                + (-w * y + v * z) * Math.sin(theta);
+        double yPrime = v * (u * x + v * y + w * z) * (1d - Math.cos(theta)) + y * Math.cos(theta)
+                + (w * x - u * z) * Math.sin(theta);
+        double zPrime = w * (u * x + v * y + w * z) * (1d - Math.cos(theta)) + z * Math.cos(theta)
+                + (-v * x + u * y) * Math.sin(theta);
 
         return clip(new Vector(xPrime, yPrime, zPrime), 4);
     }
@@ -167,91 +170,92 @@ public class VectorMath {
      * Get all SIMPLE block faces from a more specific block face (SOUTH_EAST) =
      * (south, east)
      *
-     * @param f the block face
+     * @param f
+     *            the block face
      * @return multiple faces, or one if the face is already simple
      */
     public static List<BlockFace> split(BlockFace f) {
         List<BlockFace> faces = new ArrayList<>();
 
         switch (f) {
-            case DOWN:
+            case DOWN :
                 faces.add(BlockFace.DOWN);
                 break;
-            case EAST:
+            case EAST :
                 faces.add(BlockFace.EAST);
                 break;
-            case EAST_NORTH_EAST:
+            case EAST_NORTH_EAST :
                 faces.add(BlockFace.EAST);
                 faces.add(BlockFace.EAST);
                 faces.add(BlockFace.NORTH);
                 break;
-            case EAST_SOUTH_EAST:
+            case EAST_SOUTH_EAST :
                 faces.add(BlockFace.EAST);
                 faces.add(BlockFace.EAST);
                 faces.add(BlockFace.SOUTH);
                 break;
-            case NORTH:
+            case NORTH :
                 faces.add(BlockFace.NORTH);
                 break;
-            case NORTH_EAST:
+            case NORTH_EAST :
                 faces.add(BlockFace.NORTH);
                 faces.add(BlockFace.EAST);
                 break;
-            case NORTH_NORTH_EAST:
+            case NORTH_NORTH_EAST :
                 faces.add(BlockFace.NORTH);
                 faces.add(BlockFace.NORTH);
                 faces.add(BlockFace.EAST);
                 break;
-            case NORTH_NORTH_WEST:
+            case NORTH_NORTH_WEST :
                 faces.add(BlockFace.NORTH);
                 faces.add(BlockFace.NORTH);
                 faces.add(BlockFace.WEST);
                 break;
-            case NORTH_WEST:
+            case NORTH_WEST :
                 faces.add(BlockFace.NORTH);
                 faces.add(BlockFace.WEST);
                 break;
-            case SELF:
+            case SELF :
                 faces.add(BlockFace.SELF);
                 break;
-            case SOUTH:
+            case SOUTH :
                 faces.add(BlockFace.SOUTH);
                 break;
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 faces.add(BlockFace.SOUTH);
                 faces.add(BlockFace.EAST);
                 break;
-            case SOUTH_SOUTH_EAST:
+            case SOUTH_SOUTH_EAST :
                 faces.add(BlockFace.SOUTH);
                 faces.add(BlockFace.SOUTH);
                 faces.add(BlockFace.EAST);
                 break;
-            case SOUTH_SOUTH_WEST:
+            case SOUTH_SOUTH_WEST :
                 faces.add(BlockFace.SOUTH);
                 faces.add(BlockFace.SOUTH);
                 faces.add(BlockFace.WEST);
                 break;
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 faces.add(BlockFace.SOUTH);
                 faces.add(BlockFace.WEST);
                 break;
-            case UP:
+            case UP :
                 faces.add(BlockFace.UP);
                 break;
-            case WEST:
+            case WEST :
                 faces.add(BlockFace.WEST);
                 break;
-            case WEST_NORTH_WEST:
+            case WEST_NORTH_WEST :
                 faces.add(BlockFace.WEST);
                 faces.add(BlockFace.WEST);
                 faces.add(BlockFace.NORTH);
                 break;
-            case WEST_SOUTH_WEST:
+            case WEST_SOUTH_WEST :
                 faces.add(BlockFace.WEST);
                 faces.add(BlockFace.WEST);
                 faces.add(BlockFace.SOUTH);
                 break;
-            default:
+            default :
                 break;
         }
 
@@ -261,8 +265,10 @@ public class VectorMath {
     /**
      * Get a normalized vector going from a location to another
      *
-     * @param from from here
-     * @param to   to here
+     * @param from
+     *            from here
+     * @param to
+     *            to here
      * @return the normalized vector direction
      */
     public static Vector direction(Location from, Location to) {
@@ -276,8 +282,10 @@ public class VectorMath {
     /**
      * Get the vector direction from the yaw and pitch
      *
-     * @param yaw   the yaw
-     * @param pitch the pitch
+     * @param yaw
+     *            the yaw
+     * @param pitch
+     *            the pitch
      * @return the vector
      */
     public static Vector toVector(float yaw, float pitch) {
@@ -287,8 +295,10 @@ public class VectorMath {
     /**
      * Add an impulse (force) to an entity
      *
-     * @param e the entity
-     * @param v the vector
+     * @param e
+     *            the entity
+     * @param v
+     *            the vector
      */
     public static void impulse(Entity e, Vector v) {
         impulse(e, v, 1.0);
@@ -297,9 +307,12 @@ public class VectorMath {
     /**
      * Add an impulse (force) on an entity
      *
-     * @param e             the entity
-     * @param v             the vector
-     * @param effectiveness the effectiveness
+     * @param e
+     *            the entity
+     * @param v
+     *            the vector
+     * @param effectiveness
+     *            the effectiveness
      */
     public static void impulse(Entity e, Vector v, double effectiveness) {
         Vector vx = e.getVelocity();
@@ -310,7 +323,8 @@ public class VectorMath {
     /**
      * Reverse a direction
      *
-     * @param v the direction
+     * @param v
+     *            the direction
      * @return the reversed direction
      */
     public static Vector reverse(Vector v) {
@@ -332,7 +346,8 @@ public class VectorMath {
     /**
      * Get a speed value from a vector (velocity)
      *
-     * @param v the vector
+     * @param v
+     *            the vector
      * @return the speed
      */
     public static double getSpeed(Vector v) {
@@ -345,8 +360,10 @@ public class VectorMath {
     /**
      * Shift all vectors based on the given vector
      *
-     * @param vector  the vector direction to shift the vectors
-     * @param vectors the vectors to be shifted
+     * @param vector
+     *            the vector direction to shift the vectors
+     * @param vectors
+     *            the vectors to be shifted
      * @return the shifted vectors
      */
     public static List<Vector> shift(Vector vector, List<Vector> vectors) {
@@ -361,7 +378,8 @@ public class VectorMath {
     /**
      * Attempt to get the blockFace for the vector (will be tri-normalized)
      *
-     * @param v the vector
+     * @param v
+     *            the vector
      * @return the block face or null
      */
     public static BlockFace getBlockFace(Vector v) {
@@ -403,8 +421,10 @@ public class VectorMath {
     /**
      * Angle the vector in a self relative direction
      *
-     * @param v   the initial direction
-     * @param amt the amount to shift in the direction
+     * @param v
+     *            the initial direction
+     * @param amt
+     *            the amount to shift in the direction
      * @return the shifted direction
      */
     public static Vector angleLeft(Vector v, float amt) {
@@ -426,8 +446,10 @@ public class VectorMath {
     /**
      * Angle the vector in a self relative direction
      *
-     * @param v   the initial direction
-     * @param amt the amount to shift in the direction
+     * @param v
+     *            the initial direction
+     * @param amt
+     *            the amount to shift in the direction
      * @return the shifted direction
      */
     public static Vector angleRight(Vector v, float amt) {
@@ -449,8 +471,10 @@ public class VectorMath {
     /**
      * Angle the vector in a self relative direction
      *
-     * @param v   the initial direction
-     * @param amt the amount to shift in the direction
+     * @param v
+     *            the initial direction
+     * @param amt
+     *            the amount to shift in the direction
      * @return the shifted direction
      */
     public static Vector angleUp(Vector v, float amt) {
@@ -469,8 +493,10 @@ public class VectorMath {
     /**
      * Angle the vector in a self relative direction
      *
-     * @param v   the initial direction
-     * @param amt the amount to shift in the direction
+     * @param v
+     *            the initial direction
+     * @param amt
+     *            the amount to shift in the direction
      * @return the shifted direction
      */
     public static Vector angleDown(Vector v, float amt) {
@@ -490,7 +516,8 @@ public class VectorMath {
      * (clone) Force normalize the vector into three points, 1, 0, or -1. If the
      * value is > 0.333 (1) if the value is less than -0.333 (-1) else 0
      *
-     * @param direction the direction
+     * @param direction
+     *            the direction
      * @return the vector
      */
     public static Vector triNormalize(Vector direction) {

@@ -10,18 +10,13 @@ public class SQLManager {
 
     private static final String TABLE_NAME = "ADAPT_DATA";
     private static final String CHECK_TABLE_QUERY = "SELECT 1 FROM " + TABLE_NAME + " LIMIT 1";
-    private static final String CREATE_TABLE_QUERY =
-            "CREATE TABLE " + TABLE_NAME + " (" +
-                    "UUID char(36) NOT NULL UNIQUE, " +
-                    "DATA MEDIUMTEXT NOT NULL, " +
-                    "TIME BIGINT NOT NULL)";
-    private static final String ALTER_TABLE_QUERY =
-            "ALTER TABLE " + TABLE_NAME + " " +
-                    "ADD COLUMN TIME BIGINT NOT NULL";
-    private static final String UPDATE_QUERY =
-            "INSERT INTO " + TABLE_NAME + " (UUID, DATA, TIME) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE DATA=?, TIME=?";
-    private static final String UPDATE_TIME_QUERY =
-            "UPDATE " + TABLE_NAME + " SET TIME=? WHERE UUID=?";
+    private static final String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + " ("
+            + "UUID char(36) NOT NULL UNIQUE, " + "DATA MEDIUMTEXT NOT NULL, " + "TIME BIGINT NOT NULL)";
+    private static final String ALTER_TABLE_QUERY = "ALTER TABLE " + TABLE_NAME + " "
+            + "ADD COLUMN TIME BIGINT NOT NULL";
+    private static final String UPDATE_QUERY = "INSERT INTO " + TABLE_NAME
+            + " (UUID, DATA, TIME) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE DATA=?, TIME=?";
+    private static final String UPDATE_TIME_QUERY = "UPDATE " + TABLE_NAME + " SET TIME=? WHERE UUID=?";
     private static final String FETCH_QUERY = "SELECT DATA FROM " + TABLE_NAME + " WHERE UUID=?";
     private static final String FETCH_TIME_QUERY = "SELECT TIME FROM " + TABLE_NAME + " WHERE UUID=?";
     private static final String DELETE_QUERY = "DELETE FROM " + TABLE_NAME + " WHERE UUID=?";
@@ -35,7 +30,8 @@ public class SQLManager {
 
         AdaptConfig config = AdaptConfig.get();
         try {
-            connection = DriverManager.getConnection(assembleUrl(config), config.getSql().getUsername(), config.getSql().getPassword());
+            connection = DriverManager.getConnection(assembleUrl(config), config.getSql().getUsername(),
+                    config.getSql().getPassword());
             if (!connection.isValid(30)) {
                 throw new SQLException("Connection timed out");
             } else {
@@ -108,7 +104,8 @@ public class SQLManager {
             try (PreparedStatement stmt = connection.prepareStatement(FETCH_QUERY)) {
                 stmt.setString(1, uuid.toString());
                 try (ResultSet set = stmt.executeQuery()) {
-                    if (!set.next()) return null;
+                    if (!set.next())
+                        return null;
                     return set.getString("DATA");
                 }
             }
@@ -124,7 +121,8 @@ public class SQLManager {
             try (PreparedStatement stmt = connection.prepareStatement(FETCH_TIME_QUERY)) {
                 stmt.setString(1, uuid.toString());
                 try (ResultSet set = stmt.executeQuery()) {
-                    if (!set.next()) return null;
+                    if (!set.next())
+                        return null;
                     return set.getLong("TIME");
                 }
             }
@@ -149,7 +147,8 @@ public class SQLManager {
     }
 
     private void checkAndReestablishConnection() throws SQLException {
-        if (connection == null || !connection.isValid(AdaptConfig.get().getSqlSecondsCheckverify())) { // 30 sec by default
+        if (connection == null || !connection.isValid(AdaptConfig.get().getSqlSecondsCheckverify())) { // 30 sec by
+                                                                                                        // default
             establishConnection();
         }
     }
@@ -160,6 +159,7 @@ public class SQLManager {
     }
 
     private String assembleUrl(AdaptConfig config) {
-        return String.format("jdbc:mysql://%s:%d/%s", config.getSql().getHost(), config.getSql().getPort(), config.getSql().getDatabase());
+        return String.format("jdbc:mysql://%s:%d/%s", config.getSql().getHost(), config.getSql().getPort(),
+                config.getSql().getDatabase());
     }
 }

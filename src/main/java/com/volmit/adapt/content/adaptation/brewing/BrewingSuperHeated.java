@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.brewing;
 
@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
 public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Config> {
 
     private static final int MAX_CHECKS_BEFORE_REMOVE = 20;
@@ -62,8 +61,10 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Form.pc(getFireBoost(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("brewing", "superheated", "lore1"));
-        v.addLore(C.GREEN + Form.pc(getLavaBoost(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("brewing", "superheated", "lore2"));
+        v.addLore(C.GREEN + Form.pc(getFireBoost(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("brewing", "superheated", "lore1"));
+        v.addLore(C.GREEN + Form.pc(getLavaBoost(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("brewing", "superheated", "lore2"));
     }
 
     public double getLavaBoost(double factor) {
@@ -108,7 +109,6 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
         }
     }
 
-
     @Override
     public void onTick() {
         if (activeStands.isEmpty()) {
@@ -137,7 +137,8 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
                         continue;
                     }
 
-                    BrewingStandOwner owner = WorldData.of(b.getWorld()).getMantle().get(b.getX(), b.getY(), b.getZ(), BrewingStandOwner.class);
+                    BrewingStandOwner owner = WorldData.of(b.getWorld()).getMantle().get(b.getX(), b.getY(), b.getZ(),
+                            BrewingStandOwner.class);
 
                     if (owner == null) {
                         it.remove();
@@ -146,9 +147,12 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
 
                     PlayerData p = getServer().peekData(owner.getOwner());
 
-                    if (p.getSkillLines().get(getSkill().getName()) != null && p.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())
-                            && p.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getLevel() > 0) {
-                        updateHeat(b, getLevelPercent(p.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getLevel()));
+                    if (p.getSkillLines().get(getSkill().getName()) != null
+                            && p.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())
+                            && p.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName())
+                                    .getLevel() > 0) {
+                        updateHeat(b, getLevelPercent(p.getSkillLines().get(getSkill().getName()).getAdaptations()
+                                .get(getName()).getLevel()));
                     } else {
                         it.remove();
                     }

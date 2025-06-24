@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api;
 
@@ -65,14 +65,16 @@ public interface Component {
     }
 
     /**
-     * Attempts to "damage" an item.
-     * 1. If the item is null, null is returned
-     * 2. If the item doesnt have durability, (damage) amount will be consumed from the stack, null will be returned if
-     * more consumed than amount
-     * 3. If the item has durability, the damage will be consuemd and return the item affected, OR null if it broke
+     * Attempts to "damage" an item. 1. If the item is null, null is returned 2. If
+     * the item doesnt have durability, (damage) amount will be consumed from the
+     * stack, null will be returned if more consumed than amount 3. If the item has
+     * durability, the damage will be consuemd and return the item affected, OR null
+     * if it broke
      *
-     * @param item   the item (tool)
-     * @param damage the damage to cause
+     * @param item
+     *            the item (tool)
+     * @param damage
+     *            the damage to cause
      * @return the damaged item or null if destroyed
      */
     default ItemStack damage(ItemStack item, int damage) {
@@ -126,43 +128,73 @@ public interface Component {
         ItemStack chest = inv.getChestplate();
         ItemStack pants = inv.getLeggings();
         double armorValue = 0.0;
-        if (helmet == null) armorValue = armorValue + 0.0;
-        else if (helmet.getType() == Material.LEATHER_HELMET) armorValue = armorValue + 0.04;
-        else if (helmet.getType() == Material.GOLDEN_HELMET) armorValue = armorValue + 0.08;
-        else if (helmet.getType() == Material.TURTLE_HELMET) armorValue = armorValue + 0.08;
-        else if (helmet.getType() == Material.CHAINMAIL_HELMET) armorValue = armorValue + 0.08;
-        else if (helmet.getType() == Material.IRON_HELMET) armorValue = armorValue + 0.08;
-        else if (helmet.getType() == Material.DIAMOND_HELMET) armorValue = armorValue + 0.12;
-        else if (helmet.getType() == Material.NETHERITE_HELMET) armorValue = armorValue + 0.12;
+        if (helmet == null)
+            armorValue = armorValue + 0.0;
+        else if (helmet.getType() == Material.LEATHER_HELMET)
+            armorValue = armorValue + 0.04;
+        else if (helmet.getType() == Material.GOLDEN_HELMET)
+            armorValue = armorValue + 0.08;
+        else if (helmet.getType() == Material.TURTLE_HELMET)
+            armorValue = armorValue + 0.08;
+        else if (helmet.getType() == Material.CHAINMAIL_HELMET)
+            armorValue = armorValue + 0.08;
+        else if (helmet.getType() == Material.IRON_HELMET)
+            armorValue = armorValue + 0.08;
+        else if (helmet.getType() == Material.DIAMOND_HELMET)
+            armorValue = armorValue + 0.12;
+        else if (helmet.getType() == Material.NETHERITE_HELMET)
+            armorValue = armorValue + 0.12;
         //
-        if (boots == null) armorValue = armorValue + 0.0;
-        else if (boots.getType() == Material.LEATHER_BOOTS) armorValue = armorValue + 0.04;
-        else if (boots.getType() == Material.GOLDEN_BOOTS) armorValue = armorValue + 0.04;
-        else if (boots.getType() == Material.CHAINMAIL_BOOTS) armorValue = armorValue + 0.04;
-        else if (boots.getType() == Material.IRON_BOOTS) armorValue = armorValue + 0.08;
-        else if (boots.getType() == Material.DIAMOND_BOOTS) armorValue = armorValue + 0.12;
-        else if (boots.getType() == Material.NETHERITE_BOOTS) armorValue = armorValue + 0.12;
+        if (boots == null)
+            armorValue = armorValue + 0.0;
+        else if (boots.getType() == Material.LEATHER_BOOTS)
+            armorValue = armorValue + 0.04;
+        else if (boots.getType() == Material.GOLDEN_BOOTS)
+            armorValue = armorValue + 0.04;
+        else if (boots.getType() == Material.CHAINMAIL_BOOTS)
+            armorValue = armorValue + 0.04;
+        else if (boots.getType() == Material.IRON_BOOTS)
+            armorValue = armorValue + 0.08;
+        else if (boots.getType() == Material.DIAMOND_BOOTS)
+            armorValue = armorValue + 0.12;
+        else if (boots.getType() == Material.NETHERITE_BOOTS)
+            armorValue = armorValue + 0.12;
         //
-        if (pants == null) armorValue = armorValue + 0.0;
-        else if (pants.getType() == Material.LEATHER_LEGGINGS) armorValue = armorValue + 0.08;
-        else if (pants.getType() == Material.GOLDEN_LEGGINGS) armorValue = armorValue + 0.12;
-        else if (pants.getType() == Material.CHAINMAIL_LEGGINGS) armorValue = armorValue + 0.16;
-        else if (pants.getType() == Material.IRON_LEGGINGS) armorValue = armorValue + 0.20;
-        else if (pants.getType() == Material.DIAMOND_LEGGINGS) armorValue = armorValue + 0.24;
-        else if (pants.getType() == Material.NETHERITE_LEGGINGS) armorValue = armorValue + 0.24;
+        if (pants == null)
+            armorValue = armorValue + 0.0;
+        else if (pants.getType() == Material.LEATHER_LEGGINGS)
+            armorValue = armorValue + 0.08;
+        else if (pants.getType() == Material.GOLDEN_LEGGINGS)
+            armorValue = armorValue + 0.12;
+        else if (pants.getType() == Material.CHAINMAIL_LEGGINGS)
+            armorValue = armorValue + 0.16;
+        else if (pants.getType() == Material.IRON_LEGGINGS)
+            armorValue = armorValue + 0.20;
+        else if (pants.getType() == Material.DIAMOND_LEGGINGS)
+            armorValue = armorValue + 0.24;
+        else if (pants.getType() == Material.NETHERITE_LEGGINGS)
+            armorValue = armorValue + 0.24;
         //
-        if (chest == null) armorValue = armorValue + 0.0;
-        else if (chest.getType() == Material.LEATHER_CHESTPLATE) armorValue = armorValue + 0.12;
-        else if (chest.getType() == Material.GOLDEN_CHESTPLATE) armorValue = armorValue + 0.20;
-        else if (chest.getType() == Material.CHAINMAIL_CHESTPLATE) armorValue = armorValue + 0.20;
-        else if (chest.getType() == Material.IRON_CHESTPLATE) armorValue = armorValue + 0.24;
-        else if (chest.getType() == Material.DIAMOND_CHESTPLATE) armorValue = armorValue + 0.32;
-        else if (chest.getType() == Material.NETHERITE_CHESTPLATE) armorValue = armorValue + 0.32;
+        if (chest == null)
+            armorValue = armorValue + 0.0;
+        else if (chest.getType() == Material.LEATHER_CHESTPLATE)
+            armorValue = armorValue + 0.12;
+        else if (chest.getType() == Material.GOLDEN_CHESTPLATE)
+            armorValue = armorValue + 0.20;
+        else if (chest.getType() == Material.CHAINMAIL_CHESTPLATE)
+            armorValue = armorValue + 0.20;
+        else if (chest.getType() == Material.IRON_CHESTPLATE)
+            armorValue = armorValue + 0.24;
+        else if (chest.getType() == Material.DIAMOND_CHESTPLATE)
+            armorValue = armorValue + 0.32;
+        else if (chest.getType() == Material.NETHERITE_CHESTPLATE)
+            armorValue = armorValue + 0.32;
         return armorValue;
     }
 
     default PotionEffect getRawPotionEffect(ItemStack is) {
-        if (is != null && is.getItemMeta() != null && is.getItemMeta() instanceof PotionMeta p && p.getBasePotionData().getType().getEffectType() != null) {
+        if (is != null && is.getItemMeta() != null && is.getItemMeta() instanceof PotionMeta p
+                && p.getBasePotionData().getType().getEffectType() != null) {
             boolean l = is.getType().equals(Material.LINGERING_POTION);
             boolean x = p.getBasePotionData().isExtended();
             boolean u = p.getBasePotionData().isUpgraded();
@@ -173,15 +205,23 @@ public interface Component {
 
             int amplifier = 0;
             var type = p.getBasePotionData().getType();
-            if (List.of(NIGHT_VISION, INVISIBILITY, FIRE_RESISTANCE, WATER_BREATHING).contains(type)) amplifier = e;
-            else if (List.of(PotionTypes.JUMP, PotionTypes.SPEED, STRENGTH).contains(type)) amplifier = g;
-            else if (SLOWNESS == type) amplifier = u ? l ? 100 : 400 : t;
-            else if (List.of(POISON, PotionTypes.REGEN).contains(type)) amplifier = h;
-            else if (List.of(WEAKNESS, SLOW_FALLING).contains(type)) amplifier = t;
-            else if (LUCK == type) amplifier = l ? 1500 : 6000;
-            else if (TURTLE_MASTER == type) amplifier = u ? l ? 100 : 400 : x ? l ? 200 : 800 : l ? 100 : 400;
+            if (List.of(NIGHT_VISION, INVISIBILITY, FIRE_RESISTANCE, WATER_BREATHING).contains(type))
+                amplifier = e;
+            else if (List.of(PotionTypes.JUMP, PotionTypes.SPEED, STRENGTH).contains(type))
+                amplifier = g;
+            else if (SLOWNESS == type)
+                amplifier = u ? l ? 100 : 400 : t;
+            else if (List.of(POISON, PotionTypes.REGEN).contains(type))
+                amplifier = h;
+            else if (List.of(WEAKNESS, SLOW_FALLING).contains(type))
+                amplifier = t;
+            else if (LUCK == type)
+                amplifier = l ? 1500 : 6000;
+            else if (TURTLE_MASTER == type)
+                amplifier = u ? l ? 100 : 400 : x ? l ? 200 : 800 : l ? 100 : 400;
 
-            return new PotionEffect(p.getBasePotionData().getType().getEffectType(), amplifier, p.getBasePotionData().isUpgraded() ? 1 : 0);
+            return new PotionEffect(p.getBasePotionData().getType().getEffectType(), amplifier,
+                    p.getBasePotionData().isUpgraded() ? 1 : 0);
         }
 
         return null;
@@ -190,23 +230,17 @@ public interface Component {
     default boolean isAdaptableDamageCause(EntityDamageEvent event) {
         Set<EntityDamageEvent.DamageCause> excludedCauses = Set.of(
                 // These are not damage causes that can are going to trigger adaptability
-                EntityDamageEvent.DamageCause.VOID,
-                EntityDamageEvent.DamageCause.LAVA,
-                EntityDamageEvent.DamageCause.HOT_FLOOR,
-                EntityDamageEvent.DamageCause.CRAMMING,
-                EntityDamageEvent.DamageCause.MELTING,
-                EntityDamageEvent.DamageCause.SUFFOCATION,
-                EntityDamageEvent.DamageCause.SUICIDE,
-                EntityDamageEvent.DamageCause.WITHER,
-                EntityDamageEvent.DamageCause.FLY_INTO_WALL,
-                EntityDamageEvent.DamageCause.FALL,
-                EntityDamageEvent.DamageCause.SONIC_BOOM,
-                EntityDamageEvent.DamageCause.THORNS
-        );
+                EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.LAVA,
+                EntityDamageEvent.DamageCause.HOT_FLOOR, EntityDamageEvent.DamageCause.CRAMMING,
+                EntityDamageEvent.DamageCause.MELTING, EntityDamageEvent.DamageCause.SUFFOCATION,
+                EntityDamageEvent.DamageCause.SUICIDE, EntityDamageEvent.DamageCause.WITHER,
+                EntityDamageEvent.DamageCause.FLY_INTO_WALL, EntityDamageEvent.DamageCause.FALL,
+                EntityDamageEvent.DamageCause.SONIC_BOOM, EntityDamageEvent.DamageCause.THORNS);
         return !excludedCauses.contains(event.getCause());
     }
 
-    default void addPotionStacks(Player p, PotionEffectType potionEffect, int amplifier, int duration, boolean overlap) {
+    default void addPotionStacks(Player p, PotionEffectType potionEffect, int amplifier, int duration,
+            boolean overlap) {
         List<PotionEffect> activeEffects = new ArrayList<>(p.getActivePotionEffects());
         SoundPlayer sp = SoundPlayer.of(p);
         for (PotionEffect activeEffect : activeEffects) {
@@ -237,7 +271,6 @@ public interface Component {
         });
 
     }
-
 
     default void potion(Player p, PotionEffectType type, int power, int duration) {
         p.addPotionEffect(new PotionEffect(type, power, duration, true, false, false));
@@ -272,7 +305,8 @@ public interface Component {
         return MaterialValue.getValue(block.getType());
     }
 
-    default void vfxMovingSphere(Location startLocation, Location endLocation, int ticks, Color color, double size, double density) {
+    default void vfxMovingSphere(Location startLocation, Location endLocation, int ticks, Color color, double size,
+            double density) {
         World world = startLocation.getWorld();
         double startX = startLocation.getX();
         double startY = startLocation.getY();
@@ -315,7 +349,8 @@ public interface Component {
         }.runTaskTimer(Adapt.instance, 0, 1);
     }
 
-    default void vfxMovingSwirlingSphere(Location startLocation, Location endLocation, int ticks, Color color, double size, double swirlRadius, double density) {
+    default void vfxMovingSwirlingSphere(Location startLocation, Location endLocation, int ticks, Color color,
+            double size, double swirlRadius, double density) {
         World world = startLocation.getWorld();
         double startX = startLocation.getX();
         double startY = startLocation.getY();
@@ -458,7 +493,6 @@ public interface Component {
         }.runTaskTimer(Adapt.instance, 0, 1);
     }
 
-
     default void vfxDome(Location center, double range, Color color, int particleCount) {
         Particle.DustOptions dustOptions = new Particle.DustOptions(color, 1);
         World world = center.getWorld();
@@ -475,7 +509,8 @@ public interface Component {
         }
     }
 
-    default void vfxSphereV1(Player p, Location l, double radius, Particle particle, int verticalDensity, int radialDensity) {
+    default void vfxSphereV1(Player p, Location l, double radius, Particle particle, int verticalDensity,
+            int radialDensity) {
         for (double phi = 0; phi <= Math.PI; phi += Math.PI / verticalDensity) {
             for (double theta = 0; theta <= 2 * Math.PI; theta += Math.PI / radialDensity) {
                 double x = radius * Math.cos(theta) * Math.sin(phi);
@@ -488,7 +523,6 @@ public interface Component {
             }
         }
     }
-
 
     default void vfxZuck(Location from, Location to) {
         Vector v = from.clone().subtract(to).toVector();
@@ -519,16 +553,15 @@ public interface Component {
         }
     }
 
-
     default void safeGiveItem(Player player, ItemStack item) {
         if (!player.getInventory().addItem(item).isEmpty()) {
             player.getWorld().dropItem(player.getLocation(), item);
         }
     }
 
-
-    default void vfxParticleLine(Location start, Location end, Particle particle, int pointsPerLine, int particleCount, double offsetX, double offsetY, double offsetZ, double extra, @Nullable Double data, boolean forceDisplay,
-                                 @Nullable Predicate<Location> operationPerPoint) {
+    default void vfxParticleLine(Location start, Location end, Particle particle, int pointsPerLine, int particleCount,
+            double offsetX, double offsetY, double offsetZ, double extra, @Nullable Double data, boolean forceDisplay,
+            @Nullable Predicate<Location> operationPerPoint) {
         double d = start.distance(end) / pointsPerLine;
         for (int i = 0; i < pointsPerLine; i++) {
             Location l = start.clone();
@@ -536,11 +569,13 @@ public interface Component {
             Vector v = direction.multiply(i * d);
             l.add(v.getX(), v.getY(), v.getZ());
             if (operationPerPoint == null) {
-                start.getWorld().spawnParticle(particle, l, particleCount, offsetX, offsetY, offsetZ, extra, data, forceDisplay);
+                start.getWorld().spawnParticle(particle, l, particleCount, offsetX, offsetY, offsetZ, extra, data,
+                        forceDisplay);
                 continue;
             }
             if (operationPerPoint.test(l)) {
-                start.getWorld().spawnParticle(particle, l, particleCount, offsetX, offsetY, offsetZ, extra, data, forceDisplay);
+                start.getWorld().spawnParticle(particle, l, particleCount, offsetX, offsetY, offsetZ, extra, data,
+                        forceDisplay);
             }
         }
     }
@@ -557,7 +592,6 @@ public interface Component {
         }
     }
 
-
     private List<Location> getHollowCuboid(Location loc, double particleDistance) {
         List<Location> result = Lists.newArrayList();
         World world = loc.getWorld();
@@ -572,9 +606,12 @@ public interface Component {
             for (double y = minY; y <= maxY; y += particleDistance) {
                 for (double z = minZ; z <= maxZ; z += particleDistance) {
                     int components = 0;
-                    if (x == minX || x == maxX) components++;
-                    if (y == minY || y == maxY) components++;
-                    if (z == minZ || z == maxZ) components++;
+                    if (x == minX || x == maxX)
+                        components++;
+                    if (y == minY || y == maxY)
+                        components++;
+                    if (z == minZ || z == maxZ)
+                        components++;
                     if (components >= 2) {
                         result.add(new Location(world, x, y, z));
                     }
@@ -599,9 +636,12 @@ public interface Component {
             for (double y = minY; y <= maxY; y += particleDistance) {
                 for (double z = minZ; z <= maxZ; z += particleDistance) {
                     int components = 0;
-                    if (x == minX || x == maxX) components++;
-                    if (y == minY || y == maxY) components++;
-                    if (z == minZ || z == maxZ) components++;
+                    if (x == minX || x == maxX)
+                        components++;
+                    if (y == minY || y == maxY)
+                        components++;
+                    if (z == minZ || z == maxZ)
+                        components++;
                     if (components >= 2) {
                         result.add(new Location(world, x, y, z));
                     }
@@ -636,18 +676,27 @@ public interface Component {
     default void vfxPrismOutline(Location placer, double outset, Particle particle, int particleCount) {
 
         Location top = new Location(placer.getWorld(), placer.getX(), placer.getY() + outset, placer.getZ());
-        Location baseCorner1 = new Location(placer.getWorld(), placer.getX() - outset, placer.getY(), placer.getZ() - outset);
-        Location baseCorner2 = new Location(placer.getWorld(), placer.getX() + outset, placer.getY(), placer.getZ() - outset);
-        Location baseCorner3 = new Location(placer.getWorld(), placer.getX() + outset, placer.getY(), placer.getZ() + outset);
-        Location baseCorner4 = new Location(placer.getWorld(), placer.getX() - outset, placer.getY(), placer.getZ() + outset);
+        Location baseCorner1 = new Location(placer.getWorld(), placer.getX() - outset, placer.getY(),
+                placer.getZ() - outset);
+        Location baseCorner2 = new Location(placer.getWorld(), placer.getX() + outset, placer.getY(),
+                placer.getZ() - outset);
+        Location baseCorner3 = new Location(placer.getWorld(), placer.getX() + outset, placer.getY(),
+                placer.getZ() + outset);
+        Location baseCorner4 = new Location(placer.getWorld(), placer.getX() - outset, placer.getY(),
+                placer.getZ() + outset);
 
-        vfxParticleLine(baseCorner1, baseCorner2, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true, l -> l.getBlock().isPassable());
-        vfxParticleLine(baseCorner2, baseCorner3, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true, l -> l.getBlock().isPassable());
-        vfxParticleLine(baseCorner3, baseCorner4, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true, l -> l.getBlock().isPassable());
-        vfxParticleLine(baseCorner4, baseCorner1, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true, l -> l.getBlock().isPassable());
+        vfxParticleLine(baseCorner1, baseCorner2, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true,
+                l -> l.getBlock().isPassable());
+        vfxParticleLine(baseCorner2, baseCorner3, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true,
+                l -> l.getBlock().isPassable());
+        vfxParticleLine(baseCorner3, baseCorner4, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true,
+                l -> l.getBlock().isPassable());
+        vfxParticleLine(baseCorner4, baseCorner1, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true,
+                l -> l.getBlock().isPassable());
 
         for (Location location : Arrays.asList(baseCorner1, baseCorner2, baseCorner3, baseCorner4)) {
-            vfxParticleLine(location, top, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true, l -> l.getBlock().isPassable());
+            vfxParticleLine(location, top, particle, particleCount, 1, 0.0D, 0D, 0.0D, 0D, null, true,
+                    l -> l.getBlock().isPassable());
         }
     }
 
@@ -697,7 +746,8 @@ public interface Component {
         }.runTaskTimer(Adapt.instance, 0, 1);
     }
 
-    default void vfxLoadingRing(Location center, double radius, Particle particle, int durationTicks, int particleCount) {
+    default void vfxLoadingRing(Location center, double radius, Particle particle, int durationTicks,
+            int particleCount) {
         World world = center.getWorld();
 
         new BukkitRunnable() {
@@ -719,7 +769,6 @@ public interface Component {
             }
         }.runTaskTimer(Adapt.instance, 0, 1);
     }
-
 
     default void vfxLevelUp(Player p) {
         p.spawnParticle(Particle.REVERSE_PORTAL, p.getLocation().clone().add(0, 1.7, 0), 100, 0.1, 0.1, 0.1, 4.1);
@@ -756,7 +805,8 @@ public interface Component {
         Location location = player.getEyeLocation();
         Vector direction = location.getDirection();
         for (int i = 0; i < count; i++) {
-            player.getWorld().spawnParticle(particle, location.getX(), location.getY(), location.getZ(), 0, (float) direction.getX(), (float) direction.getY(), (float) direction.getZ(), velocity, null);
+            player.getWorld().spawnParticle(particle, location.getX(), location.getY(), location.getZ(), 0,
+                    (float) direction.getX(), (float) direction.getY(), (float) direction.getZ(), velocity, null);
         }
     }
 
@@ -769,7 +819,6 @@ public interface Component {
             angle += 0.1;
         }
     }
-
 
     default void vfxXP(Player p, Location l, int amt) {
         if (AdaptConfig.get().isUseEnchantmentTableParticleForActiveEffects()) {
@@ -906,7 +955,6 @@ public interface Component {
         }
     }
 
-
     default void setExp(Player p, int exp) {
         p.setExp(0);
         p.setLevel(0);
@@ -988,9 +1036,12 @@ public interface Component {
     /**
      * Takes a custom amount of the item stack exact type (Ignores the item amount)
      *
-     * @param inv    the inv
-     * @param is     the item ignore the amount
-     * @param amount the amount to use
+     * @param inv
+     *            the inv
+     * @param is
+     *            the item ignore the amount
+     * @param amount
+     *            the amount to use
      * @return true if taken, false if not (missing)
      */
     default boolean takeAll(Inventory inv, ItemStack is, int amount) {
@@ -1002,8 +1053,10 @@ public interface Component {
     /**
      * Take one of an exact type ignoring the item stack amount
      *
-     * @param inv the inv
-     * @param is  the item ignoring the amount
+     * @param inv
+     *            the inv
+     * @param is
+     *            the item ignoring the amount
      * @return true if taken, false if diddnt
      */
     default boolean takeOne(Inventory inv, ItemStack is, int amount) {
@@ -1013,8 +1066,10 @@ public interface Component {
     /**
      * Take a specific amount of an EXACT META TYPE from an inventory
      *
-     * @param inv the inv
-     * @param is  uses the amount
+     * @param inv
+     *            the inv
+     * @param is
+     *            uses the amount
      * @return returns false if it couldnt get enough (and none was taken)
      */
     default boolean takeAll(Inventory inv, ItemStack is) {

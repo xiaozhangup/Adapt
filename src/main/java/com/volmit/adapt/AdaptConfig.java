@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt;
 
@@ -75,11 +75,8 @@ public class AdaptConfig {
     private boolean unlearnAllButton = false;
     private SqlSettings sql = new SqlSettings();
     private Protector protectorSupport = new Protector();
-    private Map<String, Map<String, Boolean>> protectionOverrides = Map.of(
-            "adaptation-name", Map.of(
-                    "WorldGuard", true
-            )
-    );
+    private Map<String, Map<String, Boolean>> protectionOverrides = Map.of("adaptation-name",
+            Map.of("WorldGuard", true));
 
     @Setter
     private boolean verbose = false;
@@ -88,7 +85,6 @@ public class AdaptConfig {
         if (config == null) {
             AdaptConfig dummy = new AdaptConfig();
             File l = Adapt.instance.getDataFile("adapt", "adapt.json");
-
 
             if (!l.exists()) {
                 try {
@@ -122,7 +118,6 @@ public class AdaptConfig {
         private boolean griefprevention = true;
         private boolean lockettePro = true;
     }
-
 
     @Getter
     public static class SqlSettings {

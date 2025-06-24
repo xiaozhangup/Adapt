@@ -58,7 +58,9 @@ public class BrewingTask extends BukkitRunnable {
             return false;
         }
 
-        int totalFuel = (inv.getFuel() != null && inv.getFuel().getType() != Material.AIR ? inv.getFuel().getAmount() * 20 : 0) + block.getFuelLevel();
+        int totalFuel = (inv.getFuel() != null && inv.getFuel().getType() != Material.AIR
+                ? inv.getFuel().getAmount() * 20
+                : 0) + block.getFuelLevel();
         if (totalFuel < recipe.getFuelCost()) {
             return false;
         }

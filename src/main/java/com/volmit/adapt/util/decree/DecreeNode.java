@@ -38,14 +38,16 @@ public class DecreeNode {
         this.method = method;
         this.decree = method.getDeclaredAnnotation(Decree.class);
         if (decree == null) {
-            throw new RuntimeException("Cannot instantiate DecreeNode on method " + method.getName() + " in " + method.getDeclaringClass().getCanonicalName() + " not annotated by @Decree");
+            throw new RuntimeException("Cannot instantiate DecreeNode on method " + method.getName() + " in "
+                    + method.getDeclaringClass().getCanonicalName() + " not annotated by @Decree");
         }
     }
 
     /**
      * Get the parameters of this decree node
      *
-     * @return The list of parameters if ALL are annotated by @{@link Param}, else null
+     * @return The list of parameters if ALL are annotated by @{@link Param}, else
+     *         null
      */
     public KList<DecreeParameter> getParameters() {
         KList<DecreeParameter> required = new KList<>();
@@ -88,7 +90,6 @@ public class DecreeNode {
 
             d.add(i);
         }
-
 
         d.removeDuplicates();
         return d;

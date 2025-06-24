@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.architect;
 
@@ -29,7 +29,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-
 
 public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
     public ArchitectGlass() {
@@ -50,19 +49,21 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
         v.addLore(C.GREEN + Localizer.dLocalize("architect", "glass", "lore1"));
     }
 
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(BlockBreakEvent e) {
         if (e.isCancelled()) {
             return;
         }
         Player p = e.getPlayer();
-        if (hasAdaptation(p) && (p.getInventory().getItemInMainHand().getType() == Material.AIR || !isTool(p.getInventory().getItemInMainHand())) && !e.isCancelled()) {
+        if (hasAdaptation(p) && (p.getInventory().getItemInMainHand().getType() == Material.AIR
+                || !isTool(p.getInventory().getItemInMainHand())) && !e.isCancelled()) {
             if (!canBlockBreak(p, e.getBlock().getLocation())) {
                 return;
             }
-            if (e.getBlock().getType().toString().contains("GLASS") && !e.getBlock().getType().toString().contains("TINTED_GLASS")) {
-                e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(e.getBlock().getType(), 1));
+            if (e.getBlock().getType().toString().contains("GLASS")
+                    && !e.getBlock().getType().toString().contains("TINTED_GLASS")) {
+                e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(),
+                        new ItemStack(e.getBlock().getType(), 1));
                 SoundPlayer spw = SoundPlayer.of(e.getBlock().getWorld());
                 spw.play(e.getBlock().getLocation(), Sound.BLOCK_LARGE_AMETHYST_BUD_BREAK, 1.0f, 1.0f);
                 if (getConfig().showParticles) {
@@ -79,7 +80,6 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
     public boolean isEnabled() {
         return getConfig().enabled;
     }
-
 
     @Override
     public void onTick() {

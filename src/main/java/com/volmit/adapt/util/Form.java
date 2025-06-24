@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -28,7 +28,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Form {
-    private static final String[] NAMES = new String[]{"Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sexdecillion", "Septendecillion", "Octodecillion", "Novemdecillion", "Vigintillion",};
+    private static final String[] NAMES = new String[]{"Thousand", "Million", "Billion", "Trillion", "Quadrillion",
+            "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion",
+            "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sexdecillion", "Septendecillion",
+            "Octodecillion", "Novemdecillion", "Vigintillion",};
     private static final BigInteger THOUSAND = BigInteger.valueOf(1000);
     private static final NavigableMap<BigInteger, String> MAP;
     private static final LinkedHashMap<String, Integer> roman_numerals = new LinkedHashMap<String, Integer>();
@@ -65,9 +68,12 @@ public class Form {
     /**
      * Scroll text
      *
-     * @param smx      the text
-     * @param viewport the viewport length
-     * @param time     the timeline value
+     * @param smx
+     *            the text
+     * @param viewport
+     *            the viewport length
+     * @param time
+     *            the timeline value
      */
     public static String scroll(String smx, int viewport, long time) {
         String src = Form.repeat(" ", viewport) + smx + Form.repeat(" ", viewport);
@@ -82,7 +88,8 @@ public class Form {
     /**
      * Capitalize the first letter
      *
-     * @param s the string
+     * @param s
+     *            the string
      * @return the capitalized string
      */
     public static String capitalize(String s) {
@@ -104,7 +111,8 @@ public class Form {
     /**
      * Capitalize all words in the string
      *
-     * @param s the string
+     * @param s
+     *            the string
      * @return the capitalized string
      */
     public static String capitalizeWords(String s) {
@@ -120,8 +128,10 @@ public class Form {
     /**
      * Hard word wrap
      *
-     * @param s   the words
-     * @param len the length per line
+     * @param s
+     *            the words
+     * @param len
+     *            the length per line
      * @return the wrapped string
      */
     public static String wrap(String s, int len) {
@@ -131,8 +141,10 @@ public class Form {
     /**
      * Soft Word wrap
      *
-     * @param s   the string
-     * @param len the length to wrap
+     * @param s
+     *            the string
+     * @param len
+     *            the length to wrap
      * @return the wrapped string
      */
     public static String wrapWords(String s, int len) {
@@ -146,10 +158,14 @@ public class Form {
     /**
      * Wrap words
      *
-     * @param s          the string
-     * @param len        the wrap length
-     * @param newLineSep the new line seperator
-     * @param soft       should it be soft wrapped or hard wrapped?
+     * @param s
+     *            the string
+     * @param len
+     *            the wrap length
+     * @param newLineSep
+     *            the new line seperator
+     * @param soft
+     *            should it be soft wrapped or hard wrapped?
      * @return the wrapped words
      */
     public static String wrap(String s, int len, String newLineSep, boolean soft) {
@@ -163,11 +179,16 @@ public class Form {
     /**
      * Wrap words
      *
-     * @param s          the string
-     * @param len        the length
-     * @param newLineSep the new line seperator
-     * @param soft       soft or hard wrapping
-     * @param regex      the regex
+     * @param s
+     *            the string
+     * @param len
+     *            the length
+     * @param newLineSep
+     *            the new line seperator
+     * @param soft
+     *            soft or hard wrapping
+     * @param regex
+     *            the regex
      * @return the wrapped string
      */
     public static String wrap(String s, int len, String newLineSep, boolean soft, String regex) {
@@ -315,7 +336,8 @@ public class Form {
     /**
      * Fixes the minute issue with formatting
      *
-     * @param c the calendar
+     * @param c
+     *            the calendar
      * @return the minute string
      */
     public static String fmin(Calendar c) {
@@ -330,7 +352,8 @@ public class Form {
     /**
      * Get a fancy time stamp
      *
-     * @param time the stamp in time (ago)
+     * @param time
+     *            the stamp in time (ago)
      * @return the fancy stamp in time (ago)
      */
     public static String ago(long time) {
@@ -361,32 +384,33 @@ public class Form {
                     int h = c.get(Calendar.HOUR);
                     h = h == 0 ? 12 : h;
 
-                    return "Yesterday at " + h + ":" + fmin(c) + " " + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
+                    return "Yesterday at " + h + ":" + fmin(c) + " "
+                            + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
                 } else {
                     int h = c.get(Calendar.HOUR);
                     h = h == 0 ? 12 : h;
                     String dow = "Error Day";
 
                     switch (c.get(Calendar.DAY_OF_WEEK)) {
-                        case Calendar.SUNDAY:
+                        case Calendar.SUNDAY :
                             dow = "Sunday";
                             break;
-                        case Calendar.MONDAY:
+                        case Calendar.MONDAY :
                             dow = "Monday";
                             break;
-                        case Calendar.TUESDAY:
+                        case Calendar.TUESDAY :
                             dow = "Tuesday";
                             break;
-                        case Calendar.WEDNESDAY:
+                        case Calendar.WEDNESDAY :
                             dow = "Wednesday";
                             break;
-                        case Calendar.THURSDAY:
+                        case Calendar.THURSDAY :
                             dow = "Thursday";
                             break;
-                        case Calendar.FRIDAY:
+                        case Calendar.FRIDAY :
                             dow = "Friday";
                             break;
-                        case Calendar.SATURDAY:
+                        case Calendar.SATURDAY :
                             dow = "Saturday";
                             break;
                     }
@@ -395,40 +419,40 @@ public class Form {
                     int month = c.get(Calendar.MONTH);
 
                     switch (month) {
-                        case Calendar.JANUARY:
+                        case Calendar.JANUARY :
                             monthName = "Jan";
                             break;
-                        case Calendar.FEBRUARY:
+                        case Calendar.FEBRUARY :
                             monthName = "Feb";
                             break;
-                        case Calendar.MARCH:
+                        case Calendar.MARCH :
                             monthName = "Mar";
                             break;
-                        case Calendar.APRIL:
+                        case Calendar.APRIL :
                             monthName = "Apr";
                             break;
-                        case Calendar.MAY:
+                        case Calendar.MAY :
                             monthName = "May";
                             break;
-                        case Calendar.JUNE:
+                        case Calendar.JUNE :
                             monthName = "Jun";
                             break;
-                        case Calendar.JULY:
+                        case Calendar.JULY :
                             monthName = "Jul";
                             break;
-                        case Calendar.AUGUST:
+                        case Calendar.AUGUST :
                             monthName = "Aug";
                             break;
-                        case Calendar.SEPTEMBER:
+                        case Calendar.SEPTEMBER :
                             monthName = "Sep";
                             break;
-                        case Calendar.OCTOBER:
+                        case Calendar.OCTOBER :
                             monthName = "Oct";
                             break;
-                        case Calendar.NOVEMBER:
+                        case Calendar.NOVEMBER :
                             monthName = "Nov";
                             break;
-                        case Calendar.DECEMBER:
+                        case Calendar.DECEMBER :
                             monthName = "Dec";
                             break;
                     }
@@ -436,7 +460,8 @@ public class Form {
                     int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
                     String suffix = numberSuffix(dayOfMonth);
 
-                    return dow + ", " + monthName + " " + suffix + " at " + h + ":" + fmin(c) + " " + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
+                    return dow + ", " + monthName + " " + suffix + " at " + h + ":" + fmin(c) + " "
+                            + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
                 }
             } else {
                 int h = c.get(Calendar.HOUR);
@@ -444,25 +469,25 @@ public class Form {
                 String dow = "Error Day";
 
                 switch (c.get(Calendar.DAY_OF_WEEK)) {
-                    case Calendar.SUNDAY:
+                    case Calendar.SUNDAY :
                         dow = "Sunday";
                         break;
-                    case Calendar.MONDAY:
+                    case Calendar.MONDAY :
                         dow = "Monday";
                         break;
-                    case Calendar.TUESDAY:
+                    case Calendar.TUESDAY :
                         dow = "Tuesday";
                         break;
-                    case Calendar.WEDNESDAY:
+                    case Calendar.WEDNESDAY :
                         dow = "Wednesday";
                         break;
-                    case Calendar.THURSDAY:
+                    case Calendar.THURSDAY :
                         dow = "Thursday";
                         break;
-                    case Calendar.FRIDAY:
+                    case Calendar.FRIDAY :
                         dow = "Friday";
                         break;
-                    case Calendar.SATURDAY:
+                    case Calendar.SATURDAY :
                         dow = "Saturday";
                         break;
                 }
@@ -471,40 +496,40 @@ public class Form {
                 int month = c.get(Calendar.MONTH);
 
                 switch (month) {
-                    case Calendar.JANUARY:
+                    case Calendar.JANUARY :
                         monthName = "Jan";
                         break;
-                    case Calendar.FEBRUARY:
+                    case Calendar.FEBRUARY :
                         monthName = "Feb";
                         break;
-                    case Calendar.MARCH:
+                    case Calendar.MARCH :
                         monthName = "Mar";
                         break;
-                    case Calendar.APRIL:
+                    case Calendar.APRIL :
                         monthName = "Apr";
                         break;
-                    case Calendar.MAY:
+                    case Calendar.MAY :
                         monthName = "May";
                         break;
-                    case Calendar.JUNE:
+                    case Calendar.JUNE :
                         monthName = "Jun";
                         break;
-                    case Calendar.JULY:
+                    case Calendar.JULY :
                         monthName = "Jul";
                         break;
-                    case Calendar.AUGUST:
+                    case Calendar.AUGUST :
                         monthName = "Aug";
                         break;
-                    case Calendar.SEPTEMBER:
+                    case Calendar.SEPTEMBER :
                         monthName = "Sep";
                         break;
-                    case Calendar.OCTOBER:
+                    case Calendar.OCTOBER :
                         monthName = "Oct";
                         break;
-                    case Calendar.NOVEMBER:
+                    case Calendar.NOVEMBER :
                         monthName = "Nov";
                         break;
-                    case Calendar.DECEMBER:
+                    case Calendar.DECEMBER :
                         monthName = "Dec";
                         break;
                 }
@@ -513,7 +538,8 @@ public class Form {
                 String suffix = numberSuffix(dayOfMonth);
                 int year = c.get(Calendar.YEAR);
 
-                return year + ", " + dow + ", " + monthName + " " + suffix + " at " + h + ":" + fmin(c) + " " + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
+                return year + ", " + dow + ", " + monthName + " " + suffix + " at " + h + ":" + fmin(c) + " "
+                        + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
             }
         }
     }
@@ -521,17 +547,18 @@ public class Form {
     /**
      * Get the suffix for a number i.e. 1st 2nd 3rd
      *
-     * @param i the number
+     * @param i
+     *            the number
      * @return the suffix
      */
     public static String numberSuffix(int i) {
         String[] sufixes = new String[]{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"};
         switch (i % 100) {
-            case 11:
-            case 12:
-            case 13:
+            case 11 :
+            case 12 :
+            case 13 :
                 return i + "th";
-            default:
+            default :
                 return i + sufixes[i % 10];
 
         }
@@ -541,8 +568,10 @@ public class Form {
      * Get a high accuracy but limited range duration (accurate up to a couple
      * minutes)
      *
-     * @param ms   the milliseconds (double)
-     * @param prec the precision (decimal format)
+     * @param ms
+     *            the milliseconds (double)
+     * @param prec
+     *            the precision (decimal format)
      * @return the formatted string
      */
     public static String duration(double ms, int prec) {
@@ -576,8 +605,10 @@ public class Form {
     /**
      * Get a duration from milliseconds up to days
      *
-     * @param ms   the ms
-     * @param prec the precision (decimal format)
+     * @param ms
+     *            the ms
+     * @param prec
+     *            the precision (decimal format)
      * @return the formatted string
      */
     public static String duration(long ms, int prec) {
@@ -607,7 +638,8 @@ public class Form {
     /**
      * Format a big value
      *
-     * @param i the number
+     * @param i
+     *            the number
      * @return the full value in string
      */
     public static String b(int i) {
@@ -617,7 +649,8 @@ public class Form {
     /**
      * Format a big value
      *
-     * @param i the number
+     * @param i
+     *            the number
      * @return the full value in string
      */
     public static String b(long i) {
@@ -627,7 +660,8 @@ public class Form {
     /**
      * Format a big value
      *
-     * @param i the number
+     * @param i
+     *            the number
      * @return the full value in string
      */
     public static String b(double i) {
@@ -637,7 +671,8 @@ public class Form {
     /**
      * Format a big number
      *
-     * @param number the big number
+     * @param number
+     *            the big number
      * @return the value in string
      */
     public static String b(BigInteger number) {
@@ -663,7 +698,8 @@ public class Form {
      * Calculate a fancy string representation of a file size. Adds a suffix of B,
      * KB, MB, GB, or TB
      *
-     * @param s the size (in bytes)
+     * @param s
+     *            the size (in bytes)
      * @return the string
      */
     public static String fileSize(long s) {
@@ -673,8 +709,10 @@ public class Form {
     /**
      * ":", "a", "b", "c" -> a:b:c
      *
-     * @param splitter the splitter that goes in between
-     * @param strings  the strings
+     * @param splitter
+     *            the splitter that goes in between
+     * @param strings
+     *            the strings
      * @return the result
      */
     public static String split(String splitter, String... strings) {
@@ -692,7 +730,8 @@ public class Form {
      * Calculate a fancy string representation of a file size. Adds a suffix of B,
      * KB, MB, GB, or TB
      *
-     * @param s the size (in bytes)
+     * @param s
+     *            the size (in bytes)
      * @return the string
      */
     public static String memSize(long s) {
@@ -706,20 +745,23 @@ public class Form {
     /**
      * Get the timestamp of the time t (ms since 1970)
      *
-     * @param t the time
+     * @param t
+     *            the time
      * @return the stamp
      */
     @SuppressWarnings("deprecation")
     public static String stamp(long t) {
         Date d = new Date(t);
-        return d.getMonth() + "-" + d.getDate() + "-" + (d.getYear() + 1900) + " " + d.getHours() + "h " + d.getMinutes() + "m " + d.getSeconds() + "s ";
+        return d.getMonth() + "-" + d.getDate() + "-" + (d.getYear() + 1900) + " " + d.getHours() + "h "
+                + d.getMinutes() + "m " + d.getSeconds() + "s ";
     }
 
     @SuppressWarnings("deprecation")
     public static String stampTime(long t) {
         Date d = new Date(t);
 
-        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + forceDoubleDigit(d.getMinutes()) + ":" + forceDoubleDigit(d.getSeconds());
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + forceDoubleDigit(d.getMinutes()) + ":"
+                + forceDoubleDigit(d.getSeconds());
     }
 
     public static String forceDoubleDigit(int dig) {
@@ -741,8 +783,10 @@ public class Form {
      * with a special divisor. The divisor decides how much goes up in the suffix
      * chain.
      *
-     * @param s   the size (in bytes)
-     * @param div the divisor
+     * @param s
+     *            the size (in bytes)
+     * @param div
+     *            the divisor
      * @return the string
      */
     public static String ofSize(long s, int div) {
@@ -781,9 +825,12 @@ public class Form {
      * with a special divisor. The divisor decides how much goes up in the suffix
      * chain.
      *
-     * @param s   the size (in bytes)
-     * @param div the divisor
-     * @param dec the decimal places
+     * @param s
+     *            the size (in bytes)
+     * @param div
+     *            the divisor
+     * @param dec
+     *            the decimal places
      * @return the string
      */
     public static String ofSize(long s, int div, int dec) {
@@ -818,9 +865,12 @@ public class Form {
      * with a special divisor. The divisor decides how much goes up in the suffix
      * chain.
      *
-     * @param s   the size (in bytes)
-     * @param div the divisor
-     * @param dec the decimal places
+     * @param s
+     *            the size (in bytes)
+     * @param div
+     *            the divisor
+     * @param dec
+     *            the decimal places
      * @return the string
      */
     public static String ofSizeMetricWeight(long s, int div, int dec) {
@@ -857,8 +907,10 @@ public class Form {
     /**
      * Trim a string to a length, then append ... at the end if it extends the limit
      *
-     * @param s the string
-     * @param l the limit
+     * @param s
+     *            the string
+     * @param l
+     *            the limit
      * @return the modified string
      */
     public static String trim(String s, int l) {
@@ -873,7 +925,8 @@ public class Form {
      * Get a class name into a configuration/filename key For example,
      * PhantomController.class is converted to phantom-controller
      *
-     * @param clazz the class
+     * @param clazz
+     *            the class
      * @return the string representation
      */
     public static String cname(String clazz) {
@@ -897,7 +950,8 @@ public class Form {
     /**
      * Get a formatted representation of the memory given in megabytes
      *
-     * @param mb the megabytes
+     * @param mb
+     *            the megabytes
      * @return the string representation with suffixes
      */
     public static String mem(long mb) {
@@ -911,7 +965,8 @@ public class Form {
     /**
      * Get a formatted representation of the memory given in kilobytes
      *
-     * @param kb the kilobytes
+     * @param kb
+     *            the kilobytes
      * @return the string representation with suffixes
      */
     public static String memx(long kb) {
@@ -933,7 +988,8 @@ public class Form {
     /**
      * Format a long. Changes -10334 into -10,334
      *
-     * @param i the number
+     * @param i
+     *            the number
      * @return the string representation of the number
      */
     public static String f(long i) {
@@ -944,7 +1000,8 @@ public class Form {
     /**
      * Format a number. Changes -10334 into -10,334
      *
-     * @param i the number
+     * @param i
+     *            the number
      * @return the string representation of the number
      */
     public static String f(int i) {
@@ -955,8 +1012,10 @@ public class Form {
     /**
      * Formats a double's decimals to a limit
      *
-     * @param i the double
-     * @param p the number of decimal places to use
+     * @param i
+     *            the double
+     * @param p
+     *            the number of decimal places to use
      * @return the formated string
      */
     public static String f(double i, int p) {
@@ -976,8 +1035,10 @@ public class Form {
      * decimal places that dont need to be placed down. 2.4343 formatted with 6
      * decimals gets returned as 2.434300
      *
-     * @param i the double
-     * @param p the number of decimal places to use
+     * @param i
+     *            the double
+     * @param p
+     *            the number of decimal places to use
      * @return the formated string
      */
     public static String fd(double i, int p) {
@@ -995,8 +1056,10 @@ public class Form {
     /**
      * Formats a float's decimals to a limit
      *
-     * @param i the float
-     * @param p the number of decimal places to use
+     * @param i
+     *            the float
+     * @param p
+     *            the number of decimal places to use
      * @return the formated string
      */
     public static String f(float i, int p) {
@@ -1014,7 +1077,8 @@ public class Form {
     /**
      * Formats a double's decimals (one decimal point)
      *
-     * @param i the double
+     * @param i
+     *            the double
      */
     public static String f(double i) {
         return f(i, 1);
@@ -1023,7 +1087,8 @@ public class Form {
     /**
      * Formats a float's decimals (one decimal point)
      *
-     * @param i the float
+     * @param i
+     *            the float
      */
     public static String f(float i) {
         return f(i, 1);
@@ -1033,8 +1098,10 @@ public class Form {
      * Get a percent representation of a double and decimal places (0.53) would
      * return 53%
      *
-     * @param i the double
-     * @param p the number of decimal points
+     * @param i
+     *            the double
+     * @param p
+     *            the number of decimal points
      * @return a string
      */
     public static String pc(double i, int p) {
@@ -1045,8 +1112,10 @@ public class Form {
      * Get a percent representation of a float and decimal places (0.53) would
      * return 53%
      *
-     * @param i the float
-     * @param p the number of decimal points
+     * @param i
+     *            the float
+     * @param p
+     *            the number of decimal points
      * @return a string
      */
     public static String pc(float i, int p) {
@@ -1057,7 +1126,8 @@ public class Form {
      * Get a percent representation of a double and zero decimal places (0.53) would
      * return 53%
      *
-     * @param i the double
+     * @param i
+     *            the double
      * @return a string
      */
     public static String pc(double i) {
@@ -1068,7 +1138,8 @@ public class Form {
      * Get a percent representation of a float and zero decimal places (0.53) would
      * return 53%
      *
-     * @param i the double
+     * @param i
+     *            the double
      * @return a string
      */
     public static String pc(float i) {
@@ -1078,9 +1149,12 @@ public class Form {
     /**
      * Get a percent as the percent of i out of "of" with custom decimal places
      *
-     * @param i  the percent out of
-     * @param of of of
-     * @param p  the decimal places
+     * @param i
+     *            the percent out of
+     * @param of
+     *            of of
+     * @param p
+     *            the decimal places
      * @return the string
      */
     public static String pc(int i, int of, int p) {
@@ -1090,8 +1164,10 @@ public class Form {
     /**
      * Get a percent as the percent of i out of "of"
      *
-     * @param i  the percent out of
-     * @param of of of
+     * @param i
+     *            the percent out of
+     * @param of
+     *            of of
      * @return the string
      */
     public static String pc(int i, int of) {
@@ -1101,9 +1177,12 @@ public class Form {
     /**
      * Get a percent as the percent of i out of "of" with custom decimal places
      *
-     * @param i  the percent out of
-     * @param of of of
-     * @param p  the decimal places
+     * @param i
+     *            the percent out of
+     * @param of
+     *            of of
+     * @param p
+     *            the decimal places
      * @return the string
      */
     public static String pc(long i, long of, int p) {
@@ -1113,8 +1192,10 @@ public class Form {
     /**
      * Get a percent as the percent of i out of "of"
      *
-     * @param i  the percent out of
-     * @param of of of
+     * @param i
+     *            the percent out of
+     * @param of
+     *            of of
      * @return the string
      */
     public static String pc(long i, long of) {
@@ -1124,7 +1205,8 @@ public class Form {
     /**
      * Milliseconds to seconds (double)
      *
-     * @param ms the milliseconds
+     * @param ms
+     *            the milliseconds
      * @return a formatted string to milliseconds
      */
     public static String msSeconds(long ms) {
@@ -1134,8 +1216,10 @@ public class Form {
     /**
      * Milliseconds to seconds (double) custom decimals
      *
-     * @param ms the milliseconds
-     * @param p  number of decimal points
+     * @param ms
+     *            the milliseconds
+     * @param p
+     *            number of decimal points
      * @return a formatted string to milliseconds
      */
     public static String msSeconds(long ms, int p) {
@@ -1145,7 +1229,8 @@ public class Form {
     /**
      * nanoseconds to seconds (double)
      *
-     * @param ms the nanoseconds
+     * @param ms
+     *            the nanoseconds
      * @return a formatted string to nanoseconds
      */
     public static String nsMs(long ns) {
@@ -1155,8 +1240,10 @@ public class Form {
     /**
      * nanoseconds to seconds (double) custom decimals
      *
-     * @param ms the nanoseconds
-     * @param p  number of decimal points
+     * @param ms
+     *            the nanoseconds
+     * @param p
+     *            number of decimal points
      * @return a formatted string to nanoseconds
      */
     public static String nsMs(long ns, int p) {
@@ -1166,8 +1253,10 @@ public class Form {
     /**
      * nanoseconds to seconds (double) custom decimals
      *
-     * @param ms the nanoseconds
-     * @param p  number of decimal points
+     * @param ms
+     *            the nanoseconds
+     * @param p
+     *            number of decimal points
      * @return a formatted string to nanoseconds
      */
     public static String nsMsd(long ns, int p) {
@@ -1177,7 +1266,8 @@ public class Form {
     /**
      * Get roman numeral representation of the int
      *
-     * @param num the int
+     * @param num
+     *            the int
      * @return the numerals
      */
     public static String toRoman(int num) {
@@ -1197,7 +1287,8 @@ public class Form {
     /**
      * Get the number representation from roman numerals.
      *
-     * @param number the roman number
+     * @param number
+     *            the roman number
      * @return the int representation
      */
     public static int fromRoman(String number) {
@@ -1265,8 +1356,10 @@ public class Form {
     /**
      * Repeat a string
      *
-     * @param s the string
-     * @param n the amount of times to repeat
+     * @param s
+     *            the string
+     * @param n
+     *            the amount of times to repeat
      * @return the repeated string
      */
     public static String repeat(String s, int n) {

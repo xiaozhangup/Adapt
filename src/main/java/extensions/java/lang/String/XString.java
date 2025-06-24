@@ -33,7 +33,6 @@ public class XString {
         return s.toUpperCase(Locale.ROOT);
     }
 
-
     public static String fromBase64(@This String s) {
         return new String(Base64.getUrlDecoder().decode(s), StandardCharsets.UTF_8);
     }
@@ -86,7 +85,6 @@ public class XString {
         }
     }
 
-
     public static String replaceAbs(@This String s, String find, String replace) {
         return s.replaceAll("\\Q" + find + "\\E", replace);
     }
@@ -115,7 +113,8 @@ public class XString {
     /**
      * Capitalize the first letter
      *
-     * @param s the string
+     * @param s
+     *            the string
      * @return the capitalized string
      */
     public static String capitalize(@This String s) {
@@ -137,7 +136,8 @@ public class XString {
     /**
      * Capitalize all words in the string
      *
-     * @param s the string
+     * @param s
+     *            the string
      * @return the capitalized string
      */
     public static String capitalizeWords(@This String s) {
@@ -153,8 +153,10 @@ public class XString {
     /**
      * Hard word wrap
      *
-     * @param s   the words
-     * @param len the length per line
+     * @param s
+     *            the words
+     * @param len
+     *            the length per line
      * @return the wrapped string
      */
     public static String wrap(@This String s, int len) {
@@ -164,8 +166,10 @@ public class XString {
     /**
      * Soft Word wrap
      *
-     * @param s   the string
-     * @param len the length to wrap
+     * @param s
+     *            the string
+     * @param len
+     *            the length to wrap
      * @return the wrapped string
      */
     public static String wrapWords(@This String s, int len) {
@@ -175,10 +179,14 @@ public class XString {
     /**
      * Wrap words
      *
-     * @param s          the string
-     * @param len        the wrap length
-     * @param newLineSep the new line seperator
-     * @param soft       should it be soft wrapped or hard wrapped?
+     * @param s
+     *            the string
+     * @param len
+     *            the wrap length
+     * @param newLineSep
+     *            the new line seperator
+     * @param soft
+     *            should it be soft wrapped or hard wrapped?
      * @return the wrapped words
      */
     public static String wrap(@This String s, int len, String newLineSep, boolean soft) {
@@ -188,11 +196,16 @@ public class XString {
     /**
      * Wrap words
      *
-     * @param s          the string
-     * @param len        the length
-     * @param newLineSep the new line seperator
-     * @param soft       soft or hard wrapping
-     * @param regex      the regex
+     * @param s
+     *            the string
+     * @param len
+     *            the length
+     * @param newLineSep
+     *            the new line seperator
+     * @param soft
+     *            soft or hard wrapping
+     * @param regex
+     *            the regex
      * @return the wrapped string
      */
     public static String wrap(@This String s, int len, String newLineSep, boolean soft, String regex) {
@@ -269,8 +282,10 @@ public class XString {
     /**
      * Trim a string to a length, then append ... at the end if it extends the limit
      *
-     * @param s the string
-     * @param l the limit
+     * @param s
+     *            the string
+     * @param l
+     *            the limit
      * @return the modified string
      */
     public static String elipse(@This String s, int l) {
@@ -284,7 +299,8 @@ public class XString {
     /**
      * Get the number representation from roman numerals.
      *
-     * @param number the roman number
+     * @param number
+     *            the roman number
      * @return the int representation
      */
     public static int fromRoman(@This String number) {
@@ -352,9 +368,12 @@ public class XString {
     /**
      * Scroll text
      *
-     * @param smx      the text
-     * @param viewport the viewport length
-     * @param time     the timeline value
+     * @param smx
+     *            the text
+     * @param viewport
+     *            the viewport length
+     * @param time
+     *            the timeline value
      */
     public static String scroll(@This String smx, int viewport, long time) {
         String src = " ".repeat(viewport) + smx + " ".repeat(viewport);

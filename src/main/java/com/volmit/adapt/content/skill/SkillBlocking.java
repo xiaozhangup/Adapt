@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -59,51 +59,56 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
         registerAdaptation(new BlockingChainArmorer());
         registerAdaptation(new BlockingSaddlecrafter());
         registerAdaptation(new BlockingHorseArmorer());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.LEATHER_CHESTPLATE).key("challenge_block_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.LEATHER_CHESTPLATE).key("challenge_block_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_block_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_block_1k", "description"))
                 .model(CustomModel.get(Material.LEATHER_CHESTPLATE, "advancement", "blocking", "challenge_block_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                        .icon(Material.CHAINMAIL_CHESTPLATE)
-                        .key("challenge_block_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.CHAINMAIL_CHESTPLATE).key("challenge_block_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_block_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_block_5k", "description"))
-                        .model(CustomModel.get(Material.CHAINMAIL_CHESTPLATE, "advancement", "blocking", "challenge_block_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.IRON_CHESTPLATE)
-                                .key("challenge_block_50k")
+                        .model(CustomModel.get(Material.CHAINMAIL_CHESTPLATE, "advancement", "blocking",
+                                "challenge_block_5k"))
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.IRON_CHESTPLATE).key("challenge_block_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_block_50k", "title"))
                                 .description(Localizer.dLocalize("advancement", "challenge_block_50k", "description"))
-                                .model(CustomModel.get(Material.IRON_CHESTPLATE, "advancement", "blocking", "challenge_block_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                        .icon(Material.GOLDEN_CHESTPLATE)
+                                .model(CustomModel.get(Material.IRON_CHESTPLATE, "advancement", "blocking",
+                                        "challenge_block_50k"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.GOLDEN_CHESTPLATE)
                                         .key("challenge_block_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_block_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_block_500k", "description"))
-                                        .model(CustomModel.get(Material.GOLDEN_CHESTPLATE, "advancement", "blocking", "challenge_block_500k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_block_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.GOLDEN_CHESTPLATE, "advancement", "blocking",
+                                                "challenge_block_500k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
-                                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                                .icon(Material.DIAMOND_CHESTPLATE)
+                                        .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                        .child(AdaptAdvancement.builder().icon(Material.DIAMOND_CHESTPLATE)
                                                 .key("challenge_block_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_block_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_block_5m", "description"))
-                                                .model(CustomModel.get(Material.DIAMOND_CHESTPLATE, "advancement", "blocking", "challenge_block_5m"))
+                                                .title(Localizer.dLocalize("advancement", "challenge_block_5m",
+                                                        "title"))
+                                                .description(Localizer.dLocalize("advancement", "challenge_block_5m",
+                                                        "description"))
+                                                .model(CustomModel.get(Material.DIAMOND_CHESTPLATE, "advancement",
+                                                        "blocking", "challenge_block_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_1k").goal(1000).stat("blocked.hits").reward(getConfig().challengeBlock1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_5k").goal(5000).stat("blocked.hits").reward(getConfig().challengeBlock1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_50k").goal(50000).stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_500k").goal(500000).stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_5m").goal(5000000).stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_1k").goal(1000).stat("blocked.hits")
+                .reward(getConfig().challengeBlock1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_5k").goal(5000).stat("blocked.hits")
+                .reward(getConfig().challengeBlock1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_50k").goal(50000)
+                .stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_500k").goal(500000)
+                .stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_5m").goal(5000000)
+                .stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
         cooldowns = new HashMap<>();
     }
 
@@ -114,7 +119,6 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
         cooldowns.put(p, System.currentTimeMillis());
         runnable.run();
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(EntityDamageByEntityEvent e) {
@@ -149,13 +153,14 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
             AdaptPlayer adaptPlayer = getPlayer(i);
             shouldReturnForPlayer(i, () -> {
                 checkStatTrackers(adaptPlayer);
-                if (i.getPlayer() != null && (i.getPlayer().getInventory().getItemInOffHand().getType().equals(Material.SHIELD) || i.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.SHIELD))) {
+                if (i.getPlayer() != null
+                        && (i.getPlayer().getInventory().getItemInOffHand().getType().equals(Material.SHIELD) || i
+                                .getPlayer().getInventory().getItemInMainHand().getType().equals(Material.SHIELD))) {
                     xpSilent(i, getConfig().passiveXpForUsingShield);
                 }
             });
         }
     }
-
 
     @Override
     public boolean isEnabled() {

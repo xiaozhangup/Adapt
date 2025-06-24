@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
@@ -55,7 +55,6 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + "+ " + getRadius(level) + C.GRAY + Localizer.dLocalize("herbalism", "replant", "lore1"));
     }
-
 
     private int getCooldown(double factor, int level) {
         if (level == 1) {
@@ -115,7 +114,8 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
                 spw.play(p.getLocation(), Sound.ITEM_SHOVEL_FLATTEN, 1f, 0.66f);
                 spw.play(p.getLocation(), Sound.BLOCK_BAMBOO_SAPLING_BREAK, 1f, 0.66f);
                 if (getConfig().showParticles) {
-                    p.spawnParticle(Particles.VILLAGER_HAPPY, p.getLocation().clone().add(0.5, 0.5, 0.5), getLevel(p) * 3, 0.3 * getLevel(p), 0.3 * getLevel(p), 0.3 * getLevel(p), 0.9);
+                    p.spawnParticle(Particles.VILLAGER_HAPPY, p.getLocation().clone().add(0.5, 0.5, 0.5),
+                            getLevel(p) * 3, 0.3 * getLevel(p), 0.3 * getLevel(p), 0.3 * getLevel(p), 0.9);
                 }
             } else {
                 hit(p, e.getClickedBlock());
@@ -129,9 +129,14 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
                 return;
             }
 
-            xp(p, b.getLocation().clone().add(0.5, 0.5, 0.5), ((SkillHerbalism.Config) getSkill().getConfig()).harvestPerAgeXP * aa.getAge());
-            xp(p, b.getLocation().clone().add(0.5, 0.5, 0.5), ((SkillHerbalism.Config) getSkill().getConfig()).plantCropSeedsXP);
-            if (getPlayer(p).getData().getSkillLines().get("herbalism").getAdaptations().get("herbalism-drop-to-inventory") != null && getPlayer(p).getData().getSkillLines().get("herbalism").getAdaptations().get("herbalism-drop-to-inventory").getLevel() > 0) {
+            xp(p, b.getLocation().clone().add(0.5, 0.5, 0.5),
+                    ((SkillHerbalism.Config) getSkill().getConfig()).harvestPerAgeXP * aa.getAge());
+            xp(p, b.getLocation().clone().add(0.5, 0.5, 0.5),
+                    ((SkillHerbalism.Config) getSkill().getConfig()).plantCropSeedsXP);
+            if (getPlayer(p).getData().getSkillLines().get("herbalism").getAdaptations()
+                    .get("herbalism-drop-to-inventory") != null
+                    && getPlayer(p).getData().getSkillLines().get("herbalism").getAdaptations()
+                            .get("herbalism-drop-to-inventory").getLevel() > 0) {
                 Collection<ItemStack> items = b.getDrops();
                 SoundPlayer sp = SoundPlayer.of(p);
                 for (ItemStack i : items) {
@@ -160,7 +165,6 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
             }
         }
     }
-
 
     @Override
     public void onTick() {

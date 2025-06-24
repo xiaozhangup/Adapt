@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.matter.slices;
 
-
 import com.volmit.adapt.util.spatial.hunk.storage.MappedHunk;
 import com.volmit.adapt.util.spatial.hunk.storage.PaletteOrHunk;
 import com.volmit.adapt.util.spatial.matter.MatterReader;

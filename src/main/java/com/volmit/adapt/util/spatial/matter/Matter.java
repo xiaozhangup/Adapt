@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.matter;
 
-
 import com.volmit.adapt.util.spatial.util.Pos;
 
 import java.io.*;
@@ -30,17 +29,9 @@ import java.util.function.Function;
 /**
  * When Red Matter isn't enough
  * <p>
- * UVI width
- * UVI height
- * UVI depth
- * UVI sliceCount
- * UTF author
- * UVL createdAt
- * UVI version
- * UTF sliceType (canonical class name)
- * UVI nodeCount (for each slice)
- * UVI position [(z * w * h) + (y * w) + x]
- * ??? nodeData
+ * UVI width UVI height UVI depth UVI sliceCount UTF author UVL createdAt UVI
+ * version UTF sliceType (canonical class name) UVI nodeCount (for each slice)
+ * UVI position [(z * w * h) + (y * w) + x] ??? nodeData
  */
 public interface Matter {
     int VERSION = 1;
@@ -68,23 +59,24 @@ public interface Matter {
     }
 
     /**
-     * Reads the input stream into a matter object using a matter factory.
-     * Does not close the input stream. Be a man, close it yourself.
+     * Reads the input stream into a matter object using a matter factory. Does not
+     * close the input stream. Be a man, close it yourself.
      *
-     * @param in            the input stream
-     * @param matterFactory the matter factory (size) -> new MatterImpl(size);
+     * @param in
+     *            the input stream
+     * @param matterFactory
+     *            the matter factory (size) -> new MatterImpl(size);
      * @return the matter object
-     * @throws IOException shit happens yo
+     * @throws IOException
+     *             shit happens yo
      */
     static Matter read(InputStream in, Function<Pos, Matter> matterFactory) throws IOException, ClassNotFoundException {
         return readDin(new DataInputStream(in), matterFactory);
     }
 
-    static Matter readDin(DataInputStream din, Function<Pos, Matter> matterFactory) throws IOException, ClassNotFoundException {
-        Matter matter = matterFactory.apply(new Pos(
-                din.readInt(),
-                din.readInt(),
-                din.readInt()));
+    static Matter readDin(DataInputStream din, Function<Pos, Matter> matterFactory)
+            throws IOException, ClassNotFoundException {
+        Matter matter = matterFactory.apply(new Pos(din.readInt(), din.readInt(), din.readInt()));
         int sliceCount = din.readByte();
 
         matter.getHeader().read(din);
@@ -151,9 +143,12 @@ public interface Matter {
     /**
      * Create a slice from the given type (full is false)
      *
-     * @param type   the type class
-     * @param matter the matter this slice will go into (size provider)
-     * @param <T>    the type
+     * @param type
+     *            the type class
+     * @param matter
+     *            the matter this slice will go into (size provider)
+     * @param <T>
+     *            the type
      * @return the slice (or null if not supported)
      */
     <T> MatterSlice<T> createSlice(Class<T> type, Matter matter);
@@ -197,8 +192,10 @@ public interface Matter {
     /**
      * Return the slice for the given type
      *
-     * @param t   the type class
-     * @param <T> the type
+     * @param t
+     *            the type class
+     * @param <T>
+     *            the type
      * @return the slice or null
      */
     default <T> MatterSlice<T> getSlice(Class<T> t) {
@@ -208,8 +205,10 @@ public interface Matter {
     /**
      * Delete the slice for the given type
      *
-     * @param c   the type class
-     * @param <T> the type
+     * @param c
+     *            the type class
+     * @param <T>
+     *            the type
      * @return the deleted slice, or null if it diddn't exist
      */
     default <T> MatterSlice<T> deleteSlice(Class<?> c) {
@@ -219,9 +218,12 @@ public interface Matter {
     /**
      * Put a given slice type
      *
-     * @param c     the slice type class
-     * @param slice the slice to assign to the type
-     * @param <T>   the slice type
+     * @param c
+     *            the slice type class
+     * @param slice
+     *            the slice to assign to the type
+     * @param <T>
+     *            the slice type
      * @return the overwritten slice if there was an existing slice of that type
      */
     default <T> MatterSlice<T> putSlice(Class<?> c, MatterSlice<T> slice) {
@@ -292,7 +294,8 @@ public interface Matter {
             slice = (MatterSlice<T>) createSlice(getClass(c), this);
             if (slice == null) {
                 try {
-                    throw new RuntimeException("Bad slice " + c.getCanonicalName() + ". Did you use SpatialMatter.register?");
+                    throw new RuntimeException(
+                            "Bad slice " + c.getCanonicalName() + ". Did you use SpatialMatter.register?");
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -309,7 +312,8 @@ public interface Matter {
     /**
      * Check if a slice exists for a given type
      *
-     * @param c the slice class type
+     * @param c
+     *            the slice class type
      * @return true if it exists
      */
     default boolean hasSlice(Class<?> c) {
@@ -375,11 +379,14 @@ public interface Matter {
     }
 
     /**
-     * Writes the data to the output stream. The data will be flushed to the provided output
-     * stream however the provided stream will NOT BE CLOSED, so be sure to actually close it
+     * Writes the data to the output stream. The data will be flushed to the
+     * provided output stream however the provided stream will NOT BE CLOSED, so be
+     * sure to actually close it
      *
-     * @param out the output stream
-     * @throws IOException shit happens yo
+     * @param out
+     *            the output stream
+     * @throws IOException
+     *             shit happens yo
      */
     default void write(OutputStream out) throws IOException {
         writeDos(new DataOutputStream(out));

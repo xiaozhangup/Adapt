@@ -36,7 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface DecreeSystem extends CommandExecutor, TabCompleter {
-    KList<DecreeParameterHandler<?>> handlers = Adapt.initialize("com.volmit.adapt.util.decree.handlers", null).kConvert((i) -> (DecreeParameterHandler<?>) i);
+    KList<DecreeParameterHandler<?>> handlers = Adapt.initialize("com.volmit.adapt.util.decree.handlers", null)
+            .kConvert((i) -> (DecreeParameterHandler<?>) i);
 
     static List<String> enhanceArgs(String[] args) {
         return enhanceArgs(args, true);
@@ -64,7 +65,11 @@ public interface DecreeSystem extends CommandExecutor, TabCompleter {
             }
         }
 
-        flat = new StringBuilder(flat.length() > 0 ? trim ? flat.toString().trim().length() > 0 ? flat.substring(1).trim() : flat.toString().trim() : flat.substring(1) : flat);
+        flat = new StringBuilder(flat.length() > 0
+                ? trim
+                        ? flat.toString().trim().length() > 0 ? flat.substring(1).trim() : flat.toString().trim()
+                        : flat.substring(1)
+                : flat);
         StringBuilder arg = new StringBuilder();
         boolean quoting = false;
 
@@ -111,7 +116,8 @@ public interface DecreeSystem extends CommandExecutor, TabCompleter {
     /**
      * Get the handler for the specified type
      *
-     * @param type The type to handle
+     * @param type
+     *            The type to handle
      * @return The corresponding {@link DecreeParameterHandler}, or null
      */
     static DecreeParameterHandler<?> getHandler(Class<?> type) {
@@ -136,7 +142,8 @@ public interface DecreeSystem extends CommandExecutor, TabCompleter {
 
     @Nullable
     @Override
-    default List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    default List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias,
+            @NotNull String[] args) {
         List<String> enhanced = new ArrayList<>(List.of(args));
         KList<String> v = getRoot().tabComplete(enhanced, String.join(" ", enhanced));
         v.removeDuplicates();
@@ -150,7 +157,8 @@ public interface DecreeSystem extends CommandExecutor, TabCompleter {
     }
 
     @Override
-    default boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    default boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         if (!sender.hasPermission("adapt.main")) {
             sender.sendMessage("You lack the Permission 'adapt.main'");
             return true;

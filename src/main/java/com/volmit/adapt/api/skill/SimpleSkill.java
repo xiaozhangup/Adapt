@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.skill;
 
@@ -155,7 +155,8 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
                 return true;
             }
             Adapt.verbose("Checking " + p.getName() + " for " + getName());
-            return !this.isEnabled() || hasBlacklistPermission(p, this) || isWorldBlacklisted(p) || isInCreativeOrSpectator(p);
+            return !this.isEnabled() || hasBlacklistPermission(p, this) || isWorldBlacklisted(p)
+                    || isInCreativeOrSpectator(p);
         } catch (Exception ignored) {
             return true;
         }
@@ -197,17 +198,23 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     }
 
     protected boolean isInCreativeOrSpectator(Player p) {
-        return !AdaptConfig.get().isXpInCreative() && (p.getGameMode().equals(GameMode.CREATIVE) || p.getGameMode().equals(GameMode.SPECTATOR));
+        return !AdaptConfig.get().isXpInCreative()
+                && (p.getGameMode().equals(GameMode.CREATIVE) || p.getGameMode().equals(GameMode.SPECTATOR));
     }
 
     @Override
     public String getDisplayName() {
-        return displayName == null ? Skill.super.getDisplayName() : (C.RESET + "" + C.BOLD + getColor() + getEmojiName() + " " + displayName);
+        return displayName == null
+                ? Skill.super.getDisplayName()
+                : (C.RESET + "" + C.BOLD + getColor() + getEmojiName() + " " + displayName);
     }
 
     @Override
     public String getTitleDisplay() {
-        return displayName == null ? Skill.super.getDisplayName() : (C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " " + displayName);
+        return displayName == null
+                ? Skill.super.getDisplayName()
+                : (C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " "
+                        + displayName);
     }
 
     @Override
@@ -223,16 +230,9 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
             a.add(i.buildAdvancements());
         }
 
-        return AdaptAdvancement.builder()
-                .background(getAdvancementBackground())
-                .key("skill_" + getName())
-                .title(displayName)
-                .description(getDescription())
-                .icon(getIcon())
-                .model(getModel())
-                .children(a)
-                .visibility(AdvancementVisibility.HIDDEN)
-                .build();
+        return AdaptAdvancement.builder().background(getAdvancementBackground()).key("skill_" + getName())
+                .title(displayName).description(getDescription()).icon(getIcon()).model(getModel()).children(a)
+                .visibility(AdvancementVisibility.HIDDEN).build();
     }
 
     @Override

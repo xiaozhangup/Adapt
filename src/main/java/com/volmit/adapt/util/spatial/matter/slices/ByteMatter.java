@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.matter.slices;
 
-
 import com.volmit.adapt.util.spatial.container.Palette;
 import com.volmit.adapt.util.spatial.matter.Sliced;
 

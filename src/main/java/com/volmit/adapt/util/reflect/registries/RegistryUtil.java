@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 @SuppressWarnings("unchecked")
 public class RegistryUtil {
     private static final AtomicCache<RegistryLookup> registryLookup = new AtomicCache<>();
@@ -42,7 +41,8 @@ public class RegistryUtil {
 
     @NonNull
     public static <T> T find(@NonNull Class<T> typeClass, @Nullable Lookup<T> lookup, @NonNull NamespacedKey... keys) {
-        if (keys.length == 0) throw new IllegalArgumentException("Need at least one key");
+        if (keys.length == 0)
+            throw new IllegalArgumentException("Need at least one key");
         Registry<Keyed> registry = null;
         if (Keyed.class.isAssignableFrom(typeClass)) {
             registry = getRegistry(typeClass.asSubclass(Keyed.class));
@@ -58,10 +58,7 @@ public class RegistryUtil {
                         } catch (IllegalAccessException e) {
                             return null;
                         }
-                    })
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(null));
+                    }).filter(Objects::nonNull).findFirst().orElse(null));
         }
 
         if (registry != null) {
@@ -107,31 +104,25 @@ public class RegistryUtil {
     private static Map<NamespacedKey, Keyed> getKeyedValues(@NonNull Class<?> typeClass) {
         return Arrays.stream(typeClass.getDeclaredFields())
                 .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()))
-                .filter(field -> Keyed.class.isAssignableFrom(field.getType()))
-                .map(field -> {
+                .filter(field -> Keyed.class.isAssignableFrom(field.getType())).map(field -> {
                     try {
                         return (Keyed) field.get(null);
                     } catch (Throwable e) {
                         return null;
                     }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(Keyed::getKey, keyed -> keyed));
+                }).filter(Objects::nonNull).collect(Collectors.toMap(Keyed::getKey, keyed -> keyed));
     }
 
     private static Map<NamespacedKey, Object> getEnumValues(@NonNull Class<?> typeClass) {
         return Arrays.stream(typeClass.getDeclaredFields())
                 .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()))
-                .filter(field -> typeClass.isAssignableFrom(field.getType()))
-                .map(field -> {
+                .filter(field -> typeClass.isAssignableFrom(field.getType())).map(field -> {
                     try {
                         return Map.entry(NamespacedKey.minecraft(field.getName().toLowerCase()), field.get(null));
                     } catch (Throwable e) {
                         return null;
                     }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                }).filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     }
 
@@ -152,7 +143,8 @@ public class RegistryUtil {
     @FunctionalInterface
     public interface Lookup<T> {
         static <T> Lookup<T> combine(@NonNull Lookup<T>... lookups) {
-            if (lookups.length == 0) throw new IllegalArgumentException("Need at least one lookup");
+            if (lookups.length == 0)
+                throw new IllegalArgumentException("Need at least one lookup");
             return (typeClass, keys) -> {
                 for (Lookup<T> lookup : lookups) {
                     try {
@@ -181,23 +173,22 @@ public class RegistryUtil {
             this.bukkit = bukkit;
             registries = Arrays.stream(Registry.class.getDeclaredFields())
                     .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()))
-                    .filter(field -> Registry.class.isAssignableFrom(field.getType()))
-                    .map(field -> {
+                    .filter(field -> Registry.class.isAssignableFrom(field.getType())).map(field -> {
                         var type = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                         try {
                             return Map.entry(type, field.get(null));
                         } catch (Throwable e) {
                             return null;
                         }
-                    })
-                    .filter(Objects::nonNull)
+                    }).filter(Objects::nonNull)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a));
         }
 
         @Nullable
         @Override
         public <T extends Keyed> Registry<T> find(@NonNull Class<T> type) {
-            if (bukkit == null) return (Registry<T>) registries.get(type);
+            if (bukkit == null)
+                return (Registry<T>) registries.get(type);
             try {
                 return bukkit.find(type);
             } catch (Throwable e) {

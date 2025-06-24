@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.ranged;
 
@@ -47,19 +47,16 @@ public class RangedForce extends SimpleAdaptation<RangedForce.Config> {
         setInterval(4900);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.SPECTRAL_ARROW)
-                .key("challenge_force_30")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.SPECTRAL_ARROW).key("challenge_force_30")
                 .title(Localizer.dLocalize("ranged", "forceshot", "advancementname"))
                 .description(Localizer.dLocalize("ranged", "forceshot", "advancementlore"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .build());
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getSpeed(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("ranged", "forceshot", "lore1"));
+        v.addLore(C.GREEN + "+ " + Form.pc(getSpeed(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("ranged", "forceshot", "lore1"));
     }
 
     private double getSpeed(double factor) {
@@ -71,7 +68,8 @@ public class RangedForce extends SimpleAdaptation<RangedForce.Config> {
         if (e.isCancelled()) {
             return;
         }
-        if (e.getDamager() instanceof Projectile r && r.getShooter() instanceof Player p && hasAdaptation(p) && !getPlayer(p).getData().isGranted("challenge_force_30")) {
+        if (e.getDamager() instanceof Projectile r && r.getShooter() instanceof Player p && hasAdaptation(p)
+                && !getPlayer(p).getData().isGranted("challenge_force_30")) {
             Location a = e.getEntity().getLocation().clone();
             Location b = p.getLocation().clone();
             a.setY(0);
@@ -95,7 +93,8 @@ public class RangedForce extends SimpleAdaptation<RangedForce.Config> {
                 double factor = getLevelPercent(p);
                 e.getEntity().setVelocity(e.getEntity().getVelocity().clone().multiply(1 + getSpeed(factor)));
                 SoundPlayer spw = SoundPlayer.of(e.getEntity().getWorld());
-                spw.play(e.getEntity().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 0.5f + ((float) factor * 0.25f), 0.7f + (float) (factor / 2f));
+                spw.play(e.getEntity().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 0.5f + ((float) factor * 0.25f),
+                        0.7f + (float) (factor / 2f));
             }
         }
     }

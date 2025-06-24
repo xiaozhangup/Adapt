@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.parallel;
 
-
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.volmit.adapt.util.spatial.util.CompressedNumbers;
 import com.volmit.adapt.util.spatial.util.Run;
@@ -44,11 +43,8 @@ public class HyperLock {
 
     public HyperLock(int capacity, boolean fair) {
         this.fair = fair;
-        locks = new ConcurrentLinkedHashMap.Builder<Long, ReentrantLock>()
-                .initialCapacity(capacity)
-                .maximumWeightedCapacity(capacity)
-                .concurrencyLevel(32)
-                .build();
+        locks = new ConcurrentLinkedHashMap.Builder<Long, ReentrantLock>().initialCapacity(capacity)
+                .maximumWeightedCapacity(capacity).concurrencyLevel(32).build();
     }
 
     public void clear() {

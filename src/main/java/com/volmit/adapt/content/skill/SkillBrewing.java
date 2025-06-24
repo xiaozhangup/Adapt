@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -72,97 +72,102 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
         registerAdaptation(new BrewingResistance());
         registerAdaptation(new BrewingSaturation());
 
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.POTION).key("challenge_brew_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.POTION).key("challenge_brew_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_brew_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_brew_1k", "description"))
                 .model(CustomModel.get(Material.POTION, "advancement", "brewing", "challenge_brew_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                        .icon(Material.POTION)
-                        .key("challenge_brew_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.POTION).key("challenge_brew_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_brew_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_brew_5k", "description"))
                         .model(CustomModel.get(Material.POTION, "advancement", "brewing", "challenge_brew_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.POTION)
-                                .key("challenge_brew_50k")
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.POTION).key("challenge_brew_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_brew_50k", "title"))
                                 .description(Localizer.dLocalize("advancement", "challenge_brew_50k", "description"))
                                 .model(CustomModel.get(Material.POTION, "advancement", "brewing", "challenge_brew_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                        .icon(Material.POTION)
-                                        .key("challenge_brew_500k")
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.POTION).key("challenge_brew_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_brew_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_brew_500k", "description"))
-                                        .model(CustomModel.get(Material.POTION, "advancement", "brewing", "challenge_brew_500k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_brew_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.POTION, "advancement", "brewing",
+                                                "challenge_brew_500k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
-                                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                                .icon(Material.POTION)
-                                                .key("challenge_brew_5m")
+                                        .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                        .child(AdaptAdvancement.builder().icon(Material.POTION).key("challenge_brew_5m")
                                                 .title(Localizer.dLocalize("advancement", "challenge_brew_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_brew_5m", "description"))
-                                                .model(CustomModel.get(Material.POTION, "advancement", "brewing", "challenge_brew_5m"))
+                                                .description(Localizer.dLocalize("advancement", "challenge_brew_5m",
+                                                        "description"))
+                                                .model(CustomModel.get(Material.POTION, "advancement", "brewing",
+                                                        "challenge_brew_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_1k").goal(1000).stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_5k").goal(5000).stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_50k").goal(50000).stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_500k").goal(500000).stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_5m").goal(5000000).stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_1k").goal(1000)
+                .stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_5k").goal(5000)
+                .stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_50k").goal(50000)
+                .stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_500k").goal(500000)
+                .stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brew_5m").goal(5000000)
+                .stat("brewing.consumed").reward(getConfig().challengeBrew1k).build());
 
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.SPLASH_POTION).key("challenge_brewsplash_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.SPLASH_POTION).key("challenge_brewsplash_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_brewsplash_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_brewsplash_1k", "description"))
                 .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing", "brewsplash_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                        .icon(Material.SPLASH_POTION)
-                        .key("challenge_brewsplash_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.SPLASH_POTION).key("challenge_brewsplash_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_brewsplash_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_brewsplash_5k", "description"))
                         .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing", "brewsplash_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.SPLASH_POTION)
-                                .key("challenge_brewsplash_50k")
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.SPLASH_POTION).key("challenge_brewsplash_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_brewsplash_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_brewsplash_50k", "description"))
-                                .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing", "brewsplash_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                        .icon(Material.SPLASH_POTION)
+                                .description(
+                                        Localizer.dLocalize("advancement", "challenge_brewsplash_50k", "description"))
+                                .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing",
+                                        "brewsplash_50k"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.SPLASH_POTION)
                                         .key("challenge_brewsplash_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_brewsplash_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_brewsplash_500k", "description"))
-                                        .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing", "brewsplash_50k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_brewsplash_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing",
+                                                "brewsplash_50k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
-                                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                                .icon(Material.SPLASH_POTION)
+                                        .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                        .child(AdaptAdvancement.builder().icon(Material.SPLASH_POTION)
                                                 .key("challenge_brewsplash_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_brewsplash_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_brewsplash_5m", "description"))
-                                                .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing", "brewsplash_5m"))
+                                                .title(Localizer.dLocalize("advancement", "challenge_brewsplash_5m",
+                                                        "title"))
+                                                .description(Localizer.dLocalize("advancement",
+                                                        "challenge_brewsplash_5m", "description"))
+                                                .model(CustomModel.get(Material.SPLASH_POTION, "advancement", "brewing",
+                                                        "brewsplash_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_1k").goal(1000).stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_5k").goal(5000).stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_50k").goal(50000).stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_500k").goal(500000).stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_5m").goal(5000000).stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_1k").goal(1000)
+                .stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_5k").goal(5000)
+                .stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_50k").goal(50000)
+                .stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_500k").goal(500000)
+                .stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_brewsplash_5m").goal(5000000)
+                .stat("brewing.splashes").reward(getConfig().challengeBrewSplash1k).build());
 
         SpatialMatter.registerSliceType(new BrewingStandOwnerMatter());
     }
@@ -188,9 +193,10 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
                     && !e.getItem().toString().contains("potion-type=minecraft:thick")
                     && !e.getItem().toString().contains("potion-type=minecraft:awkward")) {
                 getPlayer(p).getData().addStat("brewing.consumed", 1);
-                handleCooldown(p, () -> xp(p, p.getLocation(),
-                        getConfig().splashXP
-                                + (getConfig().splashMultiplier * o.getCustomEffects().stream().mapToDouble(i -> (i.getAmplifier() + 1) * (i.getDuration() / 20D)).sum())
+                handleCooldown(p,
+                        () -> xp(p, p.getLocation(), getConfig().splashXP
+                                + (getConfig().splashMultiplier * o.getCustomEffects().stream()
+                                        .mapToDouble(i -> (i.getAmplifier() + 1) * (i.getDuration() / 20D)).sum())
                                 + (getConfig().splashMultiplier * (o.getBasePotionData().isUpgraded() ? 50 : 25))));
             }
         });
@@ -205,11 +211,12 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
             shouldReturnForPlayer(p, e, () -> {
                 AdaptPlayer a = getPlayer(p);
                 getPlayer(p).getData().addStat("brewing.splashes", 1);
-                xp(a.getPlayer(), e.getEntity().getLocation(), getConfig().splashXP + (getConfig().splashMultiplier * e.getPotion().getEffects().stream().mapToDouble(i -> (i.getAmplifier() + 1) * (i.getDuration() / 20D)).sum()));
+                xp(a.getPlayer(), e.getEntity().getLocation(),
+                        getConfig().splashXP + (getConfig().splashMultiplier * e.getPotion().getEffects().stream()
+                                .mapToDouble(i -> (i.getAmplifier() + 1) * (i.getDuration() / 20D)).sum()));
             });
         }
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(BlockPlaceEvent e) {
@@ -218,7 +225,8 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
         }
         shouldReturnForPlayer(e.getPlayer(), e, () -> {
             if (e.getBlock().getType().equals(Material.BREWING_STAND)) {
-                WorldData.of(e.getBlock().getWorld()).getMantle().set(e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ(), new BrewingStandOwner(e.getPlayer().getUniqueId()));
+                WorldData.of(e.getBlock().getWorld()).getMantle().set(e.getBlock().getX(), e.getBlock().getY(),
+                        e.getBlock().getZ(), new BrewingStandOwner(e.getPlayer().getUniqueId()));
             }
         });
     }
@@ -230,7 +238,8 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
         }
         shouldReturnForPlayer(e.getPlayer(), e, () -> {
             if (e.getBlock().getType().equals(Material.BREWING_STAND)) {
-                WorldData.of(e.getBlock().getWorld()).getMantle().remove(e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ(), BrewingStandOwner.class);
+                WorldData.of(e.getBlock().getWorld()).getMantle().remove(e.getBlock().getX(), e.getBlock().getY(),
+                        e.getBlock().getZ(), BrewingStandOwner.class);
             }
         });
     }

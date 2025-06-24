@@ -26,7 +26,8 @@ public class Blast implements AdaptRecipe {
     }
 
     public void register() {
-        BlastingRecipe s = new BlastingRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient, experience, cookTime);
+        BlastingRecipe s = new BlastingRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient,
+                experience, cookTime);
         Bukkit.getServer().addRecipe(s);
         Adapt.verbose("Registered Blast Furnace Recipe " + s.getKey());
     }
@@ -35,7 +36,6 @@ public class Blast implements AdaptRecipe {
     public boolean is(Recipe recipe) {
         return recipe instanceof BlastingRecipe s && s.getKey().equals(getNSKey());
     }
-
 
     @Override
     public void unregister() {

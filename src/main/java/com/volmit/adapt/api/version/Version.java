@@ -34,8 +34,10 @@ public class Version {
         @Override
         public int compareTo(@NotNull Version.Entry o) {
             int result = Integer.compare(major, o.major);
-            if (result == 0) result = Integer.compare(minor, o.minor);
-            if (result == 0) result = Integer.compare(patch, o.patch);
+            if (result == 0)
+                result = Integer.compare(minor, o.minor);
+            if (result == 0)
+                result = Integer.compare(patch, o.patch);
             return result;
         }
 

@@ -32,7 +32,8 @@ public class XMap {
      * Returns a sorted list of keys from this map, based on the sorting order of
      * the values.
      *
-     * @param comparator the comparator
+     * @param comparator
+     *            the comparator
      * @return the value-sorted key list
      */
     public static <K, V> List<K> sortK(@This Map<K, V> self, Comparator<V> comparator) {
@@ -102,12 +103,10 @@ public class XMap {
         return new HashMap<>();
     }
 
-
     @Extension
     public static <K, V> LinkedHashMap<K, V> linked() {
         return new LinkedHashMap<>();
     }
-
 
     @Extension
     public static <K, V> WeakHashMap<K, V> weak() {
@@ -130,7 +129,8 @@ public class XMap {
     /**
      * Put another map's values into this map
      *
-     * @param m the map to insert
+     * @param m
+     *            the map to insert
      * @return this map (builder)
      */
     public static <K, V> @Self Map<K, V> put(@This Map<K, V> self, Map<K, V> m) {
@@ -141,7 +141,8 @@ public class XMap {
     /**
      * Return a copy of this map
      *
-     * @param factory the factory to create a new map
+     * @param factory
+     *            the factory to create a new map
      * @return the copied map
      */
     public static <K, V> @Self Map<K, V> copy(@This Map<K, V> self, Supplier<Map<K, V>> factory) {
@@ -195,7 +196,8 @@ public class XMap {
     /**
      * Sort values based on the keys sorting order
      *
-     * @param comparator the comparator to use
+     * @param comparator
+     *            the comparator to use
      * @return the values (sorted)
      */
     public static <K, V> List<V> sortV(@This Map<K, V> self, Comparator<K> comparator) {
@@ -245,8 +247,10 @@ public class XMap {
     /**
      * Still works as it normally should except it returns itself (builder)
      *
-     * @param key   the key
-     * @param value the value (single only supported)
+     * @param key
+     *            the key
+     * @param value
+     *            the value (single only supported)
      * @return self
      */
     public static <K, V> @Self Map<K, V> qput(@This Map<K, V> self, K key, V value) {
@@ -263,8 +267,10 @@ public class XMap {
      * Works just like put, except it wont put anything unless the key and value are
      * nonnull
      *
-     * @param key   the nonnull key
-     * @param value the nonnull value
+     * @param key
+     *            the nonnull key
+     * @param value
+     *            the nonnull value
      * @return the same map
      */
     public static <K, V> @Self Map<K, V> putNonNull(@This Map<K, V> self, K key, V value) {

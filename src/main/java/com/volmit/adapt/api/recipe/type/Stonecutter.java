@@ -34,7 +34,6 @@ public class Stonecutter implements AdaptRecipe {
         return recipe instanceof StonecuttingRecipe s && s.getKey().equals(getNSKey());
     }
 
-
     @Override
     public void unregister() {
         Bukkit.getServer().removeRecipe(getNSKey());

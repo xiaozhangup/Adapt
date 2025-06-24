@@ -41,16 +41,14 @@ public class BrewingManager implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if (e.getView().getTopInventory().getType() != InventoryType.BREWING || e.getView().getTopInventory().getHolder() == null) {
+        if (e.getView().getTopInventory().getType() != InventoryType.BREWING
+                || e.getView().getTopInventory().getHolder() == null) {
             return;
         }
         Adapt.verbose("Brewing click: " + e.getRawSlot());
         BrewerInventory inv = (BrewerInventory) e.getInventory();
-        boolean doTheThing = inv.getIngredient() == null
-                && e.getCursor() != null
-                && e.getRawSlot() == 3
-                && e.getClickedInventory() != null
-                && e.getClickedInventory().getType().equals(InventoryType.BREWING)
+        boolean doTheThing = inv.getIngredient() == null && e.getCursor() != null && e.getRawSlot() == 3
+                && e.getClickedInventory() != null && e.getClickedInventory().getType().equals(InventoryType.BREWING)
                 && (e.getClick() == ClickType.LEFT);
         if (doTheThing) {
             Adapt.verbose("Brewing Stand Ingredient Clicked");
@@ -63,7 +61,8 @@ public class BrewingManager implements Listener {
             }
             BrewingStand stand = inv.getHolder();
             AdaptPlayer p = Adapt.instance.getAdaptServer().getPlayer((Player) e.getWhoClicked());
-            Optional<BrewingRecipe> recipe = recipes.keySet().stream().filter(r -> BrewingTask.isValid(r, stand.getLocation())).findFirst();
+            Optional<BrewingRecipe> recipe = recipes.keySet().stream()
+                    .filter(r -> BrewingTask.isValid(r, stand.getLocation())).findFirst();
             recipe.ifPresent(r -> {
                 if (activeTasks.containsKey(stand.getLocation())) {
                     BrewingTask t = activeTasks.get(stand.getLocation());
@@ -95,7 +94,8 @@ public class BrewingManager implements Listener {
         }
         for (int i = 0; i < 3; i++) {
             ItemStack s = e.getContents().getItem(i);
-            if (s == null) continue;
+            if (s == null)
+                continue;
             PotionMeta meta = (PotionMeta) s.getItemMeta();
             var opt = Reflect.getEnum(PotionType.class, "UNCRAFTABLE");
             if (opt.isEmpty() && meta.getBasePotionData() != null)
@@ -107,12 +107,14 @@ public class BrewingManager implements Listener {
                 newStack.setType(Material.SPLASH_POTION);
             } else {
                 newStack.setType(Material.LINGERING_POTION);
-                /*PotionMeta meta = (PotionMeta)newStack.getItemMeta();
-                List<PotionEffect> newEffects = Lists.newArrayList();
-                meta.getCustomEffects().forEach(effect -> newEffects.add(new PotionEffect(effect.getType(), effect.getDuration() / 4, effect.getAmplifier())));
-                meta.clearCustomEffects();
-                newEffects.forEach(effect -> meta.addCustomEffect(effect, true));
-                newStack.setItemMeta(meta);*/
+                /*
+                 * PotionMeta meta = (PotionMeta)newStack.getItemMeta(); List<PotionEffect>
+                 * newEffects = Lists.newArrayList(); meta.getCustomEffects().forEach(effect ->
+                 * newEffects.add(new PotionEffect(effect.getType(), effect.getDuration() / 4,
+                 * effect.getAmplifier()))); meta.clearCustomEffects();
+                 * newEffects.forEach(effect -> meta.addCustomEffect(effect, true));
+                 * newStack.setItemMeta(meta);
+                 */
             }
             e.getResults().set(i, newStack);
         }

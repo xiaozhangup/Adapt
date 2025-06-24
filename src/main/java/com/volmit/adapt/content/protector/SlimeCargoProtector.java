@@ -11,32 +11,38 @@ import org.bukkit.entity.Player;
 public class SlimeCargoProtector implements Protector {
     @Override
     public boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BREAK, player, blockLocation, null, null, true) != SlimeProtect.Result.DENY;
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BREAK, player, blockLocation, null, null,
+                true) != SlimeProtect.Result.DENY;
     }
 
     @Override
     public boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BUILD, player, blockLocation, null, null, true) != SlimeProtect.Result.DENY;
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BUILD, player, blockLocation, null, null,
+                true) != SlimeProtect.Result.DENY;
     }
 
     @Override
     public boolean canPVP(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.ATTACK, player, entityLocation, null, null, true) != SlimeProtect.Result.DENY;
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.ATTACK, player, entityLocation, null, null,
+                true) != SlimeProtect.Result.DENY;
     }
 
     @Override
     public boolean canPVE(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.ATTACK, player, entityLocation, null, null, true) != SlimeProtect.Result.DENY;
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.ATTACK, player, entityLocation, null, null,
+                true) != SlimeProtect.Result.DENY;
     }
 
     @Override
     public boolean canInteract(Player player, Location targetLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.INTERACT_BLOCK, player, targetLocation, null, null, true) != SlimeProtect.Result.DENY;
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.INTERACT_BLOCK, player, targetLocation, null, null,
+                true) != SlimeProtect.Result.DENY;
     }
 
     @Override
     public boolean canAccessChest(Player player, Location chestLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.CONTAINER, player, chestLocation, null, null, true) != SlimeProtect.Result.DENY;
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.CONTAINER, player, chestLocation, null, null,
+                true) != SlimeProtect.Result.DENY;
     }
 
     @Override

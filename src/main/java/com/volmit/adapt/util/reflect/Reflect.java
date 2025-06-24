@@ -29,17 +29,21 @@ public class Reflect {
 
     @NotNull
     public static <E extends Enum<E>> E getEnum(@NotNull Class<E> enumClass, @NotNull String... enumNames) {
-        if (enumNames.length == 0) throw new IllegalArgumentException("Need at least one enum name");
+        if (enumNames.length == 0)
+            throw new IllegalArgumentException("Need at least one enum name");
         for (String enumName : enumNames) {
-            if (enumNames.isEmpty()) return null;
+            if (enumNames.isEmpty())
+                return null;
             Optional<E> optionalEnum = getEnum(enumClass, enumName);
-            if (optionalEnum.isPresent()) return optionalEnum.get();
+            if (optionalEnum.isPresent())
+                return optionalEnum.get();
         }
         throw new IllegalArgumentException("No Enum found for names " + Arrays.toString(enumNames));
     }
 
     @NotNull
-    public static Optional<Method> getMethod(@NotNull Class<?> clazz, @NotNull String methodName, @NotNull Class<?>... parameterTypes) {
+    public static Optional<Method> getMethod(@NotNull Class<?> clazz, @NotNull String methodName,
+            @NotNull Class<?>... parameterTypes) {
         try {
             return Optional.of(clazz.getDeclaredMethod(methodName, parameterTypes));
         } catch (NoSuchMethodException e) {
@@ -48,7 +52,8 @@ public class Reflect {
     }
 
     public static <E> E getField(Class<E> clazz, @NotNull String... fieldNames) {
-        if (fieldNames.length == 0) throw new IllegalArgumentException("Need at least one field name");
+        if (fieldNames.length == 0)
+            throw new IllegalArgumentException("Need at least one field name");
         for (String fieldName : fieldNames) {
             Optional<Field> optionalField = getField(clazz, fieldName);
             if (optionalField.isPresent()) {

@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -124,25 +124,25 @@ public class UIWindow implements Window, Listener {
             Element element = getElement(getLayoutPosition(e.getSlot()), getLayoutRow(e.getSlot()));
 
             switch (e.getAction()) {
-                case CLONE_STACK:
-                case COLLECT_TO_CURSOR:
-                case DROP_ALL_CURSOR:
-                case DROP_ALL_SLOT:
-                case DROP_ONE_CURSOR:
-                case DROP_ONE_SLOT:
-                case HOTBAR_MOVE_AND_READD:
-                case HOTBAR_SWAP:
-                case MOVE_TO_OTHER_INVENTORY:
-                case NOTHING:
-                case PICKUP_ALL:
-                case PICKUP_HALF:
-                case PICKUP_ONE:
-                case PICKUP_SOME:
-                case PLACE_ALL:
-                case PLACE_ONE:
-                case PLACE_SOME:
-                case SWAP_WITH_CURSOR:
-                case UNKNOWN:
+                case CLONE_STACK :
+                case COLLECT_TO_CURSOR :
+                case DROP_ALL_CURSOR :
+                case DROP_ALL_SLOT :
+                case DROP_ONE_CURSOR :
+                case DROP_ONE_SLOT :
+                case HOTBAR_MOVE_AND_READD :
+                case HOTBAR_SWAP :
+                case MOVE_TO_OTHER_INVENTORY :
+                case NOTHING :
+                case PICKUP_ALL :
+                case PICKUP_HALF :
+                case PICKUP_ONE :
+                case PICKUP_SOME :
+                case PLACE_ALL :
+                case PLACE_ONE :
+                case PLACE_SOME :
+                case SWAP_WITH_CURSOR :
+                case UNKNOWN :
                     break;
             }
 
@@ -151,8 +151,7 @@ public class UIWindow implements Window, Listener {
                 case LEFT -> {
                     clickcheck++;
                     if (clickcheck == 1) {
-                        J.s(() ->
-                        {
+                        J.s(() -> {
                             if (clickcheck == 1) {
                                 clickcheck = 0;
 
@@ -162,8 +161,7 @@ public class UIWindow implements Window, Listener {
                             }
                         });
                     } else if (clickcheck == 2) {
-                        J.s(() ->
-                        {
+                        J.s(() -> {
                             if (doubleclicked) {
                                 doubleclicked = false;
                             } else {
@@ -346,14 +344,20 @@ public class UIWindow implements Window, Listener {
             highestRow = row;
         }
 
-        elements.put(getRealPosition((int) clip(position, -getResolution().getMaxWidthOffset(), getResolution().getMaxWidthOffset()).doubleValue(), row), e);
+        elements.put(getRealPosition(
+                (int) clip(position, -getResolution().getMaxWidthOffset(), getResolution().getMaxWidthOffset())
+                        .doubleValue(),
+                row), e);
         updateInventory();
         return this;
     }
 
     @Override
     public Element getElement(int position, int row) {
-        return elements.get(getRealPosition((int) clip(position, -getResolution().getMaxWidthOffset(), getResolution().getMaxWidthOffset()).doubleValue(), row));
+        return elements.get(getRealPosition(
+                (int) clip(position, -getResolution().getMaxWidthOffset(), getResolution().getMaxWidthOffset())
+                        .doubleValue(),
+                row));
     }
 
     @Override
@@ -384,12 +388,14 @@ public class UIWindow implements Window, Listener {
 
     @Override
     public int getRealLayoutPosition(int viewportSlottedPosition) {
-        return getRealPosition(getPosition(viewportSlottedPosition), getRow(viewportSlottedPosition) + getViewportPosition());
+        return getRealPosition(getPosition(viewportSlottedPosition),
+                getRow(viewportSlottedPosition) + getViewportPosition());
     }
 
     @Override
     public int getRealPosition(int position, int row) {
-        return (int) (((row * getResolution().getWidth()) + getResolution().getMaxWidthOffset()) + clip(position, -getResolution().getMaxWidthOffset(), getResolution().getMaxWidthOffset()));
+        return (int) (((row * getResolution().getWidth()) + getResolution().getMaxWidthOffset())
+                + clip(position, -getResolution().getMaxWidthOffset(), getResolution().getMaxWidthOffset()));
     }
 
     @Override
@@ -475,7 +481,9 @@ public class UIWindow implements Window, Listener {
     public ItemStack computeItemStack(int viewportSlot) {
         int layoutRow = getLayoutRow(viewportSlot);
         int layoutPosition = getLayoutPosition(viewportSlot);
-        Element e = hasElement(layoutPosition, layoutRow) ? getElement(layoutPosition, layoutRow) : getDecorator().onDecorateBackground(this, layoutPosition, layoutRow);
+        Element e = hasElement(layoutPosition, layoutRow)
+                ? getElement(layoutPosition, layoutRow)
+                : getDecorator().onDecorateBackground(this, layoutPosition, layoutRow);
 
         if (e != null) {
             return e.computeItemStack();

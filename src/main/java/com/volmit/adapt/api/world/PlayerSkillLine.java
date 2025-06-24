@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.world;
 
@@ -83,7 +83,8 @@ public class PlayerSkillLine {
     private void checkMaxLevel(AdaptPlayer p, String line) {
         if (!p.isBusy() && getXp() > XP.getXpForLevel(AdaptConfig.get().experienceMaxLevel)) {
             p.getData().addWisdom();
-            Adapt.warn("A Player has reached the maximum level of " + AdaptConfig.get().experienceMaxLevel + " and has been granted 1 wisdom, Dropping Level to " + lastLevel);
+            Adapt.warn("A Player has reached the maximum level of " + AdaptConfig.get().experienceMaxLevel
+                    + " and has been granted 1 wisdom, Dropping Level to " + lastLevel);
             setXp(XP.getXpForLevel(AdaptConfig.get().experienceMaxLevel - 1));
         }
     }
@@ -92,17 +93,23 @@ public class PlayerSkillLine {
         double max = 1D + (getLevel() * 0.004);
 
         freshness += (0.1 * freshness) + 0.00124;
-        if (freshness > max) freshness = max;
-        if (freshness < 0.01) freshness = 0.01;
-        if (freshness < rfreshness) rfreshness -= ((rfreshness - freshness) * 0.003);
-        if (freshness > rfreshness) rfreshness += (freshness - rfreshness) * 0.265;
+        if (freshness > max)
+            freshness = max;
+        if (freshness < 0.01)
+            freshness = 0.01;
+        if (freshness < rfreshness)
+            rfreshness -= ((rfreshness - freshness) * 0.003);
+        if (freshness > rfreshness)
+            rfreshness += (freshness - rfreshness) * 0.265;
     }
 
     private void updateMultiplier(PlayerData data) {
         double m = rfreshness;
         for (XPMultiplier i : multipliers.copy()) {
-            if (i.isExpired()) multipliers.remove(i);
-            else m += i.getMultiplier();
+            if (i.isExpired())
+                multipliers.remove(i);
+            else
+                m += i.getMultiplier();
         }
 
         m = Math.max(0.01, Math.min(m, 1000));
@@ -111,7 +118,8 @@ public class PlayerSkillLine {
 
     private void updateEarnedXP(AdaptPlayer p, String line) {
         double earned = xp - lastXP;
-        if (earned > p.getServer().getSkillRegistry().getSkill(line).getMinXp()) lastXP = xp;
+        if (earned > p.getServer().getSkillRegistry().getSkill(line).getMinXp())
+            lastXP = xp;
     }
 
     private void updateLevel(AdaptPlayer p, String line, PlayerData data) {
@@ -119,16 +127,18 @@ public class PlayerSkillLine {
             long kb = getKnowledge();
             for (int i = lastLevel; i < getLevel(); i++) {
                 giveKnowledge((i / 13) + 1);
-                p.getData().giveMasterXp((i * AdaptConfig.get().getPlayerXpPerSkillLevelUpLevelMultiplier()) + AdaptConfig.get().getPlayerXpPerSkillLevelUpBase());
+                p.getData().giveMasterXp((i * AdaptConfig.get().getPlayerXpPerSkillLevelUpLevelMultiplier())
+                        + AdaptConfig.get().getPlayerXpPerSkillLevelUpBase());
             }
 
-            if (AdaptConfig.get().isActionbarNotifyLevel()) notifyLevel(p, getLevel(), getKnowledge());
+            if (AdaptConfig.get().isActionbarNotifyLevel())
+                notifyLevel(p, getLevel(), getKnowledge());
             lastLevel = getLevel();
         }
     }
 
     public void giveXP(Notifier p, double xp) {
-//        freshness -= xp * 0.005; // Increased from 0.001
+        // freshness -= xp * 0.005; // Increased from 0.001
         freshness -= Math.pow(xp, 2) * 0.0001; // Exponential decrease, attempt
         xp = multiplier * xp;
         this.xp += xp;
@@ -188,50 +198,29 @@ public class PlayerSkillLine {
     }
 
     private void notifyLevel(AdaptPlayer p, double lvl, long kn) {
-//        Skill s = p.getServer().getSkillRegistry().getSkill(getLine());
+        // Skill s = p.getServer().getSkillRegistry().getSkill(getLine());
         if (lvl % 10 == 0) {
-            p.getNot().queue(SoundNotification.builder()
-                    .sound(Sound.UI_TOAST_CHALLENGE_COMPLETE)
-                    .volume(1f)
-                    .pitch(1.35f)
-                    .group("lvl" + getLine())
-                    .build(), SoundNotification.builder()
-                    .sound(Sound.UI_TOAST_CHALLENGE_COMPLETE)
-                    .volume(1f)
-                    .pitch(0.75f)
-                    .group("lvl" + getLine())
-                    .build(), TitleNotification.builder()
-                    .in(250)
-                    .stay(1450)
-                    .out(2250)
-                    .group("lvl" + getLine())
-                    .title("")
-                    .subtitle(p.getServer().getSkillRegistry().getSkill(getLine()).getDisplayName(getLevel()))
-                    .build());
-            p.getActionBarNotifier().queue(
-                    ActionBarNotification.builder()
-                            .duration(450)
-                            .group("know" + getLine())
-                            .title(kn + " " + p.getServer().getSkillRegistry().getSkill(getLine()).getShortName() + " " + Localizer.dLocalize("snippets", "gui", "knowledge"))
+            p.getNot().queue(
+                    SoundNotification.builder().sound(Sound.UI_TOAST_CHALLENGE_COMPLETE).volume(1f).pitch(1.35f)
+                            .group("lvl" + getLine()).build(),
+                    SoundNotification.builder().sound(Sound.UI_TOAST_CHALLENGE_COMPLETE).volume(1f).pitch(0.75f)
+                            .group("lvl" + getLine()).build(),
+                    TitleNotification.builder().in(250).stay(1450).out(2250).group("lvl" + getLine()).title("")
+                            .subtitle(p.getServer().getSkillRegistry().getSkill(getLine()).getDisplayName(getLevel()))
+                            .build());
+            p.getActionBarNotifier()
+                    .queue(ActionBarNotification.builder().duration(450).group("know" + getLine())
+                            .title(kn + " " + p.getServer().getSkillRegistry().getSkill(getLine()).getShortName() + " "
+                                    + Localizer.dLocalize("snippets", "gui", "knowledge"))
                             .build());
 
         } else {
             p.getActionBarNotifier().queue(
-                    SoundNotification.builder()
-                            .sound(Sound.BLOCK_AMETHYST_BLOCK_BREAK)
-                            .volume(1f)
-                            .pitch(1.74f)
-                            .group("lvl" + getLine())
-                            .build(),
-                    SoundNotification.builder()
-                            .sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME)
-                            .volume(1f)
-                            .pitch(0.74f)
-                            .group("lvl" + getLine())
-                            .build(),
-                    ActionBarNotification.builder()
-                            .duration(450)
-                            .group("lvl" + getLine())
+                    SoundNotification.builder().sound(Sound.BLOCK_AMETHYST_BLOCK_BREAK).volume(1f).pitch(1.74f)
+                            .group("lvl" + getLine()).build(),
+                    SoundNotification.builder().sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME).volume(1f).pitch(0.74f)
+                            .group("lvl" + getLine()).build(),
+                    ActionBarNotification.builder().duration(450).group("lvl" + getLine())
                             .title(p.getServer().getSkillRegistry().getSkill(getLine()).getDisplayName(getLevel()))
                             .build());
         }

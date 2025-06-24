@@ -25,7 +25,10 @@ public class AdvancementUtils {
         try {
             ROOT_KEY = MinecraftKeyWrapper.craft("com.fren_gor", "root");
             NOTIFICATION_KEY = MinecraftKeyWrapper.craft("com.fren_gor", "notification");
-            AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(new ItemStack(Material.GRASS_BLOCK), "§f§lNotifications§1§2§3§4§5§6§7§8§9§0", "§7Notification page.\n§7Close and reopen advancements to hide.", AdvancementFrameTypeWrapper.TASK, 0, 0, "textures/block/stone.png");
+            AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(new ItemStack(Material.GRASS_BLOCK),
+                    "§f§lNotifications§1§2§3§4§5§6§7§8§9§0",
+                    "§7Notification page.\n§7Close and reopen advancements to hide.", AdvancementFrameTypeWrapper.TASK,
+                    0, 0, "textures/block/stone.png");
             ROOT = AdvancementWrapper.craftRootAdvancement(ROOT_KEY, display, 1);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
@@ -35,13 +38,19 @@ public class AdvancementUtils {
     /**
      * Displays a custom toast to a player.
      *
-     * @param player A player to show the toast.
-     * @param icon   The displayed item of the toast.
-     * @param title  The displayed title of the toast.
-     * @param frame  The {@link AdvancementFrameType} of the toast.
-     * @see UltimateAdvancementAPI#displayCustomToast(Player, ItemStack, String, AdvancementFrameType)
+     * @param player
+     *            A player to show the toast.
+     * @param icon
+     *            The displayed item of the toast.
+     * @param title
+     *            The displayed title of the toast.
+     * @param frame
+     *            The {@link AdvancementFrameType} of the toast.
+     * @see UltimateAdvancementAPI#displayCustomToast(Player, ItemStack, String,
+     *      AdvancementFrameType)
      */
-    public static void displayToast(@NotNull Player player, @NotNull ItemStack icon, @NotNull String title, @NotNull String description, @NotNull AdvancementFrameType frame) {
+    public static void displayToast(@NotNull Player player, @NotNull ItemStack icon, @NotNull String title,
+            @NotNull String description, @NotNull AdvancementFrameType frame) {
         Preconditions.checkNotNull(player, "Player is null.");
         Preconditions.checkNotNull(icon, "Icon is null.");
         Preconditions.checkNotNull(title, "Title is null.");
@@ -49,12 +58,11 @@ public class AdvancementUtils {
         Preconditions.checkArgument(icon.getType() != Material.AIR, "ItemStack is air.");
 
         try {
-            AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(icon, title, description, frame.getNMSWrapper(), 1, 0, true, false, false);
-            AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(NOTIFICATION_KEY, ROOT, display, 1);
-            PacketPlayOutAdvancementsWrapper.craftSendPacket(Map.of(
-                    ROOT, 1,
-                    notification, 1
-            )).sendTo(player);
+            AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(icon, title, description,
+                    frame.getNMSWrapper(), 1, 0, true, false, false);
+            AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(NOTIFICATION_KEY, ROOT, display,
+                    1);
+            PacketPlayOutAdvancementsWrapper.craftSendPacket(Map.of(ROOT, 1, notification, 1)).sendTo(player);
             PacketPlayOutAdvancementsWrapper.craftRemovePacket(Set.of(ROOT_KEY, NOTIFICATION_KEY)).sendTo(player);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();

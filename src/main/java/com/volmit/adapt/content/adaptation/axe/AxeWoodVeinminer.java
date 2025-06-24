@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.axe;
 
@@ -60,7 +60,8 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
 
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + Localizer.dLocalize("axe", "woodminer", "lore1"));
-        v.addLore(C.GREEN + "" + (level + getConfig().baseRange) + C.GRAY + " " + Localizer.dLocalize("axe", "woodminer", "lore2"));
+        v.addLore(C.GREEN + "" + (level + getConfig().baseRange) + C.GRAY + " "
+                + Localizer.dLocalize("axe", "woodminer", "lore2"));
         v.addLore(C.ITALIC + Localizer.dLocalize("axe", "woodminer", "lore3"));
     }
 
@@ -101,7 +102,8 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                                         break;
                                     }
                                     if (block.getLocation().distance(b.getLocation()) > getRadius(level)) {
-                                        Adapt.verbose("Block: " + b.getLocation() + " is too far away from " + block.getLocation() + " (" + getRadius(level) + ")");
+                                        Adapt.verbose("Block: " + b.getLocation() + " is too far away from "
+                                                + block.getLocation() + " (" + getRadius(level) + ")");
                                         continue;
                                     }
                                     if (!canBlockBreak(p, b.getLocation())) {
@@ -117,7 +119,10 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
 
                 J.s(() -> {
                     for (Block blocks : blockMap) {
-                        if (getPlayer(p).getData().getSkillLines().get("axes").getAdaptations().get("axe-drop-to-inventory") != null && getPlayer(p).getData().getSkillLines().get("axes").getAdaptations().get("axe-drop-to-inventory").getLevel() > 0) {
+                        if (getPlayer(p).getData().getSkillLines().get("axes").getAdaptations()
+                                .get("axe-drop-to-inventory") != null
+                                && getPlayer(p).getData().getSkillLines().get("axes").getAdaptations()
+                                        .get("axe-drop-to-inventory").getLevel() > 0) {
                             Collection<ItemStack> items = blocks.getDrops();
                             for (ItemStack item : items) {
                                 safeGiveItem(p, item);
@@ -129,7 +134,8 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                             SoundPlayer spw = SoundPlayer.of(blocks.getWorld());
                             spw.play(e.getBlock().getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.01f, 0.25f);
                             if (getConfig().showParticles) {
-                                blocks.getWorld().spawnParticle(Particle.ASH, blocks.getLocation().add(0.5, 0.5, 0.5), 25, 0.5, 0.5, 0.5, 0.1);
+                                blocks.getWorld().spawnParticle(Particle.ASH, blocks.getLocation().add(0.5, 0.5, 0.5),
+                                        25, 0.5, 0.5, 0.5, 0.1);
                             }
                         }
                         if (getConfig().showParticles) {
@@ -140,7 +146,6 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
             }
         }
     }
-
 
     @Override
     public void onTick() {

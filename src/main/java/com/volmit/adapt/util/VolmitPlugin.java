@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -74,8 +74,10 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
             unregisterListeners();
             unregisterInstance();
         } catch (Exception e) {
-            Adapt.error("Adapt: Failed to unregister all, You have a plugin that is not unloading properly. This is a bug in that plugin. Please report it to the developer. This is on shutdown however, so it's not a big deal.");
-            Adapt.error("Adapt: This is not a bug in Adapt. This is a bug in another plugin. Adapt is unloading ALL Command Nodes with Adapt ID's, If another plugin is unloading all or some of these nodes, it will cause this error.");
+            Adapt.error(
+                    "Adapt: Failed to unregister all, You have a plugin that is not unloading properly. This is a bug in that plugin. Please report it to the developer. This is on shutdown however, so it's not a big deal.");
+            Adapt.error(
+                    "Adapt: This is not a bug in Adapt. This is a bug in another plugin. Adapt is unloading ALL Command Nodes with Adapt ID's, If another plugin is unloading all or some of these nodes, it will cause this error.");
         }
     }
 
@@ -90,14 +92,12 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         }
     }
 
-
     private void outputPluginInfo() throws IOException {
         FileConfiguration fc = new YamlConfiguration();
         fc.set("version", getDescription().getVersion());
         fc.set("name", getDescription().getName());
         fc.save(getDataFile("info", "plugin.yml"));
     }
-
 
     @Override
     public void onDisable() {
@@ -156,8 +156,8 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
                     registerController(pc);
                     i.set(this, pc);
                     v("Registered " + pc.getName() + " (" + i.getName() + ")");
-                } catch (IllegalArgumentException | IllegalAccessException | InstantiationException |
-                         InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                } catch (IllegalArgumentException | IllegalAccessException | InstantiationException
+                        | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                     w("Failed to register controller (field " + i.getName() + ")");
                     e.printStackTrace();
                 }
@@ -224,7 +224,6 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         }
     }
 
-
     public String getTag() {
         if (bad) {
             return "";
@@ -253,7 +252,6 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         }
         HandlerList.unregisterAll((Listener) this);
     }
-
 
     private void stopControllers() {
         if (bad) {

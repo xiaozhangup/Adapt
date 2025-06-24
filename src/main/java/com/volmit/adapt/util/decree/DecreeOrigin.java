@@ -22,8 +22,7 @@ package com.volmit.adapt.util.decree;
 import com.volmit.adapt.util.VolmitSender;
 
 public enum DecreeOrigin {
-    PLAYER,
-    CONSOLE,
+    PLAYER, CONSOLE,
     /**
      * Both the player and the console
      */
@@ -32,7 +31,8 @@ public enum DecreeOrigin {
     /**
      * Check if the origin is valid for a sender
      *
-     * @param sender The sender to check
+     * @param sender
+     *            The sender to check
      * @return True if valid for origin
      */
     public boolean validFor(VolmitSender sender) {

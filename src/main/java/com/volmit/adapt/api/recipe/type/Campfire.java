@@ -26,7 +26,8 @@ public class Campfire implements AdaptRecipe {
     }
 
     public void register() {
-        CampfireRecipe s = new CampfireRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient, experience, cookTime);
+        CampfireRecipe s = new CampfireRecipe(new NamespacedKey(Adapt.instance, getKey()), result, ingredient,
+                experience, cookTime);
         Bukkit.getServer().addRecipe(s);
         Adapt.verbose("Registered Campfire Recipe " + s.getKey());
     }

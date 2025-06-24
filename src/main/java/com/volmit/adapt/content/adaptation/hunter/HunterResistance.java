@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.hunter;
 
@@ -56,36 +56,41 @@ public class HunterResistance extends SimpleAdaptation<HunterResistance.Config> 
 
     }
 
-
     @EventHandler
     public void on(EntityDamageEvent e) {
         if (e.isCancelled()) {
             return;
         }
         if (e.getEntity() instanceof org.bukkit.entity.Player p && isAdaptableDamageCause(e) && hasAdaptation(p)) {
-            if (AdaptConfig.get().isPreventHunterSkillsWhenHungerApplied() && p.hasPotionEffect(PotionEffectType.HUNGER)) {
+            if (AdaptConfig.get().isPreventHunterSkillsWhenHungerApplied()
+                    && p.hasPotionEffect(PotionEffectType.HUNGER)) {
                 return;
             }
 
             if (!getConfig().useConsumable) {
                 if (p.getFoodLevel() == 0) {
                     if (getConfig().poisonPenalty) {
-                        addPotionStacks(p, PotionEffectType.POISON, getConfig().basePoisonFromLevel - getLevel(p), getConfig().baseHungerDuration, getConfig().stackPoisonPenalty);
+                        addPotionStacks(p, PotionEffectType.POISON, getConfig().basePoisonFromLevel - getLevel(p),
+                                getConfig().baseHungerDuration, getConfig().stackPoisonPenalty);
                     }
 
                 } else {
-                    addPotionStacks(p, PotionEffectType.HUNGER, getConfig().baseHungerFromLevel - getLevel(p), getConfig().baseHungerDuration * getLevel(p), getConfig().stackHungerPenalty);
-                    addPotionStacks(p, PotionEffectTypes.DAMAGE_RESISTANCE, getLevel(p), getConfig().baseEffectbyLevel * getLevel(p), getConfig().stackBuff);
+                    addPotionStacks(p, PotionEffectType.HUNGER, getConfig().baseHungerFromLevel - getLevel(p),
+                            getConfig().baseHungerDuration * getLevel(p), getConfig().stackHungerPenalty);
+                    addPotionStacks(p, PotionEffectTypes.DAMAGE_RESISTANCE, getLevel(p),
+                            getConfig().baseEffectbyLevel * getLevel(p), getConfig().stackBuff);
                 }
             } else {
                 if (getConfig().consumable != null && Material.getMaterial(getConfig().consumable) != null) {
                     Material mat = Material.getMaterial(getConfig().consumable);
                     if (mat != null && p.getInventory().contains(mat)) {
                         p.getInventory().removeItem(new ItemStack(mat, 1));
-                        addPotionStacks(p, PotionEffectTypes.DAMAGE_RESISTANCE, getLevel(p), getConfig().baseEffectbyLevel * getLevel(p), getConfig().stackBuff);
+                        addPotionStacks(p, PotionEffectTypes.DAMAGE_RESISTANCE, getLevel(p),
+                                getConfig().baseEffectbyLevel * getLevel(p), getConfig().stackBuff);
                     } else {
                         if (getConfig().poisonPenalty) {
-                            addPotionStacks(p, PotionEffectType.POISON, getConfig().basePoisonFromLevel - getLevel(p), getConfig().baseHungerDuration, getConfig().stackPoisonPenalty);
+                            addPotionStacks(p, PotionEffectType.POISON, getConfig().basePoisonFromLevel - getLevel(p),
+                                    getConfig().baseHungerDuration, getConfig().stackPoisonPenalty);
                         }
                     }
                 }

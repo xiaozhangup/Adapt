@@ -52,11 +52,8 @@ public class StealthEnderVeil extends SimpleAdaptation<StealthEnderVeil.Config> 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTarget(EntityTargetLivingEntityEvent event) {
         var target = event.getTarget();
-        if (target == null
-                || target.getType() != EntityType.PLAYER
-                || event.getEntityType() != EntityType.ENDERMAN
-                || !(event.getTarget() instanceof Player player)
-                || !hasAdaptation(player)) {
+        if (target == null || target.getType() != EntityType.PLAYER || event.getEntityType() != EntityType.ENDERMAN
+                || !(event.getTarget() instanceof Player player) || !hasAdaptation(player)) {
             return;
         }
 

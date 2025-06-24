@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.agility;
 
@@ -55,8 +55,10 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + getMaxJumps(level) + C.GRAY + " " + Localizer.dLocalize("agility", "walljump", "lore1"));
-        v.addLore(C.GREEN + "+ " + Form.pc(getJumpHeight(level), 0) + C.GRAY + " " + Localizer.dLocalize("agility", "walljump", "lore2"));
+        v.addLore(C.GREEN + "+ " + getMaxJumps(level) + C.GRAY + " "
+                + Localizer.dLocalize("agility", "walljump", "lore1"));
+        v.addLore(C.GREEN + "+ " + Form.pc(getJumpHeight(level), 0) + C.GRAY + " "
+                + Localizer.dLocalize("agility", "walljump", "lore2"));
     }
 
     @EventHandler
@@ -81,7 +83,8 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
         Player p = e.getPlayer();
 
         if (airjumps.containsKey(p)) {
-            if (p.isOnGround() && !p.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial().isAir()) {
+            if (p.isOnGround()
+                    && !p.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial().isAir()) {
                 airjumps.remove(p);
             }
         }
@@ -114,7 +117,8 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
                         p.setVelocity(p.getVelocity().setY(getJumpHeight(level)));
                         if (getConfig().showParticles) {
 
-                            p.getWorld().spawnParticle(Particles.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15, 0.1, 0.8, 0.1, 0.1, getStick(p).getBlockData());
+                            p.getWorld().spawnParticle(Particles.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0),
+                                    15, 0.1, 0.8, 0.1, 0.1, getStick(p).getBlockData());
                         }
                     }
                     airjumps.put(p, j);
@@ -134,7 +138,8 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
                     spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.89f);
                     spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_CHAIN, 1f, 1.39f);
                     if (getConfig().showParticles && getStick(p) != null) {
-                        p.getWorld().spawnParticle(Particles.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15, 0.1, 0.2, 0.1, 0.1, getStick(p).getBlockData());
+                        p.getWorld().spawnParticle(Particles.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15,
+                                0.1, 0.2, 0.1, 0.1, getStick(p).getBlockData());
                     }
                 }
 
@@ -183,8 +188,7 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
     }
 
     private Block[] getBlocks(Player p) {
-        return new Block[]{
-                p.getLocation().getBlock().getRelative(BlockFace.NORTH),
+        return new Block[]{p.getLocation().getBlock().getRelative(BlockFace.NORTH),
                 p.getLocation().getBlock().getRelative(BlockFace.SOUTH),
                 p.getLocation().getBlock().getRelative(BlockFace.EAST),
                 p.getLocation().getBlock().getRelative(BlockFace.WEST),
@@ -199,8 +203,7 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
                 p.getLocation().getBlock().getRelative(BlockFace.NORTH).getRelative(BlockFace.UP),
                 p.getLocation().getBlock().getRelative(BlockFace.SOUTH).getRelative(BlockFace.UP),
                 p.getLocation().getBlock().getRelative(BlockFace.EAST).getRelative(BlockFace.UP),
-                p.getLocation().getBlock().getRelative(BlockFace.WEST).getRelative(BlockFace.UP),
-        };
+                p.getLocation().getBlock().getRelative(BlockFace.WEST).getRelative(BlockFace.UP),};
     }
 
     @Override

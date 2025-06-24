@@ -30,10 +30,7 @@ public class PotionBuilder {
     }
 
     public static ItemStack vanilla(Type type, PotionType potion, boolean extended, boolean upgraded) {
-        return of(type)
-                .setFlags(extended, upgraded)
-                .setBaseType(potion)
-                .build();
+        return of(type).setFlags(extended, upgraded).setBaseType(potion).build();
     }
 
     public static PotionBuilder of(Type type) {
@@ -45,7 +42,8 @@ public class PotionBuilder {
         return this;
     }
 
-    public PotionBuilder addEffect(PotionEffectType type, int duration, int amplifier, boolean ambient, boolean particles, boolean icon) {
+    public PotionBuilder addEffect(PotionEffectType type, int duration, int amplifier, boolean ambient,
+            boolean particles, boolean icon) {
         effects.add(new PotionEffect(type, duration, amplifier, ambient, particles, icon));
         return this;
     }
@@ -74,9 +72,7 @@ public class PotionBuilder {
     @Getter
     @AllArgsConstructor
     public enum Type {
-        REGULAR(Material.POTION),
-        SPLASH(Material.SPLASH_POTION),
-        LINGERING(Material.LINGERING_POTION);
+        REGULAR(Material.POTION), SPLASH(Material.SPLASH_POTION), LINGERING(Material.LINGERING_POTION);
 
         private final Material material;
     }

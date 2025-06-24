@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -67,88 +67,73 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
         registerAdaptation(new HunterStrength());
         registerAdaptation(new HunterResistance());
         registerAdaptation(new HunterDropToInventory());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.TURTLE_EGG)
-                .key("horrible_person")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("horrible_person")
                 .title(Localizer.dLocalize("advancement", "horrible_person", "title"))
                 .description(Localizer.dLocalize("advancement", "horrible_person", "description"))
                 .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter", "horrible_person"))
-                .frame(AdvancementFrameType.GOAL)
-                .visibility(AdvancementVisibility.HIDDEN)
-                .build()
-        );
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.TURTLE_EGG)
-                .key("challenge_turtle_egg_smasher")
+                .frame(AdvancementFrameType.GOAL).visibility(AdvancementVisibility.HIDDEN).build());
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("challenge_turtle_egg_smasher")
                 .title(Localizer.dLocalize("advancement", "challenge_turtle_egg_smasher", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_turtle_egg_smasher", "description"))
                 .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter", "challenge_turtle_egg_smasher"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .child(AdaptAdvancement.builder()
-                        .icon(Material.TURTLE_EGG)
-                        .key("challenge_turtle_egg_annihilator")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("challenge_turtle_egg_annihilator")
                         .title(Localizer.dLocalize("advancement", "challenge_turtle_egg_annihilator", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_turtle_egg_annihilator", "description"))
-                        .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter", "challenge_turtle_egg_annihilator"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED)
-                        .build())
+                        .description(
+                                Localizer.dLocalize("advancement", "challenge_turtle_egg_annihilator", "description"))
+                        .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter",
+                                "challenge_turtle_egg_annihilator"))
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.BONE)
-                .key("challenge_novice_hunter")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.BONE).key("challenge_novice_hunter")
                 .title(Localizer.dLocalize("advancement", "challenge_novice_hunter", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_novice_hunter", "description"))
                 .model(CustomModel.get(Material.BONE, "advancement", "hunter", "challenge_novice_hunter"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .child(AdaptAdvancement.builder()
-                        .icon(Material.IRON_SWORD)
-                        .key("challenge_intermediate_hunter")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.IRON_SWORD).key("challenge_intermediate_hunter")
                         .title(Localizer.dLocalize("advancement", "challenge_intermediate_hunter", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_intermediate_hunter", "description"))
-                        .model(CustomModel.get(Material.IRON_SWORD, "advancement", "hunter", "challenge_intermediate_hunter"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED)
-                        .child(AdaptAdvancement.builder()
-                                .icon(Material.DIAMOND_SWORD)
-                                .key("challenge_advanced_hunter")
+                        .model(CustomModel.get(Material.IRON_SWORD, "advancement", "hunter",
+                                "challenge_intermediate_hunter"))
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.DIAMOND_SWORD).key("challenge_advanced_hunter")
                                 .title(Localizer.dLocalize("advancement", "challenge_advanced_hunter", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_advanced_hunter", "description"))
-                                .model(CustomModel.get(Material.DIAMOND_SWORD, "advancement", "hunter", "challenge_advanced_hunter"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .description(
+                                        Localizer.dLocalize("advancement", "challenge_advanced_hunter", "description"))
+                                .model(CustomModel.get(Material.DIAMOND_SWORD, "advancement", "hunter",
+                                        "challenge_advanced_hunter"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .build())
                         .build())
                 .build());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.CREEPER_HEAD)
-                .key("challenge_creeper_conqueror")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.CREEPER_HEAD).key("challenge_creeper_conqueror")
                 .title(Localizer.dLocalize("advancement", "challenge_creeper_conqueror", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_creeper_conqueror", "description"))
                 .model(CustomModel.get(Material.CREEPER_HEAD, "advancement", "hunter", "challenge_creeper_conqueror"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .child(AdaptAdvancement.builder()
-                        .icon(Material.TNT)
-                        .key("challenge_creeper_annihilator")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.TNT).key("challenge_creeper_annihilator")
                         .title(Localizer.dLocalize("advancement", "challenge_creeper_annihilator", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_creeper_annihilator", "description"))
                         .model(CustomModel.get(Material.TNT, "advancement", "hunter", "challenge_creeper_annihilator"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED)
-                        .build())
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());
 
-        registerStatTracker(AdaptStatTracker.builder().advancement("horrible_person").goal(1).stat("killed.turtleeggs").reward(getConfig().turtleEggKillXP).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_turtle_egg_smasher").goal(100).stat("killed.turtleeggs").reward(getConfig().turtleEggKillXP * 10).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_turtle_egg_annihilator").goal(1000).stat("killed.turtleeggs").reward(getConfig().turtleEggKillXP * 10).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_novice_hunter").goal(100).stat("killed.monsters").reward(getConfig().turtleEggKillXP * 3).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_intermediate_hunter").goal(1000).stat("killed.monsters").reward(getConfig().turtleEggKillXP * 3).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_advanced_hunter").goal(10000).stat("killed.monsters").reward(getConfig().turtleEggKillXP * 3).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_creeper_conqueror").goal(100).stat("killed.creepers").reward(getConfig().turtleEggKillXP * 3).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_creeper_annihilator").goal(1000).stat("killed.creepers").reward(getConfig().turtleEggKillXP * 3).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("horrible_person").goal(1).stat("killed.turtleeggs")
+                .reward(getConfig().turtleEggKillXP).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_turtle_egg_smasher").goal(100)
+                .stat("killed.turtleeggs").reward(getConfig().turtleEggKillXP * 10).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_turtle_egg_annihilator").goal(1000)
+                .stat("killed.turtleeggs").reward(getConfig().turtleEggKillXP * 10).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_novice_hunter").goal(100)
+                .stat("killed.monsters").reward(getConfig().turtleEggKillXP * 3).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_intermediate_hunter").goal(1000)
+                .stat("killed.monsters").reward(getConfig().turtleEggKillXP * 3).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_advanced_hunter").goal(10000)
+                .stat("killed.monsters").reward(getConfig().turtleEggKillXP * 3).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_creeper_conqueror").goal(100)
+                .stat("killed.creepers").reward(getConfig().turtleEggKillXP * 3).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_creeper_annihilator").goal(1000)
+                .stat("killed.creepers").reward(getConfig().turtleEggKillXP * 3).build());
     }
 
     private void handleCooldownAndXp(Player p, double xpAmount) {
@@ -180,7 +165,8 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
         }
         Player p = e.getPlayer();
         shouldReturnForPlayer(e.getPlayer(), e, () -> {
-            if (e.getAction().equals(Action.PHYSICAL) && e.getClickedBlock() != null && e.getClickedBlock().getType().equals(Material.TURTLE_EGG)) {
+            if (e.getAction().equals(Action.PHYSICAL) && e.getClickedBlock() != null
+                    && e.getClickedBlock().getType().equals(Material.TURTLE_EGG)) {
                 handleCooldownAndXp(p, getConfig().turtleEggKillXP);
                 getPlayer(p).getData().addStat("killed.turtleeggs", 1);
             }
@@ -202,7 +188,8 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
             if (e.getEntity().getType().equals(EntityType.CREEPER)) {
                 double cmult = getConfig().creeperKillMultiplier;
                 var attribute = Version.get().getAttribute(e.getEntity(), Attributes.GENERIC_MAX_HEALTH);
-                double xpAmount = (attribute == null ? 1 : attribute.getValue()) * getConfig().killMaxHealthXPMultiplier * cmult;
+                double xpAmount = (attribute == null ? 1 : attribute.getValue()) * getConfig().killMaxHealthXPMultiplier
+                        * cmult;
                 if (e.getEntity().getPortalCooldown() > 0) {
                     xpAmount *= getConfig().spawnerMobReductionXpMultiplier;
                 }
@@ -213,7 +200,6 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
             }
         });
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(CreatureSpawnEvent e) {
@@ -237,7 +223,6 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
             handleCooldownAndXp(p, xpAmount);
         }
     }
-
 
     @Override
     public void onTick() {

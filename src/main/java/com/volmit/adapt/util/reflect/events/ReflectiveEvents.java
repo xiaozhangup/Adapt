@@ -29,51 +29,53 @@ public class ReflectiveEvents {
     private static final KMap<Class<?>, HandlerList> HANDLERS = new KMap<>();
 
     static {
-        register(EntityMountEvent.class, "org.bukkit.event.entity.EntityMountEvent", "org.spigotmc.event.entity.EntityMountEvent");
-        register(EntityDismountEvent.class, "org.bukkit.event.entity.EntityDismountEvent", "org.spigotmc.event.entity.EntityDismountEvent");
+        register(EntityMountEvent.class, "org.bukkit.event.entity.EntityMountEvent",
+                "org.spigotmc.event.entity.EntityMountEvent");
+        register(EntityDismountEvent.class, "org.bukkit.event.entity.EntityDismountEvent",
+                "org.spigotmc.event.entity.EntityDismountEvent");
         register(EndermanAttackPlayerEvent.class, "com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent");
     }
 
     public static void register(@NonNull Listener listener) {
-        if (Adapt.bad) return;
+        if (Adapt.bad)
+            return;
 
         Arrays.stream(listener.getClass().getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(ReflectiveHandler.class))
                 .filter(method -> !Modifier.isStatic(method.getModifiers()))
                 .filter(method -> method.getParameterCount() == 1)
                 .filter(method -> Event.class.isAssignableFrom(method.getParameterTypes()[0]))
-                .collect(Collectors.toMap(method -> HANDLERS.get(method.getParameterTypes()[0]),
-                        method -> {
-                            try {
-                                if (!Modifier.isPublic(method.getModifiers())) {
-                                    method.setAccessible(true);
-                                }
-                            } catch (Throwable e) {
-                                return new KList<RegisteredListener>();
-                            }
+                .collect(Collectors.toMap(method -> HANDLERS.get(method.getParameterTypes()[0]), method -> {
+                    try {
+                        if (!Modifier.isPublic(method.getModifiers())) {
+                            method.setAccessible(true);
+                        }
+                    } catch (Throwable e) {
+                        return new KList<RegisteredListener>();
+                    }
 
+                    Class<?> eventClass = method.getParameterTypes()[0];
+                    Class<?> bukkitClass = EVENTS.get(eventClass);
+                    ReflectiveHandler handler = method.getAnnotation(ReflectiveHandler.class);
 
-                            Class<?> eventClass = method.getParameterTypes()[0];
-                            Class<?> bukkitClass = EVENTS.get(eventClass);
-                            ReflectiveHandler handler = method.getAnnotation(ReflectiveHandler.class);
+                    EventExecutor executor = (obj, event) -> {
+                        if (!bukkitClass.isAssignableFrom(event.getClass()))
+                            return;
 
-                            EventExecutor executor = (obj, event) -> {
-                                if (!bukkitClass.isAssignableFrom(event.getClass()))
-                                    return;
+                        try {
+                            method.invoke(obj, newProxy(obj, eventClass));
+                        } catch (InvocationTargetException e) {
+                            throw new EventException(e.getCause());
+                        } catch (Throwable e) {
+                            throw new EventException(e);
+                        }
+                    };
 
-                                try {
-                                    method.invoke(obj, newProxy(obj, eventClass));
-                                } catch (InvocationTargetException e) {
-                                    throw new EventException(e.getCause());
-                                } catch (Throwable e) {
-                                    throw new EventException(e);
-                                }
-                            };
-
-                            return new KList<>(new RegisteredListener(listener, executor, handler.priority(), Adapt.instance, handler.ignoreCancelled()));
-                        }, KList::add))
-                .forEach((handlerList, registeredListeners) -> {
-                    if (handlerList == null) return;
+                    return new KList<>(new RegisteredListener(listener, executor, handler.priority(), Adapt.instance,
+                            handler.ignoreCancelled()));
+                }, KList::add)).forEach((handlerList, registeredListeners) -> {
+                    if (handlerList == null)
+                        return;
                     handlerList.registerAll(registeredListeners);
                 });
     }
@@ -117,6 +119,7 @@ public class ReflectiveEvents {
     }
 
     private static Object newProxy(Object o, Class<?>... interfaces) {
-        return Proxy.newProxyInstance(Event.class.getClassLoader(), interfaces, (proxy, method, args) -> method.invoke(o, args));
+        return Proxy.newProxyInstance(Event.class.getClassLoader(), interfaces,
+                (proxy, method, args) -> method.invoke(o, args));
     }
 }

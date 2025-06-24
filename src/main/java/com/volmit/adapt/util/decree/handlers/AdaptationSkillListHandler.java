@@ -5,7 +5,9 @@ import com.volmit.adapt.util.decree.DecreeParameterHandler;
 import com.volmit.adapt.util.decree.context.AdaptationListingHandler;
 import com.volmit.adapt.util.decree.exceptions.DecreeParsingException;
 
-public class AdaptationSkillListHandler implements DecreeParameterHandler<AdaptationListingHandler.AdaptationSkillList> {
+public class AdaptationSkillListHandler
+        implements
+            DecreeParameterHandler<AdaptationListingHandler.AdaptationSkillList> {
     @Override
     public KList<AdaptationListingHandler.AdaptationSkillList> getPossibilities() {
         return AdaptationListingHandler.getAdaptionSkillListings();

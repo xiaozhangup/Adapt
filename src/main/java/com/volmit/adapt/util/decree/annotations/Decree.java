@@ -52,15 +52,18 @@ public @interface Decree {
     /**
      * The origin this command must come from.<br>
      * Must be elements of the {@link DecreeOrigin} enum<br>
-     * By default, is {@link DecreeOrigin#BOTH}, meaning both console & player can send the command
+     * By default, is {@link DecreeOrigin#BOTH}, meaning both console & player can
+     * send the command
      */
     DecreeOrigin origin() default DecreeOrigin.BOTH;
 
     /**
-     * The aliases of this parameter (instead of just the {@link #name() name} (if specified) or Method Name (name of
-     * method))<br>
-     * Can be initialized as just a string (ex. "alias") or as an array (ex. {"alias1", "alias2"})<br>
-     * If someone uses /plugin foo and you specify alias="f" here, /plugin f will do the exact same.
+     * The aliases of this parameter (instead of just the {@link #name() name} (if
+     * specified) or Method Name (name of method))<br>
+     * Can be initialized as just a string (ex. "alias") or as an array (ex.
+     * {"alias1", "alias2"})<br>
+     * If someone uses /plugin foo and you specify alias="f" here, /plugin f will do
+     * the exact same.
      */
     String[] aliases() default "";
 }

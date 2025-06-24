@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -55,51 +55,56 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
         registerAdaptation(new EnchantingQuickEnchant());
         registerAdaptation(new EnchantingLapisReturn());
         registerAdaptation(new EnchantingXPReturn()); //
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.CRAFTING_TABLE).key("challenge_enchant_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE).key("challenge_enchant_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_enchant_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_enchant_1k", "description"))
                 .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "enchanting", "challenge_enchant_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                        .icon(Material.KNOWLEDGE_BOOK)
-                        .key("challenge_enchant_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_enchant_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_enchant_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_enchant_5k", "description"))
-                        .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting", "challenge_enchant_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.KNOWLEDGE_BOOK)
-                                .key("challenge_enchant_50k")
+                        .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
+                                "challenge_enchant_5k"))
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_enchant_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_enchant_50k", "title"))
                                 .description(Localizer.dLocalize("advancement", "challenge_enchant_50k", "description"))
-                                .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting", "challenge_enchant_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                        .icon(Material.KNOWLEDGE_BOOK)
+                                .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
+                                        "challenge_enchant_50k"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK)
                                         .key("challenge_enchant_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_enchant_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_enchant_500k", "description"))
-                                        .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting", "challenge_enchant_500k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_enchant_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
+                                                "challenge_enchant_500k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
-                                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                                .icon(Material.KNOWLEDGE_BOOK)
+                                        .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                        .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK)
                                                 .key("challenge_enchant_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_enchant_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_enchant_5m", "description"))
-                                                .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting", "challenge_enchant_5m"))
+                                                .title(Localizer.dLocalize("advancement", "challenge_enchant_5m",
+                                                        "title"))
+                                                .description(Localizer.dLocalize("advancement", "challenge_enchant_5m",
+                                                        "description"))
+                                                .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement",
+                                                        "enchanting", "challenge_enchant_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_1k").goal(1000).stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_5k").goal(5000).stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_50k").goal(50000).stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_500k").goal(500000).stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_5m").goal(5000000).stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_1k").goal(1000)
+                .stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_5k").goal(5000)
+                .stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_50k").goal(50000)
+                .stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_500k").goal(500000)
+                .stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_enchant_5m").goal(5000000)
+                .stat("enchanted.items").reward(getConfig().challengeEnchantReward).build());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

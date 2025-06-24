@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.crafting;
 
@@ -43,57 +43,26 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(17776);
-        registerRecipe(Shaped.builder()
-                .key("crafting-skeletonskull")
-                .ingredient(new MaterialChar('I', Material.BONE))
-                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
-                .shapes(List.of(
-                        "III",
-                        "IXI",
-                        "III"))
-                .result(new ItemStack(Material.SKELETON_SKULL, 1))
-                .build());
-        registerRecipe(Shaped.builder()
-                .key("crafting-witherskeletonskull")
+        registerRecipe(Shaped.builder().key("crafting-skeletonskull").ingredient(new MaterialChar('I', Material.BONE))
+                .ingredient(new MaterialChar('X', Material.BONE_BLOCK)).shapes(List.of("III", "IXI", "III"))
+                .result(new ItemStack(Material.SKELETON_SKULL, 1)).build());
+        registerRecipe(Shaped.builder().key("crafting-witherskeletonskull")
                 .ingredient(new MaterialChar('I', Material.COAL_BLOCK))
                 .ingredient(new MaterialChar('B', Material.NETHER_BRICK))
-                .ingredient(new MaterialChar('X', Material.SKELETON_SKULL))
-                .shapes(List.of(
-                        "III",
-                        "IXB",
-                        "BBB"))
-                .result(new ItemStack(Material.WITHER_SKELETON_SKULL, 1))
-                .build());
-        registerRecipe(Shaped.builder()
-                .key("crafting-zombieskull")
-                .ingredient(new MaterialChar('I', Material.ROTTEN_FLESH))
-                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
-                .shapes(List.of(
-                        "III",
-                        "IXI",
-                        "III"))
-                .result(new ItemStack(Material.ZOMBIE_HEAD, 1))
-                .build());
-        registerRecipe(Shaped.builder()
-                .key("crafting-creeperhead")
-                .ingredient(new MaterialChar('I', Material.GUNPOWDER))
-                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
-                .shapes(List.of(
-                        "III",
-                        "IXI",
-                        "III"))
-                .result(new ItemStack(Material.CREEPER_HEAD, 1))
-                .build());
-        registerRecipe(Shaped.builder()
-                .key("crafting-dragonhead")
-                .ingredient(new MaterialChar('I', Material.DRAGON_BREATH))
-                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
-                .shapes(List.of(
-                        "III",
-                        "IXI",
-                        "III"))
-                .result(new ItemStack(Material.DRAGON_HEAD, 1))
-                .build());
+                .ingredient(new MaterialChar('X', Material.SKELETON_SKULL)).shapes(List.of("III", "IXB", "BBB"))
+                .result(new ItemStack(Material.WITHER_SKELETON_SKULL, 1)).build());
+        registerRecipe(
+                Shaped.builder().key("crafting-zombieskull").ingredient(new MaterialChar('I', Material.ROTTEN_FLESH))
+                        .ingredient(new MaterialChar('X', Material.BONE_BLOCK)).shapes(List.of("III", "IXI", "III"))
+                        .result(new ItemStack(Material.ZOMBIE_HEAD, 1)).build());
+        registerRecipe(
+                Shaped.builder().key("crafting-creeperhead").ingredient(new MaterialChar('I', Material.GUNPOWDER))
+                        .ingredient(new MaterialChar('X', Material.BONE_BLOCK)).shapes(List.of("III", "IXI", "III"))
+                        .result(new ItemStack(Material.CREEPER_HEAD, 1)).build());
+        registerRecipe(
+                Shaped.builder().key("crafting-dragonhead").ingredient(new MaterialChar('I', Material.DRAGON_BREATH))
+                        .ingredient(new MaterialChar('X', Material.BONE_BLOCK)).shapes(List.of("III", "IXI", "III"))
+                        .result(new ItemStack(Material.DRAGON_HEAD, 1)).build());
     }
 
     @Override
@@ -109,7 +78,6 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
         v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore8"));
         v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore9"));
     }
-
 
     @Override
     public void onTick() {

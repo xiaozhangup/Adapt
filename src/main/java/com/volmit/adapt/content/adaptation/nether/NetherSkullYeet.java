@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.nether;
 
@@ -46,7 +46,9 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
     public NetherSkullYeet() {
         super("nether-skull-toss");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("nether", "skulltoss", "description1") + C.ITALIC + " " + Localizer.dLocalize("nether", "skulltoss", "description2") + " " + C.GRAY + Localizer.dLocalize("nether", "skulltoss", "description3"));
+        setDescription(Localizer.dLocalize("nether", "skulltoss", "description1") + C.ITALIC + " "
+                + Localizer.dLocalize("nether", "skulltoss", "description2") + " " + C.GRAY
+                + Localizer.dLocalize("nether", "skulltoss", "description3"));
         setDisplayName(Localizer.dLocalize("nether", "skulltoss", "name"));
         setIcon(Material.WITHER_SKELETON_SKULL);
         setBaseCost(getConfig().baseCost);
@@ -59,8 +61,11 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
     @Override
     public void addStats(int level, Element v) {
         int chance = getConfig().getBaseCooldown() - getConfig().getLevelCooldown() * level;
-        v.addLore(C.GREEN + String.valueOf(chance) + C.GRAY + " " + Localizer.dLocalize("nether", "skulltoss", "lore1"));
-        v.addLore(C.GRAY + Localizer.dLocalize("nether", "skulltoss", "lore2") + C.DARK_GRAY + Localizer.dLocalize("nether", "skulltoss", "lore3") + C.GRAY + ", " + Localizer.dLocalize("nether", "skulltoss", "lore4"));
+        v.addLore(
+                C.GREEN + String.valueOf(chance) + C.GRAY + " " + Localizer.dLocalize("nether", "skulltoss", "lore1"));
+        v.addLore(C.GRAY + Localizer.dLocalize("nether", "skulltoss", "lore2") + C.DARK_GRAY
+                + Localizer.dLocalize("nether", "skulltoss", "lore3") + C.GRAY + ", "
+                + Localizer.dLocalize("nether", "skulltoss", "lore4"));
     }
 
     private int getCooldownDuration(Player p) {
@@ -85,7 +90,8 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
         if (e.getAction() != Action.LEFT_CLICK_AIR && e.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
         }
-        if (e.getHand() != EquipmentSlot.HAND || e.getItem() == null || e.getMaterial() != Material.WITHER_SKELETON_SKULL) {
+        if (e.getHand() != EquipmentSlot.HAND || e.getItem() == null
+                || e.getMaterial() != Material.WITHER_SKELETON_SKULL) {
             return;
         }
 
@@ -108,7 +114,6 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
         } else {
             p.setCooldown(Material.WITHER_SKELETON_SKULL, getCooldownDuration(p));
         }
-
 
         if (p.getGameMode() != GameMode.CREATIVE) {
             e.getItem().setAmount(e.getItem().getAmount() - 1);
@@ -142,7 +147,6 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
     public boolean isPermanent() {
         return getConfig().permanent;
     }
-
 
     @Data
     @NoArgsConstructor

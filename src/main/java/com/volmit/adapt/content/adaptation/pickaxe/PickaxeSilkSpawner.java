@@ -38,10 +38,12 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
     public void onBlockBreak(BlockBreakEvent event) {
         var player = event.getPlayer();
         var block = event.getBlock();
-        if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SPAWNER || !canBlockBreak(player, event.getBlock().getLocation()))
+        if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SPAWNER
+                || !canBlockBreak(player, event.getBlock().getLocation()))
             return;
         var level = getLevel(player);
-        if (level == 1 && !player.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH)) {
+        if (level == 1
+                && !player.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH)) {
             return;
         } else if (level > 1 && !player.isSneaking()) {
             return;
@@ -55,11 +57,7 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
             spawner.setItemMeta(meta);
         }
 
-        var loc = block.getLocation().add(
-                rng.d(-0.25D, 0.25D),
-                rng.d(-0.25D, 0.25D) - 0.125D,
-                rng.d(-0.25D, 0.25D)
-        );
+        var loc = block.getLocation().add(rng.d(-0.25D, 0.25D), rng.d(-0.25D, 0.25D) - 0.125D, rng.d(-0.25D, 0.25D));
         var item = block.getWorld().createEntity(loc, Item.class);
         item.setItemStack(spawner);
         item.setOwner(player.getUniqueId());
@@ -68,11 +66,13 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
         Bukkit.getPluginManager().callEvent(dropEvent);
         if (dropEvent.isCancelled()) {
             for (Item i : dropEvent.getItems()) {
-                if (i.isValid()) i.remove();
+                if (i.isValid())
+                    i.remove();
             }
         } else {
             for (Item i : dropEvent.getItems()) {
-                if (!i.isValid()) block.getWorld().addEntity(i);
+                if (!i.isValid())
+                    block.getWorld().addEntity(i);
             }
         }
     }

@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.axe;
 
@@ -51,10 +51,14 @@ public class AxeGroundSmash extends SimpleAdaptation<AxeGroundSmash.Config> {
     @Override
     public void addStats(int level, Element v) {
         double f = getLevelPercent(level);
-        v.addLore(C.RED + "+ " + Form.f(getFalloffDamage(f), 1) + " - " + Form.f(getDamage(f), 1) + C.GRAY + " " + Localizer.dLocalize("axe", "groundsmash", "lore1"));
-        v.addLore(C.RED + "+ " + Form.f(getRadius(f), 1) + C.GRAY + " " + Localizer.dLocalize("axe", "groundsmash", "lore2"));
-        v.addLore(C.RED + "+ " + Form.pc(getForce(f), 0) + C.GRAY + " " + Localizer.dLocalize("axe", "groundsmash", "lore3"));
-        v.addLore(C.YELLOW + "* " + Form.duration(getCooldownTime(getLevelPercent(level)) * 50D, 1) + C.GRAY + " " + Localizer.dLocalize("axe", "groundsmash", "lore4"));
+        v.addLore(C.RED + "+ " + Form.f(getFalloffDamage(f), 1) + " - " + Form.f(getDamage(f), 1) + C.GRAY + " "
+                + Localizer.dLocalize("axe", "groundsmash", "lore1"));
+        v.addLore(C.RED + "+ " + Form.f(getRadius(f), 1) + C.GRAY + " "
+                + Localizer.dLocalize("axe", "groundsmash", "lore2"));
+        v.addLore(C.RED + "+ " + Form.pc(getForce(f), 0) + C.GRAY + " "
+                + Localizer.dLocalize("axe", "groundsmash", "lore3"));
+        v.addLore(C.YELLOW + "* " + Form.duration(getCooldownTime(getLevelPercent(level)) * 50D, 1) + C.GRAY + " "
+                + Localizer.dLocalize("axe", "groundsmash", "lore4"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -74,20 +78,20 @@ public class AxeGroundSmash extends SimpleAdaptation<AxeGroundSmash.Config> {
             }
 
             p.setCooldown(p.getInventory().getItemInMainHand().getType(), getCooldownTime(f));
-            new Impulse(getRadius(f))
-                    .damage(getDamage(f), getFalloffDamage(f))
-                    .force(getForce(f))
+            new Impulse(getRadius(f)).damage(getDamage(f), getFalloffDamage(f)).force(getForce(f))
                     .punch(e.getEntity().getLocation());
             SoundPlayer spw = SoundPlayer.of(e.getEntity().getWorld());
-            spw.play(e.getEntity().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.HOSTILE, 0.6f, 0.4f);
-            spw.play(e.getEntity().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.HOSTILE, 0.5f, 0.1f);
+            spw.play(e.getEntity().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.HOSTILE, 0.6f,
+                    0.4f);
+            spw.play(e.getEntity().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.HOSTILE, 0.5f,
+                    0.1f);
             spw.play(e.getEntity().getLocation(), Sound.ENTITY_TURTLE_EGG_CRACK, SoundCategory.HOSTILE, 1f, 0.4f);
         }
     }
 
-
     public int getCooldownTime(double factor) {
-        return (int) (((1D - factor) * getConfig().cooldownTicksInverseLevelMultiplier) + getConfig().cooldownTicksBase);
+        return (int) (((1D - factor) * getConfig().cooldownTicksInverseLevelMultiplier)
+                + getConfig().cooldownTicksBase);
     }
 
     public double getRadius(double factor) {

@@ -28,39 +28,78 @@ public class PapiExpansion extends PlaceholderExpansion {
     private final Map<String, BiFunction<PlayerData, Adaptation<?>, String>> adaptationMap = Maps.newHashMap();
 
     public PapiExpansion() {
-        // this should be %adapt_skill_level%, %adapt_skill_knowledge%, %adapt_skill_xp%, %adapt_skill_freshness%, %adapt_skill_multiplier%, %adapt_skill_name%
+        // this should be %adapt_skill_level%, %adapt_skill_knowledge%,
+        // %adapt_skill_xp%, %adapt_skill_freshness%, %adapt_skill_multiplier%,
+        // %adapt_skill_name%
         // where skill is the id of the skill eg: %adapt_herbalism_level%
-        skillMap.put("level", skill -> String.valueOf(skill.getLevel()).equals("-5000") ? "0" : String.valueOf(skill.getLevel()));
-        skillMap.put("knowledge", skill -> String.valueOf(skill.getKnowledge()).equals("-5000") ? "0" : String.valueOf(skill.getKnowledge()));
-        skillMap.put("xp", skill -> String.format("%.2f", skill.getXp()).equals("-5000.00") ? "0" : String.format("%.2f", skill.getXp()));
-        skillMap.put("freshness", skill -> String.valueOf(skill.getFreshness()).equals("-5000") ? "0" : String.valueOf(skill.getFreshness()));
-        skillMap.put("multiplier", skill -> String.valueOf(skill.getMultiplier()).equals("-5000") ? "0" : String.valueOf(skill.getMultiplier()));
+        skillMap.put("level",
+                skill -> String.valueOf(skill.getLevel()).equals("-5000") ? "0" : String.valueOf(skill.getLevel()));
+        skillMap.put("knowledge",
+                skill -> String.valueOf(skill.getKnowledge()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(skill.getKnowledge()));
+        skillMap.put("xp",
+                skill -> String.format("%.2f", skill.getXp()).equals("-5000.00")
+                        ? "0"
+                        : String.format("%.2f", skill.getXp()));
+        skillMap.put("freshness",
+                skill -> String.valueOf(skill.getFreshness()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(skill.getFreshness()));
+        skillMap.put("multiplier",
+                skill -> String.valueOf(skill.getMultiplier()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(skill.getMultiplier()));
         skillMap.put("name", skill -> Localizer.dLocalize("skill", skill.getLine(), "name"));
 
-        // this should be %adapt_player_level%, %adapt_player_multiplier%, %adapt_player_availablepower%, %adapt_player_maxpower%, %adapt_player_usedpower%, %adapt_player_wisdom%, %adapt_player_masterxp%, %adapt_player_seenthings%
+        // this should be %adapt_player_level%, %adapt_player_multiplier%,
+        // %adapt_player_availablepower%, %adapt_player_maxpower%,
+        // %adapt_player_usedpower%, %adapt_player_wisdom%, %adapt_player_masterxp%,
+        // %adapt_player_seenthings%
         // the player is provided by the ingame context
-        playerMap.put("level", playerData -> String.valueOf(playerData.getMultiplier()).equals("-5000") ? "0" : String.valueOf(playerData.getLevel()));
-        playerMap.put("multiplier", playerData -> String.valueOf(playerData.getMultiplier()).equals("-5000") ? "0" : String.valueOf(playerData.getMultiplier()));
-        playerMap.put("availablepower", playerData -> String.valueOf(playerData.getAvailablePower()).equals("-5000") ? "0" : String.valueOf(playerData.getAvailablePower()));
-        playerMap.put("maxpower", playerData -> String.valueOf(playerData.getMaxPower()).equals("-5000") ? "0" : String.valueOf(playerData.getMaxPower()));
-        playerMap.put("usedpower", playerData -> String.valueOf(playerData.getUsedPower()).equals("-5000") ? "0" : String.valueOf(playerData.getUsedPower()));
-        playerMap.put("wisdom", playerData -> String.valueOf(playerData.getWisdom()).equals("-5000") ? "0" : String.valueOf(playerData.getWisdom()));
-        playerMap.put("masterxp", playerData -> String.valueOf(playerData.getMasterXp()).equals("-5000") ? "0" : String.valueOf(playerData.getMasterXp()));
+        playerMap.put("level",
+                playerData -> String.valueOf(playerData.getMultiplier()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getLevel()));
+        playerMap.put("multiplier",
+                playerData -> String.valueOf(playerData.getMultiplier()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getMultiplier()));
+        playerMap.put("availablepower",
+                playerData -> String.valueOf(playerData.getAvailablePower()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getAvailablePower()));
+        playerMap.put("maxpower",
+                playerData -> String.valueOf(playerData.getMaxPower()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getMaxPower()));
+        playerMap.put("usedpower",
+                playerData -> String.valueOf(playerData.getUsedPower()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getUsedPower()));
+        playerMap.put("wisdom",
+                playerData -> String.valueOf(playerData.getWisdom()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getWisdom()));
+        playerMap.put("masterxp",
+                playerData -> String.valueOf(playerData.getMasterXp()).equals("-5000")
+                        ? "0"
+                        : String.valueOf(playerData.getMasterXp()));
         playerMap.put("seenthings", playerData -> String.valueOf(playerData.getSeenBlocks().getSeen().size()
-                + playerData.getSeenBiomes().getSeen().size()
-                + playerData.getSeenEnchants().getSeen().size()
-                + playerData.getSeenEnvironments().getSeen().size()
-                + playerData.getSeenFoods().getSeen().size()
-                + playerData.getSeenItems().getSeen().size()
-                + playerData.getSeenMobs().getSeen().size()
-                + playerData.getSeenPeople().getSeen().size()
-                + playerData.getSeenPotionEffects().getSeen().size() + playerData.getSeenRecipes().getSeen().size()
-                + playerData.getSeenPotionEffects().getSeen().size() + playerData.getSeenWorlds().getSeen().size()));
+                + playerData.getSeenBiomes().getSeen().size() + playerData.getSeenEnchants().getSeen().size()
+                + playerData.getSeenEnvironments().getSeen().size() + playerData.getSeenFoods().getSeen().size()
+                + playerData.getSeenItems().getSeen().size() + playerData.getSeenMobs().getSeen().size()
+                + playerData.getSeenPeople().getSeen().size() + playerData.getSeenPotionEffects().getSeen().size()
+                + playerData.getSeenRecipes().getSeen().size() + playerData.getSeenPotionEffects().getSeen().size()
+                + playerData.getSeenWorlds().getSeen().size()));
 
-        // this should be %adapt_adaptation_<ID>_level%, %adapt_adaptation_<ID>_maxlevel%
-        // where adaptation is the adaptation id (e.g. %adapt_adaptation_stealth-ghost-armor_level%)
+        // this should be %adapt_adaptation_<ID>_level%,
+        // %adapt_adaptation_<ID>_maxlevel%
+        // where adaptation is the adaptation id (e.g.
+        // %adapt_adaptation_stealth-ghost-armor_level%)
         adaptationMap.put("maxlevel", (playerData, adaptation) -> String.valueOf(adaptation.getMaxLevel()));
-        adaptationMap.put("level", (playerData, adaptation) -> String.valueOf(getAdaptionLevel(adaptation, playerData)));
+        adaptationMap.put("level",
+                (playerData, adaptation) -> String.valueOf(getAdaptionLevel(adaptation, playerData)));
         adaptationMap.put("name", (playerData, adaptation) -> getAdaptionLocalizedName(adaptation));
     }
 
@@ -228,4 +267,3 @@ public class PapiExpansion extends PlaceholderExpansion {
         return null;
     }
 }
-

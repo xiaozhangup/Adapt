@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.brewing;
 
@@ -52,8 +52,10 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Form.duration((long) getDurationBoost(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("brewing", "lingering", "lore1"));
-        v.addLore(C.GREEN + Form.pc(getPercentBoost(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("brewing", "lingering", "lore2"));
+        v.addLore(C.GREEN + Form.duration((long) getDurationBoost(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("brewing", "lingering", "lore1"));
+        v.addLore(C.GREEN + Form.pc(getPercentBoost(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("brewing", "lingering", "lore2"));
     }
 
     public double getDurationBoost(double factor) {
@@ -70,7 +72,8 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
             return;
         }
         if (e.getBlock().getType().equals(Material.BREWING_STAND)) {
-            BrewingStandOwner owner = WorldData.of(e.getBlock().getWorld()).getMantle().get(e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ(), BrewingStandOwner.class);
+            BrewingStandOwner owner = WorldData.of(e.getBlock().getWorld()).getMantle().get(e.getBlock().getX(),
+                    e.getBlock().getY(), e.getBlock().getZ(), BrewingStandOwner.class);
 
             if (owner != null) {
                 J.s(() -> {
@@ -84,8 +87,10 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
                             is = is.clone();
                             data = data == null ? getServer().peekData(owner.getOwner()) : data;
 
-                            if (data.getSkillLines().containsKey(getSkill().getName()) && data.getSkillLine(getSkill().getName()).getAdaptations().containsKey(getName())) {
-                                PlayerAdaptation a = data.getSkillLine(getSkill().getName()).getAdaptations().get(getName());
+                            if (data.getSkillLines().containsKey(getSkill().getName()) && data
+                                    .getSkillLine(getSkill().getName()).getAdaptations().containsKey(getName())) {
+                                PlayerAdaptation a = data.getSkillLine(getSkill().getName()).getAdaptations()
+                                        .get(getName());
 
                                 if (a.getLevel() > 0) {
                                     double factor = getLevelPercent(a.getLevel());
@@ -126,7 +131,6 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
 
         return false;
     }
-
 
     @Override
     public void onTick() {

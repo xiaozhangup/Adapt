@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -55,51 +55,55 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
         setInterval(3100);
         setIcon(Material.IRON_BARS);
         cooldowns = new HashMap<>();
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.BRICK).key("challenge_place_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.BRICK).key("challenge_place_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_place_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_place_1k", "description"))
                 .model(CustomModel.get(Material.BRICK, "advancement", "architect", "challenge_place_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                        .icon(Material.BRICK)
-                        .key("challenge_place_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.BRICK).key("challenge_place_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_place_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_place_5k", "description"))
                         .model(CustomModel.get(Material.BRICK, "advancement", "architect", "challenge_place_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.NETHER_BRICK)
-                                .key("challenge_place_50k")
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.NETHER_BRICK).key("challenge_place_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_place_50k", "title"))
                                 .description(Localizer.dLocalize("advancement", "challenge_place_50k", "description"))
-                                .model(CustomModel.get(Material.NETHER_BRICK, "advancement", "architect", "challenge_place_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                        .icon(Material.NETHER_BRICK)
+                                .model(CustomModel.get(Material.NETHER_BRICK, "advancement", "architect",
+                                        "challenge_place_50k"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.NETHER_BRICK)
                                         .key("challenge_place_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_place_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_place_500k", "description"))
-                                        .model(CustomModel.get(Material.NETHER_BRICK, "advancement", "architect", "challenge_place_500k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_place_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.NETHER_BRICK, "advancement", "architect",
+                                                "challenge_place_500k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
-                                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                                .icon(Material.IRON_INGOT)
+                                        .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                        .child(AdaptAdvancement.builder().icon(Material.IRON_INGOT)
                                                 .key("challenge_place_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_place_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_place_5m", "description"))
-                                                .model(CustomModel.get(Material.IRON_INGOT, "advancement", "architect", "challenge_place_5m"))
+                                                .title(Localizer.dLocalize("advancement", "challenge_place_5m",
+                                                        "title"))
+                                                .description(Localizer.dLocalize("advancement", "challenge_place_5m",
+                                                        "description"))
+                                                .model(CustomModel.get(Material.IRON_INGOT, "advancement", "architect",
+                                                        "challenge_place_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_1k").goal(1000).stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_5k").goal(5000).stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_50k").goal(50000).stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_500k").goal(500000).stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_5m").goal(5000000).stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_1k").goal(1000)
+                .stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_5k").goal(5000)
+                .stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_50k").goal(50000)
+                .stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_500k").goal(500000)
+                .stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_place_5m").goal(5000000)
+                .stat("blocks.placed").reward(getConfig().challengePlace1kReward).build());
         setIcon(Material.SMITHING_TABLE);
         registerAdaptation(new ArchitectGlass());
         registerAdaptation(new ArchitectFoundation());
@@ -121,9 +125,11 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
 
                 handleBlockCooldown(p, () -> {
                     try {
-                        J.a(() -> xp(p, e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5), blockXP(e.getBlock(), getConfig().xpBase + v)));
+                        J.a(() -> xp(p, e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5),
+                                blockXP(e.getBlock(), getConfig().xpBase + v)));
                     } catch (Exception ignored) {
-                        Adapt.verbose("Failed to give XP to " + p.getName() + " for placing " + e.getBlock().getType().name());
+                        Adapt.verbose("Failed to give XP to " + p.getName() + " for placing "
+                                + e.getBlock().getType().name());
                     }
                 });
             }
@@ -153,7 +159,6 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
         cooldowns.put(p, System.currentTimeMillis());
         action.run();
     }
-
 
     @Override
     public boolean isEnabled() {

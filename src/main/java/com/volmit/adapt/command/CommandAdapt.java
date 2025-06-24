@@ -25,13 +25,9 @@ public class CommandAdapt implements DecreeExecutor {
     private CommandDebug debug;
 
     @Decree(description = "Boost Target player, or Global Experience gain.")
-    public void boost(
-            @Param(aliases = "seconds", description = "Amount of seconds", defaultValue = "10")
-            int seconds,
-            @Param(aliases = "multiplier", description = "Strength of the boost ", defaultValue = "10")
-            double multiplier,
-            @Param(description = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class)
-            Player player
+    public void boost(@Param(aliases = "seconds", description = "Amount of seconds", defaultValue = "10") int seconds,
+            @Param(aliases = "multiplier", description = "Strength of the boost ", defaultValue = "10") double multiplier,
+            @Param(description = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class) Player player
 
     ) {
         if (!sender().hasPermission("adapt.boost")) {
@@ -56,7 +52,9 @@ public class CommandAdapt implements DecreeExecutor {
     }
 
     @Decree(description = "Boost Global Experience gain.", name = "global-boost")
-    public void globalBoost(@Param(aliases = "seconds", description = "Amount of seconds", defaultValue = "10") int seconds, @Param(aliases = "multiplier", description = "Strength of the boost ", defaultValue = "10") double multiplier) {
+    public void globalBoost(
+            @Param(aliases = "seconds", description = "Amount of seconds", defaultValue = "10") int seconds,
+            @Param(aliases = "multiplier", description = "Strength of the boost ", defaultValue = "10") double multiplier) {
         if (!sender().hasPermission("adapt.boost.global")) {
             FConst.error("You lack the Permission 'adapt.boost.global'").send(sender());
             return;
@@ -70,13 +68,9 @@ public class CommandAdapt implements DecreeExecutor {
 
     @Decree(description = "Open the Adapt GUI")
     public void gui(
-            @Param(aliases = "target", defaultValue = "[Main]")
-            AdaptationListingHandler.AdaptationList guiTarget,
-            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class)
-            Player player,
-            @Param(aliases = "force", defaultValue = "false")
-            boolean force
-    ) {
+            @Param(aliases = "target", defaultValue = "[Main]") AdaptationListingHandler.AdaptationList guiTarget,
+            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class) Player player,
+            @Param(aliases = "force", defaultValue = "false") boolean force) {
         if (!sender().hasPermission("adapt.gui")) {
             FConst.error("You lack the Permission 'adapt.gui'").send(sender());
             return;
@@ -99,9 +93,11 @@ public class CommandAdapt implements DecreeExecutor {
             for (Skill<?> skill : SkillRegistry.skills.sortV()) {
                 if (guiTarget.equals("[Skill]-" + skill.getName())) {
                     if (force || skill.openGui(targetPlayer, true)) {
-                        FConst.success("Opened GUI for " + skill.getName() + " for " + targetPlayer.getName()).send(sender());
+                        FConst.success("Opened GUI for " + skill.getName() + " for " + targetPlayer.getName())
+                                .send(sender());
                     } else {
-                        FConst.error("Failed to open GUI for " + skill.getName() + " for " + targetPlayer.getName() + " - No Permission, remove from blacklist!").send(sender());
+                        FConst.error("Failed to open GUI for " + skill.getName() + " for " + targetPlayer.getName()
+                                + " - No Permission, remove from blacklist!").send(sender());
                     }
                     return;
                 }
@@ -113,9 +109,12 @@ public class CommandAdapt implements DecreeExecutor {
                 for (Adaptation<?> adaptation : skill.getAdaptations()) {
                     if (guiTarget.equals("[Adaptation]-" + adaptation.getName())) {
                         if (force || adaptation.openGui(targetPlayer, true)) {
-                            FConst.success("Opened GUI for " + adaptation.getName() + " for " + targetPlayer.getName()).send(sender());
+                            FConst.success("Opened GUI for " + adaptation.getName() + " for " + targetPlayer.getName())
+                                    .send(sender());
                         } else {
-                            FConst.error("Failed to open GUI for " + adaptation.getName() + " for " + targetPlayer.getName() + " - No Permission, remove from blacklist!").send(sender());
+                            FConst.error("Failed to open GUI for " + adaptation.getName() + " for "
+                                    + targetPlayer.getName() + " - No Permission, remove from blacklist!")
+                                    .send(sender());
                         }
                         return;
                     }
@@ -125,13 +124,9 @@ public class CommandAdapt implements DecreeExecutor {
     }
 
     @Decree(description = "Give yourself an experience orb")
-    public void experience(
-            @Param(aliases = "skill")
-            AdaptationListingHandler.AdaptationSkillList skillName,
-            @Param(aliases = "amount", defaultValue = "10")
-            int amount,
-            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class)
-            Player player
+    public void experience(@Param(aliases = "skill") AdaptationListingHandler.AdaptationSkillList skillName,
+            @Param(aliases = "amount", defaultValue = "10") int amount,
+            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class) Player player
 
     ) {
         if (!sender().hasPermission("adapt.cheatitem")) {
@@ -161,7 +156,8 @@ public class CommandAdapt implements DecreeExecutor {
         }
 
         if (skillName.equals("[random]")) {
-            targetPlayer.getInventory().addItem(ExperienceOrb.with(SkillRegistry.skills.sortV().getRandom().getName(), amount));
+            targetPlayer.getInventory()
+                    .addItem(ExperienceOrb.with(SkillRegistry.skills.sortV().getRandom().getName(), amount));
             FConst.success("Giving random orb").send(sender());
             return;
         }
@@ -174,14 +170,9 @@ public class CommandAdapt implements DecreeExecutor {
     }
 
     @Decree(description = "Give yourself a knowledge orb")
-    public void knowledge(
-            @Param(aliases = "skill")
-            AdaptationListingHandler.AdaptationSkillList skillName,
-            @Param(aliases = "amount", defaultValue = "10")
-            int amount,
-            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class)
-            Player player
-    ) {
+    public void knowledge(@Param(aliases = "skill") AdaptationListingHandler.AdaptationSkillList skillName,
+            @Param(aliases = "amount", defaultValue = "10") int amount,
+            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class) Player player) {
         if (!sender().hasPermission("adapt.cheatitem")) {
             FConst.error("You lack the Permission 'adapt.cheatitem'").send(sender());
             return;
@@ -208,7 +199,8 @@ public class CommandAdapt implements DecreeExecutor {
         }
 
         if (skillName.equals("[random]")) {
-            targetPlayer.getInventory().addItem(KnowledgeOrb.with(SkillRegistry.skills.sortV().getRandom().getName(), amount));
+            targetPlayer.getInventory()
+                    .addItem(KnowledgeOrb.with(SkillRegistry.skills.sortV().getRandom().getName(), amount));
             FConst.success("Giving random orb").send(sender());
             return;
         }
@@ -222,16 +214,10 @@ public class CommandAdapt implements DecreeExecutor {
 
     @Decree(description = "Assign a skill, or UnAssign a skill as if you are learning / unlearning a skill.")
     public void determine(
-            @Param(aliases = "adaptationTarget")
-            AdaptationListingHandler.AdaptationProvider adaptationTarget,
-            @Param(aliases = "assign")
-            boolean assign,
-            @Param(aliases = "force")
-            boolean force,
-            @Param(aliases = "level")
-            int level,
-            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class)
-            Player player
+            @Param(aliases = "adaptationTarget") AdaptationListingHandler.AdaptationProvider adaptationTarget,
+            @Param(aliases = "assign") boolean assign, @Param(aliases = "force") boolean force,
+            @Param(aliases = "level") int level,
+            @Param(aliases = "player", defaultValue = "---", customHandler = NullablePlayerHandler.class) Player player
 
     ) {
         if (!sender().hasPermission("adapt.determine")) {
@@ -246,7 +232,7 @@ public class CommandAdapt implements DecreeExecutor {
             targetPlayer = player();
         }
 
-        //the format is skillname:adaptationname
+        // the format is skillname:adaptationname
         String[] split = adaptationTarget.name().split(":");
         String skillname = split[0];
         String adaptationname = split[1];
@@ -262,7 +248,8 @@ public class CommandAdapt implements DecreeExecutor {
                                 adaptation.unlearn(player, level, force);
                             }
                         } else {
-                            FConst.error("You must specify a player when using this command from console.").send(sender());
+                            FConst.error("You must specify a player when using this command from console.")
+                                    .send(sender());
                         }
                         return;
                     }

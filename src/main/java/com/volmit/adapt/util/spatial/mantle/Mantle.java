@@ -39,8 +39,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The mantle can store any type of data slice anywhere and manage regions & IO on it's own.
- * This class is fully thread safe read & writeNodeData
+ * The mantle can store any type of data slice anywhere and manage regions & IO
+ * on it's own. This class is fully thread safe read & writeNodeData
  */
 public class Mantle {
     private final File dataFolder;
@@ -57,8 +57,10 @@ public class Mantle {
     /**
      * Create a new mantle
      *
-     * @param dataFolder  the data folder
-     * @param worldHeight the world's height (in blocks)
+     * @param dataFolder
+     *            the data folder
+     * @param worldHeight
+     *            the world's height (in blocks)
      */
     public Mantle(File dataFolder, int worldHeight) {
         this.hyperLock = new HyperLock();
@@ -75,9 +77,12 @@ public class Mantle {
     /**
      * Get the file for a region
      *
-     * @param folder the folder
-     * @param x      the x coord
-     * @param z      the z coord
+     * @param folder
+     *            the folder
+     * @param x
+     *            the x coord
+     * @param z
+     *            the z coord
      * @return the file
      */
     public static File fileForRegion(File folder, int x, int z) {
@@ -87,8 +92,10 @@ public class Mantle {
     /**
      * Get the file for the given region
      *
-     * @param folder the data folder
-     * @param key    the region key
+     * @param folder
+     *            the data folder
+     * @param key
+     *            the region key
      * @return the file
      */
     public static File fileForRegion(File folder, Long key) {
@@ -102,8 +109,10 @@ public class Mantle {
     /**
      * Get the long value representing a chunk or region coordinate
      *
-     * @param x the x
-     * @param z the z
+     * @param x
+     *            the x
+     * @param z
+     *            the z
      * @return the value
      */
     public static Long key(int x, int z) {
@@ -136,8 +145,10 @@ public class Mantle {
     /**
      * Check very quickly if a tectonic plate exists via cached or the file system
      *
-     * @param x the x region coordinate
-     * @param z the z region coordinate
+     * @param x
+     *            the x region coordinate
+     * @param z
+     *            the z region coordinate
      * @return true if it exists
      */
     public boolean hasTectonicPlate(int x, int z) {
@@ -148,11 +159,16 @@ public class Mantle {
     /**
      * Iterate data in a chunk
      *
-     * @param x        the chunk x
-     * @param z        the chunk z
-     * @param type     the type of data to iterate
-     * @param iterator the iterator (x,y,z,data) -> do stuff
-     * @param <T>      the type of data to iterate
+     * @param x
+     *            the chunk x
+     * @param z
+     *            the chunk z
+     * @param type
+     *            the type of data to iterate
+     * @param iterator
+     *            the iterator (x,y,z,data) -> do stuff
+     * @param <T>
+     *            the type of data to iterate
      */
     public <T> void iterateChunk(int x, int z, Class<T> type, Consume.Four<Integer, Integer, Integer, T> iterator) {
         if (!hasTectonicPlate(x >> 5, z >> 5)) {
@@ -165,16 +181,22 @@ public class Mantle {
     /**
      * Set data T at the given block position. This method will attempt to find a
      * Tectonic Plate either by loading it or creating a new one. This method uses
-     * the hyper lock packaged with each Mantle. The hyperlock allows locking of multiple
-     * threads at a single region while still allowing other threads to continue
-     * reading & writing other regions. Hyperlocks are slow sync, but in multicore
-     * environments, they drastically speed up loading & saving large counts of plates
+     * the hyper lock packaged with each Mantle. The hyperlock allows locking of
+     * multiple threads at a single region while still allowing other threads to
+     * continue reading & writing other regions. Hyperlocks are slow sync, but in
+     * multicore environments, they drastically speed up loading & saving large
+     * counts of plates
      *
-     * @param x   the block's x coordinate
-     * @param y   the block's y coordinate
-     * @param z   the block's z coordinate
-     * @param t   the data to set at the block
-     * @param <T> the type of data (generic method)
+     * @param x
+     *            the block's x coordinate
+     * @param y
+     *            the block's y coordinate
+     * @param z
+     *            the block's z coordinate
+     * @param t
+     *            the data to set at the block
+     * @param <T>
+     *            the type of data (generic method)
      */
 
     public <T> void set(int x, int y, int z, T t) {
@@ -186,13 +208,9 @@ public class Mantle {
             return;
         }
 
-        Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5)
-                .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
-                .getOrCreate(y >> 4);
-        matter.slice(matter.getClass(t))
-                .set(x & 15, y & 15, z & 15, t);
+        Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5).getOrCreate((x >> 4) & 31, (z >> 4) & 31).getOrCreate(y >> 4);
+        matter.slice(matter.getClass(t)).set(x & 15, y & 15, z & 15, t);
     }
-
 
     public <T> void remove(int x, int y, int z, Class<T> t) {
         if (closed.get()) {
@@ -203,26 +221,29 @@ public class Mantle {
             return;
         }
 
-        Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5)
-                .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
-                .getOrCreate(y >> 4);
-        matter.slice(t)
-                .set(x & 15, y & 15, z & 15, null);
+        Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5).getOrCreate((x >> 4) & 31, (z >> 4) & 31).getOrCreate(y >> 4);
+        matter.slice(t).set(x & 15, y & 15, z & 15, null);
     }
 
     /**
-     * Gets the data tat the current block position This method will attempt to find a
-     * Tectonic Plate either by loading it or creating a new one. This method uses
-     * the hyper lock packaged with each Mantle. The hyperlock allows locking of multiple
-     * threads at a single region while still allowing other threads to continue
-     * reading & writing other regions. Hyperlocks are slow sync, but in multicore
-     * environments, they drastically speed up loading & saving large counts of plates
+     * Gets the data tat the current block position This method will attempt to find
+     * a Tectonic Plate either by loading it or creating a new one. This method uses
+     * the hyper lock packaged with each Mantle. The hyperlock allows locking of
+     * multiple threads at a single region while still allowing other threads to
+     * continue reading & writing other regions. Hyperlocks are slow sync, but in
+     * multicore environments, they drastically speed up loading & saving large
+     * counts of plates
      *
-     * @param x   the block's x coordinate
-     * @param y   the block's y coordinate
-     * @param z   the block's z coordinate
-     * @param t   the class representing the type of data being requested
-     * @param <T> the type assumed from the provided class
+     * @param x
+     *            the block's x coordinate
+     * @param y
+     *            the block's y coordinate
+     * @param z
+     *            the block's z coordinate
+     * @param t
+     *            the class representing the type of data being requested
+     * @param <T>
+     *            the type assumed from the provided class
      * @return the returned result (or null) if it doesnt exist
      */
     @SuppressWarnings("unchecked")
@@ -240,10 +261,8 @@ public class Mantle {
             return null;
         }
 
-        return (T) get((x >> 4) >> 5, (z >> 4) >> 5)
-                .getOrCreate((x >> 4) & 31, (z >> 4) & 31)
-                .getOrCreate(y >> 4).slice(t)
-                .get(x & 15, y & 15, z & 15);
+        return (T) get((x >> 4) >> 5, (z >> 4) >> 5).getOrCreate((x >> 4) & 31, (z >> 4) & 31).getOrCreate(y >> 4)
+                .slice(t).get(x & 15, y & 15, z & 15);
     }
 
     /**
@@ -256,9 +275,9 @@ public class Mantle {
     }
 
     /**
-     * Closes the Mantle. By closing the mantle, you can no longer read or writeNodeData
-     * any data to the mantle or it's Tectonic Plates. Closing will also flush any
-     * loaded regions to the disk in parallel.
+     * Closes the Mantle. By closing the mantle, you can no longer read or
+     * writeNodeData any data to the mantle or it's Tectonic Plates. Closing will
+     * also flush any loaded regions to the disk in parallel.
      */
     public synchronized void close() {
         if (closed.get()) {
@@ -271,10 +290,11 @@ public class Mantle {
     }
 
     /**
-     * Save & unload regions that have not been used for more than the
-     * specified amount of milliseconds
+     * Save & unload regions that have not been used for more than the specified
+     * amount of milliseconds
      *
-     * @param idleDuration the duration
+     * @param idleDuration
+     *            the duration
      */
     public synchronized void trim(long idleDuration) {
         if (closed.get()) {
@@ -308,11 +328,13 @@ public class Mantle {
     }
 
     /**
-     * This retreives a future of the Tectonic Plate at the given coordinates.
-     * All methods accessing tectonic plates should go through this method
+     * This retreives a future of the Tectonic Plate at the given coordinates. All
+     * methods accessing tectonic plates should go through this method
      *
-     * @param x the region x
-     * @param z the region z
+     * @param x
+     *            the region x
+     * @param z
+     *            the region z
      * @return the future of a tectonic plate.
      */
     private MantleRegion get(int x, int z) {
@@ -342,11 +364,13 @@ public class Mantle {
     }
 
     /**
-     * This retreives a future of the Tectonic Plate at the given coordinates.
-     * All methods accessing tectonic plates should go through this method
+     * This retreives a future of the Tectonic Plate at the given coordinates. All
+     * methods accessing tectonic plates should go through this method
      *
-     * @param x the region x
-     * @param z the region z
+     * @param x
+     *            the region x
+     * @param z
+     *            the region z
      * @return the future of a tectonic plate.
      */
     private Future<MantleRegion> getSafe(int x, int z) {

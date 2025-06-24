@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.stealth;
 
@@ -54,8 +54,10 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.f(getMaxArmorPoints(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("stealth", "ghostarmor", "lore1"));
-        v.addLore(C.GREEN + "+ " + Form.f(getMaxArmorPerTick(getLevelPercent(level)), 1) + C.GRAY + " " + Localizer.dLocalize("stealth", "ghostarmor", "lore2"));
+        v.addLore(C.GREEN + "+ " + Form.f(getMaxArmorPoints(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("stealth", "ghostarmor", "lore1"));
+        v.addLore(C.GREEN + "+ " + Form.f(getMaxArmorPerTick(getLevelPercent(level)), 1) + C.GRAY + " "
+                + Localizer.dLocalize("stealth", "ghostarmor", "lore2"));
     }
 
     public double getMaxArmorPoints(double factor) {
@@ -75,17 +77,15 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
                 continue;
             }
-            double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY)
-                    .stream()
-                    .mapToDouble(Modifier::getAmount)
-                    .filter(d -> !Double.isNaN(d))
-                    .max()
-                    .orElse(0);
+            double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).stream().mapToDouble(Modifier::getAmount)
+                    .filter(d -> !Double.isNaN(d)).max().orElse(0);
             double armor = getMaxArmorPoints(getLevelPercent(p));
             armor = Double.isNaN(armor) ? 0 : armor;
 
             if (oldArmor < armor) {
-                attribute.setModifier(MODIFIER, MODIFIER_KEY, Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))), AttributeModifier.Operation.ADD_NUMBER);
+                attribute.setModifier(MODIFIER, MODIFIER_KEY,
+                        Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))),
+                        AttributeModifier.Operation.ADD_NUMBER);
             } else if (oldArmor > armor) {
                 attribute.setModifier(MODIFIER, MODIFIER_KEY, armor, AttributeModifier.Operation.ADD_NUMBER);
             }
@@ -98,12 +98,14 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             return;
         }
         if (e.getEntity() instanceof Player p && hasAdaptation(p) && !e.isCancelled() && e.getDamage() > 0) {
-            // Check if 2.5 * e.getDamage() is greater than 10 if so just set it to 10 otherwise use the value of 2.5 * e.getDamage()
+            // Check if 2.5 * e.getDamage() is greater than 10 if so just set it to 10
+            // otherwise use the value of 2.5 * e.getDamage()
             int damageXP = (int) Math.min(10, 2.5 * e.getDamage());
             xp(p, damageXP);
             J.s(() -> {
                 var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
-                if (attribute == null) return;
+                if (attribute == null)
+                    return;
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
             });
         }

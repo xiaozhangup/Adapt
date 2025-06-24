@@ -134,8 +134,9 @@ public class DataContainer<T> {
     }
 
     public String toString() {
-        return "DataContainer <" + length + " x " + bits + " bits> -> Palette<" + palette.get().getClass().getSimpleName().replaceAll("\\QPalette\\E", "") + ">: " + palette.get().size() +
-                " " + data.get().toString() + " PalBit: " + palette.get().bits();
+        return "DataContainer <" + length + " x " + bits + " bits> -> Palette<"
+                + palette.get().getClass().getSimpleName().replaceAll("\\QPalette\\E", "") + ">: "
+                + palette.get().size() + " " + data.get().toString() + " PalBit: " + palette.get().bits();
     }
 
     public byte[] write() throws IOException {

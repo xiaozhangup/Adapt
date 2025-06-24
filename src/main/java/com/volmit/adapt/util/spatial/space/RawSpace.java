@@ -67,12 +67,9 @@ public class RawSpace {
             double x = v.getX();
             double y = v.getY();
             double z = v.getZ();
-            if (!(vset.contains(new Pos(x + 1, y, z))
-                    && vset.contains(new Pos(x - 1, y, z))
-                    && vset.contains(new Pos(x, y + 1, z))
-                    && vset.contains(new Pos(x, y - 1, z))
-                    && vset.contains(new Pos(x, y, z + 1))
-                    && vset.contains(new Pos(x, y, z - 1)))) {
+            if (!(vset.contains(new Pos(x + 1, y, z)) && vset.contains(new Pos(x - 1, y, z))
+                    && vset.contains(new Pos(x, y + 1, z)) && vset.contains(new Pos(x, y - 1, z))
+                    && vset.contains(new Pos(x, y, z + 1)) && vset.contains(new Pos(x, y, z - 1)))) {
                 returnset.add(v);
             }
         }
@@ -116,11 +113,13 @@ public class RawSpace {
         }
     }
 
-    public <T> void iterateRegion(int x, int y, int z, int radius, Class<T> type, Consume.Four<Integer, Integer, Integer, T> iterator) {
+    public <T> void iterateRegion(int x, int y, int z, int radius, Class<T> type,
+            Consume.Four<Integer, Integer, Integer, T> iterator) {
         iterateRegion(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius, type, iterator);
     }
 
-    public <T> void iterateRegion(int x1, int y1, int z1, int x2, int y2, int z2, Class<T> type, Consume.Four<Integer, Integer, Integer, T> iterator) {
+    public <T> void iterateRegion(int x1, int y1, int z1, int x2, int y2, int z2, Class<T> type,
+            Consume.Four<Integer, Integer, Integer, T> iterator) {
         int xi = Math.min(x1, x2);
         int xa = Math.max(x1, x2);
         int yi = Math.min(y1, y2);
@@ -142,10 +141,11 @@ public class RawSpace {
     }
 
     /**
-     * Save & unload regions that have not been used for more than the
-     * specified amount of milliseconds
+     * Save & unload regions that have not been used for more than the specified
+     * amount of milliseconds
      *
-     * @param idleDuration the duration
+     * @param idleDuration
+     *            the duration
      */
     public synchronized void trim(long idleDuration) {
         if (closed.get()) {
@@ -164,18 +164,24 @@ public class RawSpace {
     }
 
     /**
-     * Gets the data that the current block position This method will attempt to find a
-     * Tectonic Plate either by loading it or creating a new one. This method uses
-     * the hyper lock packaged with each Mantle. The hyperlock allows locking of multiple
-     * threads at a single region while still allowing other threads to continue
-     * reading & writing other regions. Hyperlocks are slow sync, but in multicore
-     * environments, they drastically speed up loading & saving large counts of plates
+     * Gets the data that the current block position This method will attempt to
+     * find a Tectonic Plate either by loading it or creating a new one. This method
+     * uses the hyper lock packaged with each Mantle. The hyperlock allows locking
+     * of multiple threads at a single region while still allowing other threads to
+     * continue reading & writing other regions. Hyperlocks are slow sync, but in
+     * multicore environments, they drastically speed up loading & saving large
+     * counts of plates
      *
-     * @param x    the block's x coordinate
-     * @param y    the block's y coordinate
-     * @param z    the block's z coordinate
-     * @param type the class representing the type of data being requested
-     * @param <T>  the type assumed from the provided class
+     * @param x
+     *            the block's x coordinate
+     * @param y
+     *            the block's y coordinate
+     * @param z
+     *            the block's z coordinate
+     * @param type
+     *            the class representing the type of data being requested
+     * @param <T>
+     *            the type assumed from the provided class
      * @return the returned result (or null) if it doesnt exist
      */
     public <T> T get(int x, int y, int z, Class<T> type) {
@@ -193,16 +199,22 @@ public class RawSpace {
     /**
      * Set data T at the given block position. This method will attempt to find a
      * Tectonic Plate either by loading it or creating a new one. This method uses
-     * the hyper lock packaged with each Mantle. The hyperlock allows locking of multiple
-     * threads at a single region while still allowing other threads to continue
-     * reading & writing other regions. Hyperlocks are slow sync, but in multicore
-     * environments, they drastically speed up loading & saving large counts of plates
+     * the hyper lock packaged with each Mantle. The hyperlock allows locking of
+     * multiple threads at a single region while still allowing other threads to
+     * continue reading & writing other regions. Hyperlocks are slow sync, but in
+     * multicore environments, they drastically speed up loading & saving large
+     * counts of plates
      *
-     * @param x   the block's x coordinate
-     * @param y   the block's y coordinate
-     * @param z   the block's z coordinate
-     * @param t   the data to set at the block
-     * @param <T> the type of data (generic method)
+     * @param x
+     *            the block's x coordinate
+     * @param y
+     *            the block's y coordinate
+     * @param z
+     *            the block's z coordinate
+     * @param t
+     *            the data to set at the block
+     * @param <T>
+     *            the type of data (generic method)
      */
     public <T> void set(int x, int y, int z, T t) {
         if (closed.get()) {
@@ -249,7 +261,8 @@ public class RawSpace {
     /**
      * Get the mantle responsible for the given Y level
      *
-     * @param y the raw y level you need to access
+     * @param y
+     *            the raw y level you need to access
      * @return the mantle responsible for storing that y location
      */
     private Mantle getMantle(int y) {
@@ -271,13 +284,20 @@ public class RawSpace {
     /**
      * Set a sphere into the mantle
      *
-     * @param cx     the center x
-     * @param cy     the center y
-     * @param cz     the center z
-     * @param radius the radius of this sphere
-     * @param fill   should it be filled? or just the outer shell?
-     * @param data   the data to set
-     * @param <T>    the type of data to apply to the mantle
+     * @param cx
+     *            the center x
+     * @param cy
+     *            the center y
+     * @param cz
+     *            the center z
+     * @param radius
+     *            the radius of this sphere
+     * @param fill
+     *            should it be filled? or just the outer shell?
+     * @param data
+     *            the data to set
+     * @param <T>
+     *            the type of data to apply to the mantle
      */
     public <T> void setSphere(int cx, int cy, int cz, double radius, boolean fill, T data) {
         setElipsoid(cx, cy, cz, radius, radius, radius, fill, data);
@@ -290,17 +310,27 @@ public class RawSpace {
     /**
      * Set an elipsoid into the mantle
      *
-     * @param cx   the center x
-     * @param cy   the center y
-     * @param cz   the center z
-     * @param rx   the x radius
-     * @param ry   the y radius
-     * @param rz   the z radius
-     * @param fill should it be filled or just the outer shell?
-     * @param data the data to set
-     * @param <T>  the type of data to apply to the mantle
+     * @param cx
+     *            the center x
+     * @param cy
+     *            the center y
+     * @param cz
+     *            the center z
+     * @param rx
+     *            the x radius
+     * @param ry
+     *            the y radius
+     * @param rz
+     *            the z radius
+     * @param fill
+     *            should it be filled or just the outer shell?
+     * @param data
+     *            the data to set
+     * @param <T>
+     *            the type of data to apply to the mantle
      */
-    public <T> void setElipsoidFunction(int cx, int cy, int cz, double rx, double ry, double rz, boolean fill, Function.Three<Integer, Integer, Integer, T> data) {
+    public <T> void setElipsoidFunction(int cx, int cy, int cz, double rx, double ry, double rz, boolean fill,
+            Function.Three<Integer, Integer, Integer, T> data) {
         rx += 0.5;
         ry += 0.5;
         rz += 0.5;
@@ -312,13 +342,11 @@ public class RawSpace {
         final int ceilRadiusZ = (int) Math.ceil(rz);
         double nextXn = 0;
 
-        forX:
-        for (int x = 0; x <= ceilRadiusX; ++x) {
+        forX : for (int x = 0; x <= ceilRadiusX; ++x) {
             final double xn = nextXn;
             nextXn = (x + 1) * invRadiusX;
             double nextYn = 0;
-            forY:
-            for (int y = 0; y <= ceilRadiusY; ++y) {
+            forY : for (int y = 0; y <= ceilRadiusY; ++y) {
                 final double yn = nextYn;
                 nextYn = (y + 1) * invRadiusY;
                 double nextZn = 0;
@@ -338,7 +366,8 @@ public class RawSpace {
                     }
 
                     if (!fill) {
-                        if (lengthSq(nextXn, yn, zn) <= 1 && lengthSq(xn, nextYn, zn) <= 1 && lengthSq(xn, yn, nextZn) <= 1) {
+                        if (lengthSq(nextXn, yn, zn) <= 1 && lengthSq(xn, nextYn, zn) <= 1
+                                && lengthSq(xn, yn, nextZn) <= 1) {
                             continue;
                         }
                     }
@@ -360,14 +389,22 @@ public class RawSpace {
     /**
      * Set a cuboid of data in the mantle
      *
-     * @param x1   the min x
-     * @param y1   the min y
-     * @param z1   the min z
-     * @param x2   the max x
-     * @param y2   the max y
-     * @param z2   the max z
-     * @param data the data to set
-     * @param <T>  the type of data to apply to the mantle
+     * @param x1
+     *            the min x
+     * @param y1
+     *            the min y
+     * @param z1
+     *            the min z
+     * @param x2
+     *            the max x
+     * @param y2
+     *            the max y
+     * @param z2
+     *            the max z
+     * @param data
+     *            the data to set
+     * @param <T>
+     *            the type of data to apply to the mantle
      */
     public <T> void setCuboid(int x1, int y1, int z1, int x2, int y2, int z2, T data) {
         int j, k;
@@ -384,13 +421,20 @@ public class RawSpace {
     /**
      * Set a pyramid of data in the mantle
      *
-     * @param cx     the center x
-     * @param cy     the base y
-     * @param cz     the center z
-     * @param data   the data to set
-     * @param size   the size of the pyramid (width of base & height)
-     * @param filled should it be filled or hollow
-     * @param <T>    the type of data to apply to the mantle
+     * @param cx
+     *            the center x
+     * @param cy
+     *            the base y
+     * @param cz
+     *            the center z
+     * @param data
+     *            the data to set
+     * @param size
+     *            the size of the pyramid (width of base & height)
+     * @param filled
+     *            should it be filled or hollow
+     * @param <T>
+     *            the type of data to apply to the mantle
      */
     @SuppressWarnings("ConstantConditions")
     public <T> void setPyramid(int cx, int cy, int cz, T data, int size, boolean filled) {
@@ -414,12 +458,18 @@ public class RawSpace {
     /**
      * Set a 3d line
      *
-     * @param a      the first point
-     * @param b      the second point
-     * @param radius the radius
-     * @param filled hollow or filled?
-     * @param data   the data
-     * @param <T>    the type of data to apply to the mantle
+     * @param a
+     *            the first point
+     * @param b
+     *            the second point
+     * @param radius
+     *            the radius
+     * @param filled
+     *            hollow or filled?
+     * @param data
+     *            the data
+     * @param <T>
+     *            the type of data to apply to the mantle
      */
     public <T> void setLine(Pos a, Pos b, double radius, boolean filled, T data) {
         setLine(ImmutableList.of(a, b), radius, filled, data);
@@ -432,13 +482,19 @@ public class RawSpace {
     /**
      * Set lines for points
      *
-     * @param vectors the points
-     * @param radius  the radius
-     * @param filled  hollow or filled?
-     * @param data    the data to set
-     * @param <T>     the type of data to apply to the mantle
+     * @param vectors
+     *            the points
+     * @param radius
+     *            the radius
+     * @param filled
+     *            hollow or filled?
+     * @param data
+     *            the data to set
+     * @param <T>
+     *            the type of data to apply to the mantle
      */
-    public <T> void setLineConsumer(List<Pos> vectors, double radius, boolean filled, Function.Three<Integer, Integer, Integer, T> data) {
+    public <T> void setLineConsumer(List<Pos> vectors, double radius, boolean filled,
+            Function.Three<Integer, Integer, Integer, T> data) {
         Set<Pos> vset = new HashSet<>();
 
         for (int i = 0; vectors.size() != 0 && i < vectors.size() - 1; i++) {
@@ -502,13 +558,20 @@ public class RawSpace {
     /**
      * Set a cylinder in the mantle
      *
-     * @param cx     the center x
-     * @param cy     the base y
-     * @param cz     the center z
-     * @param data   the data to set
-     * @param radius the radius
-     * @param height the height of the cyl
-     * @param filled filled or not
+     * @param cx
+     *            the center x
+     * @param cy
+     *            the base y
+     * @param cz
+     *            the center z
+     * @param data
+     *            the data to set
+     * @param radius
+     *            the radius
+     * @param height
+     *            the height of the cyl
+     * @param filled
+     *            filled or not
      */
     public <T> void setCylinder(int cx, int cy, int cz, T data, double radius, int height, boolean filled) {
         setCylinder(cx, cy, cz, data, radius, radius, height, filled);
@@ -517,16 +580,25 @@ public class RawSpace {
     /**
      * Set a cylinder in the mantle
      *
-     * @param cx      the center x
-     * @param cy      the base y
-     * @param cz      the center z
-     * @param data    the data to set
-     * @param radiusX the x radius
-     * @param radiusZ the z radius
-     * @param height  the height of this cyl
-     * @param filled  filled or hollow?
+     * @param cx
+     *            the center x
+     * @param cy
+     *            the base y
+     * @param cz
+     *            the center z
+     * @param data
+     *            the data to set
+     * @param radiusX
+     *            the x radius
+     * @param radiusZ
+     *            the z radius
+     * @param height
+     *            the height of this cyl
+     * @param filled
+     *            filled or hollow?
      */
-    public <T> void setCylinder(int cx, int cy, int cz, T data, double radiusX, double radiusZ, int height, boolean filled) {
+    public <T> void setCylinder(int cx, int cy, int cz, T data, double radiusX, double radiusZ, int height,
+            boolean filled) {
         int affected = 0;
         radiusX += 0.5;
         radiusZ += 0.5;
@@ -547,8 +619,7 @@ public class RawSpace {
         final int ceilRadiusZ = (int) Math.ceil(radiusZ);
         double nextXn = 0;
 
-        forX:
-        for (int x = 0; x <= ceilRadiusX; ++x) {
+        forX : for (int x = 0; x <= ceilRadiusX; ++x) {
             final double xn = nextXn;
             nextXn = (x + 1) * invRadiusX;
             double nextZn = 0;

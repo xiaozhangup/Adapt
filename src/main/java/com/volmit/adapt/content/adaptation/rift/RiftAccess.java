@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.rift;
 
@@ -64,11 +64,8 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         setCostFactor(getConfig().costFactor);
         setInitialCost(getConfig().initialCost);
         setInterval(1000);
-        registerRecipe(Shapeless.builder()
-                .key("rift-remote-access")
-                .ingredient(Material.ENDER_PEARL)
-                .ingredient(Material.COMPASS)
-                .result(BoundEnderPearl.io.withData(new BoundEnderPearl.Data(null)))
+        registerRecipe(Shapeless.builder().key("rift-remote-access").ingredient(Material.ENDER_PEARL)
+                .ingredient(Material.COMPASS).result(BoundEnderPearl.io.withData(new BoundEnderPearl.Data(null)))
                 .build());
     }
 
@@ -78,7 +75,6 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         v.addLore(C.ITALIC + Localizer.dLocalize("rift", "remoteaccess", "lore2"));
         v.addLore(C.ITALIC + Localizer.dLocalize("rift", "remoteaccess", "lore3"));
     }
-
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(PlayerInteractEvent e) {
@@ -112,7 +108,6 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         boolean sneaking = player.isSneaking();
         boolean allowed = canUseInCreative || !isCreative;
 
-
         // Check if the player is allowed to use the bound item in creative
         if (!allowed) {
             Adapt.info("Player " + player.getName() + " tried to use the bound item in creative mode.");
@@ -132,7 +127,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
             }
             case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK ->
                 // If player right-clicks on air or any block
-                    openPearl(player);
+                openPearl(player);
             default -> {
             }
         }
@@ -166,8 +161,11 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         loadChunkAsync(b.getLocation(), chunk -> {
             if (b.getState() instanceof InventoryHolder holder) {
                 InventoryView view = p.openInventory(holder.getInventory());
-                if (view == null) return;
-                activeViewsMap.computeIfAbsent(Pair.of(new ChunkPos(chunk).add(), b.getLocation()), k -> new ArrayList<>()).add(view);
+                if (view == null)
+                    return;
+                activeViewsMap
+                        .computeIfAbsent(Pair.of(new ChunkPos(chunk).add(), b.getLocation()), k -> new ArrayList<>())
+                        .add(view);
             }
             sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
             sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
@@ -180,7 +178,8 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
     }
 
     private void checkActiveViews() {
-        Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator = activeViewsMap.entrySet().iterator();
+        Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator = activeViewsMap.entrySet()
+                .iterator();
         while (mapIterator.hasNext()) {
             Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry = mapIterator.next();
             removeInvalidViews(entry);
@@ -200,10 +199,12 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     private boolean shouldRemoveView(InventoryView i) {
         Location location = i.getTopInventory().getLocation();
-        return !i.getPlayer().getOpenInventory().equals(i) || (location == null || !isStorage(location.getBlock().getBlockData()));
+        return !i.getPlayer().getOpenInventory().equals(i)
+                || (location == null || !isStorage(location.getBlock().getBlockData()));
     }
 
-    private void removeEntryIfViewsEmpty(Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator, Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry) {
+    private void removeEntryIfViewsEmpty(Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator,
+            Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry) {
         List<InventoryView> views = entry.getValue();
         if (views.isEmpty()) {
             mapIterator.remove();
@@ -211,16 +212,17 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         }
     }
 
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(BlockBurnEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
         invClose(event.getBlock());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(BlockPistonRetractEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
         for (Block b : event.getBlocks()) {
             invClose(b);
         }
@@ -228,7 +230,8 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(BlockPistonExtendEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
         for (Block b : event.getBlocks()) {
             invClose(b);
         }
@@ -236,7 +239,8 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(BlockExplodeEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
         for (Block b : event.blockList()) {
             invClose(b);
         }
@@ -244,10 +248,10 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(BlockBreakEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
         invClose(event.getBlock());
     }
-
 
     private void invClose(Block block) {
         List<InventoryView> views = activeViewsMap.get(block.getLocation());
@@ -258,7 +262,6 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
             activeViewsMap.remove(block.getLocation());
         }
     }
-
 
     @Override
     public boolean isEnabled() {
@@ -296,7 +299,8 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
         public ChunkPos add() {
             World world = this.world.get();
-            if (world == null) return this;
+            if (world == null)
+                return this;
             if (tickets.computeIfAbsent(this, k -> new AtomicInteger()).getAndIncrement() == 0)
                 world.addPluginChunkTicket(x, z, Adapt.instance);
             return this;

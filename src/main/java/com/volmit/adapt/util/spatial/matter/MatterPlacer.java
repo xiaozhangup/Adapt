@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.matter;
 
-
 import com.volmit.adapt.util.spatial.mantle.Mantle;
 
 public interface MatterPlacer {

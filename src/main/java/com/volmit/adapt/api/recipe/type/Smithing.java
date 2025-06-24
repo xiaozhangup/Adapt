@@ -26,7 +26,9 @@ public class Smithing implements AdaptRecipe {
     }
 
     public void register() {
-        SmithingRecipe s = new SmithingRecipe(new NamespacedKey(Adapt.instance, getKey()), result, new RecipeChoice.ExactChoice(new ItemStack(base)), new RecipeChoice.ExactChoice(new ItemStack(addition)));
+        SmithingRecipe s = new SmithingRecipe(new NamespacedKey(Adapt.instance, getKey()), result,
+                new RecipeChoice.ExactChoice(new ItemStack(base)),
+                new RecipeChoice.ExactChoice(new ItemStack(addition)));
         Bukkit.getServer().addRecipe(s);
         Adapt.verbose("Registered Smithing Table Recipe " + s.getKey());
     }

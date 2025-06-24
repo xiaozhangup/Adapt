@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -67,59 +67,48 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
         registerAdaptation(new HerbalismTerralid());
         registerAdaptation(new HerbalismCraftableMushroomBlocks());
         registerAdaptation(new HerbalismCraftableCobweb());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.COOKED_BEEF)
-                .key("challenge_eat_100")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_eat_100")
                 .title(Localizer.dLocalize("advancement", "challenge_eat_100", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_eat_100", "description"))
                 .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "challenge_eat_100"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .child(AdaptAdvancement.builder()
-                        .icon(Material.COOKED_BEEF)
-                        .key("challenge_eat_1000")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_eat_1000")
                         .title(Localizer.dLocalize("advancement", "challenge_eat_1000", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_eat_1000", "description"))
                         .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "challenge_eat_1000"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED).child(AdaptAdvancement.builder()
-                                .icon(Material.COOKED_BEEF)
-                                .key("challenge_eat_10000")
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_eat_10000")
                                 .title(Localizer.dLocalize("advancement", "challenge_eat_10000", "title"))
                                 .description(Localizer.dLocalize("advancement", "challenge_eat_10000", "description"))
-                                .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "challenge_eat_10000"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism",
+                                        "challenge_eat_10000"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .build())
                         .build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_eat_100").goal(100).stat("food.eaten").reward(getConfig().challengeEat100Reward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_eat_1000").goal(1000).stat("food.eaten").reward(getConfig().challengeEat1kReward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_eat_10000").goal(10000).stat("food.eaten").reward(getConfig().challengeEat1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_eat_100").goal(100).stat("food.eaten")
+                .reward(getConfig().challengeEat100Reward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_eat_1000").goal(1000).stat("food.eaten")
+                .reward(getConfig().challengeEat1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_eat_10000").goal(10000).stat("food.eaten")
+                .reward(getConfig().challengeEat1kReward).build());
 
-
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.COOKED_BEEF)
-                .key("challenge_harvest_100")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_harvest_100")
                 .title(Localizer.dLocalize("advancement", "challenge_harvest_100", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_harvest_100", "description"))
                 .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "harvest_100"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .child(AdaptAdvancement.builder()
-                        .icon(Material.COOKED_BEEF)
-                        .key("challenge_harvest_1000")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_harvest_1000")
                         .title(Localizer.dLocalize("advancement", "challenge_harvest_1000", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_harvest_1000", "description"))
                         .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "harvest_1000"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED)
-                        .build())
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_harvest_100").goal(100).stat("harvest.blocks").reward(getConfig().challengeHarvest100Reward).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_harvest_1000").goal(1000).stat("harvest.blocks").reward(getConfig().challengeHarvest1kReward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_harvest_100").goal(100)
+                .stat("harvest.blocks").reward(getConfig().challengeHarvest100Reward).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_harvest_1000").goal(1000)
+                .stat("harvest.blocks").reward(getConfig().challengeHarvest1kReward).build());
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerQuitEvent e) {
@@ -143,7 +132,6 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
                 getPlayer(p).getData().addStat("food.eaten", 1);
             });
 
-
         });
     }
 
@@ -161,7 +149,8 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
         if (e.isCancelled()) {
             return;
         }
-        shouldReturnForPlayer(e.getPlayer(), e, () -> handleEvent(e, e.getPlayer(), e.getHarvestedBlock(), "harvest.blocks"));
+        shouldReturnForPlayer(e.getPlayer(), e,
+                () -> handleEvent(e, e.getPlayer(), e.getHarvestedBlock(), "harvest.blocks"));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -216,7 +205,8 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
     private void handleEvent(Cancellable e, Player p, Block block, String stat) {
         handleHerbCooldown(p, () -> {
             if (block.getBlockData() instanceof Ageable ageableBlock) {
-                xp(p, block.getLocation().clone().add(0.5, 0.5, 0.5), getConfig().harvestPerAgeXP * ageableBlock.getAge());
+                xp(p, block.getLocation().clone().add(0.5, 0.5, 0.5),
+                        getConfig().harvestPerAgeXP * ageableBlock.getAge());
                 getPlayer(p).getData().addStat(stat, 1);
             }
         });
@@ -228,12 +218,13 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
         J.s(() -> {
             int nl = ((Levelled) e.getClickedBlock().getBlockData()).getLevel();
             if (nl > ol || (ol > 0 && nl == 0)) {
-                xp(p, e.getClickedBlock().getLocation().clone().add(0.5, 0.5, 0.5), getConfig().composterBaseXP + (nl * getConfig().composterLevelXPMultiplier) + (nl == 0 ? getConfig().composterNonZeroLevelBonus : 5));
+                xp(p, e.getClickedBlock().getLocation().clone().add(0.5, 0.5, 0.5),
+                        getConfig().composterBaseXP + (nl * getConfig().composterLevelXPMultiplier)
+                                + (nl == 0 ? getConfig().composterNonZeroLevelBonus : 5));
                 getPlayer(p).getData().addStat("harvest.composted", 1);
             }
         });
     }
-
 
     @Override
     public void onTick() {

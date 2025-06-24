@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -25,8 +25,8 @@ package com.volmit.adapt.util;
 import com.volmit.adapt.util.tag.*;
 
 /**
- * A class which contains NBT-related utility methods. This currently supports reading 19133 but <b>only</b> writing
- * 19132.
+ * A class which contains NBT-related utility methods. This currently supports
+ * reading 19133 but <b>only</b> writing 19132.
  *
  * @author Graham Edgecombe
  */
@@ -42,7 +42,8 @@ public final class NBTUtils {
     /**
      * Gets the type name of a tag.
      *
-     * @param clazz The tag class.
+     * @param clazz
+     *            The tag class.
      * @return The type name.
      */
     public static String getTypeName(Class<? extends Tag> clazz) {
@@ -78,9 +79,11 @@ public final class NBTUtils {
     /**
      * Gets the type code of a tag class.
      *
-     * @param clazz The tag class.
+     * @param clazz
+     *            The tag class.
      * @return The type code.
-     * @throws IllegalArgumentException if the tag class is invalid.
+     * @throws IllegalArgumentException
+     *             if the tag class is invalid.
      */
     public static int getTypeCode(Class<? extends Tag> clazz) {
         if (clazz.equals(ByteArrayTag.class)) {
@@ -115,37 +118,39 @@ public final class NBTUtils {
     /**
      * Gets the class of a type of tag.
      *
-     * @param type The type.
+     * @param type
+     *            The type.
      * @return The class.
-     * @throws IllegalArgumentException if the tag type is invalid.
+     * @throws IllegalArgumentException
+     *             if the tag type is invalid.
      */
     public static Class<? extends Tag> getTypeClass(int type) {
         switch (type) {
-            case NBTConstants.TYPE_END:
+            case NBTConstants.TYPE_END :
                 return EndTag.class;
-            case NBTConstants.TYPE_BYTE:
+            case NBTConstants.TYPE_BYTE :
                 return ByteTag.class;
-            case NBTConstants.TYPE_SHORT:
+            case NBTConstants.TYPE_SHORT :
                 return ShortTag.class;
-            case NBTConstants.TYPE_INT:
+            case NBTConstants.TYPE_INT :
                 return IntTag.class;
-            case NBTConstants.TYPE_LONG:
+            case NBTConstants.TYPE_LONG :
                 return LongTag.class;
-            case NBTConstants.TYPE_FLOAT:
+            case NBTConstants.TYPE_FLOAT :
                 return FloatTag.class;
-            case NBTConstants.TYPE_DOUBLE:
+            case NBTConstants.TYPE_DOUBLE :
                 return DoubleTag.class;
-            case NBTConstants.TYPE_BYTE_ARRAY:
+            case NBTConstants.TYPE_BYTE_ARRAY :
                 return ByteArrayTag.class;
-            case NBTConstants.TYPE_STRING:
+            case NBTConstants.TYPE_STRING :
                 return StringTag.class;
-            case NBTConstants.TYPE_LIST:
+            case NBTConstants.TYPE_LIST :
                 return ListTag.class;
-            case NBTConstants.TYPE_COMPOUND:
+            case NBTConstants.TYPE_COMPOUND :
                 return CompoundTag.class;
-            case NBTConstants.TYPE_INT_ARRAY:
+            case NBTConstants.TYPE_INT_ARRAY :
                 return IntArrayTag.class;
-            default:
+            default :
                 throw new IllegalArgumentException("Invalid tag type : " + type + ".");
         }
     }

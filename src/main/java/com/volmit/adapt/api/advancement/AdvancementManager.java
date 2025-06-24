@@ -39,11 +39,13 @@ public class AdvancementManager {
     public void grant(AdaptPlayer player, String key, boolean toast) {
         player.getData().ensureGranted(key);
         Player p = player.getPlayer();
-        if (!AdaptConfig.get().isAdvancements() || !enabled.get() || p == null || !p.isOnline()) return;
+        if (!AdaptConfig.get().isAdvancements() || !enabled.get() || p == null || !p.isOnline())
+            return;
         Advancement advancement = advancements.get(key);
         try {
             J.s(() -> {
-                if (!p.isOnline()) return;
+                if (!p.isOnline())
+                    return;
                 advancement.grant(player.getPlayer(), true);
             }, 5);
         } catch (Exception e) {
@@ -60,13 +62,10 @@ public class AdvancementManager {
     }
 
     public void unlockExisting(AdaptPlayer player) {
-        if (!AdaptConfig.get().isAdvancements() || !enabled.get()) return;
+        if (!AdaptConfig.get().isAdvancements() || !enabled.get())
+            return;
         J.s(() -> {
-            instance.getAdaptServer()
-                    .getSkillRegistry()
-                    .getSkills()
-                    .stream()
-                    .map(Skill::buildAdvancements)
+            instance.getAdaptServer().getSkillRegistry().getSkills().stream().map(Skill::buildAdvancements)
                     .forEach(aa -> unlockExisting(player, aa));
 
             player.getAdvancementHandler().setReady(true);
@@ -100,8 +99,10 @@ public class AdvancementManager {
 
             for (var a : aa.toAdvancements().reverse()) {
                 advancements.put(a.getKey().getKey(), a);
-                if (a instanceof RootAdvancement r && root == null) root = r;
-                else if (a instanceof BaseAdvancement b) set.add(b);
+                if (a instanceof RootAdvancement r && root == null)
+                    root = r;
+                else if (a instanceof BaseAdvancement b)
+                    set.add(b);
             }
 
             if (root == null) {

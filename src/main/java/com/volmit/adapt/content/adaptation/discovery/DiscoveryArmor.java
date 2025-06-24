@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.discovery;
 
@@ -63,12 +63,14 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("discovery", "armor", "lore1") + C.GRAY + ", " + Localizer.dLocalize("discovery", "armor", "lore2"));
+        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("discovery", "armor", "lore1") + C.GRAY + ", "
+                + Localizer.dLocalize("discovery", "armor", "lore2"));
         v.addLore(C.YELLOW + "~ " + Localizer.dLocalize("discovery", "armor", "lore3") + C.BLUE + " +" + level * 0.25);
     }
 
     public double getArmorPoints(Material m) {
-        return Math.log(Math.min(2000, m.getBlastResistance() * m.getBlastResistance())) + Math.log((m.getHardness() < 0 ? 50 : Math.min(50, m.getHardness() + 25)) * 0.33);
+        return Math.log(Math.min(2000, m.getBlastResistance() * m.getBlastResistance()))
+                + Math.log((m.getHardness() < 0 ? 50 : Math.min(50, m.getHardness() + 25)) * 0.33);
     }
 
     public double getArmor(Location l, int level) {
@@ -94,14 +96,14 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
             if (a > 2 && M.r(0.005 * a)) {
                 Vector v = VectorMath.directionNoNormal(l, b.getLocation().add(0.5, 0.5, 0.5));
                 if (getConfig().showParticles) {
-                    l.getWorld().spawnParticle(Particles.ENCHANTMENT_TABLE, l.clone().add(0, 1, 0), 0, v.getX(), v.getY(), v.getZ());
+                    l.getWorld().spawnParticle(Particles.ENCHANTMENT_TABLE, l.clone().add(0, 1, 0), 0, v.getX(),
+                            v.getY(), v.getZ());
                 }
             }
         }
 
         return Math.min((armorValue / count) * (level / 2D) * 0.65, 10);
     }
-
 
     private double getRadius(double factor) {
         return factor * getConfig().radiusFactor;
@@ -111,7 +113,6 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
         return Math.pow(factor, getConfig().strengthExponent);
     }
 
-
     @Override
     public void onTick() {
         var players = Adapt.instance.getAdaptServer().getAdaptPlayers();
@@ -119,24 +120,24 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
         for (Player p : players) {
             executor.queue(() -> {
-                if (p == null || !p.isOnline()) return;
+                if (p == null || !p.isOnline())
+                    return;
 
                 long now = M.ms();
                 var nextUpdate = playerData.getOrDefault(p.getUniqueId(), now);
-                if (nextUpdate > now) return;
+                if (nextUpdate > now)
+                    return;
                 playerData.put(p.getUniqueId(), now + UPDATE_COOLDOWN);
 
                 var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
-                if (attribute == null) return;
+                if (attribute == null)
+                    return;
 
                 if (!hasAdaptation(p)) {
                     attribute.removeModifier(MODIFIER, MODIFIER_KEY);
                 } else {
-                    double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY)
-                            .stream()
-                            .mapToDouble(Modifier::getAmount)
-                            .max()
-                            .orElse(0);
+                    double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).stream()
+                            .mapToDouble(Modifier::getAmount).max().orElse(0);
 
                     double armor = getArmor(p.getLocation(), getLevel(p));
                     armor = Double.isNaN(armor) ? 0 : armor;

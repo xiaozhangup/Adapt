@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.excavation;
 
@@ -47,7 +47,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.Map;
 
-
 public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Config> {
     private static final OmniTool omniTool = new OmniTool();
 
@@ -71,9 +70,9 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
         v.addLore(C.GREEN + Localizer.dLocalize("excavation", "omnitool", "lore3"));
         v.addLore(C.RED + Localizer.dLocalize("excavation", "omnitool", "lore4"));
         v.addLore(C.GRAY + Localizer.dLocalize("excavation", "omnitool", "lore5"));
-        v.addLore(C.GREEN + "" + (level + getConfig().startingSlots) + C.GRAY + " " + Localizer.dLocalize("excavation", "omnitool", "lore6"));
+        v.addLore(C.GREEN + "" + (level + getConfig().startingSlots) + C.GRAY + " "
+                + Localizer.dLocalize("excavation", "omnitool", "lore6"));
         v.addLore(C.UNDERLINE + Localizer.dLocalize("excavation", "omnitool", "lore7"));
-
 
     }
 
@@ -89,8 +88,9 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
     @EventHandler(priority = EventPriority.HIGH)
     public void on(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player p && validateTool(p.getInventory().getItemInMainHand())) {
-            //deny if the tool durability is about to break
-            if (p.getInventory().getItemInMainHand().getType().getMaxDurability() - p.getInventory().getItemInMainHand().getDurability() <= 2) {
+            // deny if the tool durability is about to break
+            if (p.getInventory().getItemInMainHand().getType().getMaxDurability()
+                    - p.getInventory().getItemInMainHand().getDurability() <= 2) {
                 e.setCancelled(true);
                 return;
             }
@@ -132,14 +132,14 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
     public void on(BlockBreakEvent e) {
         Player p = e.getPlayer();
         if (validateTool(p.getInventory().getItemInMainHand())) {
-            //deny if the tool durability is about to break
-            if (p.getInventory().getItemInMainHand().getType().getMaxDurability() - p.getInventory().getItemInMainHand().getDurability() <= 2) {
+            // deny if the tool durability is about to break
+            if (p.getInventory().getItemInMainHand().getType().getMaxDurability()
+                    - p.getInventory().getItemInMainHand().getDurability() <= 2) {
                 e.setCancelled(true);
                 return;
             }
 
-
-            //deny if they dont have the adaptation
+            // deny if they dont have the adaptation
             if (!hasAdaptation(p)) {
                 e.setCancelled(true);
             }
@@ -150,8 +150,9 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
     public void on(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (validateTool(p.getInventory().getItemInMainHand())) {
-            //deny if the tool durability is about to break
-            if (p.getInventory().getItemInMainHand().getType().getMaxDurability() - p.getInventory().getItemInMainHand().getDurability() <= 2) {
+            // deny if the tool durability is about to break
+            if (p.getInventory().getItemInMainHand().getType().getMaxDurability()
+                    - p.getInventory().getItemInMainHand().getDurability() <= 2) {
                 e.setCancelled(true);
                 return;
             }
@@ -289,18 +290,19 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
         }
     }
 
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(InventoryClickEvent e) {
         if (!hasAdaptation((Player) e.getWhoClicked())) {
             return;
         }
-        if (e.getClickedInventory() != null && e.getClick().equals(ClickType.SHIFT_LEFT) && e.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
+        if (e.getClickedInventory() != null && e.getClick().equals(ClickType.SHIFT_LEFT)
+                && e.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
             ItemStack cursor = e.getWhoClicked().getItemOnCursor().clone();
             ItemStack clicked = e.getClickedInventory().getItem(e.getSlot()).clone();
 
             if (omniTool.explode(cursor).size() > 1 || omniTool.explode(clicked).size() > 1) {
-                if (omniTool.explode(cursor).size() >= getSlots(getLevel((Player) e.getWhoClicked())) || omniTool.explode(clicked).size() >= getSlots(getLevel((Player) e.getWhoClicked()))) {
+                if (omniTool.explode(cursor).size() >= getSlots(getLevel((Player) e.getWhoClicked()))
+                        || omniTool.explode(clicked).size() >= getSlots(getLevel((Player) e.getWhoClicked()))) {
                     e.setCancelled(true);
                     SoundPlayer sp = SoundPlayer.of((Player) e.getWhoClicked());
                     sp.play(e.getWhoClicked().getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 0.77f);
@@ -308,7 +310,8 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                 }
             }
             if (ItemListings.isTool(cursor.getType()) && ItemListings.isTool(clicked.getType())) { // TOOLS ONLY
-                if (!cursor.getType().isAir() && !clicked.getType().isAir() && omniTool.supportsItem(cursor) && omniTool.supportsItem(clicked)) {
+                if (!cursor.getType().isAir() && !clicked.getType().isAir() && omniTool.supportsItem(cursor)
+                        && omniTool.supportsItem(clicked)) {
                     e.setCancelled(true);
                     e.getWhoClicked().setItemOnCursor(new ItemStack(Material.AIR));
                     e.getClickedInventory().setItem(e.getSlot(), omniTool.build(cursor, clicked));
@@ -334,8 +337,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
     }
 
     private boolean validateTool(ItemStack item) {
-        return (item.getItemMeta() != null
-                && item.getItemMeta().getLore() != null
+        return (item.getItemMeta() != null && item.getItemMeta().getLore() != null
                 && item.getItemMeta().getLore().toString().contains("Leatherman"));
     }
 

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.hunk.view;
 
-
 import com.volmit.adapt.util.spatial.hunk.Hunk;
 
 @SuppressWarnings("ClassCanBeRecord")

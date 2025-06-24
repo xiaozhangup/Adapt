@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.parallel;
 
-
 import com.volmit.adapt.util.spatial.hunk.Hunk;
 import com.volmit.adapt.util.spatial.util.Run;
 

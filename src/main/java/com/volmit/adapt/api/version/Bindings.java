@@ -13,20 +13,16 @@ import java.util.Optional;
 
 public class Bindings {
 
-
     public void applyModel(CustomModel model, ItemMeta meta) {
         if (CustomModel.EMPTY_KEY.equals(model.modelKey()))
             meta.setCustomModelData(model.model());
-        else meta.setItemModel(model.modelKey());
+        else
+            meta.setItemModel(model.modelKey());
     }
-
 
     public Attribute getAttribute(Attributable attributable, org.bukkit.attribute.Attribute modifier) {
-        return Optional.ofNullable(attributable.getAttribute(modifier))
-                .map(Attribute::new)
-                .orElse(null);
+        return Optional.ofNullable(attributable.getAttribute(modifier)).map(Attribute::new).orElse(null);
     }
-
 
     public ItemStack buildPotion(PotionBuilder builder) {
         ItemStack stack = buildPotionStack(builder);

@@ -137,7 +137,8 @@ public class XList {
     /**
      * Returns a copy of this list without duplicates (set conversion)
      *
-     * @param factory the list implementation to use
+     * @param factory
+     *            the list implementation to use
      */
     public static <E> @Self List<E> withoutDuplicates(@This List<E> self, Supplier<List<E>> factory) {
         List<E> f = factory.get();
@@ -195,7 +196,6 @@ public class XList {
         Collections.addAll(self, o);
         return self;
     }
-
 
     @SafeVarargs
     public static <E> @Self List<E> qadd(@This List<E> self, E... o) {

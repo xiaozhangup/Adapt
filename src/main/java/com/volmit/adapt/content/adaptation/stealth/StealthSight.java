@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.stealth;
 
@@ -35,7 +35,6 @@ import java.util.List;
 public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
     private final List<Player> sneaking;
 
-
     public StealthSight() {
         super("stealth-vision");
         registerConfiguration(Config.class);
@@ -53,7 +52,9 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("stealth", "nightvision", "lore1") + C.GREEN + Localizer.dLocalize("stealth", "nightvision", "lore2") + C.GRAY + Localizer.dLocalize("stealth", "nightvision", "lore3"));
+        v.addLore(C.GRAY + Localizer.dLocalize("stealth", "nightvision", "lore1") + C.GREEN
+                + Localizer.dLocalize("stealth", "nightvision", "lore2") + C.GRAY
+                + Localizer.dLocalize("stealth", "nightvision", "lore3"));
     }
 
     @EventHandler
@@ -75,7 +76,6 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
         }
     }
 
-
     @Override
     public void onTick() {
         List<Player> toRemove = new ArrayList<>();
@@ -87,7 +87,6 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
         }
         sneaking.removeAll(toRemove);
     }
-
 
     @Override
     public boolean isEnabled() {

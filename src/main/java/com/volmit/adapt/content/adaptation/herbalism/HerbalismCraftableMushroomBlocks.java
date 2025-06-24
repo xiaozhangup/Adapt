@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
@@ -44,32 +44,16 @@ public class HerbalismCraftableMushroomBlocks extends SimpleAdaptation<Herbalism
         setInterval(17772);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        registerRecipe(Shaped.builder()
-                .key("herbalism-redmushblock")
-                .ingredient(new MaterialChar('I', Material.RED_MUSHROOM))
-                .shapes(List.of(
-                        "II",
-                        "II"))
-                .result(new ItemStack(Material.RED_MUSHROOM_BLOCK, 1))
-                .build());
-        registerRecipe(Shaped.builder()
-                .key("herbalism-brownmushblock")
-                .ingredient(new MaterialChar('I', Material.BROWN_MUSHROOM))
-                .shapes(List.of(
-                        "II",
-                        "II"))
-                .result(new ItemStack(Material.BROWN_MUSHROOM_BLOCK, 1))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("herbalism-mushstemred")
-                .ingredient(Material.RED_MUSHROOM_BLOCK)
-                .result(new ItemStack(Material.MUSHROOM_STEM, 1))
-                .build());
-        registerRecipe(Shapeless.builder()
-                .key("herbalism-mushstembrown")
-                .ingredient(Material.BROWN_MUSHROOM_BLOCK)
-                .result(new ItemStack(Material.MUSHROOM_STEM, 1))
-                .build());
+        registerRecipe(
+                Shaped.builder().key("herbalism-redmushblock").ingredient(new MaterialChar('I', Material.RED_MUSHROOM))
+                        .shapes(List.of("II", "II")).result(new ItemStack(Material.RED_MUSHROOM_BLOCK, 1)).build());
+        registerRecipe(Shaped.builder().key("herbalism-brownmushblock")
+                .ingredient(new MaterialChar('I', Material.BROWN_MUSHROOM)).shapes(List.of("II", "II"))
+                .result(new ItemStack(Material.BROWN_MUSHROOM_BLOCK, 1)).build());
+        registerRecipe(Shapeless.builder().key("herbalism-mushstemred").ingredient(Material.RED_MUSHROOM_BLOCK)
+                .result(new ItemStack(Material.MUSHROOM_STEM, 1)).build());
+        registerRecipe(Shapeless.builder().key("herbalism-mushstembrown").ingredient(Material.BROWN_MUSHROOM_BLOCK)
+                .result(new ItemStack(Material.MUSHROOM_STEM, 1)).build());
 
     }
 
@@ -77,7 +61,6 @@ public class HerbalismCraftableMushroomBlocks extends SimpleAdaptation<Herbalism
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("herbalism", "mushroomblocks", "lore1"));
     }
-
 
     @Override
     public void onTick() {

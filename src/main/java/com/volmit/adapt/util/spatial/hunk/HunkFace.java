@@ -19,10 +19,5 @@
 package com.volmit.adapt.util.spatial.hunk;
 
 public enum HunkFace {
-    TOP,
-    BOTTOM,
-    EAST,
-    WEST,
-    NORTH,
-    SOUTH
+    TOP, BOTTOM, EAST, WEST, NORTH, SOUTH
 }

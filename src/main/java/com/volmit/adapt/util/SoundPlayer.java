@@ -40,12 +40,15 @@ public class SoundPlayer {
 
     public void play(@NotNull Location location, @NotNull Sound sound, float volume, float pitch) {
         players.forEach(player -> player.playSound(location, sound, volume, pitch));
-        //J.s(() -> Objects.requireNonNull(location.getWorld()).playSound(location, sound, volume, pitch));
+        // J.s(() -> Objects.requireNonNull(location.getWorld()).playSound(location,
+        // sound, volume, pitch));
     }
 
-    public void play(@NotNull Location location, @NotNull Sound sound, SoundCategory category, float volume, float pitch) {
+    public void play(@NotNull Location location, @NotNull Sound sound, SoundCategory category, float volume,
+            float pitch) {
         players.forEach(player -> player.playSound(location, sound, category, volume, pitch));
-        //J.s(() -> Objects.requireNonNull(location.getWorld()).playSound(location, sound, volume, pitch));
+        // J.s(() -> Objects.requireNonNull(location.getWorld()).playSound(location,
+        // sound, volume, pitch));
     }
 
 }

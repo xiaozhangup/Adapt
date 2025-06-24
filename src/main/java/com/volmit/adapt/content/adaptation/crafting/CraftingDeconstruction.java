@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.crafting;
 
@@ -63,7 +63,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
     }
 
     public ItemStack getDeconstructionOffering(ItemStack forStuff) {
-        if (forStuff == null) return null;
+        if (forStuff == null)
+            return null;
 
         int maxPow = 0;
         Recipe selectedRecipe = null;
@@ -73,7 +74,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
             if (recipe instanceof ShapelessRecipe r) {
                 currentPower = r.getIngredientList().stream().mapToInt(ItemStack::getAmount).sum();
             } else if (recipe instanceof ShapedRecipe r) {
-                currentPower = r.getIngredientMap().values().stream().mapToInt(f -> f == null ? 0 : f.getAmount()).sum();
+                currentPower = r.getIngredientMap().values().stream().mapToInt(f -> f == null ? 0 : f.getAmount())
+                        .sum();
             }
             if (currentPower > maxPow) {
                 selectedRecipe = recipe;
@@ -81,7 +83,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
             }
         }
 
-        if (selectedRecipe == null) return null;
+        if (selectedRecipe == null)
+            return null;
 
         int v = 0;
         int outa = 1;
@@ -99,7 +102,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
         } else {
             ShapedRecipe r = (ShapedRecipe) selectedRecipe;
             Map<Material, Integer> ings = new HashMap<>();
-            r.getIngredientMap().values().stream().filter(Objects::nonNull).forEach(i -> ings.merge(i.getType(), i.getAmount(), Integer::sum));
+            r.getIngredientMap().values().stream().filter(Objects::nonNull)
+                    .forEach(i -> ings.merge(i.getType(), i.getAmount(), Integer::sum));
 
             for (Map.Entry<Material, Integer> entry : ings.entrySet()) {
                 int amount = entry.getValue() * forStuff.getAmount();
@@ -122,7 +126,6 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
         return null;
     }
 
-
     @EventHandler
     public void on(PlayerInteractEvent e) {
         Player player = e.getPlayer();
@@ -136,7 +139,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
         }
 
         // Perform a ray trace for 6 blocks looking for an item
-        RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getLocation().getDirection(), 6, entity -> entity instanceof Item);
+        RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(),
+                player.getLocation().getDirection(), 6, entity -> entity instanceof Item);
         if (rayTrace != null && rayTrace.getHitEntity() instanceof Item itemEntity) {
             processItemInteraction(player, mainHandItem, itemEntity);
         }
@@ -166,7 +170,6 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
             spw.play(itemEntity.getLocation(), Sound.BLOCK_REDSTONE_TORCH_BURNOUT, 1F, 1f); // Burnt torch sound
         }
     }
-
 
     @Override
     public void onTick() {

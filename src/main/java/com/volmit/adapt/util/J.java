@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -119,7 +119,8 @@ public class J {
      * If you dont know if you should queue this or not, do so, it's pretty
      * forgiving.
      *
-     * @param r the runnable
+     * @param r
+     *            the runnable
      */
     public static void ass(Runnable r) {
         if (started) {
@@ -136,7 +137,8 @@ public class J {
      * If you dont know if you should queue this or not, do so, it's pretty
      * forgiving.
      *
-     * @param r the runnable
+     * @param r
+     *            the runnable
      */
     public static void asa(Runnable r) {
         if (started) {
@@ -149,7 +151,8 @@ public class J {
     /**
      * Queue a sync task
      *
-     * @param r the runnable
+     * @param r
+     *            the runnable
      */
     public static void s(Runnable r) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(Adapt.instance, r);
@@ -158,8 +161,10 @@ public class J {
     /**
      * Queue a sync task
      *
-     * @param r     the runnable
-     * @param delay the delay to wait in ticks before running
+     * @param r
+     *            the runnable
+     * @param delay
+     *            the delay to wait in ticks before running
      */
     public static void s(Runnable r, int delay) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(Adapt.instance, r, delay);
@@ -168,7 +173,8 @@ public class J {
     /**
      * Cancel a sync repeating task
      *
-     * @param id the task id
+     * @param id
+     *            the task id
      */
     public static void csr(int id) {
         Bukkit.getScheduler().cancelTask(id);
@@ -177,8 +183,10 @@ public class J {
     /**
      * Start a sync repeating task
      *
-     * @param r        the runnable
-     * @param interval the interval
+     * @param r
+     *            the runnable
+     * @param interval
+     *            the interval
      * @return the task id
      */
     public static int sr(Runnable r, int interval) {
@@ -188,8 +196,10 @@ public class J {
     /**
      * Call an async task dealyed
      *
-     * @param r     the runnable
-     * @param delay the delay to wait before running
+     * @param r
+     *            the runnable
+     * @param delay
+     *            the delay to wait before running
      */
     @SuppressWarnings("deprecation")
     public static void a(Runnable r, int delay) {
@@ -199,7 +209,8 @@ public class J {
     /**
      * Cancel an async repeat task
      *
-     * @param id the id
+     * @param id
+     *            the id
      */
     public static void car(int id) {
         Bukkit.getScheduler().cancelTask(id);
@@ -208,8 +219,10 @@ public class J {
     /**
      * Start an async repeat task
      *
-     * @param r        the runnable
-     * @param interval the interval in ticks
+     * @param r
+     *            the runnable
+     * @param interval
+     *            the interval in ticks
      * @return the task id
      */
     @SuppressWarnings("deprecation")

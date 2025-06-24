@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -245,16 +245,18 @@ public enum C {
         }
     },
 
-
     ;
     /**
      * The special character which prefixes all chat colour codes. Use this if you
      * need to dynamically convert colour codes from your custom format.
      */
     public static final char COLOR_CHAR = '\u00A7';
-    public final static C[] COLORCYCLE = new C[]{C.GOLD, C.YELLOW, C.GREEN, C.AQUA, C.LIGHT_PURPLE, C.AQUA, C.GREEN, C.YELLOW, C.GOLD, C.RED};
+    public final static C[] COLORCYCLE = new C[]{C.GOLD, C.YELLOW, C.GREEN, C.AQUA, C.LIGHT_PURPLE, C.AQUA, C.GREEN,
+            C.YELLOW, C.GOLD, C.RED};
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
-    private final static C[] COLORS = new C[]{C.BLACK, C.DARK_BLUE, C.DARK_GREEN, C.DARK_AQUA, C.DARK_RED, C.DARK_PURPLE, C.GOLD, C.GRAY, C.DARK_GRAY, C.BLUE, C.GREEN, C.AQUA, C.RED, C.LIGHT_PURPLE, C.YELLOW, C.WHITE};
+    private final static C[] COLORS = new C[]{C.BLACK, C.DARK_BLUE, C.DARK_GREEN, C.DARK_AQUA, C.DARK_RED,
+            C.DARK_PURPLE, C.GOLD, C.GRAY, C.DARK_GRAY, C.BLUE, C.GREEN, C.AQUA, C.RED, C.LIGHT_PURPLE, C.YELLOW,
+            C.WHITE};
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private final static Map<Integer, C> BY_ID = new HashMap<>();
     private final static Map<Character, C> BY_CHAR = new HashMap<>();
@@ -392,13 +394,11 @@ public enum C {
 
                 if (hrad != 0 || srad != 0 || vrad != 0) {
                     if (pulse > 0) {
-                        b.append(VolmitSender.pulse(spinToHex(o, hrad, srad, vrad), spinToHex(o, -hrad, -srad, -vrad), pulse));
+                        b.append(VolmitSender.pulse(spinToHex(o, hrad, srad, vrad), spinToHex(o, -hrad, -srad, -vrad),
+                                pulse));
                     } else {
-                        b.append("<gradient:")
-                                .append(spinToHex(o, hrad, srad, vrad))
-                                .append(":")
-                                .append(spinToHex(o, -hrad, -srad, -vrad))
-                                .append(">");
+                        b.append("<gradient:").append(spinToHex(o, hrad, srad, vrad)).append(":")
+                                .append(spinToHex(o, -hrad, -srad, -vrad)).append(">");
                     }
                 } else {
                     b.append(C.getByChar(i).token);
@@ -425,9 +425,10 @@ public enum C {
     /**
      * Gets the color represented by the specified color code
      *
-     * @param code Code to check
+     * @param code
+     *            Code to check
      * @return Associative {@link org.bukkit.ChatColor} with the given code, or null
-     * if it doesn't exist
+     *         if it doesn't exist
      */
     public static C getByChar(char code) {
         try {
@@ -441,9 +442,10 @@ public enum C {
     /**
      * Gets the color represented by the specified color code
      *
-     * @param code Code to check
+     * @param code
+     *            Code to check
      * @return Associative {@link org.bukkit.ChatColor} with the given code, or null
-     * if it doesn't exist
+     *         if it doesn't exist
      */
     public static C getByChar(String code) {
         try {
@@ -459,7 +461,8 @@ public enum C {
     /**
      * Strips the given message of all color codes
      *
-     * @param input String to strip of color
+     * @param input
+     *            String to strip of color
      * @return A copy of the input string, without any coloring
      */
     public static String stripColor(final String input) {
@@ -473,7 +476,8 @@ public enum C {
     /**
      * DyeColor to ChatColor
      *
-     * @param dclr the dye color
+     * @param dclr
+     *            the dye color
      * @return the color
      */
     public static C dyeToChat(DyeColor dclr) {
@@ -553,13 +557,17 @@ public enum C {
         str.append("<table><tr><td>Chat Color</td><td>Color</td></tr>");
 
         for (Map.Entry<C, String> e : chatHexMap.entrySet()) {
-            str.append(String.format("<tr><td style='color: %2$s;'>%1$s</td>" + "<td style='color: %2$s;'>Test String</td></tr>", e.getKey().name(), e.getValue()));
+            str.append(String.format(
+                    "<tr><td style='color: %2$s;'>%1$s</td>" + "<td style='color: %2$s;'>Test String</td></tr>",
+                    e.getKey().name(), e.getValue()));
         }
 
         str.append("</table>");
         str.append("<table><tr><td>Dye Color</td><td>Color</td></tr>");
         for (Map.Entry<DyeColor, String> e : dyeHexMap.entrySet()) {
-            str.append(String.format("<tr><td style='color: %2$s;'>%1$s</td>" + "<td style='color: %2$s;'>Test String</td></tr>", e.getKey().name(), e.getValue()));
+            str.append(String.format(
+                    "<tr><td style='color: %2$s;'>%1$s</td>" + "<td style='color: %2$s;'>Test String</td></tr>",
+                    e.getKey().name(), e.getValue()));
         }
 
         str.append("</table>");
@@ -573,8 +581,10 @@ public enum C {
      * alternate color code character will only be replaced if it is immediately
      * followed by 0-9, A-F, a-f, K-O, k-o, R or r.
      *
-     * @param altColorChar    The alternate color code character to replace. Ex: {@literal &}
-     * @param textToTranslate Text containing the alternate color code character.
+     * @param altColorChar
+     *            The alternate color code character to replace. Ex: {@literal &}
+     * @param textToTranslate
+     *            Text containing the alternate color code character.
      * @return Text containing the ChatColor.COLOR_CODE color code character.
      */
     public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
@@ -609,7 +619,8 @@ public enum C {
     /**
      * Gets the ChatColors used at the end of the given input string.
      *
-     * @param input Input string to retrieve the colors from.
+     * @param input
+     *            Input string to retrieve the colors from.
      * @return Any remaining ChatColors to pass onto the next line.
      */
     public static String getLastColors(String input) {

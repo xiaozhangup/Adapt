@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -60,57 +60,57 @@ public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
         registerAdaptation(new PickaxeAutosmelt());
         registerAdaptation(new PickaxeDropToInventory());
         registerAdaptation(new PickaxeSilkSpawner());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.WOODEN_PICKAXE)
-                .key("challenge_pickaxe_1k")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.WOODEN_PICKAXE).key("challenge_pickaxe_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_pickaxe_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_pickaxe_1k", "description"))
                 .model(CustomModel.get(Material.WOODEN_PICKAXE, "advancement", "pickaxe", "challenge_pickaxe_1k"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .child(AdaptAdvancement.builder()
-                        .icon(Material.STONE_PICKAXE)
-                        .key("challenge_pickaxe_5k")
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .child(AdaptAdvancement.builder().icon(Material.STONE_PICKAXE).key("challenge_pickaxe_5k")
                         .title(Localizer.dLocalize("advancement", "challenge_pickaxe_5k", "title"))
                         .description(Localizer.dLocalize("advancement", "challenge_pickaxe_5k", "description"))
-                        .model(CustomModel.get(Material.STONE_PICKAXE, "advancement", "pickaxe", "challenge_pickaxe_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE)
-                        .visibility(AdvancementVisibility.PARENT_GRANTED)
-                        .child(AdaptAdvancement.builder()
-                                .icon(Material.IRON_PICKAXE)
-                                .key("challenge_pickaxe_50k")
+                        .model(CustomModel.get(Material.STONE_PICKAXE, "advancement", "pickaxe",
+                                "challenge_pickaxe_5k"))
+                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .child(AdaptAdvancement.builder().icon(Material.IRON_PICKAXE).key("challenge_pickaxe_50k")
                                 .title(Localizer.dLocalize("advancement", "challenge_pickaxe_50k", "title"))
                                 .description(Localizer.dLocalize("advancement", "challenge_pickaxe_50k", "description"))
-                                .model(CustomModel.get(Material.IRON_PICKAXE, "advancement", "pickaxe", "challenge_pickaxe_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE)
-                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                .child(AdaptAdvancement.builder()
-                                        .icon(Material.DIAMOND_PICKAXE)
+                                .model(CustomModel.get(Material.IRON_PICKAXE, "advancement", "pickaxe",
+                                        "challenge_pickaxe_50k"))
+                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .child(AdaptAdvancement.builder().icon(Material.DIAMOND_PICKAXE)
                                         .key("challenge_pickaxe_500k")
                                         .title(Localizer.dLocalize("advancement", "challenge_pickaxe_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_pickaxe_500k", "description"))
-                                        .model(CustomModel.get(Material.DIAMOND_PICKAXE, "advancement", "pickaxe", "challenge_pickaxe_500k"))
+                                        .description(Localizer.dLocalize("advancement", "challenge_pickaxe_500k",
+                                                "description"))
+                                        .model(CustomModel.get(Material.DIAMOND_PICKAXE, "advancement", "pickaxe",
+                                                "challenge_pickaxe_500k"))
                                         .frame(AdvancementFrameType.CHALLENGE)
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                        .child(AdaptAdvancement.builder()
-                                                .icon(Material.NETHERITE_PICKAXE)
+                                        .child(AdaptAdvancement.builder().icon(Material.NETHERITE_PICKAXE)
                                                 .key("challenge_pickaxe_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_pickaxe_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_pickaxe_5m", "description"))
-                                                .model(CustomModel.get(Material.NETHERITE_PICKAXE, "advancement", "pickaxe", "challenge_pickaxe_5m"))
+                                                .title(Localizer.dLocalize("advancement", "challenge_pickaxe_5m",
+                                                        "title"))
+                                                .description(Localizer.dLocalize("advancement", "challenge_pickaxe_5m",
+                                                        "description"))
+                                                .model(CustomModel.get(Material.NETHERITE_PICKAXE, "advancement",
+                                                        "pickaxe", "challenge_pickaxe_5m"))
                                                 .frame(AdvancementFrameType.CHALLENGE)
-                                                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                                                .build())
+                                                .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
                         .build())
                 .build());
 
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_1k").goal(100).stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 2).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_5k").goal(500).stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 5).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_50k").goal(5000).stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 10).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_500k").goal(50000).stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 10).build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_5m").goal(500000).stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 50).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_1k").goal(100)
+                .stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 2).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_5k").goal(500)
+                .stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 5).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_50k").goal(5000)
+                .stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 10).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_500k").goal(50000)
+                .stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 10).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_pickaxe_5m").goal(500000)
+                .stat("pickaxe.blocks.broken").reward(getConfig().emeraldBonus * 50).build());
 
     }
 
@@ -131,7 +131,8 @@ public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
                 if (isPickaxe(hand)) {
                     a.getData().addStat("pickaxe.swings", 1);
                     a.getData().addStat("pickaxe.damage", e.getDamage());
-                    handleCooldown(p, () -> xp(p, e.getEntity().getLocation(), getConfig().damageXPMultiplier * e.getDamage()));
+                    handleCooldown(p,
+                            () -> xp(p, e.getEntity().getLocation(), getConfig().damageXPMultiplier * e.getDamage()));
                 }
             }
         });
@@ -197,7 +198,6 @@ public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
 
         return value * 0.48;
     }
-
 
     private void handleCooldown(Player p, Runnable action) {
         Long cooldown = cooldowns.get(p);

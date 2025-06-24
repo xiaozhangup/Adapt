@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.crafting;
 
@@ -33,10 +33,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
     private final Map<Player, Long> cooldown = new HashMap<>();
-
 
     public CraftingXP() {
         super("crafting-xp");
@@ -62,14 +60,14 @@ public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
         cooldown.remove(p);
     }
 
-
     @EventHandler(priority = EventPriority.LOW)
     public void on(CraftItemEvent e) {
         if (e.isCancelled()) {
             return;
         }
         Player p = (Player) e.getWhoClicked();
-        if (e.getInventory().getResult() != null && !e.isCancelled() && hasAdaptation(p) && e.getInventory().getResult().getAmount() > 0) {
+        if (e.getInventory().getResult() != null && !e.isCancelled() && hasAdaptation(p)
+                && e.getInventory().getResult().getAmount() > 0) {
             if (e.getInventory().getResult() != null && e.getCursor() != null && e.getCursor().getAmount() < 64) {
                 if (p.getInventory().addItem(e.getCurrentItem()).isEmpty()) {
                     p.getInventory().removeItem(e.getCurrentItem());
@@ -79,7 +77,8 @@ public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
                         return;
                     }
                     cooldown.put(p, System.currentTimeMillis());
-                    p.getWorld().spawn(p.getLocation(), org.bukkit.entity.ExperienceOrb.class).setExperience(getLevel(p) * 2);
+                    p.getWorld().spawn(p.getLocation(), org.bukkit.entity.ExperienceOrb.class)
+                            .setExperience(getLevel(p) * 2);
                 }
             }
         }
@@ -89,7 +88,6 @@ public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
     public boolean isEnabled() {
         return getConfig().enabled;
     }
-
 
     @Override
     public void onTick() {

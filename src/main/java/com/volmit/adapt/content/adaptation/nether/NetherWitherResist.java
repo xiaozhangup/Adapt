@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.nether;
 
@@ -54,7 +54,8 @@ public class NetherWitherResist extends SimpleAdaptation<NetherWitherResist.Conf
     public void addStats(int level, Element v) {
         int chance = (int) (getConfig().basePieceChance + getConfig().getChanceAddition() * level);
         v.addLore(C.GREEN + "+ " + chance + "%" + C.GRAY + Localizer.dLocalize("nether", "witherresist", "lore1"));
-        v.addLore(C.GRAY + " " + Localizer.dLocalize("nether", "witherresist", "lore1") + C.DARK_GRAY + Localizer.dLocalize("nether", "witherresist", "lore2"));
+        v.addLore(C.GRAY + " " + Localizer.dLocalize("nether", "witherresist", "lore1") + C.DARK_GRAY
+                + Localizer.dLocalize("nether", "witherresist", "lore2"));
     }
 
     @EventHandler
@@ -81,14 +82,16 @@ public class NetherWitherResist extends SimpleAdaptation<NetherWitherResist.Conf
     }
 
     private double getTotalChange(Player p) {
-        return getChance(p, EquipmentSlot.HEAD) + getChance(p, EquipmentSlot.CHEST) + getChance(p, EquipmentSlot.LEGS) + getChance(p, EquipmentSlot.FEET);
+        return getChance(p, EquipmentSlot.HEAD) + getChance(p, EquipmentSlot.CHEST) + getChance(p, EquipmentSlot.LEGS)
+                + getChance(p, EquipmentSlot.FEET);
     }
 
     private double getChance(Player p, EquipmentSlot slot) {
         if (p.getEquipment() == null)
             return 0.0;
         ItemStack item = p.getEquipment().getItem(slot);
-        if (item.getType() == Material.NETHERITE_HELMET || item.getType() == Material.NETHERITE_CHESTPLATE || item.getType() == Material.NETHERITE_LEGGINGS || item.getType() == Material.NETHERITE_BOOTS)
+        if (item.getType() == Material.NETHERITE_HELMET || item.getType() == Material.NETHERITE_CHESTPLATE
+                || item.getType() == Material.NETHERITE_LEGGINGS || item.getType() == Material.NETHERITE_BOOTS)
             return getConfig().basePieceChance + getConfig().chanceAddition * getLevel(p);
         return 0.0D;
     }

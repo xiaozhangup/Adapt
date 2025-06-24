@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.item;
 
@@ -43,10 +43,10 @@ public interface DataItem<T> {
     }
 
     default T getData(ItemStack stack) {
-        if (stack != null
-                && stack.getType().equals(getMaterial())
-                && stack.getItemMeta() != null) {
-            String r = stack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""), PersistentDataType.STRING);
+        if (stack != null && stack.getType().equals(getMaterial()) && stack.getItemMeta() != null) {
+            String r = stack.getItemMeta().getPersistentDataContainer().get(
+                    new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""),
+                    PersistentDataType.STRING);
             if (r != null) {
                 return BukkitGson.gson.fromJson(r, getType());
             }
@@ -56,14 +56,13 @@ public interface DataItem<T> {
     }
 
     default boolean hasData(ItemStack stack) {
-        if (stack != null
-                && stack.getType().equals(getMaterial())
-                && stack.getItemMeta() != null) {
-            return stack.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""), PersistentDataType.STRING);
+        if (stack != null && stack.getType().equals(getMaterial()) && stack.getItemMeta() != null) {
+            return stack.getItemMeta().getPersistentDataContainer().has(
+                    new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""),
+                    PersistentDataType.STRING);
         }
         return false;
     }
-
 
     default void setData(ItemStack item, T t) {
         item.setItemMeta(withData(t).getItemMeta());
@@ -81,7 +80,9 @@ public interface DataItem<T> {
         List<String> lore = new ArrayList<>();
         applyLore(t, lore);
         meta.setLore(lore);
-        meta.getPersistentDataContainer().set(new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""), PersistentDataType.STRING, BukkitGson.gson.toJson(t));
+        meta.getPersistentDataContainer().set(
+                new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""),
+                PersistentDataType.STRING, BukkitGson.gson.toJson(t));
         item.setItemMeta(meta);
         return item;
     }

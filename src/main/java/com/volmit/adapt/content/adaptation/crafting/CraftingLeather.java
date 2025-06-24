@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.crafting;
 
@@ -42,13 +42,8 @@ public class CraftingLeather extends SimpleAdaptation<CraftingLeather.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(17776);
-        registerRecipe(Campfire.builder()
-                .key("crafting-leather")
-                .ingredient(Material.ROTTEN_FLESH)
-                .cookTime(100)
-                .experience(1)
-                .result(new ItemStack(Material.LEATHER, 1))
-                .build());
+        registerRecipe(Campfire.builder().key("crafting-leather").ingredient(Material.ROTTEN_FLESH).cookTime(100)
+                .experience(1).result(new ItemStack(Material.LEATHER, 1)).build());
 
     }
 
@@ -59,13 +54,13 @@ public class CraftingLeather extends SimpleAdaptation<CraftingLeather.Config> {
 
     @EventHandler
     public void on(PlayerInteractEvent e) {
-        if (e.getItem() != null && e.getItem().getType() == Material.ROTTEN_FLESH && e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.CAMPFIRE) {
+        if (e.getItem() != null && e.getItem().getType() == Material.ROTTEN_FLESH && e.getClickedBlock() != null
+                && e.getClickedBlock().getType() == Material.CAMPFIRE) {
             if (!hasAdaptation(e.getPlayer())) {
                 e.setCancelled(true);
             }
         }
     }
-
 
     @Override
     public void onTick() {

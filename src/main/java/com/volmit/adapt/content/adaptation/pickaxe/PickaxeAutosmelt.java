@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.pickaxe;
 
@@ -55,8 +55,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
     }
 
     static void autosmeltBlockDTI(Block b, Player p) {
-        int fortune = getFortuneOreMultiplier(p.getInventory().getItemInMainHand()
-                .getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
+        int fortune = getFortuneOreMultiplier(
+                p.getInventory().getItemInMainHand().getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
         SoundPlayer spw = SoundPlayer.of(b.getWorld());
         switch (b.getType()) {
             case IRON_ORE, DEEPSLATE_IRON_ORE -> {
@@ -65,8 +65,10 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 }
 
                 b.setType(Material.AIR);
-                HashMap<Integer, ItemStack> excessItems = p.getInventory().addItem(new ItemStack(Material.IRON_INGOT, fortune));
-                excessItems.values().forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
+                HashMap<Integer, ItemStack> excessItems = p.getInventory()
+                        .addItem(new ItemStack(Material.IRON_INGOT, fortune));
+                excessItems.values()
+                        .forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
                 spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
@@ -76,8 +78,10 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 }
 
                 b.setType(Material.AIR);
-                HashMap<Integer, ItemStack> excessItems = p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, fortune));
-                excessItems.values().forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
+                HashMap<Integer, ItemStack> excessItems = p.getInventory()
+                        .addItem(new ItemStack(Material.GOLD_INGOT, fortune));
+                excessItems.values()
+                        .forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
                 spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
@@ -86,8 +90,10 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                     return;
                 }
                 b.setType(Material.AIR);
-                HashMap<Integer, ItemStack> excessItems = p.getInventory().addItem(new ItemStack(Material.COPPER_INGOT, fortune));
-                excessItems.values().forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
+                HashMap<Integer, ItemStack> excessItems = p.getInventory()
+                        .addItem(new ItemStack(Material.COPPER_INGOT, fortune));
+                excessItems.values()
+                        .forEach(itemStack -> b.getLocation().getWorld().dropItemNaturally(b.getLocation(), itemStack));
                 spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
@@ -96,8 +102,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
     }
 
     static void autosmeltBlock(Block b, Player p) {
-        int fortune = getFortuneOreMultiplier(p.getInventory().getItemInMainHand()
-                .getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
+        int fortune = getFortuneOreMultiplier(
+                p.getInventory().getItemInMainHand().getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
         SoundPlayer spw = SoundPlayer.of(b.getWorld());
         switch (b.getType()) {
             case IRON_ORE, DEEPSLATE_IRON_ORE -> {
@@ -107,7 +113,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 }
 
                 b.setType(Material.AIR);
-                b.getLocation().getWorld().dropItemNaturally(b.getLocation(), new ItemStack(Material.IRON_INGOT, fortune));
+                b.getLocation().getWorld().dropItemNaturally(b.getLocation(),
+                        new ItemStack(Material.IRON_INGOT, fortune));
                 spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
@@ -117,7 +124,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 }
 
                 b.setType(Material.AIR);
-                b.getLocation().getWorld().dropItemNaturally(b.getLocation(), new ItemStack(Material.GOLD_INGOT, fortune));
+                b.getLocation().getWorld().dropItemNaturally(b.getLocation(),
+                        new ItemStack(Material.GOLD_INGOT, fortune));
                 spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
@@ -126,7 +134,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                     return;
                 }
                 b.setType(Material.AIR);
-                b.getLocation().getWorld().dropItemNaturally(b.getLocation(), new ItemStack(Material.COPPER_INGOT, fortune));
+                b.getLocation().getWorld().dropItemNaturally(b.getLocation(),
+                        new ItemStack(Material.COPPER_INGOT, fortune));
                 spw.play(b.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
                 b.getWorld().spawnParticle(Particle.LAVA, b.getLocation(), 3, 0.5, 0.5, 0.5);
             }
@@ -136,7 +145,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
     // https://minecraft.fandom.com/wiki/Fortune?oldid=2359015#Ore
     private static int getFortuneOreMultiplier(Integer fortuneLevel) {
-        if (fortuneLevel == null || fortuneLevel < 1) return 1;
+        if (fortuneLevel == null || fortuneLevel < 1)
+            return 1;
 
         double averageBonusMultiplier = (1.0 / (fortuneLevel + 2) + (fortuneLevel + 1) / 2.0) - 1;
         int sumOfBonusMultipliers = (fortuneLevel * (fortuneLevel + 1)) / 2;
@@ -166,19 +176,24 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
         if (!hasAdaptation(p)) {
             return;
         }
-        if (!e.getBlock().getBlockData().getMaterial().name().endsWith("_ORE") && !ItemListings.isSmeltOre(e.getBlock().getType())) {
+        if (!e.getBlock().getBlockData().getMaterial().name().endsWith("_ORE")
+                && !ItemListings.isSmeltOre(e.getBlock().getType())) {
             return;
         }
         if (!canBlockBreak(p, e.getBlock().getLocation())) {
             return;
         }
-        if (getPlayer(p).getData().getSkillLines() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-drop-to-inventory") != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-drop-to-inventory").getLevel() > 0) {
+        if (getPlayer(p).getData().getSkillLines() != null
+                && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
+                && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                        .get("pickaxe-drop-to-inventory") != null
+                && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                        .get("pickaxe-drop-to-inventory").getLevel() > 0) {
             PickaxeAutosmelt.autosmeltBlockDTI(e.getBlock(), p);
         } else {
             autosmeltBlock(e.getBlock(), p);
         }
     }
-
 
     @Override
     public void onTick() {

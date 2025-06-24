@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.adaptation;
 
@@ -55,8 +55,10 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default <F> F getStorage(Player p, String key, F defaultValue) {
         PlayerData data = getPlayer(p).getData();
-        if (data.getSkillLines().containsKey(getSkill().getName()) && data.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())) {
-            Object o = data.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getStorage().get(key);
+        if (data.getSkillLines().containsKey(getSkill().getName())
+                && data.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())) {
+            Object o = data.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getStorage()
+                    .get(key);
             return o == null ? defaultValue : (F) o;
         }
 
@@ -69,7 +71,8 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default boolean setStorage(Player p, String key, Object value) {
         PlayerData data = getPlayer(p).getData();
-        if (data.getSkillLines().containsKey(getSkill().getName()) && data.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())) {
+        if (data.getSkillLines().containsKey(getSkill().getName())
+                && data.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())) {
             data.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getStorage().put(key, value);
             return true;
         }
@@ -176,16 +179,15 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default Set<Protector> getProtectors() {
         Set<Protector> protectors = new HashSet<>(Adapt.instance.getProtectorRegistry().getDefaultProtectors());
-        Map<String, Boolean> overrides = AdaptConfig.get().getProtectionOverrides().getOrDefault(this.getName(), Collections.emptyMap());
+        Map<String, Boolean> overrides = AdaptConfig.get().getProtectionOverrides().getOrDefault(this.getName(),
+                Collections.emptyMap());
         overrides.forEach((protector, enabled) -> {
             if (enabled) {
-                Protector p = Adapt.instance.getProtectorRegistry().getAllProtectors()
-                        .stream()
-                        .filter(pr -> pr.getName().equals(protector))
-                        .findFirst()
-                        .orElse(null);
+                Protector p = Adapt.instance.getProtectorRegistry().getAllProtectors().stream()
+                        .filter(pr -> pr.getName().equals(protector)).findFirst().orElse(null);
                 if (p == null) {
-                    Adapt.error("Could not find protector " + protector + " for adaptation " + this.getName() + ". Skipping...");
+                    Adapt.error("Could not find protector " + protector + " for adaptation " + this.getName()
+                            + ". Skipping...");
                 } else {
                     protectors.add(p);
                 }
@@ -221,7 +223,8 @@ public interface Adaptation<T> extends Ticked, Component {
     }
 
     default boolean checkRegion(Player player) {
-        return getProtectors().stream().allMatch(protector -> protector.checkRegion(player, player.getLocation(), this));
+        return getProtectors().stream()
+                .allMatch(protector -> protector.checkRegion(player, player.getLocation(), this));
     }
 
     default boolean hasAdaptation(Player p) {
@@ -230,29 +233,35 @@ public interface Adaptation<T> extends Ticked, Component {
                 return false;
             }
             if (!this.getSkill().isEnabled()) {
-                Adapt.verbose("Skill " + this.getSkill().getName() + " is disabled. Skipping adaptation " + this.getName());
+                Adapt.verbose(
+                        "Skill " + this.getSkill().getName() + " is disabled. Skipping adaptation " + this.getName());
                 this.unregister();
             }
             if (getLevel(p) > 0) {
                 if (AdaptConfig.get().blacklistedWorlds.contains(p.getWorld().getName())) {
-                    Adapt.verbose("Player " + p.getName() + " is in a blacklisted world. Skipping adaptation " + this.getName());
+                    Adapt.verbose("Player " + p.getName() + " is in a blacklisted world. Skipping adaptation "
+                            + this.getName());
                     return false;
                 }
                 if (p.getGameMode().equals(GameMode.CREATIVE) || p.getGameMode().equals(GameMode.SPECTATOR)) {
-                    Adapt.verbose("Player " + p.getName() + " is in creative or spectator mode. Skipping adaptation " + this.getName());
+                    Adapt.verbose("Player " + p.getName() + " is in creative or spectator mode. Skipping adaptation "
+                            + this.getName());
                     return false;
                 }
                 if (!checkRegion(p)) {
-                    Adapt.verbose("Player " + p.getName() + " don't have adaptation - " + this.getName() + " permission.");
+                    Adapt.verbose(
+                            "Player " + p.getName() + " don't have adaptation - " + this.getName() + " permission.");
                     return false;
                 }
 
                 if (hasBlacklistPermission(p, this)) {
-                    Adapt.verbose("Player " + p.getName() + " has blacklist permission for adaptation " + this.getName());
+                    Adapt.verbose(
+                            "Player " + p.getName() + " has blacklist permission for adaptation " + this.getName());
                     return false;
                 }
                 if (!canUse(p)) {
-                    Adapt.verbose("Player " + p.getName() + " can't use adaptation, This is an API restriction" + this.getName());
+                    Adapt.verbose("Player " + p.getName() + " can't use adaptation, This is an API restriction"
+                            + this.getName());
                     return false;
                 }
                 Adapt.verbose("Player " + p.getName() + " used adaptation " + this.getName());
@@ -261,7 +270,8 @@ public interface Adaptation<T> extends Ticked, Component {
                 return false;
             }
         } catch (Exception e) {
-            if (e instanceof IndexOutOfBoundsException) { // This is that fucking bug with Citizens Spoofing Players. I hate it.
+            if (e instanceof IndexOutOfBoundsException) { // This is that fucking bug with Citizens Spoofing Players. I
+                                                            // hate it.
                 Adapt.verbose("Citizens/PacketSpoofing is Messing stuff up again. I hate it.");
                 Adapt.verbose(e.getMessage());
             } else {
@@ -305,7 +315,8 @@ public interface Adaptation<T> extends Ticked, Component {
     }
 
     default int getCostFor(int level) {
-        return (int) (Math.max(1, getBaseCost() + (getBaseCost() * (level * getCostFactor())))) + (level == 1 ? getInitialCost() : 0);
+        return (int) (Math.max(1, getBaseCost() + (getBaseCost() * (level * getCostFactor()))))
+                + (level == 1 ? getInitialCost() : 0);
     }
 
     default int getPowerCostFor(int level, int myLevel) {
@@ -316,7 +327,6 @@ public interface Adaptation<T> extends Ticked, Component {
         if (myLevel >= level) {
             return 0;
         }
-
 
         int c = 0;
 
@@ -345,14 +355,16 @@ public interface Adaptation<T> extends Ticked, Component {
         if (!this.getSkill().isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + getSkill().getColor().toString() + Form.capitalizeWords(getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " "));
+        return C.RESET + "" + C.BOLD + getSkill().getColor().toString() + Form.capitalizeWords(
+                getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " "));
     }
 
     default String getTitleDisplay() {
         if (!this.getSkill().isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + ChatColor.of(getSkill().getColor().getColor().darker()) + Form.capitalizeWords(getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " "));
+        return C.RESET + "" + C.BOLD + ChatColor.of(getSkill().getColor().getColor().darker()) + Form.capitalizeWords(
+                getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " "));
     }
 
     default String getDisplayName(int level) {
@@ -376,7 +388,8 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default BlockFace getBlockFace(Player player, int maxrange) {
         List<Block> lastTwoTargetBlocks = player.getLastTwoTargetBlocks(null, maxrange);
-        if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding()) return null;
+        if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding())
+            return null;
         Block targetBlock = lastTwoTargetBlocks.get(1);
         Block adjacentBlock = lastTwoTargetBlocks.get(0);
         return targetBlock.getFace(adjacentBlock);
@@ -416,8 +429,7 @@ public interface Adaptation<T> extends Ticked, Component {
         spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 0.855f);
         Window w = new UIWindow(player);
         w.setTag("skill/" + getSkill().getName() + "/" + getName());
-        w.setDecorator((window, position, row) -> new UIElement("bg")
-                .setName(" ")
+        w.setDecorator((window, position, row) -> new UIElement("bg").setName(" ")
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
         w.setResolution(WindowResolution.W9_H6);
@@ -449,17 +461,49 @@ public interface Adaptation<T> extends Ticked, Component {
             int rc = getRefundCostFor(i - 1, mylevel);
             int pc = getPowerCostFor(i, mylevel);
             int lvl = i;
-            Element de = new UIElement("lp-" + i + "g")
-                    .setMaterial(new MaterialBlock(getIcon()))
-                    .setModel(getModel(i))
-                    .setName(getDisplayName(i))
-                    .setEnchanted(mylevel >= lvl)
-                    .setProgress(1D)
-                    .addLore(Form.wrapWordsPrefixed(getDescription(), "" + C.GRAY, 40))
-                    .addLore(mylevel >= lvl ? ("") : ("" + C.WHITE + c + C.GRAY + " " + Localizer.dLocalize("snippets", "adaptmenu", "knowledgecost") + " " + (AdaptConfig.get().isHardcoreNoRefunds() ? C.DARK_RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds") : "")))
-                    .addLore(mylevel >= lvl ? AdaptConfig.get().isHardcoreNoRefunds() ? (C.GREEN + Localizer.dLocalize("snippets", "adaptmenu", "alreadylearned") + " " + C.DARK_RED + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")) : (isPermanent() ? "" : (C.GREEN + Localizer.dLocalize("snippets", "adaptmenu", "alreadylearned") + " " + C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "unlearnrefund") + " " + C.GREEN + rc + " " + Localizer.dLocalize("snippets", "adaptmenu", "knowledgecost"))) : (k >= c ? (C.BLUE + Localizer.dLocalize("snippets", "adaptmenu", "clicklearn") + " " + getDisplayName(i)) : (k == 0 ? (C.RED + Localizer.dLocalize("snippets", "adaptmenu", "noknowledge")) : (C.RED + "(" + Localizer.dLocalize("snippets", "adaptmenu", "youonlyhave") + " " + C.WHITE + k + C.RED + " " + Localizer.dLocalize("snippets", "adaptmenu", "knowledgeavailable") + ")"))))
-                    .addLore(mylevel < lvl && getPlayer(player).getData().hasPowerAvailable(pc) ? C.GREEN + "" + lvl + " " + Localizer.dLocalize("snippets", "adaptmenu", "powerdrain") : mylevel >= lvl ? C.GREEN + "" + lvl + " " + Localizer.dLocalize("snippets", "adaptmenu", "powerdrain") : C.RED + Localizer.dLocalize("snippets", "adaptmenu", "notenoughpower") + "\n" + C.RED + Localizer.dLocalize("snippets", "adaptmenu", "howtolevelup"))
-                    .addLore((isPermanent() ? C.RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "maynotunlearn") : ""))
+            Element de = new UIElement("lp-" + i + "g").setMaterial(new MaterialBlock(getIcon())).setModel(getModel(i))
+                    .setName(getDisplayName(i)).setEnchanted(mylevel >= lvl).setProgress(1D)
+                    .addLore(
+                            Form.wrapWordsPrefixed(getDescription(), "" + C.GRAY, 40))
+                    .addLore(mylevel >= lvl
+                            ? ("")
+                            : ("" + C.WHITE + c + C.GRAY + " "
+                                    + Localizer.dLocalize("snippets", "adaptmenu", "knowledgecost") + " "
+                                    + (AdaptConfig.get().isHardcoreNoRefunds()
+                                            ? C.DARK_RED + "" + C.BOLD
+                                                    + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
+                                            : "")))
+                    .addLore(mylevel >= lvl
+                            ? AdaptConfig.get().isHardcoreNoRefunds()
+                                    ? (C.GREEN + Localizer.dLocalize("snippets", "adaptmenu", "alreadylearned") + " "
+                                            + C.DARK_RED + C.BOLD
+                                            + Localizer.dLocalize("snippets", "adaptmenu", "norefunds"))
+                                    : (isPermanent()
+                                            ? ""
+                                            : (C.GREEN + Localizer.dLocalize("snippets", "adaptmenu", "alreadylearned")
+                                                    + " " + C.GRAY
+                                                    + Localizer.dLocalize("snippets", "adaptmenu", "unlearnrefund")
+                                                    + " " + C.GREEN + rc + " "
+                                                    + Localizer.dLocalize("snippets", "adaptmenu", "knowledgecost")))
+                            : (k >= c
+                                    ? (C.BLUE + Localizer.dLocalize("snippets", "adaptmenu", "clicklearn") + " "
+                                            + getDisplayName(i))
+                                    : (k == 0
+                                            ? (C.RED + Localizer.dLocalize("snippets", "adaptmenu", "noknowledge"))
+                                            : (C.RED + "(" + Localizer.dLocalize("snippets", "adaptmenu", "youonlyhave")
+                                                    + " " + C.WHITE + k + C.RED + " "
+                                                    + Localizer.dLocalize("snippets", "adaptmenu", "knowledgeavailable")
+                                                    + ")"))))
+                    .addLore(mylevel < lvl && getPlayer(player).getData().hasPowerAvailable(pc)
+                            ? C.GREEN + "" + lvl + " " + Localizer.dLocalize("snippets", "adaptmenu", "powerdrain")
+                            : mylevel >= lvl
+                                    ? C.GREEN + "" + lvl + " "
+                                            + Localizer.dLocalize("snippets", "adaptmenu", "powerdrain")
+                                    : C.RED + Localizer.dLocalize("snippets", "adaptmenu", "notenoughpower") + "\n"
+                                            + C.RED + Localizer.dLocalize("snippets", "adaptmenu", "howtolevelup"))
+                    .addLore((isPermanent()
+                            ? C.RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "maynotunlearn")
+                            : ""))
                     .onLeftClick((e) -> {
                         if (mylevel >= lvl) {
                             unlearn(player, lvl, false);
@@ -469,9 +513,16 @@ public interface Adaptation<T> extends Ticked, Component {
                             if (AdaptConfig.get().getLearnUnlearnButtonDelayTicks() != 0) {
                                 if (isPermanent()) {
                                     spw.play(player.getLocation(), Sound.ENTITY_BLAZE_DEATH, 0.5f, 1.355f);
-                                    player.sendTitle(" ", C.RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "maynotunlearn") + " " + getDisplayName(mylevel), 1, 10, 11);
+                                    player.sendTitle(" ",
+                                            C.RED + "" + C.BOLD
+                                                    + Localizer.dLocalize("snippets", "adaptmenu", "maynotunlearn")
+                                                    + " " + getDisplayName(mylevel),
+                                            1, 10, 11);
                                 } else {
-                                    player.sendTitle(" ", C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "unlearned") + " " + getDisplayName(mylevel), 1, 10, 11);
+                                    player.sendTitle(" ",
+                                            C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "unlearned") + " "
+                                                    + getDisplayName(mylevel),
+                                            1, 10, 11);
                                 }
                             }
                             J.s(() -> openGui(player), AdaptConfig.get().getLearnUnlearnButtonDelayTicks());
@@ -491,7 +542,10 @@ public interface Adaptation<T> extends Ticked, Component {
                                 }
                                 w.close();
                                 if (AdaptConfig.get().getLearnUnlearnButtonDelayTicks() != 0) {
-                                    player.sendTitle(" ", C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "learned") + " " + getDisplayName(lvl), 1, 5, 11);
+                                    player.sendTitle(" ",
+                                            C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "learned") + " "
+                                                    + getDisplayName(lvl),
+                                            1, 5, 11);
                                 }
                                 J.s(() -> openGui(player), AdaptConfig.get().getLearnUnlearnButtonDelayTicks());
                             } else {
@@ -509,15 +563,17 @@ public interface Adaptation<T> extends Ticked, Component {
         if (AdaptConfig.get().isGuiBackButton()) {
             int backPos = w.getResolution().getWidth() - 1;
             int backRow = w.getViewportHeight() - 1;
-            w.setElement(backPos, backRow, new UIElement("back")
-                    .setMaterial(new MaterialBlock(Material.RED_BED))
-                    .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
-                    .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
-                    .onLeftClick((e) -> onGuiClose(player, true)));
+            w.setElement(backPos, backRow,
+                    new UIElement("back").setMaterial(new MaterialBlock(Material.RED_BED))
+                            .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
+                            .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
+                            .onLeftClick((e) -> onGuiClose(player, true)));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(getTitleDisplay() + " " + C.DARK_GRAY + " " + Form.f(a.getSkillLine(getSkill().getName()).getKnowledge()) + " " + Localizer.dLocalize("snippets", "adaptmenu", "knowledge"));
+        w.setTitle(getTitleDisplay() + " " + C.DARK_GRAY + " "
+                + Form.f(a.getSkillLine(getSkill().getName()).getKnowledge()) + " "
+                + Localizer.dLocalize("snippets", "adaptmenu", "knowledge"));
         w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis())));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);

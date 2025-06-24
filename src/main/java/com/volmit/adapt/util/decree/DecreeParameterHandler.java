@@ -38,17 +38,21 @@ public interface DecreeParameterHandler<T> {
     }
 
     /**
-     * Converting the type back to a string (inverse of the {@link #parse(String) parse} method)
+     * Converting the type back to a string (inverse of the {@link #parse(String)
+     * parse} method)
      *
-     * @param t The input of the designated type to convert to a String
+     * @param t
+     *            The input of the designated type to convert to a String
      * @return The resulting string
      */
     String toString(T t);
 
     /**
-     * Forces conversion to the designated type before converting to a string using {@link #toString(T t)}
+     * Forces conversion to the designated type before converting to a string using
+     * {@link #toString(T t)}
      *
-     * @param t The object to convert to string (that should be of this type)
+     * @param t
+     *            The object to convert to string (that should be of this type)
      * @return The resulting string.
      */
     default String toStringForce(Object t) {
@@ -58,36 +62,47 @@ public interface DecreeParameterHandler<T> {
     /**
      * Should parse a String into the designated type
      *
-     * @param in The string to parse
+     * @param in
+     *            The string to parse
      * @return The value extracted from the string, of the designated type
-     * @throws DecreeParsingException Thrown when the parsing fails (ex: "oop" translated to an integer throws this)
+     * @throws DecreeParsingException
+     *             Thrown when the parsing fails (ex: "oop" translated to an integer
+     *             throws this)
      */
     default T parse(String in) throws DecreeParsingException {
         return parse(in, false);
     }
 
     /**
-     * Should parse a String into the designated type. You can force it to not throw a whichexception
+     * Should parse a String into the designated type. You can force it to not throw
+     * a whichexception
      *
-     * @param in    The string to parse
-     * @param force force an option instead of throwing decreewhich
+     * @param in
+     *            The string to parse
+     * @param force
+     *            force an option instead of throwing decreewhich
      * @return The value extracted from the string, of the designated type
-     * @throws DecreeParsingException Thrown when the parsing fails (ex: "oop" translated to an integer throws this)
+     * @throws DecreeParsingException
+     *             Thrown when the parsing fails (ex: "oop" translated to an integer
+     *             throws this)
      */
     T parse(String in, boolean force) throws DecreeParsingException;
 
     /**
      * Returns whether a certain type is supported by this handler<br>
      *
-     * @param type The type to check
+     * @param type
+     *            The type to check
      * @return True if supported, false if not
      */
     boolean supports(Class<?> type);
 
     /**
-     * The possible entries for the inputted string (support for autocomplete on partial entries)
+     * The possible entries for the inputted string (support for autocomplete on
+     * partial entries)
      *
-     * @param input The inputted string to check against
+     * @param input
+     *            The inputted string to check against
      * @return A {@link List} of possibilities
      */
     default KList<T> getPossibilities(String input) {
@@ -116,7 +131,8 @@ public interface DecreeParameterHandler<T> {
             // G == I or
             // I in G or
             // G in I
-            if (g.equalsIgnoreCase(input) || g.toLowerCase().contains(input.toLowerCase()) || input.toLowerCase().contains(g.toLowerCase())) {
+            if (g.equalsIgnoreCase(input) || g.toLowerCase().contains(input.toLowerCase())
+                    || input.toLowerCase().contains(g.toLowerCase())) {
                 matches.add(possible.get(i));
             }
         }

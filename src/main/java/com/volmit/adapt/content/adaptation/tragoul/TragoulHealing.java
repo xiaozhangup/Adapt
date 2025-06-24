@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.tragoul;
 
@@ -35,7 +35,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
     private final Map<Player, Long> cooldowns;
@@ -60,7 +59,9 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + Localizer.dLocalize("tragoul", "healing", "lore1"));
         v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "healing", "lore2"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "healing", "lore3") + (getConfig().minHealPercent + (getConfig().maxHealPercent - getConfig().minHealPercent) * (level - 1) / (getConfig().maxLevel - 1)) + "%");
+        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "healing", "lore3") + (getConfig().minHealPercent
+                + (getConfig().maxHealPercent - getConfig().minHealPercent) * (level - 1) / (getConfig().maxLevel - 1))
+                + "%");
     }
 
     @EventHandler
@@ -79,9 +80,12 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
                 vfxParticleLine(p.getLocation(), e.getEntity().getLocation(), 25, Particle.WHITE_ASH);
             }
 
-            double healPercentage = getConfig().minHealPercent + (getConfig().maxHealPercent - getConfig().minHealPercent) * (getLevel(p) - 1) / (getConfig().maxLevel - 1);
+            double healPercentage = getConfig().minHealPercent
+                    + (getConfig().maxHealPercent - getConfig().minHealPercent) * (getLevel(p) - 1)
+                            / (getConfig().maxLevel - 1);
             double healAmount = e.getDamage() * healPercentage;
-            Adapt.verbose("Healing " + p.getName() + " for " + healAmount + " (" + healPercentage * 100 + "% of " + e.getDamage() + " damage)");
+            Adapt.verbose("Healing " + p.getName() + " for " + healAmount + " (" + healPercentage * 100 + "% of "
+                    + e.getDamage() + " damage)");
             var attribute = Version.get().getAttribute(p, Attributes.GENERIC_MAX_HEALTH);
             p.setHealth(Math.min(attribute == null ? p.getHealth() : attribute.getValue(), p.getHealth() + healAmount));
 

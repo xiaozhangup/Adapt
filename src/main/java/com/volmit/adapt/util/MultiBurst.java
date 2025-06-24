@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -38,12 +38,8 @@ public class MultiBurst {
         int corePoolSize = 2;
         int maxPoolSize = Math.max(8, Runtime.getRuntime().availableProcessors() - 4);
 
-        service = new ThreadPoolExecutor(
-                corePoolSize,
-                maxPoolSize,
-                10L, TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(512),
-                r -> {
+        service = new ThreadPoolExecutor(corePoolSize, maxPoolSize, 10L, TimeUnit.SECONDS,
+                new LinkedBlockingDeque<>(512), r -> {
                     Thread t = Executors.defaultThreadFactory().newThread(r);
                     t.setName("Adapt Dynamic Workgroup " + tid.incrementAndGet());
                     t.setUncaughtExceptionHandler((et, e) -> {
@@ -51,19 +47,18 @@ public class MultiBurst {
                         e.printStackTrace();
                     });
                     return t;
-                },
-                (r, executor) -> {
+                }, (r, executor) -> {
                     long now = System.currentTimeMillis();
                     if (now - lastWarningTime.get() > 1200_000) { // 1200秒内最多弹出一次
                         lastWarningTime.set(now);
-                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. (" + qpsCounter.getQPS() + " overloaded tasks / s)");
+                        Adapt.warn("MultiBurst thread pool is full! Running task in the calling thread. ("
+                                + qpsCounter.getQPS() + " overloaded tasks / s)");
                     }
                     qpsCounter.record();
                     if (!executor.isShutdown()) {
                         r.run(); // 确保任务执行
                     }
-                }
-        );
+                });
 
         ((ThreadPoolExecutor) service).allowCoreThreadTimeOut(true);
     }

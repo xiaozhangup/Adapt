@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.world;
 
@@ -151,43 +151,27 @@ public class PlayerData {
 
         if (oldLevel != level) {
             setLastMasterXp(getMasterXp());
-            p.getNot().queue(SoundNotification.builder()
-                            .sound(Sound.BLOCK_ENCHANTMENT_TABLE_USE)
-                            .volume(1f)
-                            .pitch(0.54f)
-                            .group("lvl")
-                            .build(),
-                    SoundNotification.builder()
-                            .sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME)
-                            .volume(1f)
-                            .pitch(0.44f)
-                            .group("lvl")
-                            .build(),
-                    SoundNotification.builder()
-                            .sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME)
-                            .volume(1f)
-                            .pitch(0.74f)
-                            .group("lvl")
-                            .build(),
-                    SoundNotification.builder()
-                            .sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME)
-                            .volume(1f)
-                            .pitch(1.34f)
-                            .group("lvl")
-                            .build(),
-                    TitleNotification.builder()
-                            .in(250)
-                            .stay(1450)
-                            .out(2250)
-                            .group("lvl")
-                            .title("")
-                            .subtitle(C.GOLD + Localizer.dLocalize("snippets", "gui", "level") + " " + level)// I'm sorry I missed this!
-                            .build());
-            p.getActionBarNotifier().queue(
-                    ActionBarNotification.builder()
-                            .duration(450)
-                            .group("power")
-                            .title(C.GOLD + "" + Form.f(level * AdaptConfig.get().getPowerPerLevel(), 0) + C.GRAY + " " + Localizer.dLocalize("snippets", "gui", "maxabilitypower")) // I'm sorry I missed this!
+            p.getNot()
+                    .queue(SoundNotification.builder().sound(Sound.BLOCK_ENCHANTMENT_TABLE_USE).volume(1f).pitch(0.54f)
+                            .group("lvl").build(),
+                            SoundNotification.builder().sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME).volume(1f).pitch(0.44f)
+                                    .group("lvl").build(),
+                            SoundNotification.builder().sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME).volume(1f).pitch(0.74f)
+                                    .group("lvl").build(),
+                            SoundNotification.builder().sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME).volume(1f).pitch(1.34f)
+                                    .group("lvl").build(),
+                            TitleNotification.builder().in(250).stay(1450).out(2250).group("lvl").title("")
+                                    .subtitle(C.GOLD + Localizer.dLocalize("snippets", "gui", "level") + " " + level)// I'm
+                                                                                                                        // sorry
+                                                                                                                        // I
+                                                                                                                        // missed
+                                                                                                                        // this!
+                                    .build());
+            p.getActionBarNotifier()
+                    .queue(ActionBarNotification.builder().duration(450).group("power")
+                            .title(C.GOLD + "" + Form.f(level * AdaptConfig.get().getPowerPerLevel(), 0) + C.GRAY + " "
+                                    + Localizer.dLocalize("snippets", "gui", "maxabilitypower")) // I'm sorry I missed
+                                                                                                    // this!
                             .build());
 
         }
@@ -206,7 +190,8 @@ public class PlayerData {
     }
 
     public int getUsedPower() {
-        return getSkillLines().values().stream().mapToInt(i -> i.getAdaptations().values().stream().mapToInt(PlayerAdaptation::getLevel).sum()).sum();
+        return getSkillLines().values().stream()
+                .mapToInt(i -> i.getAdaptations().values().stream().mapToInt(PlayerAdaptation::getLevel).sum()).sum();
     }
 
     public int getLevel() {

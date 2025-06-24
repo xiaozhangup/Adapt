@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.brewing;
 
@@ -30,7 +30,6 @@ import org.bukkit.Material;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-
 public class BrewingHunger extends SimpleAdaptation<BrewingHunger.Config> {
     public BrewingHunger() {
         super("brewing-hunger");
@@ -43,29 +42,17 @@ public class BrewingHunger extends SimpleAdaptation<BrewingHunger.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(1331);
-        registerBrewingRecipe(BrewingRecipe.builder()
-                .id("brewing-hunger-1")
-                .brewingTime(320)
-                .fuelCost(16)
+        registerBrewingRecipe(BrewingRecipe.builder().id("brewing-hunger-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.ROTTEN_FLESH)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR)
-                        .setName("Bottled Hunger")
-                        .setColor(Color.GREEN)
-                        .addEffect(PotionEffectType.HUNGER, 1200, 1, true, true, true)
-                        .build())
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Hunger").setColor(Color.GREEN)
+                        .addEffect(PotionEffectType.HUNGER, 1200, 1, true, true, true).build())
                 .build());
-        registerBrewingRecipe(BrewingRecipe.builder()
-                .id("brewing-hunger-2")
-                .brewingTime(320)
-                .fuelCost(32)
+        registerBrewingRecipe(BrewingRecipe.builder().id("brewing-hunger-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.ROTTEN_FLESH)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.WEAKNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR)
-                        .setName("Bottled Hunger 2")
-                        .setColor(Color.GREEN)
-                        .addEffect(PotionEffectType.HUNGER, 600, 3, true, true, true)
-                        .build())
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Hunger 2").setColor(Color.GREEN)
+                        .addEffect(PotionEffectType.HUNGER, 600, 3, true, true, true).build())
                 .build());
     }
 
@@ -75,11 +62,9 @@ public class BrewingHunger extends SimpleAdaptation<BrewingHunger.Config> {
         v.addLore(C.GREEN + Localizer.dLocalize("brewing", "hunger", "lore2"));
     }
 
-
     @Override
     public void onTick() {
     }
-
 
     @Override
     public boolean isEnabled() {

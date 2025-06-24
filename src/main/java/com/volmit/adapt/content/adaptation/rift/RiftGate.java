@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.rift;
 
@@ -37,7 +37,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-
 public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
     public RiftGate() {
         super("rift-gate");
@@ -50,22 +49,18 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         setMaxLevel(1);
         setInitialCost(30);
         setInterval(1322);
-        registerRecipe(Shapeless.builder()
-                .key("rift-recall-gate")
-                .ingredient(Material.ENDER_PEARL)
-                .ingredient(Material.AMETHYST_SHARD)
-                .ingredient(Material.EMERALD)
-                .result(BoundEyeOfEnder.io.withData(new BoundEyeOfEnder.Data(null)))
-                .build());
+        registerRecipe(Shapeless.builder().key("rift-recall-gate").ingredient(Material.ENDER_PEARL)
+                .ingredient(Material.AMETHYST_SHARD).ingredient(Material.EMERALD)
+                .result(BoundEyeOfEnder.io.withData(new BoundEyeOfEnder.Data(null))).build());
     }
 
     @Override
     public void addStats(int level, Element v) {
         v.addLore(C.YELLOW + Localizer.dLocalize("rift", "gate", "lore1"));
         v.addLore(C.RED + Localizer.dLocalize("rift", "gate", "lore2"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "gate", "lore3") + C.UNDERLINE + C.RED + Localizer.dLocalize("rift", "gate", "lore4"));
+        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "gate", "lore3") + C.UNDERLINE + C.RED
+                + Localizer.dLocalize("rift", "gate", "lore4"));
     }
-
 
     @EventHandler
     public void on(PlayerInteractEvent e) {
@@ -75,15 +70,14 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         Location location = e.getClickedBlock() == null ? p.getLocation() : e.getClickedBlock().getLocation();
 
         // Deny usage if the offhand contains a bindable item
-        if (BoundEyeOfEnder.isBindableItem(offHand) && e.getHand() != null && e.getHand().equals(EquipmentSlot.OFF_HAND)) {
+        if (BoundEyeOfEnder.isBindableItem(offHand) && e.getHand() != null
+                && e.getHand().equals(EquipmentSlot.OFF_HAND)) {
             e.setCancelled(true);
             return;
         }
 
         if (p.getInventory().getItemInMainHand().getType().equals(Material.ENDER_EYE)
-                && !p.hasCooldown(Material.ENDER_EYE)
-                && hasAdaptation(p)
-                && BoundEyeOfEnder.isBindableItem(hand)) {
+                && !p.hasCooldown(Material.ENDER_EYE) && hasAdaptation(p) && BoundEyeOfEnder.isBindableItem(hand)) {
 
             e.setCancelled(true);
             Adapt.verbose(" - Player Main hand: " + hand.getType());
@@ -103,7 +97,6 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
             }
         }
     }
-
 
     private void handleEyeOfEnderInteraction(PlayerInteractEvent event, Player player, Block block) {
         boolean sneaking = player.isSneaking();
@@ -158,7 +151,6 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         }
     }
 
-
     private void openEye(Player p) {
         Adapt.verbose("Using eye");
         SoundPlayer sp = SoundPlayer.of(p);
@@ -175,7 +167,6 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
             }
         }
         p.setCooldown(Material.ENDER_EYE, 150);
-
 
         if (RiftResist.hasRiftResistPerk(getPlayer(p))) {
             RiftResist.riftResistStackAdd(p, 150, 3);
@@ -205,7 +196,8 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         vfxLevelUp(p);
         sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 5.35f, 0.1f);
         J.s(() -> {
-            AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(), getPlayer(p), this, p.getLocation(), l);
+            AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(),
+                    getPlayer(p), this, p.getLocation(), l);
             Bukkit.getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 return;
@@ -216,7 +208,6 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
             sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 5.35f, 0.1f);
         }, 85);
     }
-
 
     @Override
     public void onTick() {

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.matter;
 
-
 import com.volmit.adapt.util.spatial.container.DataContainer;
 import com.volmit.adapt.util.spatial.container.NodeWritable;
 import com.volmit.adapt.util.spatial.container.Palette;

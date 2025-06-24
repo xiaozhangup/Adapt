@@ -56,9 +56,12 @@ public class KMap<K, V> extends ConcurrentHashMap<K, V> {
      * Puts a value into a map-value-list based on the key such that if GMap<K,
      * GList<S>> where V is GList<S>
      *
-     * @param <S> the list type in the value type
-     * @param k   the key to look for
-     * @param vs  the values to put into the list of the given key
+     * @param <S>
+     *            the list type in the value type
+     * @param k
+     *            the key to look for
+     * @param vs
+     *            the values to put into the list of the given key
      * @return the same list (builder)
      */
     @SuppressWarnings("unchecked")
@@ -143,7 +146,8 @@ public class KMap<K, V> extends ConcurrentHashMap<K, V> {
     /**
      * Put another map's values into this map
      *
-     * @param m the map to insert
+     * @param m
+     *            the map to insert
      * @return this map (builder)
      */
     public KMap<K, V> put(Map<K, V> m) {
@@ -163,7 +167,8 @@ public class KMap<K, V> extends ConcurrentHashMap<K, V> {
     /**
      * Loop through each keyvalue set (copy of it) with the map parameter
      *
-     * @param f the function
+     * @param f
+     *            the function
      * @return the same gmap
      */
     public KMap<K, V> rewrite(Consumer3<K, V, KMap<K, V>> f) {
@@ -179,7 +184,8 @@ public class KMap<K, V> extends ConcurrentHashMap<K, V> {
     /**
      * Loop through each keyvalue set (copy of it)
      *
-     * @param f the function
+     * @param f
+     *            the function
      * @return the same gmap
      */
     public KMap<K, V> keach(Consumer2<K, V> f) {
@@ -308,8 +314,10 @@ public class KMap<K, V> extends ConcurrentHashMap<K, V> {
     /**
      * Still works as it normally should except it returns itself (builder)
      *
-     * @param key   the key
-     * @param value the value (single only supported)
+     * @param key
+     *            the key
+     * @param value
+     *            the value (single only supported)
      */
     public KMap<K, V> qput(K key, V value) {
         super.put(key, value);
@@ -320,8 +328,10 @@ public class KMap<K, V> extends ConcurrentHashMap<K, V> {
      * Works just like put, except it wont put anything unless the key and value are
      * nonnull
      *
-     * @param key   the nonnull key
-     * @param value the nonnull value
+     * @param key
+     *            the nonnull key
+     * @param value
+     *            the nonnull value
      * @return the same map
      */
     public KMap<K, V> putNonNull(K key, V value) {

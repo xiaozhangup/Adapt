@@ -39,7 +39,6 @@ public class Shapeless implements AdaptRecipe {
         return recipe instanceof ShapelessRecipe s && s.getKey().equals(getNSKey());
     }
 
-
     @Override
     public void unregister() {
         Bukkit.getServer().removeRecipe(getNSKey());

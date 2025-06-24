@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.discovery;
 
@@ -51,10 +51,12 @@ public class DiscoveryUnity extends SimpleAdaptation<DiscoveryUnity.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.f(getXPGained(getLevelPercent(level), 1), 0) + " " + Localizer.dLocalize("discovery", "unity", "lore1") + C.GRAY + " " + Localizer.dLocalize("discovery", "unity", "lore2"));
+        v.addLore(C.GREEN + "+ " + Form.f(getXPGained(getLevelPercent(level), 1), 0) + " "
+                + Localizer.dLocalize("discovery", "unity", "lore1") + C.GRAY + " "
+                + Localizer.dLocalize("discovery", "unity", "lore2"));
     }
 
-    //Give random XP to the player when they gain XP!
+    // Give random XP to the player when they gain XP!
     @EventHandler(priority = EventPriority.LOW)
     public void on(PlayerExpChangeEvent e) {
         Player p = e.getPlayer();
@@ -63,12 +65,13 @@ public class DiscoveryUnity extends SimpleAdaptation<DiscoveryUnity.Config> {
         if (hasAdaptation(p) && e.getAmount() > 0) {
             xp(p, 5);
             sp.play(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1.9f);
-            //get a random skill that they have unlocked already
+            // get a random skill that they have unlocked already
             List<PlayerSkillLine> skills = ap.getData().getSkillLines().sortV();
             if (skills.size() > 0) {
                 PlayerSkillLine skill = skills.get(RANDOM.nextInt(skills.size()));
-                //give them a random amount of XP in that skill
-                skill.giveXPFresh(Adapt.instance.getAdaptServer().getPlayer(p).getNot(), getXPGained(getLevelPercent(getLevel(p)), RANDOM.nextInt(3) + 1));
+                // give them a random amount of XP in that skill
+                skill.giveXPFresh(Adapt.instance.getAdaptServer().getPlayer(p).getNot(),
+                        getXPGained(getLevelPercent(getLevel(p)), RANDOM.nextInt(3) + 1));
             }
 
         }

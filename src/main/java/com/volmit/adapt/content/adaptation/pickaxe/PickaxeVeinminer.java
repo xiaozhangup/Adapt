@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.pickaxe;
 
@@ -51,7 +51,8 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
 
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "veinminer", "lore1"));
-        v.addLore(C.GREEN + "" + (level + getConfig().baseRange) + C.GRAY + " " + Localizer.dLocalize("pickaxe", "veinminer", "lore2"));
+        v.addLore(C.GREEN + "" + (level + getConfig().baseRange) + C.GRAY + " "
+                + Localizer.dLocalize("pickaxe", "veinminer", "lore2"));
         v.addLore(C.ITALIC + Localizer.dLocalize("pickaxe", "veinminer", "lore3"));
     }
 
@@ -104,14 +105,29 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
                     continue;
                 }
                 Block b = e.getBlock().getWorld().getBlockAt(l);
-                if (getPlayer(p).getData().getSkillLines() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-autosmelt") != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-autosmelt").getLevel() > 0) {
-                    if (getPlayer(p).getData().getSkillLines() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-drop-to-inventory") != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-drop-to-inventory").getLevel() > 0) {
+                if (getPlayer(p).getData().getSkillLines() != null
+                        && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
+                        && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                                .get("pickaxe-autosmelt") != null
+                        && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                                .get("pickaxe-autosmelt").getLevel() > 0) {
+                    if (getPlayer(p).getData().getSkillLines() != null
+                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
+                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                                    .get("pickaxe-drop-to-inventory") != null
+                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                                    .get("pickaxe-drop-to-inventory").getLevel() > 0) {
                         PickaxeAutosmelt.autosmeltBlockDTI(b, p);
                     } else {
                         PickaxeAutosmelt.autosmeltBlock(b, p);
                     }
                 } else {
-                    if (getPlayer(p).getData().getSkillLines() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-drop-to-inventory") != null && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations().get("pickaxe-drop-to-inventory").getLevel() > 0) {
+                    if (getPlayer(p).getData().getSkillLines() != null
+                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
+                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                                    .get("pickaxe-drop-to-inventory") != null
+                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
+                                    .get("pickaxe-drop-to-inventory").getLevel() > 0) {
                         b.getDrops(p.getInventory().getItemInMainHand(), p).forEach(item -> {
                             HashMap<Integer, ItemStack> extra = p.getInventory().addItem(item);
                             extra.forEach((k, v) -> p.getWorld().dropItem(p.getLocation(), v));
@@ -123,7 +139,8 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
                         spw.play(e.getBlock().getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.4f, 0.25f);
                         if (getConfig().showParticles) {
 
-                            e.getBlock().getWorld().spawnParticle(Particle.ASH, e.getBlock().getLocation().add(0.5, 0.5, 0.5), 25, 0.5, 0.5, 0.5, 0.1);
+                            e.getBlock().getWorld().spawnParticle(Particle.ASH,
+                                    e.getBlock().getLocation().add(0.5, 0.5, 0.5), 25, 0.5, 0.5, 0.5, 0.1);
                         }
                     }
                 }
@@ -135,7 +152,6 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
     public boolean isEnabled() {
         return getConfig().enabled;
     }
-
 
     @Override
     public void onTick() {

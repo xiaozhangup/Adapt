@@ -38,7 +38,10 @@ public class DecreeParameter {
         this.parameter = parameter;
         this.param = parameter.getDeclaredAnnotation(Param.class);
         if (param == null) {
-            throw new RuntimeException("Cannot instantiate DecreeParameter on " + parameter.getName() + " in method " + parameter.getDeclaringExecutable().getName() + "(...) in class " + parameter.getDeclaringExecutable().getDeclaringClass().getCanonicalName() + " not annotated by @Param");
+            throw new RuntimeException("Cannot instantiate DecreeParameter on " + parameter.getName() + " in method "
+                    + parameter.getDeclaringExecutable().getName() + "(...) in class "
+                    + parameter.getDeclaringExecutable().getDeclaringClass().getCanonicalName()
+                    + " not annotated by @Param");
         }
     }
 

@@ -48,9 +48,8 @@ public class ConcurrentSpaceMap<T> implements Space<T>, Weigher<SpaceNode<T>>, E
     public ConcurrentSpaceMap(int initialMax, int absoluteMax, SpaceLoader<T> loader, SpaceSaver<T> saver) {
         this.loader = loader;
         this.saver = saver;
-        data = new ConcurrentLinkedHashMap.Builder<Long, SpaceNode<T>>()
-                .initialCapacity(initialMax).maximumWeightedCapacity(absoluteMax)
-                .concurrencyLevel(32).weigher(this).listener(this).build();
+        data = new ConcurrentLinkedHashMap.Builder<Long, SpaceNode<T>>().initialCapacity(initialMax)
+                .maximumWeightedCapacity(absoluteMax).concurrencyLevel(32).weigher(this).listener(this).build();
     }
 
     @Override
@@ -67,7 +66,8 @@ public class ConcurrentSpaceMap<T> implements Space<T>, Weigher<SpaceNode<T>>, E
 
     private LongStream worstKeys() {
         return new HashSet<>(data.entrySet()).stream()
-                .sorted(Comparator.comparingLong((Map.Entry<Long, SpaceNode<T>> i) -> i.getValue().getWeight()).reversed())
+                .sorted(Comparator.comparingLong((Map.Entry<Long, SpaceNode<T>> i) -> i.getValue().getWeight())
+                        .reversed())
                 .sorted(Comparator.comparingLong((Map.Entry<Long, SpaceNode<T>> i) -> i.getValue().getLastAccess()))
                 .sorted(Comparator.comparingLong((Map.Entry<Long, SpaceNode<T>> i) -> i.getValue().getAccessCount()))
                 .sorted(Comparator.comparingLong((Map.Entry<Long, SpaceNode<T>> i) -> i.getValue().getAge()).reversed())
@@ -90,11 +90,10 @@ public class ConcurrentSpaceMap<T> implements Space<T>, Weigher<SpaceNode<T>>, E
     @Override
     public int trim(int trimCount) {
         AtomicInteger is = new AtomicInteger(0);
-        worstKeys().limit(trimCount)
-                .forEach(i -> {
-                    unload(CompressedNumbers.i2a(i), CompressedNumbers.i2b(i));
-                    is.incrementAndGet();
-                });
+        worstKeys().limit(trimCount).forEach(i -> {
+            unload(CompressedNumbers.i2a(i), CompressedNumbers.i2b(i));
+            is.incrementAndGet();
+        });
         return is.get();
     }
 
@@ -122,9 +121,7 @@ public class ConcurrentSpaceMap<T> implements Space<T>, Weigher<SpaceNode<T>>, E
 
     @Override
     public List<Biset<Integer, Integer>> getPositions() {
-        return data.keySet().stream()
-                .map(i -> Biset.from(CompressedNumbers.i2a(i), CompressedNumbers.i2b(i)))
-                .toList();
+        return data.keySet().stream().map(i -> Biset.from(CompressedNumbers.i2a(i), CompressedNumbers.i2b(i))).toList();
     }
 
     @Override
@@ -134,7 +131,8 @@ public class ConcurrentSpaceMap<T> implements Space<T>, Weigher<SpaceNode<T>>, E
 
     @Override
     public void saveAll() {
-        modifiedKeys().parallel().forEach(i -> save(i.getValue().peek(), CompressedNumbers.i2a(i.getKey()), CompressedNumbers.i2b(i.getKey())));
+        modifiedKeys().parallel().forEach(
+                i -> save(i.getValue().peek(), CompressedNumbers.i2a(i.getKey()), CompressedNumbers.i2b(i.getKey())));
     }
 
     @Override

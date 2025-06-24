@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.skill;
 
@@ -61,16 +61,13 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
         registerAdaptation(new SeaborneFishersFantasy());
         registerAdaptation(new SeaborneTurtlesVision());
         registerAdaptation(new SeaborneTurtlesMiningSpeed());
-        registerAdvancement(AdaptAdvancement.builder()
-                .icon(Material.TURTLE_HELMET)
-                .key("challenge_swim_1nm")
+        registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_HELMET).key("challenge_swim_1nm")
                 .title(Localizer.dLocalize("advancement", "challenge_swim_1nm", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_swim_1nm", "description"))
                 .model(CustomModel.get(Material.TURTLE_HELMET, "advancement", "seaborne", "challenge_swim_1nm"))
-                .frame(AdvancementFrameType.CHALLENGE)
-                .visibility(AdvancementVisibility.PARENT_GRANTED)
-                .build());
-        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_swim_1nm").goal(1852).stat("move.swim").reward(getConfig().challengeSwim1nmReward).build());
+                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
+        registerStatTracker(AdaptStatTracker.builder().advancement("challenge_swim_1nm").goal(1852).stat("move.swim")
+                .reward(getConfig().challengeSwim1nmReward).build());
         cooldowns = new HashMap<>();
     }
 
@@ -90,7 +87,8 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
         }
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             shouldReturnForPlayer(i, () -> {
-                if (i.getWorld().getBlockAt(i.getLocation()).isLiquid() && i.isSwimming() && i.getPlayer() != null && i.getPlayer().getRemainingAir() < i.getMaximumAir()) {
+                if (i.getWorld().getBlockAt(i.getLocation()).isLiquid() && i.isSwimming() && i.getPlayer() != null
+                        && i.getPlayer().getRemainingAir() < i.getMaximumAir()) {
                     Adapt.verbose("seaborne Tick");
                     checkStatTrackers(getPlayer(i));
                     xpSilent(i, getConfig().swimXP);
@@ -126,7 +124,8 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
                 return;
             }
             setCooldown(p);
-            if (e.getBlock().getType().equals(Material.SEA_PICKLE) && p.isSwimming() && p.getRemainingAir() < p.getMaximumAir()) { // BECAUSE I LIKE PICKLES
+            if (e.getBlock().getType().equals(Material.SEA_PICKLE) && p.isSwimming()
+                    && p.getRemainingAir() < p.getMaximumAir()) { // BECAUSE I LIKE PICKLES
                 xpSilent(p, 10);
             } else {
                 xpSilent(p, 3);
@@ -151,12 +150,14 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
         } else if (e.getDamager().getType() == EntityType.TRIDENT) {
             var shooter = ((Trident) e.getDamager()).getShooter();
             if (shooter instanceof Player p) {
-                shouldReturnForPlayer(p, e, () -> xp(p, getConfig().tridentxpmultiplier * Math.min(e.getDamage(), getBaseHealth(entity))));
+                shouldReturnForPlayer(p, e,
+                        () -> xp(p, getConfig().tridentxpmultiplier * Math.min(e.getDamage(), getBaseHealth(entity))));
             }
         } else if (e.getDamager().getType() == EntityType.PLAYER) {
             var p = (Player) e.getDamager();
             if (p.getInventory().getItemInMainHand().getType().equals(Material.TRIDENT)) {
-                shouldReturnForPlayer(p, e, () -> xp(p, getConfig().tridentxpmultiplier * Math.min(e.getDamage(), getBaseHealth(entity))));
+                shouldReturnForPlayer(p, e,
+                        () -> xp(p, getConfig().tridentxpmultiplier * Math.min(e.getDamage(), getBaseHealth(entity))));
             }
         }
     }

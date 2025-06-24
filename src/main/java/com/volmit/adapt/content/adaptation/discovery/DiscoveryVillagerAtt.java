@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.discovery;
 
@@ -48,12 +48,13 @@ public class DiscoveryVillagerAtt extends SimpleAdaptation<DiscoveryVillagerAtt.
         setMaxLevel(getConfig().maxLevel);
     }
 
-
     @Override
     public void addStats(int level, Element v) {
         v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("discovery", "villager", "lore1"));
-        v.addLore(C.GREEN + "+ " + Form.pc(getEffectiveness(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("discovery", "villager", "lore2"));
-        v.addLore(C.GREEN + "+ " + getXpTaken(level) + " " + C.GRAY + Localizer.dLocalize("discovery", "villager", "lore3"));
+        v.addLore(C.GREEN + "+ " + Form.pc(getEffectiveness(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("discovery", "villager", "lore2"));
+        v.addLore(C.GREEN + "+ " + getXpTaken(level) + " " + C.GRAY
+                + Localizer.dLocalize("discovery", "villager", "lore3"));
     }
 
     private double getEffectiveness(double multiplier) {
@@ -76,15 +77,16 @@ public class DiscoveryVillagerAtt extends SimpleAdaptation<DiscoveryVillagerAtt.
             Random r = new Random();
             if (r.nextDouble() <= getEffectiveness(getLevelPercent(getLevel(p)))) {
                 if (p.getLevel() - getXpTaken(getLevel(p)) > 0) {
-                    BleedEffect blood = new BleedEffect(Adapt.instance.adaptEffectManager);  // Enemy gets blood
+                    BleedEffect blood = new BleedEffect(Adapt.instance.adaptEffectManager); // Enemy gets blood
                     blood.material = Material.EMERALD;
                     blood.setEntity(v);
                     p.setLevel((p.getLevel() - getXpTaken(getLevel(p))));
                     sp.play(p.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f);
                     sp.play(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10, getLevel(p), true, true));
+                    p.addPotionEffect(
+                            new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10, getLevel(p), true, true));
                 } else {
-                    BleedEffect blood = new BleedEffect(Adapt.instance.adaptEffectManager);  // Enemy gets blood
+                    BleedEffect blood = new BleedEffect(Adapt.instance.adaptEffectManager); // Enemy gets blood
                     blood.material = Material.STONE;
                     v.shakeHead();
                     blood.setEntity(v);

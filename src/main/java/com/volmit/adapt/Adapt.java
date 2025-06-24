@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt;
 
@@ -79,7 +79,6 @@ public class Adapt extends VolmitPlugin {
     @Getter
     private AdvancementManager manager;
 
-
     public Adapt() {
         super();
         gson = new Gson();
@@ -139,22 +138,27 @@ public class Adapt extends VolmitPlugin {
         debug("XP Curve: " + AdaptConfig.get().getXpCurve());
         debug("XP/Level base: " + AdaptConfig.get().getPlayerXpPerSkillLevelUpBase());
         debug("XP/Level multiplier: " + AdaptConfig.get().getPlayerXpPerSkillLevelUpLevelMultiplier());
-        info("Language: " + AdaptConfig.get().getLanguage() + " - Language Fallback: " + AdaptConfig.get().getFallbackLanguageDontChangeUnlessYouKnowWhatYouAreDoing());
+        info("Language: " + AdaptConfig.get().getLanguage() + " - Language Fallback: "
+                + AdaptConfig.get().getFallbackLanguageDontChangeUnlessYouKnowWhatYouAreDoing());
     }
 
     @SneakyThrows
     public static void autoUpdateCheck() {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/VolmitSoftware/Adapt/main/build.gradle").openStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                new URL("https://raw.githubusercontent.com/VolmitSoftware/Adapt/main/build.gradle").openStream()))) {
             info("Checking for updates...");
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 if (inputLine.contains("version '")) {
-                    String version = inputLine.replace("version '", "").replace("'", "").replace("// Needs to be version specific", "").replace(" ", "");
+                    String version = inputLine.replace("version '", "").replace("'", "")
+                            .replace("// Needs to be version specific", "").replace(" ", "");
                     if (instance.getDescription().getVersion().contains("development")) {
                         info("Development build detected. Skipping update check.");
                         return;
                     } else if (!version.equals(instance.getDescription().getVersion())) {
-                        info(MessageFormat.format("Please update your Adapt plugin to the latest version! (Current: {0} Latest: {1})", instance.getDescription().getVersion(), version));
+                        info(MessageFormat.format(
+                                "Please update your Adapt plugin to the latest version! (Current: {0} Latest: {1})",
+                                instance.getDescription().getVersion(), version));
                     } else {
                         info("You are running the latest version of Adapt!");
                     }
@@ -235,15 +239,19 @@ public class Adapt extends VolmitPlugin {
                         String[] split = window.getTag().split("\\Q/\\E");
                         if (split.length == 2) {
                             if (split[0].equals("skill")) {
-                                instance.getAdaptServer().getSkillRegistry().getSkill(split[1]).openGui(Bukkit.getPlayer(UUID.fromString(s)));
+                                instance.getAdaptServer().getSkillRegistry().getSkill(split[1])
+                                        .openGui(Bukkit.getPlayer(UUID.fromString(s)));
                             }
                         } else if (split.length == 3) {
                             if (split[0].equals("skill")) {
                                 try {
-                                    instance.getAdaptServer().getSkillRegistry().getSkill(split[1]).getAdaptations().where(a -> a.getId().equals(split[2])).get(0).openGui(Bukkit.getPlayer(UUID.fromString(s)));
+                                    instance.getAdaptServer().getSkillRegistry().getSkill(split[1]).getAdaptations()
+                                            .where(a -> a.getId().equals(split[2])).get(0)
+                                            .openGui(Bukkit.getPlayer(UUID.fromString(s)));
 
                                 } catch (Throwable e) {
-                                    instance.getAdaptServer().getSkillRegistry().getSkill(split[1]).openGui(Bukkit.getPlayer(UUID.fromString(s)));
+                                    instance.getAdaptServer().getSkillRegistry().getSkill(split[1])
+                                            .openGui(Bukkit.getPlayer(UUID.fromString(s)));
                                 }
                             }
                         }
@@ -263,7 +271,8 @@ public class Adapt extends VolmitPlugin {
     @Override
     public void start() {
         services = new KMap<>();
-        initialize("com.volmit.adapt.service").forEach((i) -> services.put((Class<? extends AdaptService>) i.getClass(), (AdaptService) i));
+        initialize("com.volmit.adapt.service")
+                .forEach((i) -> services.put((Class<? extends AdaptService>) i.getClass(), (AdaptService) i));
 
         Localizer.updateLanguageFile();
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -283,27 +292,27 @@ public class Adapt extends VolmitPlugin {
             // autoUpdateCheck();
         }
         protectorRegistry = new ProtectorRegistry();
-//        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-//            protectorRegistry.registerProtector(new WorldGuardProtector());
-//        }
-//        if (getServer().getPluginManager().getPlugin("Factions") != null) {
-//            protectorRegistry.registerProtector(new FactionsClaimProtector());
-//        }
-//        if (getServer().getPluginManager().getPlugin("ChestProtect") != null) {
-//            protectorRegistry.registerProtector(new ChestProtectProtector());
-//        }
-//        if (getServer().getPluginManager().getPlugin("Residence") != null) {
-//            protectorRegistry.registerProtector(new ResidenceProtector());
-//        }
-//        if (getServer().getPluginManager().getPlugin("GriefDefender") != null) {
-//            protectorRegistry.registerProtector(new GriefDefenderProtector());
-//        }
-//        if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
-//            protectorRegistry.registerProtector(new GriefPreventionProtector());
-//        }
-//        if (getServer().getPluginManager().getPlugin("LockettePro") != null) {
-//            protectorRegistry.registerProtector(new LocketteProProtector());
-//        }
+        // if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+        // protectorRegistry.registerProtector(new WorldGuardProtector());
+        // }
+        // if (getServer().getPluginManager().getPlugin("Factions") != null) {
+        // protectorRegistry.registerProtector(new FactionsClaimProtector());
+        // }
+        // if (getServer().getPluginManager().getPlugin("ChestProtect") != null) {
+        // protectorRegistry.registerProtector(new ChestProtectProtector());
+        // }
+        // if (getServer().getPluginManager().getPlugin("Residence") != null) {
+        // protectorRegistry.registerProtector(new ResidenceProtector());
+        // }
+        // if (getServer().getPluginManager().getPlugin("GriefDefender") != null) {
+        // protectorRegistry.registerProtector(new GriefDefenderProtector());
+        // }
+        // if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
+        // protectorRegistry.registerProtector(new GriefPreventionProtector());
+        // }
+        // if (getServer().getPluginManager().getPlugin("LockettePro") != null) {
+        // protectorRegistry.registerProtector(new LocketteProProtector());
+        // }
         if (getServer().getPluginManager().getPlugin("SlimeCargoNext") != null) {
             protectorRegistry.registerProtector(new SlimeCargoProtector());
             info("Enabled SlimeCargoProtector!");
@@ -353,6 +362,7 @@ public class Adapt extends VolmitPlugin {
 
     @Override
     public String getTag(String subTag) {
-        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET + C.GRAY + ": ";
+        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET
+                + C.GRAY + ": ";
     }
 }

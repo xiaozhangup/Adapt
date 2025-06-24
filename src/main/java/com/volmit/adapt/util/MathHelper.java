@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -25,14 +25,14 @@ import java.util.function.IntPredicate;
 
 public class MathHelper {
     public static final float a = MathHelper.c(2.0f);
-    private static final float[] b = (float[]) a((Object) new float[65536], var0 ->
-    {
+    private static final float[] b = (float[]) a((Object) new float[65536], var0 -> {
         for (int var1 = 0; var1 < ((float[]) var0).length; ++var1) {
             ((float[]) var0)[var1] = (float) Math.sin((double) var1 * 3.141592653589793 * 2.0 / 65536.0);
         }
     });
     private static final Random c = new Random();
-    private static final int[] d = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
+    private static final int[] d = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23,
+            21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
     private static final double e = Double.longBitsToDouble(4805340802404319232L);
     private static final double[] f = new double[257];
     private static final double[] g = new double[257];
@@ -378,44 +378,45 @@ public class MathHelper {
         float var6 = var2 * (1.0f - var4 * var1);
         float var7 = var2 * (1.0f - (1.0f - var4) * var1);
         switch (var3) {
-            case 0: {
+            case 0 : {
                 var8 = var2;
                 var9 = var7;
                 var10 = var5;
                 break;
             }
-            case 1: {
+            case 1 : {
                 var8 = var6;
                 var9 = var2;
                 var10 = var5;
                 break;
             }
-            case 2: {
+            case 2 : {
                 var8 = var5;
                 var9 = var2;
                 var10 = var7;
                 break;
             }
-            case 3: {
+            case 3 : {
                 var8 = var5;
                 var9 = var6;
                 var10 = var2;
                 break;
             }
-            case 4: {
+            case 4 : {
                 var8 = var7;
                 var9 = var5;
                 var10 = var2;
                 break;
             }
-            case 5: {
+            case 5 : {
                 var8 = var2;
                 var9 = var5;
                 var10 = var6;
                 break;
             }
-            default: {
-                throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + var0 + ", " + var1 + ", " + var2);
+            default : {
+                throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + var0
+                        + ", " + var1 + ", " + var2);
             }
         }
         int var11 = MathHelper.clamp((int) (var8 * 255.0f), 0, 255);
@@ -460,8 +461,10 @@ public class MathHelper {
         return MathHelper.d(var2, MathHelper.d(var0, var4, var6), MathHelper.d(var0, var8, var10));
     }
 
-    public static double a(double var0, double var2, double var4, double var6, double var8, double var10, double var12, double var14, double var16, double var18, double var20) {
-        return MathHelper.d(var4, MathHelper.a(var0, var2, var6, var8, var10, var12), MathHelper.a(var0, var2, var14, var16, var18, var20));
+    public static double a(double var0, double var2, double var4, double var6, double var8, double var10, double var12,
+            double var14, double var16, double var18, double var20) {
+        return MathHelper.d(var4, MathHelper.a(var0, var2, var6, var8, var10, var12),
+                MathHelper.a(var0, var2, var14, var16, var18, var20));
     }
 
     public static double j(double var0) {

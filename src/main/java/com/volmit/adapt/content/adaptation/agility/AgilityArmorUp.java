@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.agility;
 
@@ -41,7 +41,6 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:armor-up");
     private final Map<Player, Integer> ticksRunning;
 
-
     public AgilityArmorUp() {
         super("agility-armor-up");
         registerConfiguration(Config.class);
@@ -57,8 +56,10 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getWindupArmor(getLevelPercent(level)), 0) + C.GRAY + " " + Localizer.dLocalize("agility", "armorup", "lore1"));
-        v.addLore(C.YELLOW + "* " + Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1) + " " + C.GRAY + Localizer.dLocalize("agility", "armorup", "lore2"));
+        v.addLore(C.GREEN + "+ " + Form.pc(getWindupArmor(getLevelPercent(level)), 0) + C.GRAY + " "
+                + Localizer.dLocalize("agility", "armorup", "lore1"));
+        v.addLore(C.YELLOW + "* " + Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1) + " " + C.GRAY
+                + Localizer.dLocalize("agility", "armorup", "lore2"));
     }
 
     @EventHandler
@@ -79,7 +80,8 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     public void onTick() {
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
-            if (attribute == null) continue;
+            if (attribute == null)
+                continue;
 
             try {
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
@@ -120,7 +122,8 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
                         p.getWorld().spawnParticle(Particle.WAX_ON, p.getLocation(), 1, 0, 0, 0, 0);
                     }
                 }
-                attribute.setModifier(MODIFIER, MODIFIER_KEY, armorInc * 10, AttributeModifier.Operation.MULTIPLY_SCALAR_1);
+                attribute.setModifier(MODIFIER, MODIFIER_KEY, armorInc * 10,
+                        AttributeModifier.Operation.MULTIPLY_SCALAR_1);
             } else {
                 ticksRunning.remove(p);
             }
@@ -136,7 +139,6 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     public boolean isPermanent() {
         return getConfig().permanent;
     }
-
 
     @NoArgsConstructor
     protected static class Config {

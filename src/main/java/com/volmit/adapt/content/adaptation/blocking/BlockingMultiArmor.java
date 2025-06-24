@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.blocking;
 
@@ -38,20 +38,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Config> {
     private static final MultiArmor multiarmor = new MultiArmor();
     private final Map<Player, Long> cooldowns;
-    private final List<Material> multiArmorable = List.of(
-            Material.ELYTRA,
-            Material.CHAINMAIL_CHESTPLATE,
-            Material.DIAMOND_CHESTPLATE,
-            Material.GOLDEN_CHESTPLATE,
-            Material.IRON_CHESTPLATE,
-            Material.LEATHER_CHESTPLATE,
-            Material.NETHERITE_CHESTPLATE
-    );
-
+    private final List<Material> multiArmorable = List.of(Material.ELYTRA, Material.CHAINMAIL_CHESTPLATE,
+            Material.DIAMOND_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.IRON_CHESTPLATE,
+            Material.LEATHER_CHESTPLATE, Material.NETHERITE_CHESTPLATE);
 
     public BlockingMultiArmor() {
         super("blocking-multiarmor");
@@ -98,7 +90,8 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
             if (cooldown != null) {
                 if (cooldown + 3000 > System.currentTimeMillis())
                     return;
-                else cooldowns.remove(p);
+                else
+                    cooldowns.remove(p);
             }
 
             SoundPlayer spw = SoundPlayer.of(p.getWorld());
@@ -122,7 +115,6 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
             }
         }
     }
-
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(PlayerDropItemEvent e) {
@@ -155,33 +147,35 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
         }
     }
 
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(InventoryClickEvent e) {
         if (!hasAdaptation((Player) e.getWhoClicked())) {
             return;
         }
-        if (e.getClickedInventory() != null
-                && e.getClick().equals(ClickType.SHIFT_LEFT)
+        if (e.getClickedInventory() != null && e.getClick().equals(ClickType.SHIFT_LEFT)
                 && e.getClickedInventory().getItem(e.getSlot()) != null
                 && e.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
             ItemStack cursor = e.getWhoClicked().getItemOnCursor().clone();
             ItemStack clicked = e.getClickedInventory().getItem(e.getSlot()).clone();
 
-            if (cursor.getType().equals(Material.ELYTRA) || clicked.getType().equals(Material.ELYTRA)) { // One must be an ELYTRA
+            if (cursor.getType().equals(Material.ELYTRA) || clicked.getType().equals(Material.ELYTRA)) { // One must be
+                                                                                                            // an ELYTRA
 
                 if (multiarmor.explode(cursor).size() > 1 || multiarmor.explode(clicked).size() > 1) {
 
-                    if (multiarmor.explode(cursor).size() >= getSlots(getLevel((Player) e.getWhoClicked())) || multiarmor.explode(clicked).size() >= getSlots(getLevel((Player) e.getWhoClicked()))) {
+                    if (multiarmor.explode(cursor).size() >= getSlots(getLevel((Player) e.getWhoClicked()))
+                            || multiarmor.explode(clicked).size() >= getSlots(getLevel((Player) e.getWhoClicked()))) {
                         e.setCancelled(true);
                         SoundPlayer sp = SoundPlayer.of((Player) e.getWhoClicked());
                         sp.play(e.getWhoClicked().getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 0.77f);
                         return;
                     }
                 }
-                if (multiArmorable.contains(cursor.getType()) && multiArmorable.contains(clicked.getType())) { // Chest/Elytra Only
+                if (multiArmorable.contains(cursor.getType()) && multiArmorable.contains(clicked.getType())) { // Chest/Elytra
+                                                                                                                // Only
 
-                    if (!cursor.getType().isAir() && !clicked.getType().isAir() && multiarmor.supportsItem(cursor) && multiarmor.supportsItem(clicked)) {
+                    if (!cursor.getType().isAir() && !clicked.getType().isAir() && multiarmor.supportsItem(cursor)
+                            && multiarmor.supportsItem(clicked)) {
                         e.setCancelled(true);
                         e.getWhoClicked().setItemOnCursor(new ItemStack(Material.AIR));
                         e.getClickedInventory().setItem(e.getSlot(), multiarmor.build(cursor, clicked));
@@ -193,7 +187,6 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
         }
     }
 
-
     private boolean validateArmor(ItemStack item) {
         if (item.getItemMeta() != null && item.getItemMeta().getLore() != null) {
             for (String lore : item.getItemMeta().getLore()) {
@@ -204,7 +197,6 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
         }
         return false;
     }
-
 
     private double getSlots(double level) {
         return getConfig().startingSlots + level;

@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.content.adaptation.taming;
 
@@ -57,7 +57,8 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.f(getRegenSpeed(level), 0) + C.GRAY + " " + Localizer.dLocalize("taming", "regeneration", "lore1"));
+        v.addLore(C.GREEN + "+ " + Form.f(getRegenSpeed(level), 0) + C.GRAY + " "
+                + Localizer.dLocalize("taming", "regeneration", "lore1"));
     }
 
     @EventHandler
@@ -65,11 +66,10 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
         if (e.isCancelled()) {
             return;
         }
-        if (e.getEntity() instanceof Tameable tam
-                && tam.getOwner() instanceof Player p
-                && hasAdaptation(p)) {
+        if (e.getEntity() instanceof Tameable tam && tam.getOwner() instanceof Player p && hasAdaptation(p)) {
             if (lastDamage.containsKey(tam.getUniqueId())) {
-                Adapt.verbose("Tamed Entity " + tam.getUniqueId() + " last damaged " + (M.ms() - lastDamage.get(tam.getUniqueId())) + "ms ago");
+                Adapt.verbose("Tamed Entity " + tam.getUniqueId() + " last damaged "
+                        + (M.ms() - lastDamage.get(tam.getUniqueId())) + "ms ago");
                 return;
             }
             var attribute = Version.get().getAttribute(tam, Attributes.GENERIC_MAX_HEALTH);
@@ -86,7 +86,8 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
                         }
-//                        Adapt.verbose("[POST] Current Health: " + tam.getHealth() + " Max Health: " + mh);
+                        // Adapt.verbose("[POST] Current Health: " + tam.getHealth() + " Max Health: " +
+                        // mh);
 
                     });
 
@@ -106,7 +107,6 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
     public void on(EntityDeathEvent e) {
         lastDamage.remove(e.getEntity().getUniqueId());
     }
-
 
     private double getRegenSpeed(int level) {
         return ((getLevelPercent(level) * (getLevelPercent(level)) * getConfig().regenFactor) + getConfig().regenBase);

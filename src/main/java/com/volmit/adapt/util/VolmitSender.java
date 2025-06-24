@@ -19,7 +19,6 @@
 
 package com.volmit.adapt.util;
 
-
 //import com.volmit.Adapt.Adapt;
 //import com.volmit.Adapt.util.collection.List;
 //import com.volmit.Adapt.util.collection.Map;
@@ -76,7 +75,8 @@ public class VolmitSender implements CommandSender {
     /**
      * Wrap a command sender
      *
-     * @param s the command sender
+     * @param s
+     *            the command sender
      */
     public VolmitSender(CommandSender s) {
         tag = "";
@@ -97,7 +97,8 @@ public class VolmitSender implements CommandSender {
     }
 
     public static String pulse(double speed) {
-        return Form.f(invertSpread((((getTick() * 15D * speed) % 1000D) / 1000D)), 3).replaceAll("\\Q,\\E", ".").replaceAll("\\Q?\\E", "-");
+        return Form.f(invertSpread((((getTick() * 15D * speed) % 1000D) / 1000D)), 3).replaceAll("\\Q,\\E", ".")
+                .replaceAll("\\Q?\\E", "-");
     }
 
     public static double invertSpread(double v) {
@@ -129,7 +130,8 @@ public class VolmitSender implements CommandSender {
     /**
      * Set a command tag (prefix for sendMessage)
      *
-     * @param tag the tag
+     * @param tag
+     *            the tag
      */
     public void setTag(String tag) {
         this.tag = tag;
@@ -241,24 +243,24 @@ public class VolmitSender implements CommandSender {
     }
 
     public void sendTitle(String title, String subtitle, int i, int s, int o) {
-        player().showTitle(Title.title(
-                createComponent(title),
-                createComponent(subtitle),
+        player().showTitle(Title.title(createComponent(title), createComponent(subtitle),
                 Title.Times.times(Duration.ofMillis(i), Duration.ofMillis(s), Duration.ofMillis(o))));
     }
 
     public void sendProgress(double percent, String thing) {
-        //noinspection IfStatementWithIdenticalBranches
+        // noinspection IfStatementWithIdenticalBranches
         if (percent < 0) {
             int l = 44;
             int g = (int) (1D * l);
             sendTitle(C.ADAPT + thing + " ", 0, 500, 250);
-            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>" + Form.repeat(" ", l - g));
+            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>"
+                    + Form.repeat(" ", l - g));
         } else {
             int l = 44;
             int g = (int) (percent * l);
             sendTitle(C.ADAPT + thing + " " + C.BLUE + "<font:minecraft:uniform>" + Form.pc(percent, 0), 0, 500, 250);
-            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>" + Form.repeat(" ", l - g));
+            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>"
+                    + Form.repeat(" ", l - g));
         }
     }
 
@@ -271,9 +273,7 @@ public class VolmitSender implements CommandSender {
     }
 
     public void sendTitle(String subtitle, int i, int s, int o) {
-        player().showTitle(Title.title(
-                createNoPrefixComponent(" "),
-                createNoPrefixComponent(subtitle),
+        player().showTitle(Title.title(createNoPrefixComponent(" "), createNoPrefixComponent(subtitle),
                 Title.Times.times(Duration.ofMillis(i), Duration.ofMillis(s), Duration.ofMillis(o))));
     }
 
@@ -423,19 +423,14 @@ public class VolmitSender implements CommandSender {
         for (int ix = 0; ix < max; ix++) {
             m.add((i.isNode()
                     ? (i.getNode().getParameters().isNotEmpty())
-                    ? "<#B0E0E6>✦ <#00FA9A>"
-                    + i.getParentPath()
-                    + " <#00CED1>"
-                    + i.getName() + " "
-                    + String.join(
-                    " ",
-                    i.getNode().getParameters().shuffleCopy(RNG.r).kConvert((f)
-                            -> (f.isRequired() || RNG.r.b(0.5)
-                            ? "<#f2e15e>" + f.getNames().getRandom() + "="
-                            + "<#9370DB>" + f.example()
-                            : ""))
-            )
-                    : ""
+                            ? "<#B0E0E6>✦ <#00FA9A>" + i.getParentPath() + " <#00CED1>" + i.getName() + " "
+                                    + String.join(" ",
+                                            i.getNode().getParameters().shuffleCopy(RNG.r)
+                                                    .kConvert((f) -> (f.isRequired() || RNG.r.b(0.5)
+                                                            ? "<#f2e15e>" + f.getNames().getRandom() + "=" + "<#9370DB>"
+                                                                    + f.example()
+                                                            : "")))
+                            : ""
                     : ""));
         }
 
@@ -452,9 +447,12 @@ public class VolmitSender implements CommandSender {
         String se = "]";
 
         if (name.trim().isEmpty()) {
-            sendMessageRaw("<font:minecraft:uniform><strikethrough><gradient:#00BFFF:#003366>" + sf + s + "<reset><font:minecraft:uniform><strikethrough><gradient:#003366:#00BFFF>" + s + se);
+            sendMessageRaw("<font:minecraft:uniform><strikethrough><gradient:#00BFFF:#003366>" + sf + s
+                    + "<reset><font:minecraft:uniform><strikethrough><gradient:#003366:#00BFFF>" + s + se);
         } else {
-            sendMessageRaw("<font:minecraft:uniform><strikethrough><gradient:#00BFFF:#003366>" + sf + s + si + "<reset> <gradient:#323bbf:#3299bf>" + name + "<reset> <font:minecraft:uniform><strikethrough><gradient:#003366:#00BFFF>" + so + s + se);
+            sendMessageRaw("<font:minecraft:uniform><strikethrough><gradient:#00BFFF:#003366>" + sf + s + si
+                    + "<reset> <gradient:#323bbf:#3299bf>" + name
+                    + "<reset> <font:minecraft:uniform><strikethrough><gradient:#003366:#00BFFF>" + so + s + se);
         }
     }
 
@@ -482,7 +480,9 @@ public class VolmitSender implements CommandSender {
         if (v.getNodes().isNotEmpty()) {
             sendHeader(v.getPath() + (page > 0 ? (" {" + (page + 1) + "}") : ""));
             if (isPlayer() && v.getParent() != null) {
-                sendMessageRaw("<hover:show_text:'" + "<#8B4513>Click to go back to <#4682B4>" + Form.capitalize(v.getParent().getName()) + " Help" + "'><click:run_command:" + v.getParent().getPath() + "><font:minecraft:uniform><#B30000>〈 Back</click></hover>");
+                sendMessageRaw("<hover:show_text:'" + "<#8B4513>Click to go back to <#4682B4>"
+                        + Form.capitalize(v.getParent().getName()) + " Help" + "'><click:run_command:"
+                        + v.getParent().getPath() + "><font:minecraft:uniform><#B30000>〈 Back</click></hover>");
             }
 
             AtomicBoolean next = new AtomicBoolean(false);
@@ -494,18 +494,23 @@ public class VolmitSender implements CommandSender {
             int l = 75 - (page > 0 ? 10 : 0) - (next.get() ? 10 : 0);
 
             if (page > 0) {
-                s += "<hover:show_text:'<green>Click to go back to page " + page + "'><click:run_command:" + v.getPath() + " help=" + page + "><gradient:#2770b8:#27b84d>〈 Page " + page + "</click></hover><reset> ";
+                s += "<hover:show_text:'<green>Click to go back to page " + page + "'><click:run_command:" + v.getPath()
+                        + " help=" + page + "><gradient:#2770b8:#27b84d>〈 Page " + page + "</click></hover><reset> ";
             }
 
-            s += "<reset><font:minecraft:uniform><strikethrough><gradient:#323bbf:#3299bf>" + Form.repeat(" ", l) + "<reset>";
+            s += "<reset><font:minecraft:uniform><strikethrough><gradient:#323bbf:#3299bf>" + Form.repeat(" ", l)
+                    + "<reset>";
 
             if (next.get()) {
-                s += " <hover:show_text:'<green>Click to go to back to page " + (page + 2) + "'><click:run_command:" + v.getPath() + " help=" + (page + 2) + "><gradient:#4169E1:#228B22>Page " + (page + 2) + " ❭</click></hover>";
+                s += " <hover:show_text:'<green>Click to go to back to page " + (page + 2) + "'><click:run_command:"
+                        + v.getPath() + " help=" + (page + 2) + "><gradient:#4169E1:#228B22>Page " + (page + 2)
+                        + " ❭</click></hover>";
             }
 
             sendMessageRaw(s);
         } else {
-            sendMessage(C.RED + "There are no subcommands in this group! Contact support, this is a command design issue!");
+            sendMessage(
+                    C.RED + "There are no subcommands in this group! Contact support, this is a command design issue!");
         }
     }
 
@@ -538,12 +543,12 @@ public class VolmitSender implements CommandSender {
                 String suggestion = "";
                 String suggestions = "";
                 if (i.isNode() && i.getNode().getParameters().isNotEmpty()) {
-                    suggestion += String.join(
-                            "",
-                            newline + "<#B0E0E6>✦ <#00FA9A><font:minecraft:uniform>" + i.getParentPath() + " <#00CED1>" + i.getName() + " "
-                                    + i.getNode().getParameters().kConvert((f) -> "<#9370DB>" + f.example())
-                    );
-                    suggestions += newline + "<font:minecraft:uniform>" + pickRandoms(Math.min(i.getNode().getParameters().size() + 1, 5), i);
+                    suggestion += String.join("",
+                            newline + "<#B0E0E6>✦ <#00FA9A><font:minecraft:uniform>" + i.getParentPath() + " <#00CED1>"
+                                    + i.getName() + " "
+                                    + i.getNode().getParameters().kConvert((f) -> "<#9370DB>" + f.example()));
+                    suggestions += newline + "<font:minecraft:uniform>"
+                            + pickRandoms(Math.min(i.getNode().getParameters().size() + 1, 5), i);
                 }
 
                 /// Params
@@ -565,44 +570,28 @@ public class VolmitSender implements CommandSender {
                             nUsage = "<#CD5C5C>⚠ <#F08080><font:minecraft:uniform>This parameter is required.";
                         } else if (p.hasDefault()) {
                             fullTitle = "<#F7F7F7>⊰" + nTitle + "<#F7F7F7>⊱";
-                            nUsage = "<#1E90FF>✔ <#87CEEB><font:minecraft:uniform>Defaults to \"" + p.getParam().defaultValue() + "\" if undefined.";
+                            nUsage = "<#1E90FF>✔ <#87CEEB><font:minecraft:uniform>Defaults to \""
+                                    + p.getParam().defaultValue() + "\" if undefined.";
                         } else {
                             fullTitle = "<#F7F7F7>⊰" + nTitle + "<#F7F7F7>⊱";
                             nUsage = "<#8A2BE2>✔ <#87CEEB><font:minecraft:uniform>This parameter is optional.";
                         }
-                        String type = "<#cc00ff>✢ <#ff33cc><font:minecraft:uniform>This parameter is of type " + p.getType().getSimpleName() + ".";
+                        String type = "<#cc00ff>✢ <#ff33cc><font:minecraft:uniform>This parameter is of type "
+                                + p.getType().getSimpleName() + ".";
 
-                        nodes
-                                .append("<hover:show_text:'")
-                                .append(nHoverTitle).append(newline)
-                                .append(nDescription).append(newline)
-                                .append(nUsage).append(newline)
-                                .append(type)
-                                .append("'>")
-                                .append(fullTitle)
-                                .append("</hover>");
+                        nodes.append("<hover:show_text:'").append(nHoverTitle).append(newline).append(nDescription)
+                                .append(newline).append(nUsage).append(newline).append(type).append("'>")
+                                .append(fullTitle).append("</hover>");
                     }
                 } else {
                     nodes = new StringBuilder("<gradient:#AFEEEE:#B0E0E6> - Category of Commands");
                 }
 
                 /// Wrapper
-                String wrapper =
-                        "<hover:show_text:'" +
-                                hoverTitle + newline +
-                                description + newline +
-                                usage +
-                                suggestion + //Newlines for suggestions are added when they're built, to prevent blanklines.
-                                suggestions + // ^
-                                "'>" +
-                                "<click:" +
-                                onClick +
-                                ":" +
-                                realText +
-                                "</click>" +
-                                "</hover>" +
-                                " " +
-                                nodes;
+                String wrapper = "<hover:show_text:'" + hoverTitle + newline + description + newline + usage
+                        + suggestion + // Newlines for suggestions are added when they're built, to prevent blanklines.
+                        suggestions + // ^
+                        "'>" + "<click:" + onClick + ":" + realText + "</click>" + "</hover>" + " " + nodes;
 
                 return wrapper;
             }));

@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.util;
 
@@ -151,22 +151,22 @@ public class UIElement implements Element {
     public Element call(ElementEvent event, Element context) {
         try {
             switch (event) {
-                case DRAG_INTO:
+                case DRAG_INTO :
                     eDraggedInto.run(context);
                     return this;
-                case LEFT:
+                case LEFT :
                     eLeft.run(context);
                     return this;
-                case OTHER_DRAG_INTO:
+                case OTHER_DRAG_INTO :
                     eOtherDraggedInto.run(context);
                     return this;
-                case RIGHT:
+                case RIGHT :
                     eRight.run(context);
                     return this;
-                case SHIFT_LEFT:
+                case SHIFT_LEFT :
                     eShiftLeft.run(context);
                     return this;
-                case SHIFT_RIGHT:
+                case SHIFT_RIGHT :
                     eShiftRight.run(context);
                     return this;
             }
@@ -227,13 +227,13 @@ public class UIElement implements Element {
     @Override
     public ItemStack computeItemStack() {
         try {
-            ItemStack is = getModel() != null ? getModel().toItemStack() :
-                    new ItemStack(getMaterial().getMaterial());
+            ItemStack is = getModel() != null ? getModel().toItemStack() : new ItemStack(getMaterial().getMaterial());
             is.setAmount(getCount());
             is.setDurability(getEffectiveDurability());
 
             ItemMeta im = is.getItemMeta();
-            if (im == null) return is;
+            if (im == null)
+                return is;
             im.setDisplayName(getName());
             im.setLore(getLore().copy());
             if (isEnchanted()) {

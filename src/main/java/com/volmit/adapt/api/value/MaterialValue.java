@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.value;
 
@@ -153,7 +153,8 @@ public class MaterialValue {
             }
             Bukkit.getRecipesFor(is).forEach(i -> {
                 if (i instanceof AdaptRecipe) {
-                    Adapt.verbose("Skipping Adapt Recipe to prevent duplicates, " + mat.name() + " -> " + ((AdaptRecipe) i).getKey());
+                    Adapt.verbose("Skipping Adapt Recipe to prevent duplicates, " + mat.name() + " -> "
+                            + ((AdaptRecipe) i).getKey());
                     return;
                 }
                 MaterialRecipe rx = toMaterial(i);
@@ -171,12 +172,12 @@ public class MaterialValue {
         try {
             if (r instanceof ShapelessRecipe recipe) {
                 return MaterialRecipe.builder()
-                        .input(new ArrayList<>(recipe.getIngredientList().stream().map(i -> new MaterialCount(i.getType(), 1)).toList()))
+                        .input(new ArrayList<>(recipe.getIngredientList().stream()
+                                .map(i -> new MaterialCount(i.getType(), 1)).toList()))
                         .output(new MaterialCount(recipe.getResult().getType(), recipe.getResult().getAmount()))
                         .build();
             } else if (r instanceof ShapedRecipe recipe) {
-                MaterialRecipe re = MaterialRecipe.builder()
-                        .input(new ArrayList<>())
+                MaterialRecipe re = MaterialRecipe.builder().input(new ArrayList<>())
                         .output(new MaterialCount(recipe.getResult().getType(), recipe.getResult().getAmount()))
                         .build();
                 Map<Material, Integer> f = new HashMap<>();
@@ -195,21 +196,20 @@ public class MaterialValue {
                 List<MaterialCount> a = new ArrayList<>();
                 a.add(new MaterialCount(recipe.getInput().getType(), 1));
 
-                return MaterialRecipe.builder()
-                        .input(a)
+                return MaterialRecipe.builder().input(a)
                         .output(new MaterialCount(recipe.getResult().getType(), recipe.getResult().getAmount()))
                         .build();
             } else if (r instanceof MerchantRecipe recipe) {
                 return MaterialRecipe.builder()
-                        .input(new ArrayList<>(recipe.getIngredients().stream().map(i -> new MaterialCount(i.getType(), 1)).toList()))
+                        .input(new ArrayList<>(
+                                recipe.getIngredients().stream().map(i -> new MaterialCount(i.getType(), 1)).toList()))
                         .output(new MaterialCount(recipe.getResult().getType(), recipe.getResult().getAmount()))
                         .build();
             } else if (r instanceof StonecuttingRecipe recipe) {
                 List<MaterialCount> a = new ArrayList<>();
                 a.add(new MaterialCount(recipe.getInput().getType(), 1));
 
-                return MaterialRecipe.builder()
-                        .input(a)
+                return MaterialRecipe.builder().input(a)
                         .output(new MaterialCount(recipe.getResult().getType(), recipe.getResult().getAmount()))
                         .build();
             }

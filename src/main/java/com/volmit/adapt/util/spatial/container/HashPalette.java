@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.container;
 
-
 import com.volmit.adapt.util.spatial.util.Consume;
 
 import java.util.LinkedHashMap;

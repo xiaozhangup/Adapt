@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.skill;
 
@@ -91,22 +91,26 @@ public class SkillRegistry extends TickedObject {
     }
 
     private boolean canInteract(Player player, Location targetLocation) {
-        return Adapt.instance.getProtectorRegistry().getAllProtectors().stream().allMatch(protector -> protector.canInteract(player, targetLocation, null));
+        return Adapt.instance.getProtectorRegistry().getAllProtectors().stream()
+                .allMatch(protector -> protector.canInteract(player, targetLocation, null));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerInteractEvent e) {
         Player p = e.getPlayer();
 
-        boolean commonConditions = p.isSneaking() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock() != null;
+        boolean commonConditions = p.isSneaking() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                && e.getClickedBlock() != null;
         boolean isLectern = commonConditions && e.getClickedBlock().getType().equals(Material.LECTERN);
         boolean isObserver = commonConditions && e.getClickedBlock().getType().equals(Material.OBSERVER);
-        boolean isAdaptActivator = !e.getBlockFace().equals(BlockFace.UP) && !e.getBlockFace().equals(BlockFace.DOWN) && !p.isSneaking() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-                && e.getClickedBlock() != null
+        boolean isAdaptActivator = !e.getBlockFace().equals(BlockFace.UP) && !e.getBlockFace().equals(BlockFace.DOWN)
+                && !p.isSneaking() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock() != null
                 && canInteract(p, e.getClickedBlock().getLocation())
-                && e.getClickedBlock().getType().equals(Material.valueOf(AdaptConfig.get().adaptActivatorBlock)) && (p.getInventory().getItemInMainHand().getType().equals(Material.AIR)
-                || !p.getInventory().getItemInMainHand().getType().isBlock()) &&
-                (p.getInventory().getItemInOffHand().getType().equals(Material.AIR) || !p.getInventory().getItemInOffHand().getType().isBlock());
+                && e.getClickedBlock().getType().equals(Material.valueOf(AdaptConfig.get().adaptActivatorBlock))
+                && (p.getInventory().getItemInMainHand().getType().equals(Material.AIR)
+                        || !p.getInventory().getItemInMainHand().getType().isBlock())
+                && (p.getInventory().getItemInOffHand().getType().equals(Material.AIR)
+                        || !p.getInventory().getItemInOffHand().getType().isBlock());
 
         if (isAdaptActivator) {
             SoundPlayer spw = SoundPlayer.of(e.getClickedBlock().getWorld());
@@ -114,8 +118,10 @@ public class SkillRegistry extends TickedObject {
             spw.play(e.getClickedBlock().getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 0.35f, 0.755f);
             SkillsGui.open(p);
             e.setCancelled(true);
-            p.getWorld().spawnParticle(Particles.CRIT_MAGIC, e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5), 25, 0, 0, 0, 1.1);
-            p.getWorld().spawnParticle(Particles.ENCHANTMENT_TABLE, e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5), 12, 0, 0, 0, 1.1);
+            p.getWorld().spawnParticle(Particles.CRIT_MAGIC, e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5),
+                    25, 0, 0, 0, 1.1);
+            p.getWorld().spawnParticle(Particles.ENCHANTMENT_TABLE,
+                    e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5), 12, 0, 0, 0, 1.1);
         }
 
         if (isLectern) {
@@ -123,7 +129,10 @@ public class SkillRegistry extends TickedObject {
             if (it.getItemMeta() != null && !it.getItemMeta().getPersistentDataContainer().getKeys().isEmpty()) {
                 e.setCancelled(true);
                 playDebug(p);
-                it.getItemMeta().getPersistentDataContainer().getKeys().forEach(k -> Bukkit.getServer().getConsoleSender().sendMessage(k + " = " + it.getItemMeta().getPersistentDataContainer().getOrDefault(k, PersistentDataType.STRING, "Not a String")));
+                it.getItemMeta().getPersistentDataContainer().getKeys()
+                        .forEach(k -> Bukkit.getServer().getConsoleSender()
+                                .sendMessage(k + " = " + it.getItemMeta().getPersistentDataContainer().getOrDefault(k,
+                                        PersistentDataType.STRING, "Not a String")));
             }
         }
 
@@ -136,25 +145,35 @@ public class SkillRegistry extends TickedObject {
                 AdaptPlayer a = getPlayer(p);
                 playDebug(p);
 
-                String xv = a.getData().getMultiplier() - 1d > 0 ? "+" + Form.pc(a.getData().getMultiplier() - 1D) : Form.pc(a.getData().getMultiplier() - 1D);
+                String xv = a.getData().getMultiplier() - 1d > 0
+                        ? "+" + Form.pc(a.getData().getMultiplier() - 1D)
+                        : Form.pc(a.getData().getMultiplier() - 1D);
                 Bukkit.getServer().getConsoleSender().sendMessage("Global" + C.GRAY + ": " + C.GREEN + xv);
 
                 for (XPMultiplier i : a.getData().getMultipliers()) {
                     String vv = i.getMultiplier() > 0 ? "+" + Form.pc(i.getMultiplier()) : Form.pc(i.getMultiplier());
-                    Bukkit.getServer().getConsoleSender().sendMessage(C.GREEN + "* " + vv + C.GRAY + " for " + Form.duration(i.getGoodFor() - M.ms(), 0));
+                    Bukkit.getServer().getConsoleSender().sendMessage(
+                            C.GREEN + "* " + vv + C.GRAY + " for " + Form.duration(i.getGoodFor() - M.ms(), 0));
                 }
                 for (XPMultiplier i : Adapt.instance.getAdaptServer().getData().getMultipliers()) {
                     String vv = i.getMultiplier() > 0 ? "+" + Form.pc(i.getMultiplier()) : Form.pc(i.getMultiplier());
-                    Bukkit.getServer().getConsoleSender().sendMessage(C.GREEN + "* " + vv + C.GRAY + " for " + Form.duration(i.getGoodFor() - M.ms(), 0));
+                    Bukkit.getServer().getConsoleSender().sendMessage(
+                            C.GREEN + "* " + vv + C.GRAY + " for " + Form.duration(i.getGoodFor() - M.ms(), 0));
                 }
 
                 for (PlayerSkillLine i : a.getData().getSkillLines().v()) {
                     Skill<?> s = i.getRawSkill(a);
-                    String v = i.getMultiplier() - a.getData().getMultiplier() > 0 ? "+" + Form.pc(i.getMultiplier() - a.getData().getMultiplier()) : Form.pc(i.getMultiplier() - a.getData().getMultiplier());
-                    Bukkit.getServer().getConsoleSender().sendMessage("  " + s.getDisplayName() + C.GRAY + ": " + s.getColor() + v);
+                    String v = i.getMultiplier() - a.getData().getMultiplier() > 0
+                            ? "+" + Form.pc(i.getMultiplier() - a.getData().getMultiplier())
+                            : Form.pc(i.getMultiplier() - a.getData().getMultiplier());
+                    Bukkit.getServer().getConsoleSender()
+                            .sendMessage("  " + s.getDisplayName() + C.GRAY + ": " + s.getColor() + v);
                     for (XPMultiplier j : i.getMultipliers()) {
-                        String vv = j.getMultiplier() > 0 ? "+" + Form.pc(j.getMultiplier()) : Form.pc(j.getMultiplier());
-                        Bukkit.getServer().getConsoleSender().sendMessage("  " + s.getShortName() + C.GRAY + " " + vv + " for " + Form.duration(j.getGoodFor() - M.ms(), 0));
+                        String vv = j.getMultiplier() > 0
+                                ? "+" + Form.pc(j.getMultiplier())
+                                : Form.pc(j.getMultiplier());
+                        Bukkit.getServer().getConsoleSender().sendMessage("  " + s.getShortName() + C.GRAY + " " + vv
+                                + " for " + Form.duration(j.getGoodFor() - M.ms(), 0));
                     }
                 }
             }
@@ -188,8 +207,8 @@ public class SkillRegistry extends TickedObject {
 
             skills.put(sk.getName(), sk);
             registerRecipes(sk);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

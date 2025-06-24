@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
- -   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
- -   Copyright (c) 2022 Arcane Arts (Volmit Software)
- -
- -   This program is free software: you can redistribute it and/or modify
- -   it under the terms of the GNU General Public License as published by
- -   the Free Software Foundation, either version 3 of the License, or
- -   (at your option) any later version.
- -
- -   This program is distributed in the hope that it will be useful,
- -   but WITHOUT ANY WARRANTY; without even the implied warranty of
- -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- -   GNU General Public License for more details.
- -
- -   You should have received a copy of the GNU General Public License
- -   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- -----------------------------------------------------------------------------*/
+-   Adapt is a Skill/Integration plugin  for Minecraft Bukkit Servers
+-   Copyright (c) 2022 Arcane Arts (Volmit Software)
+-
+-   This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
+-   (at your option) any later version.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-   GNU General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------------*/
 
 package com.volmit.adapt.api.skill;
 
@@ -116,7 +116,8 @@ public interface Skill<T> extends Ticked, Component {
         if (!this.isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " " + Form.capitalize(getName());
+        return C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " "
+                + Form.capitalize(getName());
     }
 
     default String getShortName() {
@@ -181,12 +182,13 @@ public interface Skill<T> extends Ticked, Component {
         }
         try {
             XP.xpSilent(p, this, xp);
-        } catch (
-                Exception ignored) { // Player was Given XP (Likely Teleportation) before i can see it because some plugin has higher priority than me and moves a player. so im not going to throw an error, as i know why it's happening.
-            Adapt.verbose("Player was Given XP (Likely Teleportation) before i can see it because some plugin has higher priority than me and moves a player. so im not going to throw an error, as i know why it's happening.");
+        } catch (Exception ignored) { // Player was Given XP (Likely Teleportation) before i can see it because some
+                                        // plugin has higher priority than me and moves a player. so im not going to
+                                        // throw an error, as i know why it's happening.
+            Adapt.verbose(
+                    "Player was Given XP (Likely Teleportation) before i can see it because some plugin has higher priority than me and moves a player. so im not going to throw an error, as i know why it's happening.");
         }
     }
-
 
     default void xp(Location at, double xp, int rad, long duration) {
         XP.spatialXP(at, this, xp, rad, duration);
@@ -228,8 +230,7 @@ public interface Skill<T> extends Ticked, Component {
         spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
         Window w = new UIWindow(player);
         w.setTag("skill/" + getName());
-        w.setDecorator((window, position, row) -> new UIElement("bg")
-                .setName(" ")
+        w.setDecorator((window, position, row) -> new UIElement("bg").setName(" ")
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
 
@@ -242,33 +243,37 @@ public interface Skill<T> extends Ticked, Component {
             int pos = w.getPosition(ind);
             int row = w.getRow(ind);
             int lvl = getPlayer(player).getData().getSkillLine(getName()).getAdaptationLevel(i.getName());
-            w.setElement(pos, row, new UIElement("ada-" + i.getName())
-                    .setMaterial(new MaterialBlock(i.getIcon()))
-                    .setModel(i.getModel())
-                    .setName(i.getDisplayName(lvl))
-                    .addLore(Form.wrapWordsPrefixed(i.getDescription(), "" + C.GRAY, 45)) // Set to the actual Description
-                    .addLore(lvl == 0 ? (C.DARK_GRAY + Localizer.dLocalize("snippets", "gui", "notlearned")) : (C.GRAY + Localizer.dLocalize("snippets", "gui", "level") + " " + C.WHITE + Form.toRoman(lvl)))
-                    .setProgress(1D)
-                    .onLeftClick((e) -> i.openGui(player)));
+            w.setElement(pos, row,
+                    new UIElement("ada-" + i.getName()).setMaterial(new MaterialBlock(i.getIcon()))
+                            .setModel(i.getModel()).setName(i.getDisplayName(lvl))
+                            .addLore(Form.wrapWordsPrefixed(i.getDescription(), "" + C.GRAY, 45)) // Set to the actual
+                                                                                                    // Description
+                            .addLore(lvl == 0
+                                    ? (C.DARK_GRAY + Localizer.dLocalize("snippets", "gui", "notlearned"))
+                                    : (C.GRAY + Localizer.dLocalize("snippets", "gui", "level") + " " + C.WHITE
+                                            + Form.toRoman(lvl)))
+                            .setProgress(1D).onLeftClick((e) -> i.openGui(player)));
             ind++;
         }
 
         if (AdaptConfig.get().isGuiBackButton()) {
             int backPos = w.getResolution().getWidth() - 1;
             int backRow = w.getViewportHeight() - 1;
-            if (w.getElement(backPos, backRow) != null) backRow++;
-            w.setElement(backPos, backRow, new UIElement("back")
-                    .setMaterial(new MaterialBlock(Material.RED_BED))
+            if (w.getElement(backPos, backRow) != null)
+                backRow++;
+            w.setElement(backPos, backRow, new UIElement("back").setMaterial(new MaterialBlock(Material.RED_BED))
                     .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
-                    .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
-                    .onLeftClick((e) -> {
+                    .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back")).onLeftClick((e) -> {
                         w.close();
                         onGuiClose(player, true, simple);
                     }));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(getTitleDisplay() + C.BLACK + " (" + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1) + ")");
+        w.setTitle(getTitleDisplay() + C.BLACK + " ("
+                + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp()))
+                + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1)
+                + ")");
         w.onClosed((vv) -> J.s(() -> {
             w.close();
             onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple);

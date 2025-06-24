@@ -43,7 +43,8 @@ public class MantleRegion {
     /**
      * Create a new tectonic plate
      *
-     * @param worldHeight the height of the world
+     * @param worldHeight
+     *            the height of the world
      */
     public MantleRegion(int worldHeight, int x, int z) {
         this.sectionHeight = worldHeight >> 4;
@@ -55,10 +56,14 @@ public class MantleRegion {
     /**
      * Load a tectonic plate from a data stream
      *
-     * @param worldHeight the height of the world
-     * @param din         the data input
-     * @throws IOException            shit happens yo
-     * @throws ClassNotFoundException real shit bro
+     * @param worldHeight
+     *            the height of the world
+     * @param din
+     *            the data input
+     * @throws IOException
+     *             shit happens yo
+     * @throws ClassNotFoundException
+     *             real shit bro
      */
     public MantleRegion(int worldHeight, DataInputStream din) throws IOException, ClassNotFoundException {
         this(worldHeight, din.readInt(), din.readInt());
@@ -82,8 +87,10 @@ public class MantleRegion {
     /**
      * Check if a chunk exists in this plate or not (same as get(x, z) != null)
      *
-     * @param x the chunk relative x (0-31)
-     * @param z the chunk relative z (0-31)
+     * @param x
+     *            the chunk relative x (0-31)
+     * @param z
+     *            the chunk relative z (0-31)
      * @return true if the chunk exists
      */
     public boolean exists(int x, int z) {
@@ -93,8 +100,10 @@ public class MantleRegion {
     /**
      * Get a chunk at the given coordinates or null if it doesnt exist
      *
-     * @param x the chunk relative x (0-31)
-     * @param z the chunk relative z (0-31)
+     * @param x
+     *            the chunk relative x (0-31)
+     * @param z
+     *            the chunk relative z (0-31)
      * @return the chunk or null if it doesnt exist
      */
     public MantleChunk get(int x, int z) {
@@ -113,18 +122,23 @@ public class MantleRegion {
     /**
      * Delete a chunk from this tectonic plate
      *
-     * @param x the chunk relative x (0-31)
-     * @param z the chunk relative z (0-31)
+     * @param x
+     *            the chunk relative x (0-31)
+     * @param z
+     *            the chunk relative z (0-31)
      */
     public void delete(int x, int z) {
         chunks.set(index(x, z), null);
     }
 
     /**
-     * Get a tectonic plate, or create one and insert it & return it if it diddnt exist
+     * Get a tectonic plate, or create one and insert it & return it if it diddnt
+     * exist
      *
-     * @param x the chunk relative x (0-31)
-     * @param z the chunk relative z (0-31)
+     * @param x
+     *            the chunk relative x (0-31)
+     * @param z
+     *            the chunk relative z (0-31)
      * @return the chunk (read or created & inserted)
      */
     public MantleChunk getOrCreate(int x, int z) {
@@ -145,8 +159,10 @@ public class MantleRegion {
     /**
      * Write this tectonic plate to file
      *
-     * @param file the file to writeNodeData it to
-     * @throws IOException shit happens
+     * @param file
+     *            the file to writeNodeData it to
+     * @throws IOException
+     *             shit happens
      */
     public void write(File file) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
@@ -159,8 +175,10 @@ public class MantleRegion {
     /**
      * Write this tectonic plate to a data stream
      *
-     * @param dos the data output
-     * @throws IOException shit happens
+     * @param dos
+     *            the data output
+     * @throws IOException
+     *             shit happens
      */
     public void write(DataOutputStream dos) throws IOException {
         dos.writeInt(x);

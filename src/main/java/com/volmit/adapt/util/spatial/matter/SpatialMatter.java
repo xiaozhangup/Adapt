@@ -78,7 +78,8 @@ public class SpatialMatter implements Matter {
         }
 
         try {
-            return slice.getClass().getConstructor(int.class, int.class, int.class).newInstance(getWidth(), getHeight(), getDepth());
+            return slice.getClass().getConstructor(int.class, int.class, int.class).newInstance(getWidth(), getHeight(),
+                    getDepth());
         } catch (Throwable e) {
             e.printStackTrace();
         }

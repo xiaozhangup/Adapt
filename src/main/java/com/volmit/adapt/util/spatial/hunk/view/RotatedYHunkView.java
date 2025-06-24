@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util.spatial.hunk.view;
 
-
 import com.volmit.adapt.util.spatial.hunk.Hunk;
 
 public class RotatedYHunkView<T> implements Hunk<T> {
@@ -36,9 +35,7 @@ public class RotatedYHunkView<T> implements Hunk<T> {
     public void setRaw(int x, int y, int z, T t) {
         int xc = (int) Math.round(cos * (getWidth() / 2f) + sin * (getDepth() / 2f));
         int zc = (int) Math.round(-sin * (getWidth() / 2f) + cos * (getDepth() / 2f));
-        src.setIfExists((int)
-                        Math.round(cos * (x - xc) + sin * (z - zc)) - xc,
-                y,
+        src.setIfExists((int) Math.round(cos * (x - xc) + sin * (z - zc)) - xc, y,
                 (int) Math.round(-sin * (x - xc) + cos * (z - zc)) - zc, t);
     }
 
@@ -46,11 +43,8 @@ public class RotatedYHunkView<T> implements Hunk<T> {
     public T getRaw(int x, int y, int z) {
         int xc = (int) Math.round(cos * (getWidth() / 2f) + sin * (getDepth() / 2f));
         int zc = (int) Math.round(-sin * (getWidth() / 2f) + cos * (getDepth() / 2f));
-        return src.getIfExists(
-                (int) Math.round(cos * (x - xc) + sin * (z - zc)) - xc,
-                y,
-                (int) Math.round(-sin * (x - xc) + cos * (z - zc)) - zc
-        );
+        return src.getIfExists((int) Math.round(cos * (x - xc) + sin * (z - zc)) - xc, y,
+                (int) Math.round(-sin * (x - xc) + cos * (z - zc)) - zc);
     }
 
     @Override
