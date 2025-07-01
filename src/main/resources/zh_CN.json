@@ -727,6 +727,9 @@
       "lore1": "当挖掘时给予急迫效果",
       "lore2": "x 挖掘时急迫效果等级"
     },
+    "droptoinventory": {
+      "name": "快速进入背包"
+    },
     "omnitool": {
       "name": "OMNI - T.O.O.L.",
       "description": "Tackle设计的豪华多功能工具钳。",

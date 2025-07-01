@@ -97,7 +97,8 @@ dependencies {
 
     // Dynamically Loaded
     compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.4-R0.1-SNAPSHOT'
-    compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'
+    compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'                  // SlimeCargoNext
+    compileOnly 'me.xiaozhangup:OrangDomain:1.0.1'
     compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
     compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     compileOnly 'com.google.code.gson:gson:2.10'

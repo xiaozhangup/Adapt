@@ -2,7 +2,7 @@ package com.volmit.adapt.content.protector;
 
 import com.volmit.adapt.api.adaptation.Adaptation;
 import com.volmit.adapt.api.protection.Protector;
-import me.xiaozhangup.domain.common.poly.BarrierPoly;
+import me.xiaozhangup.domain.poly.Poly;
 import me.xiaozhangup.domain.utils.LemonUtilsKt;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,7 +11,7 @@ public class OrangDomainProtector implements Protector {
 
     @Override
     public boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        BarrierPoly poly = LemonUtilsKt.getPoly(blockLocation);
+        Poly poly = LemonUtilsKt.getPoly(blockLocation);
         if (poly == null)
             return true;
         return poly.hasPermission("build", null, false);
@@ -19,7 +19,7 @@ public class OrangDomainProtector implements Protector {
 
     @Override
     public boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        BarrierPoly poly = LemonUtilsKt.getPoly(blockLocation);
+        Poly poly = LemonUtilsKt.getPoly(blockLocation);
         if (poly == null)
             return true;
         return poly.hasPermission("build", null, false);
@@ -27,7 +27,7 @@ public class OrangDomainProtector implements Protector {
 
     @Override
     public boolean canPVP(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        BarrierPoly poly = LemonUtilsKt.getPoly(entityLocation);
+        Poly poly = LemonUtilsKt.getPoly(entityLocation);
         if (poly == null)
             return true;
         return poly.hasPermission("pvp", null, false);
@@ -35,7 +35,7 @@ public class OrangDomainProtector implements Protector {
 
     @Override
     public boolean canPVE(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        BarrierPoly poly = LemonUtilsKt.getPoly(entityLocation);
+        Poly poly = LemonUtilsKt.getPoly(entityLocation);
         if (poly == null)
             return true;
         return poly.hasPermission("pvp", null, false);
@@ -43,7 +43,7 @@ public class OrangDomainProtector implements Protector {
 
     @Override
     public boolean canInteract(Player player, Location targetLocation, Adaptation<?> adaptation) {
-        BarrierPoly poly = LemonUtilsKt.getPoly(targetLocation);
+        Poly poly = LemonUtilsKt.getPoly(targetLocation);
         if (poly == null)
             return true;
         return poly.hasPermission("interact", null, false);
@@ -51,7 +51,7 @@ public class OrangDomainProtector implements Protector {
 
     @Override
     public boolean canAccessChest(Player player, Location chestLocation, Adaptation<?> adaptation) {
-        BarrierPoly poly = LemonUtilsKt.getPoly(chestLocation);
+        Poly poly = LemonUtilsKt.getPoly(chestLocation);
         if (poly == null)
             return true;
         return poly.hasPermission("interact", null, false);
