@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.LongAdder;
 
 public class MultiBurst {
     public static final MultiBurst burst = new MultiBurst();
+    public static final MultiBurst virtualBurst = new MultiBurst(Executors.newVirtualThreadPerTaskExecutor());
     @Getter
     private final ExecutorService service;
     private final AtomicInteger tid = new AtomicInteger(0);
@@ -61,6 +62,10 @@ public class MultiBurst {
                 });
 
         ((ThreadPoolExecutor) service).allowCoreThreadTimeOut(true);
+    }
+
+    public MultiBurst(ExecutorService service) {
+        this.service = service;
     }
 
     public void burst(Runnable... r) {

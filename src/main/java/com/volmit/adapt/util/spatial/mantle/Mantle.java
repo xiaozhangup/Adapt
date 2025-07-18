@@ -71,7 +71,7 @@ public class Mantle {
         unload = new HashSet<>();
         loadedRegions = new HashMap<>();
         lastUse = new HashMap<>();
-        ioBurst = MultiBurst.burst;
+        ioBurst = MultiBurst.virtualBurst;
     }
 
     /**
