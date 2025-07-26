@@ -92,11 +92,11 @@ dependencies {
 
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'xyz.xenondevs:particle:1.8.4'
-    implementation "com.frengor:ultimateadvancementapi-shadeable:2.5.1"
+    implementation "com.frengor:ultimateadvancementapi-shadeable:2.5.2:mojang-mapped"
     implementation 'com.jeff-media:custom-block-data:2.2.3'
 
     // Dynamically Loaded
-    compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.8-R0.1-SNAPSHOT'
     compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'                  // SlimeCargoNext
     compileOnly 'me.xiaozhangup:OrangDomain:1.0.1'
     compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'

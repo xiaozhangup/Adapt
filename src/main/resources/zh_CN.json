@@ -609,11 +609,6 @@
       "description": "允许你合成不同种类的马铠。",
       "lore1": "在工作台中，使用合成材料围着马鞍一圈以合成目标材质的马铠。"
     },
-    "saddlecrafter": {
-      "name": "可合成马鞍",
-      "description": "用羽毛合成马鞍",
-      "lore1": "配方：5皮革："
-    },
     "multiarmor": {
       "name": "盔甲套组",
       "description": "在盔甲上绑定鞘翅",
