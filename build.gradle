@@ -92,7 +92,7 @@ dependencies {
 
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'xyz.xenondevs:particle:1.8.4'
-    implementation "com.frengor:ultimateadvancementapi-shadeable:2.5.2:mojang-mapped"
+    implementation "com.frengor:ultimateadvancementapi-shadeable:2.6.0:mojang-mapped"
     implementation 'com.jeff-media:custom-block-data:2.2.3'
 
     // Dynamically Loaded

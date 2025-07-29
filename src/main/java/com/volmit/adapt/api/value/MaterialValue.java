@@ -34,27 +34,22 @@ import java.util.*;
 
 @Getter
 public class MaterialValue {
-    private static final Map<Material, Double> valueMultipliers = new HashMap<>();
-    private static MaterialValue valueCache = null;
+    private static final MaterialValue valueCache = get();
+    private static final Map<Material, Double> value = new HashMap<>();
+    private final Map<Material, Double> valueMultipliers = new HashMap<>();
 
     static {
         AdaptConfig.get().getValue().getValueMutlipliers().forEach((k, v) -> {
             try {
                 Material m = Material.valueOf(k.toUpperCase());
-                valueMultipliers.put(m, v);
+                valueCache.valueMultipliers.put(m, v);
             } catch (Exception e) {
                 Adapt.verbose("Invalid material value multiplier: " + k);
             }
         });
     }
 
-    private final Map<Material, Double> value = new HashMap<>();
-
     public static void save() {
-        if (valueCache == null) {
-            return;
-        }
-
         File l = Adapt.instance.getDataFile("data", "value-cache.json");
         try {
             IO.writeAll(l, new JSONObject(Adapt.gson.toJson(valueCache)).toString(4));
@@ -63,30 +58,24 @@ public class MaterialValue {
         }
     }
 
-    public static MaterialValue get() {
-        if (valueCache == null) {
+    private static MaterialValue get() {
+        File l = Adapt.instance.getDataFile("data", "value-cache.json");
+        if (!l.exists()) {
             MaterialValue dummy = new MaterialValue();
-            File l = Adapt.instance.getDataFile("data", "value-cache.json");
-
-            if (!l.exists()) {
-                try {
-                    IO.writeAll(l, new JSONObject(Adapt.gson.toJson(dummy)).toString(4));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    valueCache = dummy;
-                    return dummy;
-                }
-            }
-
             try {
-                valueCache = Adapt.gson.fromJson(IO.readAll(l), MaterialValue.class);
+                IO.writeAll(l, new JSONObject(Adapt.gson.toJson(dummy)).toString(4));
             } catch (IOException e) {
                 e.printStackTrace();
-                valueCache = new MaterialValue();
+                return dummy;
             }
         }
 
-        return valueCache;
+        try {
+            return Adapt.gson.fromJson(IO.readAll(l), MaterialValue.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new MaterialValue();
+        }
     }
 
     private static double getMultiplier(Material m) {
@@ -103,16 +92,16 @@ public class MaterialValue {
     }
 
     private static double getValue(Material m, Set<MaterialRecipe> ignore) {
-        if (get().value.containsKey(m)) {
+        if (value.containsKey(m)) {
             if (m.isBlock() && m.getHardness() == 0) {
                 return 0;
             }
-            return get().value.get(m);
+            return value.get(m);
         }
         double v = AdaptConfig.get().getValue().getBaseValue();
         List<MaterialRecipe> recipes = getRecipes(m);
         if (recipes.isEmpty()) {
-            get().value.put(m, v * getMultiplier(m)); // No recipes, just use base value, if no base value then 1
+            value.put(m, v * getMultiplier(m)); // No recipes, just use base value, if no base value then 1
         } else {
             List<Double> d = new ArrayList<>();
             for (MaterialRecipe i : recipes) {
@@ -130,16 +119,16 @@ public class MaterialValue {
                 v += d.stream().mapToDouble(i -> i).average().getAsDouble();
             }
             if (v > AdaptConfig.get().getMaxRecipeListPrecaution()) {
-                get().value.put(m, (v / 10 + 1) * getMultiplier(m));
+                value.put(m, (v / 10 + 1) * getMultiplier(m));
             } else {
-                get().value.put(m, v);
+                value.put(m, v);
             }
 
         }
         if (m.isBlock() && m.getHardness() == 0) {
             return 0;
         }
-        return get().value.get(m);
+        return value.get(m);
     }
 
     private static List<MaterialRecipe> getRecipes(Material mat) {
