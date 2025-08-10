@@ -120,7 +120,7 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
         for (Player p : players) {
             executor.queue(() -> {
-                if (p == null || !p.isOnline())
+                if (p == null || !p.isOnline() || !p.clientConnected())
                     return;
 
                 long now = M.ms();

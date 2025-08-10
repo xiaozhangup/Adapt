@@ -69,7 +69,7 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
 
                 J.a(() -> {
                     for (Tameable j : gl) {
-                        if (j.isTamed() && j.getOwner() instanceof Player p) {
+                        if (j.isTamed() && j.getOwner() instanceof Player p && p.clientConnected()) {
                             update(j, getLevel(p));
                         }
                     }

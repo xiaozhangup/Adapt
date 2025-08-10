@@ -71,6 +71,10 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
     @Override
     public void onTick() {
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+            if (!p.clientConnected()) {
+                continue;
+            }
+
             var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
 
             if (!hasAdaptation(p)) {
@@ -103,6 +107,10 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
             int damageXP = (int) Math.min(10, 2.5 * e.getDamage());
             xp(p, damageXP);
             J.s(() -> {
+                if (!p.clientConnected()) {
+                    return;
+                }
+
                 var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
                 if (attribute == null)
                     return;

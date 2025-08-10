@@ -98,6 +98,10 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
     @Override
     public void onTick() {
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+            if (!p.clientConnected()) {
+                continue;
+            }
+
             var attribute = Version.get().getAttribute(p, Attributes.GENERIC_MOVEMENT_SPEED);
             if (attribute == null)
                 continue;
