@@ -212,7 +212,7 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
 
     public void seeEnchant(Player p, Enchantment bd, int level) {
         Discovery<String> d = getPlayer(p).getData().getSeenEnchants();
-        if (d.isNewDiscovery(bd.getName() + " " + Form.toRoman(level))) {
+        if (d.isNewDiscovery(bd.getKey() + " " + Form.toRoman(level))) {
             xp(p, getConfig().discoverEnchantBaseXP
                     + Math.min(getConfig().discoverEnchantMaxXP, level * getConfig().discoverEnchantLevelXPMultiplier));
         }

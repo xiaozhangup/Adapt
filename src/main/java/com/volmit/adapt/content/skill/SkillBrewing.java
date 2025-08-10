@@ -191,13 +191,17 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
                     && !e.getItem().toString().contains("potion-type=minecraft:water")
                     && !e.getItem().toString().contains("potion-type=minecraft:mundane")
                     && !e.getItem().toString().contains("potion-type=minecraft:thick")
-                    && !e.getItem().toString().contains("potion-type=minecraft:awkward")) {
+                    && !e.getItem().toString().contains("potion-type=minecraft:awkward")
+                    && o.getBasePotionType() != null
+            ) {
                 getPlayer(p).getData().addStat("brewing.consumed", 1);
-                handleCooldown(p,
+                handleCooldown(
+                        p,
                         () -> xp(p, p.getLocation(), getConfig().splashXP
                                 + (getConfig().splashMultiplier * o.getCustomEffects().stream()
-                                        .mapToDouble(i -> (i.getAmplifier() + 1) * (i.getDuration() / 20D)).sum())
-                                + (getConfig().splashMultiplier * (o.getBasePotionData().isUpgraded() ? 50 : 25))));
+                                .mapToDouble(i -> (i.getAmplifier() + 1) * (i.getDuration() / 20D)).sum())
+                                + (getConfig().splashMultiplier * (o.getBasePotionType().isUpgradeable() ? 50 : 25)))
+                );
             }
         });
     }

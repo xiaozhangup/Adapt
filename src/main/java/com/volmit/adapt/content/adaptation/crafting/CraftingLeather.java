@@ -25,6 +25,7 @@ import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +53,7 @@ public class CraftingLeather extends SimpleAdaptation<CraftingLeather.Config> {
         v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("crafting", "leather", "lore1"));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void on(PlayerInteractEvent e) {
         if (e.getItem() != null && e.getItem().getType() == Material.ROTTEN_FLESH && e.getClickedBlock() != null
                 && e.getClickedBlock().getType() == Material.CAMPFIRE) {

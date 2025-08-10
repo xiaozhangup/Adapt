@@ -147,7 +147,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
 
     protected boolean shouldReturnForPlayer(Player p) {
         try {
-            if (p == null) {
+            if (p == null || !p.clientConnected()) {
                 return true;
             }
             AdaptPlayer adaptPlayer = getPlayer(p);
