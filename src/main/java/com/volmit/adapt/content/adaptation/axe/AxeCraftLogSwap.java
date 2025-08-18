@@ -24,10 +24,20 @@ import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+@Slf4j
 public class AxeCraftLogSwap extends SimpleAdaptation<AxeCraftLogSwap.Config> {
+
+    private static final List<Material> logs = new ArrayList<>();
+    private static final Map<Material, Material> saplings = new EnumMap<>(Material.class);
 
     public AxeCraftLogSwap() {
         super("axe-logswap");
@@ -41,230 +51,53 @@ public class AxeCraftLogSwap extends SimpleAdaptation<AxeCraftLogSwap.Config> {
         setInitialCost(getConfig().initialCost);
         setInterval(17773);
 
-        // Birch -> Types
-        registerRecipe(Shapeless.builder().key("axe-swapbirchoak").ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.OAK_SAPLING)
-                .result(new ItemStack(Material.OAK_PLANKS, 1)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapbirchacacia").ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.ACACIA_SAPLING)
-                .result(new ItemStack(Material.ACACIA_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapbirchdarkoak").ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.DARK_OAK_SAPLING)
-                .result(new ItemStack(Material.DARK_OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapbirchjungle").ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.JUNGLE_SAPLING)
-                .result(new ItemStack(Material.JUNGLE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapbirchspruce").ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.SPRUCE_SAPLING)
-                .result(new ItemStack(Material.SPRUCE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapbirchmangrove").ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG).ingredient(Material.BIRCH_LOG)
-                .ingredient(Material.BIRCH_LOG).ingredient(Material.MANGROVE_PROPAGULE)
-                .result(new ItemStack(Material.MANGROVE_LOG, 8)).build());
+        // 所有原木
+        logs.add(Material.ACACIA_LOG);
+        logs.add(Material.BIRCH_LOG);
+        logs.add(Material.CHERRY_LOG);
+        logs.add(Material.DARK_OAK_LOG);
+        logs.add(Material.JUNGLE_LOG);
+        logs.add(Material.MANGROVE_LOG);
+        logs.add(Material.OAK_LOG);
+        logs.add(Material.PALE_OAK_LOG);
+        logs.add(Material.SPRUCE_LOG);
+        logs.add(Material.CRIMSON_STEM);
+        logs.add(Material.WARPED_STEM);
+        logs.add(Material.BAMBOO_BLOCK);
 
-        // Oak -> Types
-        registerRecipe(
-                Shapeless.builder().key("axe-swapoakbirch").ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.BIRCH_SAPLING).result(new ItemStack(Material.BIRCH_LOG, 8)).build());
-        registerRecipe(
-                Shapeless.builder().key("axe-swapoakacacia").ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.ACACIA_SAPLING).result(new ItemStack(Material.ACACIA_LOG, 8)).build());
-        registerRecipe(
-                Shapeless.builder().key("axe-swapoakdarkoak").ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.DARK_OAK_SAPLING).result(new ItemStack(Material.DARK_OAK_LOG, 8)).build());
-        registerRecipe(
-                Shapeless.builder().key("axe-swapoakjungle").ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.JUNGLE_SAPLING).result(new ItemStack(Material.JUNGLE_LOG, 8)).build());
-        registerRecipe(
-                Shapeless.builder().key("axe-swapoakspruce").ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                        .ingredient(Material.SPRUCE_SAPLING).result(new ItemStack(Material.SPRUCE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapoakmangrove").ingredient(Material.OAK_LOG)
-                .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                .ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG).ingredient(Material.OAK_LOG)
-                .ingredient(Material.OAK_LOG).ingredient(Material.MANGROVE_PROPAGULE)
-                .result(new ItemStack(Material.MANGROVE_LOG, 8)).build());
+        // 树苗和方块映射
+        saplings.put(Material.ACACIA_SAPLING, Material.ACACIA_LOG);
+        saplings.put(Material.BIRCH_SAPLING, Material.BIRCH_LOG);
+        saplings.put(Material.CHERRY_SAPLING, Material.CHERRY_LOG);
+        saplings.put(Material.DARK_OAK_SAPLING, Material.DARK_OAK_LOG);
+        saplings.put(Material.JUNGLE_SAPLING, Material.JUNGLE_LOG);
+        saplings.put(Material.MANGROVE_PROPAGULE, Material.MANGROVE_LOG);
+        saplings.put(Material.OAK_SAPLING, Material.OAK_LOG);
+        saplings.put(Material.SPRUCE_SAPLING, Material.SPRUCE_LOG);
+        saplings.put(Material.PALE_OAK_SAPLING, Material.PALE_OAK_LOG);
+        saplings.put(Material.CRIMSON_FUNGUS, Material.CRIMSON_STEM);
+        saplings.put(Material.WARPED_FUNGUS, Material.WARPED_STEM);
+        saplings.put(Material.BAMBOO, Material.BAMBOO_BLOCK);
 
-        // Acacia -> Types
-        registerRecipe(Shapeless.builder().key("axe-swapacaciabirch").ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.BIRCH_SAPLING)
-                .result(new ItemStack(Material.BIRCH_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapacaciaoak").ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.OAK_SAPLING)
-                .result(new ItemStack(Material.OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapacaciadarkoak").ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.DARK_OAK_SAPLING)
-                .result(new ItemStack(Material.DARK_OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapacaciajungle").ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.JUNGLE_SAPLING)
-                .result(new ItemStack(Material.JUNGLE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapacaciaspruce").ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.SPRUCE_SAPLING)
-                .result(new ItemStack(Material.SPRUCE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapacaciamangrove").ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG).ingredient(Material.ACACIA_LOG)
-                .ingredient(Material.ACACIA_LOG).ingredient(Material.MANGROVE_PROPAGULE)
-                .result(new ItemStack(Material.MANGROVE_LOG, 8)).build());
+        for (Material log : logs) {
+            for (Map.Entry<Material, Material> sapling : saplings.entrySet()) {
+                Material from = sapling.getKey();
+                Material to = sapling.getValue();
+                if (log == to) continue;
 
-        // Dark Oak -> Types
-        registerRecipe(Shapeless.builder().key("axe-swapdarkoakbirch").ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.BIRCH_SAPLING)
-                .result(new ItemStack(Material.BIRCH_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapdarkoakoak").ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.OAK_SAPLING)
-                .result(new ItemStack(Material.OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapdarkoakacacia").ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.ACACIA_SAPLING)
-                .result(new ItemStack(Material.ACACIA_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapdarkoakjungle").ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.JUNGLE_SAPLING)
-                .result(new ItemStack(Material.JUNGLE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapdarkoakspruce").ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.SPRUCE_SAPLING)
-                .result(new ItemStack(Material.SPRUCE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapdarkoakmangrove").ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG).ingredient(Material.DARK_OAK_LOG)
-                .ingredient(Material.DARK_OAK_LOG).ingredient(Material.MANGROVE_PROPAGULE)
-                .result(new ItemStack(Material.MANGROVE_LOG, 8)).build());
-
-        // Jungle -> Types
-        registerRecipe(Shapeless.builder().key("axe-swapjunglebirch").ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.BIRCH_SAPLING)
-                .result(new ItemStack(Material.BIRCH_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapjungleoak").ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.OAK_SAPLING)
-                .result(new ItemStack(Material.OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapjungleacacia").ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.ACACIA_SAPLING)
-                .result(new ItemStack(Material.ACACIA_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapjungledarkoak").ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.DARK_OAK_SAPLING)
-                .result(new ItemStack(Material.DARK_OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapjunglespruce").ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.SPRUCE_SAPLING)
-                .result(new ItemStack(Material.SPRUCE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapjunglemangrove").ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG).ingredient(Material.JUNGLE_LOG)
-                .ingredient(Material.JUNGLE_LOG).ingredient(Material.MANGROVE_PROPAGULE)
-                .result(new ItemStack(Material.MANGROVE_LOG, 8)).build());
-
-        // Spruce -> Types
-        registerRecipe(Shapeless.builder().key("axe-swapsprucebirch").ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.BIRCH_SAPLING)
-                .result(new ItemStack(Material.BIRCH_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapspruceoak").ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.OAK_SAPLING)
-                .result(new ItemStack(Material.OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapspruceacacia").ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.ACACIA_SAPLING)
-                .result(new ItemStack(Material.ACACIA_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapsprucedarkoak").ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.DARK_OAK_SAPLING)
-                .result(new ItemStack(Material.DARK_OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapsprucejungle").ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.JUNGLE_SAPLING)
-                .result(new ItemStack(Material.JUNGLE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapsprucemangrove").ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG).ingredient(Material.SPRUCE_LOG)
-                .ingredient(Material.SPRUCE_LOG).ingredient(Material.MANGROVE_PROPAGULE)
-                .result(new ItemStack(Material.MANGROVE_LOG, 8)).build());
-
-        // Mangrove -> Types
-        registerRecipe(Shapeless.builder().key("axe-swapmangrovebirch").ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.BIRCH_SAPLING)
-                .result(new ItemStack(Material.BIRCH_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapmangroveoak").ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.OAK_SAPLING)
-                .result(new ItemStack(Material.OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapmangroveacacia").ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.ACACIA_SAPLING)
-                .result(new ItemStack(Material.ACACIA_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapmangrovedarkoak").ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.DARK_OAK_SAPLING)
-                .result(new ItemStack(Material.DARK_OAK_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapmangrovejungle").ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.JUNGLE_SAPLING)
-                .result(new ItemStack(Material.JUNGLE_LOG, 8)).build());
-        registerRecipe(Shapeless.builder().key("axe-swapmangrovespruce").ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG).ingredient(Material.MANGROVE_LOG)
-                .ingredient(Material.MANGROVE_LOG).ingredient(Material.SPRUCE_SAPLING)
-                .result(new ItemStack(Material.SPRUCE_LOG, 8)).build());
-
+                StringBuilder key = new StringBuilder("axe-swap");
+                String logName = log.toString().toLowerCase();
+                logName = logName.substring(0, logName.length() - 4);
+                String toName = to.toString().toLowerCase();
+                toName = toName.substring(0, toName.length() - 4);
+                key.append(logName).append(toName);
+                registerRecipe(Shapeless.builder().key(key.toString()).ingredient(log)
+                        .ingredient(log).ingredient(log).ingredient(log)
+                        .ingredient(log).ingredient(log).ingredient(log)
+                        .ingredient(log).ingredient(from)
+                        .result(new ItemStack(to, 8)).build());
+            }
+        }
     }
 
     @Override
