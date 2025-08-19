@@ -78,9 +78,13 @@ public class ItemListings {
     }
 
     public static boolean isLog(Material material) {
-        return List.of(MUSHROOM_STEM, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MANGROVE_ROOTS, MUDDY_MANGROVE_ROOTS)
-                .contains(material) || material.name().endsWith("_LOG") || material.name().endsWith("_WOOD");
-
+        if (
+                material == MUSHROOM_STEM || material == BROWN_MUSHROOM_BLOCK ||
+                        material == RED_MUSHROOM_BLOCK || material == MANGROVE_ROOTS ||
+                        material == MUDDY_MANGROVE_ROOTS || material == WARPED_STEM ||
+                        material == CRIMSON_STEM
+        ) return true;
+        return material.name().endsWith("_LOG") || material.name().endsWith("_WOOD");
     }
 
     public static boolean isFood(Material material) {
