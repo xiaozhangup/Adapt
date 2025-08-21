@@ -194,17 +194,17 @@ public interface Component {
 
     default PotionEffect getRawPotionEffect(ItemStack is) {
         if (is != null && is.getItemMeta() != null && is.getItemMeta() instanceof PotionMeta p
-                && p.getBasePotionData().getType().getEffectType() != null) {
+                && !p.getBasePotionType().getPotionEffects().isEmpty()) {
             boolean l = is.getType().equals(Material.LINGERING_POTION);
-            boolean x = p.getBasePotionData().isExtended();
-            boolean u = p.getBasePotionData().isUpgraded();
+            boolean x = p.getBasePotionType().isExtendable();
+            boolean u = p.getBasePotionType().isUpgradeable();
             int e = x ? l ? 2400 : 9600 : l ? 900 : 3600;
             int g = u ? l ? 440 : 1800 : e;
             int t = x ? l ? 1200 : 4800 : l ? 440 : 1800;
             int h = u ? l ? 100 : 420 : x ? l ? 440 : 1800 : l ? 220 : 900;
 
             int amplifier = 0;
-            var type = p.getBasePotionData().getType();
+            var type = p.getBasePotionType();
             if (List.of(NIGHT_VISION, INVISIBILITY, FIRE_RESISTANCE, WATER_BREATHING).contains(type))
                 amplifier = e;
             else if (List.of(PotionTypes.JUMP, PotionTypes.SPEED, STRENGTH).contains(type))
@@ -220,8 +220,8 @@ public interface Component {
             else if (TURTLE_MASTER == type)
                 amplifier = u ? l ? 100 : 400 : x ? l ? 200 : 800 : l ? 100 : 400;
 
-            return new PotionEffect(p.getBasePotionData().getType().getEffectType(), amplifier,
-                    p.getBasePotionData().isUpgraded() ? 1 : 0);
+            return new PotionEffect(p.getBasePotionType().getEffectType(), amplifier,
+                    p.getBasePotionType().isUpgradeable() ? 1 : 0);
         }
 
         return null;

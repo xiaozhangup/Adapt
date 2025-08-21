@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 /*
  * Adapt is Copyright (c) 2021 Arcane Arts (Volmit Software)
  *
@@ -18,6 +20,7 @@
 plugins {
     id 'java'
     id 'java-library'
+    id "org.jetbrains.kotlin.jvm" version "2.1.21"
     id "io.freefair.lombok" version "8.10.2"
     id "com.gradleup.shadow" version "8.3.5"
     id 'systems.manifold.manifold-gradle-plugin' version '0.0.2-alpha'
@@ -41,6 +44,13 @@ file(jar.archiveFile.get().getAsFile().getParentFile().getParentFile().getParent
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "21"
+        freeCompilerArgs = ["-Xjvm-default=all"]
     }
 }
 
@@ -69,6 +79,7 @@ repositories {
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url "https://repo.glaremasters.me/repository/bloodshot/" }
     maven { url "https://maven.enginehub.org/repo/" }
+    maven { url "https://repo.momirealms.net/releases/" }
     maven { url "https://repo.oraxen.com/releases" }
     maven { url "https://repo.alessiodp.com/releases" }
     maven { url 'https://jitpack.io' }
@@ -92,13 +103,15 @@ dependencies {
 
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'xyz.xenondevs:particle:1.8.4'
-    implementation "com.frengor:ultimateadvancementapi-shadeable:2.6.0:mojang-mapped"
+    implementation 'com.frengor:ultimateadvancementapi-shadeable:2.6.0:mojang-mapped'
     implementation 'com.jeff-media:custom-block-data:2.2.3'
 
     // Dynamically Loaded
     compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.8-R0.1-SNAPSHOT'
-    compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'                  // SlimeCargoNext
+    compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'
     compileOnly 'me.xiaozhangup:OrangDomain:1.0.1'
+    compileOnly 'net.momirealms:craft-engine-core:0.0.57.1'
+    compileOnly 'net.momirealms:craft-engine-bukkit:0.0.57.1'
     compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
     compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     compileOnly 'com.google.code.gson:gson:2.10'

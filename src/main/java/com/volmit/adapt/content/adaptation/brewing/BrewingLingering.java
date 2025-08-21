@@ -115,7 +115,7 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
     }
 
     private boolean enhance(double factor, ItemStack is, PotionMeta p) {
-        if (!p.getBasePotionData().getType().isInstant()) {
+        if (!p.getBasePotionType().isInstant()) {
             PotionEffect effect = getRawPotionEffect(is);
 
             if (effect != null) {

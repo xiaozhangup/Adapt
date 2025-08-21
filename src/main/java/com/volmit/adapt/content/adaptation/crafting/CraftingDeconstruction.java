@@ -19,23 +19,17 @@
 package com.volmit.adapt.content.adaptation.crafting;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.function.Deconstruction;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.SoundPlayer;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.*;
@@ -62,70 +56,6 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
         v.addLore(C.GREEN + Localizer.dLocalize("crafting", "deconstruction", "lore2"));
     }
 
-    public ItemStack getDeconstructionOffering(ItemStack forStuff) {
-        if (forStuff == null)
-            return null;
-
-        int maxPow = 0;
-        Recipe selectedRecipe = null;
-
-        for (Recipe recipe : Bukkit.getRecipesFor(forStuff)) {
-            int currentPower = 0;
-            if (recipe instanceof ShapelessRecipe r) {
-                currentPower = r.getIngredientList().stream().mapToInt(ItemStack::getAmount).sum();
-            } else if (recipe instanceof ShapedRecipe r) {
-                currentPower = r.getIngredientMap().values().stream().mapToInt(f -> f == null ? 0 : f.getAmount())
-                        .sum();
-            }
-            if (currentPower > maxPow) {
-                selectedRecipe = recipe;
-                maxPow = currentPower;
-            }
-        }
-
-        if (selectedRecipe == null)
-            return null;
-
-        int v = 0;
-        int outa = 1;
-        ItemStack sel = null;
-
-        if (selectedRecipe instanceof ShapelessRecipe r) {
-            for (ItemStack i : r.getIngredientList()) {
-                int amount = i.getAmount() * forStuff.getAmount();
-                if (amount > v) {
-                    v = amount;
-                    sel = i;
-                    outa = r.getResult().getAmount();
-                }
-            }
-        } else {
-            ShapedRecipe r = (ShapedRecipe) selectedRecipe;
-            Map<Material, Integer> ings = new HashMap<>();
-            r.getIngredientMap().values().stream().filter(Objects::nonNull)
-                    .forEach(i -> ings.merge(i.getType(), i.getAmount(), Integer::sum));
-
-            for (Map.Entry<Material, Integer> entry : ings.entrySet()) {
-                int amount = entry.getValue() * forStuff.getAmount();
-                if (amount > v) {
-                    v = amount;
-                    sel = new ItemStack(entry.getKey(), entry.getValue());
-                    outa = r.getResult().getAmount();
-                }
-            }
-        }
-
-        if (sel != null && sel.getAmount() * forStuff.getAmount() > 1) {
-            int a = ((sel.getAmount() * forStuff.getAmount()) / outa) / 2;
-            if (a <= sel.getMaxStackSize() && getValue(sel) < getValue(forStuff)) {
-                sel.setAmount(a);
-                return sel.clone();
-            }
-        }
-
-        return null;
-    }
-
     @EventHandler
     public void on(PlayerInteractEvent e) {
         Player player = e.getPlayer();
@@ -142,32 +72,7 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
         RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(),
                 player.getLocation().getDirection(), 6, entity -> entity instanceof Item);
         if (rayTrace != null && rayTrace.getHitEntity() instanceof Item itemEntity) {
-            processItemInteraction(player, mainHandItem, itemEntity);
-        }
-    }
-
-    private void processItemInteraction(Player player, ItemStack mainHandItem, Item itemEntity) {
-        ItemStack forStuff = itemEntity.getItemStack();
-        ItemStack offering = getDeconstructionOffering(forStuff);
-
-        SoundPlayer spw = SoundPlayer.of(player.getWorld());
-        if (offering != null) {
-            itemEntity.setItemStack(offering);
-            spw.play(itemEntity.getLocation(), Sound.BLOCK_BASALT_BREAK, 1F, 0.2f);
-            spw.play(itemEntity.getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 1F, 0.7f);
-            getSkill().xp(player, getValue(offering));
-
-            // Damage the shears
-            Damageable damageable = (Damageable) mainHandItem.getItemMeta();
-            int newDamage = damageable.getDamage() + 8 * forStuff.getAmount();
-            if (newDamage >= mainHandItem.getType().getMaxDurability()) {
-                player.getInventory().setItemInMainHand(null); // Break the shears
-            } else {
-                damageable.setDamage(newDamage);
-                mainHandItem.setItemMeta(damageable);
-            }
-        } else {
-            spw.play(itemEntity.getLocation(), Sound.BLOCK_REDSTONE_TORCH_BURNOUT, 1F, 1f); // Burnt torch sound
+            Deconstruction.processItemInteraction(player, mainHandItem, itemEntity, this);
         }
     }
 

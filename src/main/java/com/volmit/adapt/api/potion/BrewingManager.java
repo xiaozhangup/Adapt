@@ -98,9 +98,9 @@ public class BrewingManager implements Listener {
                 continue;
             PotionMeta meta = (PotionMeta) s.getItemMeta();
             var opt = Reflect.getEnum(PotionType.class, "UNCRAFTABLE");
-            if (opt.isEmpty() && meta.getBasePotionData() != null)
+            if (opt.isEmpty() && meta.getBasePotionType() != null)
                 continue;
-            if (opt.isPresent() && meta.getBasePotionData().getType() == opt.get())
+            if (opt.isPresent() && meta.getBasePotionType() == opt.get())
                 continue;
             ItemStack newStack = s.clone();
             if (m == Material.GUNPOWDER) {
