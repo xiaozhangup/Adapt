@@ -210,21 +210,20 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                     Damageable iDmgable = (Damageable) i.getItemMeta();
                     if (i.hasItemMeta()) {
                         ItemMeta im = i.getItemMeta().clone();
-                        ItemMeta im2 = im;
                         if (im.hasDisplayName()) {
-                            im2.setDisplayName(im.getDisplayName());
+                            im.setDisplayName(im.getDisplayName());
                         }
                         if (im.hasEnchants()) {
                             Map<Enchantment, Integer> enchants = im.getEnchants();
                             for (Enchantment enchant : enchants.keySet()) {
-                                im2.addEnchant(enchant, enchants.get(enchant), true);
+                                im.addEnchant(enchant, enchants.get(enchant), true);
                             }
                         }
                         if (iDmgable != null && iDmgable.hasDamage()) {
-                            ((Damageable) im2).setDamage(iDmgable.getDamage());
+                            ((Damageable) im).setDamage(iDmgable.getDamage());
                         }
-                        im2.setLore(null);
-                        i.setItemMeta(im2);
+                        im.setLore(null);
+                        i.setItemMeta(im);
                     }
                     drops.set(drops.indexOf(i), i);
                 }
@@ -297,8 +296,11 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
         }
         if (e.getClickedInventory() != null && e.getClick().equals(ClickType.SHIFT_LEFT)
                 && e.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
+            ItemStack slot = e.getClickedInventory().getItem(e.getSlot());
+            if (slot == null) return;
+
+            ItemStack clicked = slot.clone();
             ItemStack cursor = e.getWhoClicked().getItemOnCursor().clone();
-            ItemStack clicked = e.getClickedInventory().getItem(e.getSlot()).clone();
 
             if (omniTool.explode(cursor).size() > 1 || omniTool.explode(clicked).size() > 1) {
                 if (omniTool.explode(cursor).size() >= getSlots(getLevel((Player) e.getWhoClicked()))

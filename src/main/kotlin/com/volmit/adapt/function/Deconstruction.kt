@@ -3,17 +3,11 @@ package com.volmit.adapt.function
 import com.volmit.adapt.api.adaptation.SimpleAdaptation
 import com.volmit.adapt.util.SoundPlayer
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.RecipeChoice
-import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.inventory.ShapelessRecipe
+import org.bukkit.inventory.*
 import org.bukkit.inventory.meta.Damageable
-import java.util.*
 
 object Deconstruction {
 
@@ -59,6 +53,13 @@ object Deconstruction {
         val (selectedRecipe, items) = itemRecipes(forStuff)
         if (selectedRecipe == null || items.isEmpty()) return emptyList()
 
+        val recipeOutputAmount = selectedRecipe.result.amount
+
+        // 对于产出多个的配方，必须要求传入的物品达到产出的数量
+        if (recipeOutputAmount > 1 && forStuff.amount < recipeOutputAmount) {
+            return emptyList()
+        }
+
         // 从 itemRecipes 返回的 items 中找到数量最多的物品类型
         var bestItemStack: ItemStack? = null
         var bestAmountPerCraft = 0
@@ -88,7 +89,6 @@ object Deconstruction {
         }
 
         if (bestItemStack == null) return emptyList()
-        val recipeOutputAmount = selectedRecipe.result.amount
 
         // 计算可以拆解多少次配方
         val timesCanDeconstruct = forStuff.amount / recipeOutputAmount
@@ -142,7 +142,7 @@ object Deconstruction {
     private fun itemRecipes(item: ItemStack): Pair<Recipe?, List<ItemStack>> {
         val recipes = Bukkit.getRecipesFor(item).filter { recipe ->
             (recipe is ShapedRecipe || recipe is ShapelessRecipe) &&
-            item.isSimilar(recipe.result)
+                    item.isSimilar(recipe.result)
         } // 精确匹配配方
 
         var recipe: Recipe? = null
