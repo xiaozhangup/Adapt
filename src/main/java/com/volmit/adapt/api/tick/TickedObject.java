@@ -24,20 +24,14 @@ import org.bukkit.event.Listener;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class TickedObject implements Ticked, Listener {
-    private final AtomicLong lastTick;
-    private final AtomicLong interval;
-    private final AtomicInteger skip;
-    private final AtomicInteger burst;
-    private final AtomicLong ticks;
-    private final AtomicInteger dieIn;
-    private final AtomicBoolean die;
-    private final long start;
+    private Long lastTick;
+    private Long interval;
     private final String group;
     private final String id;
+    private final Long identifier;
+    private final AtomicBoolean unregistered;
 
     public TickedObject() {
         this("null");
@@ -58,22 +52,14 @@ public abstract class TickedObject implements Ticked, Listener {
     public TickedObject(String group, String id, long interval) {
         this.group = group;
         this.id = id;
-        this.die = new AtomicBoolean(false);
-        this.dieIn = new AtomicInteger(0);
-        this.interval = new AtomicLong(interval);
-        this.lastTick = new AtomicLong(M.ms());
-        this.burst = new AtomicInteger(0);
-        this.skip = new AtomicInteger(0);
-        this.ticks = new AtomicLong(0);
-        this.start = M.ms();
+        this.interval = interval;
+        this.lastTick = M.ms();
+        this.identifier = Adapt.instance.getTicker().generateId();
+        this.unregistered = new AtomicBoolean(false);
         Adapt.instance.getTicker().register(this);
         Adapt.instance.registerListener(this);
     }
 
-    public void dieAfter(int ticks) {
-        dieIn.set(ticks);
-        die.set(true);
-    }
 
     @Override
     public void unregister() {
@@ -83,36 +69,22 @@ public abstract class TickedObject implements Ticked, Listener {
 
     @Override
     public long getLastTick() {
-        return lastTick.get();
+        return lastTick;
     }
 
     @Override
     public long getInterval() {
-        if (burst.get() > 0) {
-            return 0;
-        }
-
-        return interval.get();
+        return interval;
     }
 
     @Override
     public void setInterval(long ms) {
-        interval.set(ms);
+        interval = ms;
     }
 
     @Override
     public void tick() {
-        if (skip.getAndDecrement() > 0) {
-            return;
-        }
-
-        if (die.get() && dieIn.decrementAndGet() <= 0) {
-            unregister();
-            return;
-        }
-
-        lastTick.set(M.ms());
-        burst.decrementAndGet();
+        lastTick = M.ms();
         onTick();
     }
 
@@ -129,52 +101,17 @@ public abstract class TickedObject implements Ticked, Listener {
     }
 
     @Override
-    public long getTickCount() {
-        return ticks.get();
+    public long getIdentifier() {
+        return identifier;
     }
 
     @Override
-    public long getAge() {
-        return M.ms() - start;
+    public boolean isUnregistered() {
+        return unregistered.get();
     }
 
     @Override
-    public boolean isBursting() {
-        return burst.get() > 0;
-    }
-
-    @Override
-    public void burst(int ticks) {
-        if (burst.get() < 0) {
-            burst.set(ticks);
-            return;
-        }
-
-        burst.addAndGet(ticks);
-    }
-
-    @Override
-    public boolean isSkipping() {
-        return skip.get() > 0;
-    }
-
-    @Override
-    public void stopBursting() {
-        burst.set(0);
-    }
-
-    @Override
-    public void stopSkipping() {
-        skip.set(0);
-    }
-
-    @Override
-    public void skip(int ticks) {
-        if (skip.get() < 0) {
-            skip.set(ticks);
-            return;
-        }
-
-        skip.addAndGet(ticks);
+    public void setUnregistered(boolean unregistered) {
+        this.unregistered.set(unregistered);
     }
 }

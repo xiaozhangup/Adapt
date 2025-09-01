@@ -18,58 +18,68 @@
 
 package com.volmit.adapt.api.tick;
 
+import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.BurstExecutor;
-import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.MultiBurst;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Ticker {
-    private final List<Ticked> ticklist;
-    private final ConcurrentLinkedQueue<Ticked> newTicks;
-    private final Set<String> removeTicks;
-    private volatile boolean ticking;
+    private final AtomicLong idGenerator = new AtomicLong(0);
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+    private final AtomicBoolean isProcessing = new AtomicBoolean(false);
+    private final ConcurrentHashMap<Long, Ticked> tickList = new ConcurrentHashMap<>();
+    private final BukkitTask task; // 任务执行线程
 
     public Ticker() {
-        this.ticklist = new CopyOnWriteArrayList<>();
-        this.newTicks = new ConcurrentLinkedQueue<>();
-        this.removeTicks = ConcurrentHashMap.newKeySet();
-        this.ticking = false;
-        J.ar(() -> {
-            if (!ticking) {
-                tick();
-            }
-        }, 0);
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(
+                Adapt.instance,
+                () -> {
+                    if (!isProcessing.get()) {
+                        try {
+                            isProcessing.set(true);
+                            tick();
+                        } finally {
+                            isProcessing.set(false);
+                        }
+                    }
+                },
+                0,
+                1
+        );
     }
 
     public void register(Ticked ticked) {
-        newTicks.add(ticked);
+        tickList.put(ticked.getIdentifier(), ticked);
     }
 
     public void unregister(Ticked ticked) {
-        removeTicks.add(ticked.getId());
+        ticked.setUnregistered(true);
     }
 
     public void clear() {
-        ticklist.clear();
-        newTicks.clear();
-        removeTicks.clear();
+        task.cancel();
+        isRunning.set(false);
+        tickList.clear();
+    }
+
+    public long generateId() {
+        return idGenerator.incrementAndGet();
     }
 
     private void tick() {
-        ticking = true;
-        AtomicInteger tc = new AtomicInteger(0);
-        BurstExecutor e = MultiBurst.burst.burst(ticklist.size());
+        if (!isRunning.get()) {
+            return;
+        }
 
-        for (Ticked t : ticklist) {
+        BurstExecutor e = MultiBurst.burst.burst(tickList.size());
+        for (Ticked t : tickList.values()) {
             e.queue(() -> {
-                if (t.shouldTick()) {
-                    tc.incrementAndGet();
+                if (t.shouldTick() && !t.isUnregistered()) {
                     try {
                         t.tick();
                     } catch (Throwable ex) {
@@ -80,14 +90,6 @@ public class Ticker {
         }
 
         e.complete();
-
-        Ticked t;
-        while ((t = newTicks.poll()) != null) {
-            ticklist.add(t);
-        }
-
-        ticklist.removeIf(ticked -> removeTicks.remove(ticked.getId()));
-
-        ticking = false;
+        tickList.values().removeIf(Ticked::isUnregistered);
     }
 }
