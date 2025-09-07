@@ -955,62 +955,8 @@ public interface Component {
         }
     }
 
-    default void setExp(Player p, int exp) {
-        p.setExp(0);
-        p.setLevel(0);
-        p.setTotalExperience(0);
-
-        if (exp <= 0) {
-            return;
-        }
-
-        giveExp(p, exp);
-    }
-
-    default void giveExp(Player p, int exp) {
-        while (exp > 0) {
-            int xp = getExpToLevel(p) - getExp(p);
-            if (xp > exp) {
-                xp = exp;
-            }
-            p.giveExp(xp);
-            exp -= xp;
-        }
-    }
-
-    default void takeExp(Player p, int exp) {
-        takeExp(p, exp, true);
-    }
-
-    default void takeExp(Player p, int exp, boolean fromTotal) {
-        int xp = getTotalExp(p);
-
-        if (fromTotal) {
-            xp -= exp;
-        } else {
-            int m = getExp(p) - exp;
-            if (m < 0) {
-                m = 0;
-            }
-            xp -= getExp(p) + m;
-        }
-
-        setExp(p, xp);
-    }
-
     default int getExp(Player p) {
         return (int) (getExpToLevel(p) * p.getExp());
-    }
-
-    default int getTotalExp(Player p) {
-        return getTotalExp(p, false);
-    }
-
-    default int getTotalExp(Player p, boolean recalc) {
-        if (recalc) {
-            recalcTotalExp(p);
-        }
-        return p.getTotalExperience();
     }
 
     default int getLevel(Player p) {
