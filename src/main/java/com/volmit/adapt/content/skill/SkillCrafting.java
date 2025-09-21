@@ -59,6 +59,7 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
         registerAdaptation(new CraftingSkulls());
         registerAdaptation(new CraftingStations());
         registerAdaptation(new CraftingReconstruction());
+        registerAdaptation(new CraftingCorals());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE).key("challenge_craft_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_craft_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_craft_1k", "description"))

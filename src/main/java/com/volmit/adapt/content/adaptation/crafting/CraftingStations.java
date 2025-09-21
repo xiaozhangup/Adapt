@@ -24,16 +24,14 @@ import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MenuType;
 
 public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> {
     public CraftingStations() {
@@ -57,6 +55,7 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
         v.addLore(C.GRAY + Localizer.dLocalize("crafting", "stations", "lore4"));
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @EventHandler
     public void on(PlayerInteractEvent e) {
         Player p = e.getPlayer();
@@ -80,48 +79,37 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
             SoundPlayer sp = SoundPlayer.of(p);
             switch (hand.getType()) {
                 case CRAFTING_TABLE -> {
-                    p.setCooldown(hand.getType(), 1000);
-                    sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    p.openWorkbench(null, true);
+                    playEffect(p, hand, sp);
+                    p.openInventory(MenuType.CRAFTING.create(p));
                 }
                 case GRINDSTONE -> {
-                    p.setCooldown(hand.getType(), 1000);
-                    sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.GRINDSTONE);
-                    p.openInventory(inv);
+                    playEffect(p, hand, sp);
+                    p.openInventory(MenuType.GRINDSTONE.create(p));
                 }
                 case ANVIL -> {
-                    p.setCooldown(hand.getType(), 1000);
-                    sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.ANVIL);
-                    p.openInventory(inv);
+                    playEffect(p, hand, sp);
+                    p.openInventory(MenuType.ANVIL.create(p));
                 }
                 case STONECUTTER -> {
-                    p.setCooldown(hand.getType(), 1000);
-                    sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.STONECUTTER);
-                    p.openInventory(inv);
+                    playEffect(p, hand, sp);
+                    p.openInventory(MenuType.STONECUTTER.create(p));
                 }
                 case CARTOGRAPHY_TABLE -> {
-                    p.setCooldown(hand.getType(), 1000);
-                    sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.CARTOGRAPHY);
-                    p.openInventory(inv);
+                    playEffect(p, hand, sp);
+                    p.openInventory(MenuType.CARTOGRAPHY_TABLE.create(p));
                 }
                 case LOOM -> {
-                    p.setCooldown(hand.getType(), 1000);
-                    sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-                    sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
-                    Inventory inv = Bukkit.createInventory(p, InventoryType.LOOM);
-                    p.openInventory(inv);
+                    playEffect(p, hand, sp);
+                    p.openInventory(MenuType.LOOM.create(p));
                 }
             }
         }
+    }
+
+    private static void playEffect(Player p, ItemStack hand, SoundPlayer sp) {
+        p.setCooldown(hand.getType(), 1000);
+        sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
+        sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
     }
 
     @Override

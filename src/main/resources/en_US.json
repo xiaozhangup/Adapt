@@ -706,6 +706,11 @@
       "lore4": "Creeper: Gunpowder",
       "lore5": "Wither: Nether Brick",
       "lore6": "Dragon: Dragons Breath"
+    },
+    "corals": {
+      "name": "Craftable corals!",
+      "description": "Using Materials you can Craft Corals Block!",
+      "lore1": "Surround a Bone Block with coral fans to get a coral block"
     }
   },
   "discovery": {

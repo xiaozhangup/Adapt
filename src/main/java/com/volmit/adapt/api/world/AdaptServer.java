@@ -181,9 +181,14 @@ public class AdaptServer extends TickedObject {
             for (Skill<?> i : getSkillRegistry().getSkills()) {
                 for (Adaptation<?> j : i.getAdaptations()) {
                     if (j.isAdaptationRecipe(e.getRecipe()) && !j.hasAdaptation(p)) {
-                        Adapt.actionbar(p, C.RED + "需要 " + j.getDisplayName() + C.RED + " 来 " + i.getDisplayName());
+                        String action = C.RESET + i.getColor().toString() + i.getEmojiName() +
+                                " 需要技能 \"" + j.getDisplayName() +
+                                "\" 来合成";
+
+                        Adapt.actionbar(p, action);
                         sp.play(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.5f, 1.8f);
                         e.setCancelled(true);
+                        p.closeInventory();
                     }
                 }
             }
