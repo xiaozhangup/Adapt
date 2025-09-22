@@ -710,7 +710,7 @@
     "corals": {
       "name": "Craftable corals!",
       "description": "Using Materials you can Craft Corals Block!",
-      "lore1": "Surround a Bone Block with coral fans to get a coral block"
+      "lore1": "Surround a Bone Block with coral fans or corals to get a coral block"
     }
   },
   "discovery": {

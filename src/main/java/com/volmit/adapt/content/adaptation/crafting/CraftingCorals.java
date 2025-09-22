@@ -48,23 +48,52 @@ public class CraftingCorals extends SimpleAdaptation<CraftingCorals.Config> {
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
                 .shapes(List.of("III", "IXI", "III"))
                 .result(new ItemStack(Material.TUBE_CORAL_BLOCK, 1)).build());
+        registerRecipe(Shaped.builder().key("crafting-tubecoralfan")
+                .ingredient(new MaterialChar('I', Material.TUBE_CORAL_FAN))
+                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
+                .shapes(List.of("III", "IXI", "III"))
+                .result(new ItemStack(Material.TUBE_CORAL_BLOCK, 1)).build());
+
         registerRecipe(Shaped.builder().key("crafting-braincoral")
                 .ingredient(new MaterialChar('I', Material.BRAIN_CORAL))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
                 .shapes(List.of("III", "IXI", "III"))
                 .result(new ItemStack(Material.BRAIN_CORAL_BLOCK, 1)).build());
+        registerRecipe(Shaped.builder().key("crafting-braincoralfan")
+                .ingredient(new MaterialChar('I', Material.BRAIN_CORAL_FAN))
+                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
+                .shapes(List.of("III", "IXI", "III"))
+                .result(new ItemStack(Material.BRAIN_CORAL_BLOCK, 1)).build());
+
         registerRecipe(Shaped.builder().key("crafting-bubblecoral")
                 .ingredient(new MaterialChar('I', Material.BUBBLE_CORAL))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
                 .shapes(List.of("III", "IXI", "III"))
                 .result(new ItemStack(Material.BUBBLE_CORAL_BLOCK, 1)).build());
+        registerRecipe(Shaped.builder().key("crafting-bubblecoralfan")
+                .ingredient(new MaterialChar('I', Material.BUBBLE_CORAL_FAN))
+                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
+                .shapes(List.of("III", "IXI", "III"))
+                .result(new ItemStack(Material.BUBBLE_CORAL_BLOCK, 1)).build());
+
         registerRecipe(Shaped.builder().key("crafting-firecoral")
                 .ingredient(new MaterialChar('I', Material.FIRE_CORAL))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
                 .shapes(List.of("III", "IXI", "III"))
                 .result(new ItemStack(Material.FIRE_CORAL_BLOCK, 1)).build());
+        registerRecipe(Shaped.builder().key("crafting-firecoralfan")
+                .ingredient(new MaterialChar('I', Material.FIRE_CORAL_FAN))
+                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
+                .shapes(List.of("III", "IXI", "III"))
+                .result(new ItemStack(Material.FIRE_CORAL_BLOCK, 1)).build());
+
         registerRecipe(Shaped.builder().key("crafting-horncoral")
                 .ingredient(new MaterialChar('I', Material.HORN_CORAL))
+                .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
+                .shapes(List.of("III", "IXI", "III"))
+                .result(new ItemStack(Material.HORN_CORAL_BLOCK, 1)).build());
+        registerRecipe(Shaped.builder().key("crafting-horncoralfan")
+                .ingredient(new MaterialChar('I', Material.HORN_CORAL_FAN))
                 .ingredient(new MaterialChar('X', Material.BONE_BLOCK))
                 .shapes(List.of("III", "IXI", "III"))
                 .result(new ItemStack(Material.HORN_CORAL_BLOCK, 1)).build());
