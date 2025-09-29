@@ -86,7 +86,7 @@ public class PickaxeChisel extends SimpleAdaptation<PickaxeChisel.Config> {
             if (p.getCooldown(p.getInventory().getItemInMainHand().getType()) > 0) {
                 return;
             }
-            if (!canBlockBreak(p, e.getClickedBlock().getLocation())) {
+            if (!canBlockBreak(p, e.getClickedBlock())) {
                 return;
             }
             BlockData b = e.getClickedBlock().getBlockData();

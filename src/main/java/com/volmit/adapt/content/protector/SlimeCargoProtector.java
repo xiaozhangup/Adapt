@@ -6,18 +6,19 @@ import me.xiaozhangup.slimecargo.SlimeCargoNext;
 import me.xiaozhangup.slimecargo.objects.enums.ProtectType;
 import me.xiaozhangup.slimecargo.protect.SlimeProtect;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class SlimeCargoProtector implements Protector {
     @Override
-    public boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BREAK, player, blockLocation, null, null,
+    public boolean canBlockBreak(Player player, Block block, Adaptation<?> adaptation) {
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BREAK, player, null, block, null,
                 true) != SlimeProtect.Result.DENY;
     }
 
     @Override
-    public boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BUILD, player, blockLocation, null, null,
+    public boolean canBlockPlace(Player player, Block block, Adaptation<?> adaptation) {
+        return SlimeCargoNext.slimeProtect.hasPermission(ProtectType.BUILD, player, null, block, null,
                 true) != SlimeProtect.Result.DENY;
     }
 

@@ -4,17 +4,18 @@ import com.volmit.adapt.api.adaptation.Adaptation;
 import com.volmit.adapt.api.protection.Protector;
 import me.xiaozhangup.domain.OrangDomain;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class WorldProtector implements Protector {
     @Override
-    public boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(blockLocation.getWorld().getName());
+    public boolean canBlockBreak(Player player, Block block, Adaptation<?> adaptation) {
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(block.getWorld().getName());
     }
 
     @Override
-    public boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(blockLocation.getWorld().getName());
+    public boolean canBlockPlace(Player player, Block block, Adaptation<?> adaptation) {
+        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(block.getWorld().getName());
     }
 
     @Override

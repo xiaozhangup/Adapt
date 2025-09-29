@@ -72,7 +72,7 @@ public class AxeDropToInventory extends SimpleAdaptation<AxeDropToInventory.Conf
         if (p.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
-        if (!canBlockBreak(p, e.getBlock().getLocation())) {
+        if (!canBlockBreak(p, e.getBlock())) {
             return;
         }
         if (p.getInventory().getItemInMainHand().getType().name().endsWith("_AXE")) {

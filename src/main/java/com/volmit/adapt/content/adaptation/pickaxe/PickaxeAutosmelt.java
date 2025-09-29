@@ -180,7 +180,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
                 && !ItemListings.isSmeltOre(e.getBlock().getType())) {
             return;
         }
-        if (!canBlockBreak(p, e.getBlock().getLocation())) {
+        if (!canBlockBreak(p, e.getBlock())) {
             return;
         }
         if (getPlayer(p).getData().getSkillLines() != null

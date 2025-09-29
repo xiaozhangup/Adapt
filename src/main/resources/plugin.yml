@@ -6,12 +6,16 @@ authors:
   - Cyberpwn
   - Vatuu
 api-version: '${apiversion}'
+depend:
+  - WhaleMechanism
+  - SlimeCargoNext
 softdepend:
   - PlaceholderAPI
   - WorldGuard
   - Factions
   - ChestProtect
   - Residence
+  - OrangDomain
 libraries:
   - com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2
   - org.apache.commons:commons-lang3:3.12.0

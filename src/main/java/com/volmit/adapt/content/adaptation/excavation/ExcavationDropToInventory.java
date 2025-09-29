@@ -75,7 +75,7 @@ public class ExcavationDropToInventory extends SimpleAdaptation<ExcavationDropTo
         if (!canInteract(p, e.getBlock().getLocation())) {
             return;
         }
-        if (!canBlockBreak(p, e.getBlock().getLocation())) {
+        if (!canBlockBreak(p, e.getBlock())) {
             return;
         }
         if (p.getInventory().getItemInMainHand().getType().name().endsWith("_SHOVEL")) {

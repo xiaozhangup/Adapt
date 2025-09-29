@@ -106,7 +106,7 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                                                 + block.getLocation() + " (" + getRadius(level) + ")");
                                         continue;
                                     }
-                                    if (!canBlockBreak(p, b.getLocation())) {
+                                    if (!canBlockBreak(p, b)) {
                                         Adapt.verbose("Player " + p.getName() + " doesn't have permission.");
                                         continue;
                                     }

@@ -39,7 +39,7 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
         var player = event.getPlayer();
         var block = event.getBlock();
         if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SPAWNER
-                || !canBlockBreak(player, event.getBlock().getLocation()))
+                || !canBlockBreak(player, event.getBlock()))
             return;
         var level = getLevel(player);
         if (level == 1

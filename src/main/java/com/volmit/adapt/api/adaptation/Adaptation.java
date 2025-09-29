@@ -198,12 +198,12 @@ public interface Adaptation<T> extends Ticked, Component {
         return ImmutableSet.copyOf(protectors);
     }
 
-    default boolean canBlockBreak(Player player, Location blockLocation) {
-        return getProtectors().stream().allMatch(protector -> protector.canBlockBreak(player, blockLocation, this));
+    default boolean canBlockBreak(Player player, Block block) {
+        return getProtectors().stream().allMatch(protector -> protector.canBlockBreak(player, block, this));
     }
 
-    default boolean canBlockPlace(Player player, Location blockLocation) {
-        return getProtectors().stream().allMatch(protector -> protector.canBlockPlace(player, blockLocation, this));
+    default boolean canBlockPlace(Player player, Block block) {
+        return getProtectors().stream().allMatch(protector -> protector.canBlockPlace(player, block, this));
     }
 
     default boolean canPVP(Player player, Location victimLocation) {

@@ -5,21 +5,22 @@ import com.volmit.adapt.api.protection.Protector;
 import me.xiaozhangup.domain.poly.Poly;
 import me.xiaozhangup.domain.utils.LemonUtilsKt;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class OrangDomainProtector implements Protector {
 
     @Override
-    public boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        Poly poly = LemonUtilsKt.getPoly(blockLocation);
+    public boolean canBlockBreak(Player player, Block block, Adaptation<?> adaptation) {
+        Poly poly = LemonUtilsKt.getPoly(block.getLocation());
         if (poly == null)
             return true;
         return poly.hasPermission("build", null, false);
     }
 
     @Override
-    public boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
-        Poly poly = LemonUtilsKt.getPoly(blockLocation);
+    public boolean canBlockPlace(Player player, Block block, Adaptation<?> adaptation) {
+        Poly poly = LemonUtilsKt.getPoly(block.getLocation());
         if (poly == null)
             return true;
         return poly.hasPermission("build", null, false);

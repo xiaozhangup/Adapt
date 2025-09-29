@@ -88,7 +88,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         if (!hasAdaptation(p)) {
             return;
         }
-        if (!canBlockPlace(p, p.getLocation())) {
+        if (!canBlockPlace(p, p.getLocation().getBlock())) {
             return;
         }
         if (!e.getFrom().getBlock().equals(e.getTo().getBlock())) {

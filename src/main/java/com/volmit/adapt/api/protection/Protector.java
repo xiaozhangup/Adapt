@@ -20,15 +20,16 @@ package com.volmit.adapt.api.protection;
 
 import com.volmit.adapt.api.adaptation.Adaptation;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public interface Protector {
 
-    default boolean canBlockBreak(Player player, Location blockLocation, Adaptation<?> adaptation) {
+    default boolean canBlockBreak(Player player, Block block, Adaptation<?> adaptation) {
         return true;
     }
 
-    default boolean canBlockPlace(Player player, Location blockLocation, Adaptation<?> adaptation) {
+    default boolean canBlockPlace(Player player, Block block, Adaptation<?> adaptation) {
         return true;
     }
 

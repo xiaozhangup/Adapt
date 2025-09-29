@@ -57,7 +57,7 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
         Player p = e.getPlayer();
         if (hasAdaptation(p) && (p.getInventory().getItemInMainHand().getType() == Material.AIR
                 || !isTool(p.getInventory().getItemInMainHand())) && !e.isCancelled()) {
-            if (!canBlockBreak(p, e.getBlock().getLocation())) {
+            if (!canBlockBreak(p, e.getBlock())) {
                 return;
             }
             if (e.getBlock().getType().toString().contains("GLASS")

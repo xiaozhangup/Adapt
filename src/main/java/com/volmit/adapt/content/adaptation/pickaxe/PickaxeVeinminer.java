@@ -32,7 +32,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> {
@@ -80,8 +82,8 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
         }
 
         Block block = e.getBlock();
-        Map<Location, Block> blockMap = new HashMap<>();
-        blockMap.put(block.getLocation(), block);
+        List<Block> blockMap = new ArrayList<>();
+        blockMap.add(block);
 
         for (int i = 0; i < getRadius(getLevel(p)); i++) {
             for (int x = -i; x <= i; x++) {
@@ -89,22 +91,21 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
                     for (int z = -i; z <= i; z++) {
                         Block b = block.getRelative(x, y, z);
                         if (b.getType() == block.getType()) {
-                            if (!canBlockBreak(p, e.getBlock().getLocation())) {
+                            if (!canBlockBreak(p, e.getBlock())) {
                                 continue;
                             }
-                            blockMap.put(b.getLocation(), b);
+                            blockMap.add(b);
                         }
                     }
                 }
             }
         }
         J.s(() -> {
-            for (Location l : blockMap.keySet()) {
-                if (!canBlockBreak(p, l)) {
+            for (Block b : blockMap) {
+                if (!canBlockBreak(p, b)) {
                     Adapt.verbose("Player " + p.getName() + " doesn't have permission.");
                     continue;
                 }
-                Block b = e.getBlock().getWorld().getBlockAt(l);
                 if (getPlayer(p).getData().getSkillLines() != null
                         && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
                         && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
