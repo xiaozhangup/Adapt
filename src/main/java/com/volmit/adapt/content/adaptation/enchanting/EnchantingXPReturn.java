@@ -30,11 +30,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class EnchantingXPReturn extends SimpleAdaptation<EnchantingXPReturn.Config> {
-    private final Map<Player, Long> cooldown = new HashMap<>();
+    private final Map<Player, Long> cooldown = new WeakHashMap<>();
 
     public EnchantingXPReturn() {
         super("enchanting-xp-return");

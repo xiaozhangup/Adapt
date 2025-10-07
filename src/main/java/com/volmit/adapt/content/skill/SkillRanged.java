@@ -36,9 +36,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
     private final Map<Player, Long> cooldowns;
@@ -55,7 +55,7 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
         registerAdaptation(new RangedArrowRecovery());
         registerAdaptation(new RangedLungeShot());
         setIcon(Material.CROSSBOW);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

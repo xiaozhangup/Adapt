@@ -30,11 +30,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
-    private final Map<Player, Long> cooldown = new HashMap<>();
+    private final Map<Player, Long> cooldown = new WeakHashMap<>();
 
     public CraftingXP() {
         super("crafting-xp");

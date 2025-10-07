@@ -40,8 +40,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
     private final Map<Player, Long> cooldowns;
@@ -54,7 +54,7 @@ public class SkillPickaxes extends SimpleSkill<SkillPickaxes.Config> {
         setColor(ChatColor.of("#dac98e"));
         setInterval(2750);
         setIcon(Material.NETHERITE_PICKAXE);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new PickaxeChisel());
         registerAdaptation(new PickaxeVeinminer());
         registerAdaptation(new PickaxeAutosmelt());

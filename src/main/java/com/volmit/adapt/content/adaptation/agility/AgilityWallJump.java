@@ -33,8 +33,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
     private final Map<Player, Double> airjumps;
@@ -50,7 +50,7 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(50);
-        airjumps = new HashMap<>();
+        airjumps = new WeakHashMap<>();
     }
 
     @Override

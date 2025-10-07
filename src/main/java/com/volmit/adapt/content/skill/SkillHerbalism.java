@@ -43,11 +43,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.meta.PotionMeta;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
-    private final Map<Player, Long> cooldown = new HashMap<>();
+    private final Map<Player, Long> cooldown = new WeakHashMap<>();
 
     public SkillHerbalism() {
         super("herbalism", Localizer.dLocalize("skill", "herbalism", "icon"));

@@ -40,8 +40,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
     private final Map<Player, Long> cooldowns;
@@ -107,7 +107,7 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
                 .stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_block_5m").goal(5000000)
                 .stat("blocked.hits").reward(getConfig().challengeBlock5kReward).build());
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     private void handleCooldown(Player p, Runnable runnable) {

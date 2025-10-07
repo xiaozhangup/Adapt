@@ -40,8 +40,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
     private final Map<Player, Long> cooldowns;
@@ -54,7 +54,7 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
         setDisplayName(Localizer.dLocalize("skill", "architect", "name"));
         setInterval(3100);
         setIcon(Material.IRON_BARS);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdvancement(AdaptAdvancement.builder().icon(Material.BRICK).key("challenge_place_1k")
                 .title(Localizer.dLocalize("advancement", "challenge_place_1k", "title"))
                 .description(Localizer.dLocalize("advancement", "challenge_place_1k", "description"))

@@ -33,8 +33,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
     private final Map<Player, Long> cooldowns;
@@ -51,8 +51,8 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        cooldowns = new HashMap<>();
-        healingWindow = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
+        healingWindow = new WeakHashMap<>();
     }
 
     @Override

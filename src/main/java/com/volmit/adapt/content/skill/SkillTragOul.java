@@ -42,8 +42,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
     private final Map<Player, Long> cooldowns;
@@ -56,7 +56,7 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
         setDisplayName(Localizer.dLocalize("skill", "tragoul", "name"));
         setInterval(2755);
         setIcon(Material.CRIMSON_ROOTS);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new TragoulGlobe());
         registerAdaptation(new TragoulHealing());
         registerAdaptation(new TragoulLance());

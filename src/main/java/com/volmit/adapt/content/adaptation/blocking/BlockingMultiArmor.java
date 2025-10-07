@@ -34,9 +34,9 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Config> {
     private static final MultiArmor multiarmor = new MultiArmor();
@@ -56,7 +56,7 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @Override

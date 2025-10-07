@@ -39,8 +39,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
     private final Map<Player, Long> cooldowns;
@@ -53,7 +53,7 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
         setColor(ChatColor.of("#dfc393"));
         setInterval(5953);
         setIcon(Material.DIAMOND_SHOVEL);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new ExcavationHaste());
         registerAdaptation(new ExcavationOmniTool());
         registerAdaptation(new ExcavationDropToInventory());

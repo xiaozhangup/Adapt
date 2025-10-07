@@ -22,7 +22,6 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -35,7 +34,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> {
     public PickaxeVeinminer() {

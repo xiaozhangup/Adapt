@@ -42,8 +42,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
     private final Map<Player, Long> cooldowns;
@@ -58,7 +58,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
         setDisplayName(Localizer.dLocalize("skill", "axes", "name"));
         setInterval(5251);
         setIcon(Material.GOLDEN_AXE);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new AxeGroundSmash());
         registerAdaptation(new AxeDropToInventory());
         registerAdaptation(new AxeWoodVeinminer());

@@ -32,8 +32,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillSwords extends SimpleSkill<SkillSwords.Config> {
     private final Map<Player, Long> cooldowns;
@@ -46,7 +46,7 @@ public class SkillSwords extends SimpleSkill<SkillSwords.Config> {
         setDisplayName(Localizer.dLocalize("skill", "swords", "name"));
         setInterval(2150);
         setIcon(Material.DIAMOND_SWORD);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new SwordsPoisonedBlade());
         registerAdaptation(new SwordsBloodyBlade());
     }

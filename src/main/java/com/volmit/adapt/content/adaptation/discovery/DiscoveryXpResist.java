@@ -28,8 +28,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class DiscoveryXpResist extends SimpleAdaptation<DiscoveryXpResist.Config> {
     private final Map<Player, Long> cooldowns;
@@ -45,7 +45,7 @@ public class DiscoveryXpResist extends SimpleAdaptation<DiscoveryXpResist.Config
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
         setMaxLevel(getConfig().maxLevel);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @Override

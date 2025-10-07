@@ -33,8 +33,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class TragoulGlobe extends SimpleAdaptation<TragoulGlobe.Config> {
     private final Map<Player, Long> cooldowns;
@@ -50,7 +50,7 @@ public class TragoulGlobe extends SimpleAdaptation<TragoulGlobe.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @Override

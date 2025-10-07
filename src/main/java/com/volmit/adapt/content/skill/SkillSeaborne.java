@@ -42,8 +42,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
     private final Map<Player, Long> cooldowns;
@@ -68,7 +68,7 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_swim_1nm").goal(1852).stat("move.swim")
                 .reward(getConfig().challengeSwim1nmReward).build());
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     private boolean isOnCooldown(Player p, long cooldown) {

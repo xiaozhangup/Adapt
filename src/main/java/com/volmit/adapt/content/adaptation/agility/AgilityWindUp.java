@@ -36,9 +36,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-wind-up".getBytes());
@@ -56,7 +56,7 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
         setCostFactor(getConfig().costFactor);
         setInitialCost(getConfig().initialCost);
         setInterval(120);
-        ticksRunning = new HashMap<>();
+        ticksRunning = new WeakHashMap<>();
     }
 
     @Override

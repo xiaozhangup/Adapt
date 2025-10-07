@@ -36,12 +36,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
 
-    private final Map<Player, Long> lastJump = new HashMap<>();
+    private final Map<Player, Long> lastJump = new WeakHashMap<>();
 
     public NetherSkullYeet() {
         super("nether-skull-toss");

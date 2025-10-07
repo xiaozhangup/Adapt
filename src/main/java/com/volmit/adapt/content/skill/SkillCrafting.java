@@ -39,8 +39,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
     private final Map<Player, Long> cooldowns;
@@ -111,7 +111,7 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_craft_5m").goal(5000000)
                 .stat("crafted.items").reward(getConfig().challengeCraft1kReward).build());
 
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

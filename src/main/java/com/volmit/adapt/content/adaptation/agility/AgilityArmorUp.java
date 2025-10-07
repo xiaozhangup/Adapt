@@ -32,9 +32,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-armor-up".getBytes());
@@ -51,7 +51,7 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
         setCostFactor(getConfig().costFactor);
         setInitialCost(getConfig().initialCost);
         setInterval(350);
-        ticksRunning = new HashMap<>();
+        ticksRunning = new WeakHashMap<>();
     }
 
     @Override

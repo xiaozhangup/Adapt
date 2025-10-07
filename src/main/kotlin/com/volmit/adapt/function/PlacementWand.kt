@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class PlacementWand(

@@ -43,8 +43,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
     private final Map<Player, Long> cooldowns;
@@ -57,7 +57,7 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
         setDisplayName(Localizer.dLocalize("skill", "hunter", "name"));
         setInterval(4150);
         setIcon(Material.BONE);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new HunterAdrenaline());
         registerAdaptation(new HunterRegen());
         registerAdaptation(new HunterInvis());

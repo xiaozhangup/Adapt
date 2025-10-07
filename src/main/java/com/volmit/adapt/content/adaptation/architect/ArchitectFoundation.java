@@ -39,17 +39,14 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Config> {
     private static final BlockData AIR = Material.AIR.createBlockData();
     private static final BlockData BLOCK = Material.TINTED_GLASS.createBlockData();
     private final Map<Player, Integer> blockPower;
     private final Map<Player, Long> cooldowns;
-    private final Set<Player> active;
+    private final Set<UUID> active;
     private final Set<Block> activeBlocks;
 
     public ArchitectFoundation() {
@@ -63,8 +60,8 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        blockPower = new HashMap<>();
-        cooldowns = new HashMap<>();
+        blockPower = new WeakHashMap<>();
+        cooldowns = new WeakHashMap<>();
         active = new HashSet<>();
         activeBlocks = new HashSet<>();
     }
@@ -94,7 +91,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         if (!e.getFrom().getBlock().equals(e.getTo().getBlock())) {
             return;
         }
-        if (!this.active.contains(p)) {
+        if (!this.active.contains(p.getUniqueId())) {
             return;
         }
         int power = blockPower.get(p);
@@ -192,15 +189,15 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
             return;
         }
 
-        boolean ready = !hasCooldown(p);
-        boolean active = this.active.contains(p);
+        boolean ready = hasCooldown(p);
+        boolean active = this.active.contains(p.getUniqueId());
 
         if (e.isSneaking() && ready && !active) {
-            this.active.add(p);
+            this.active.add(p.getUniqueId());
             cooldowns.put(p, Long.MAX_VALUE);
             // effect start placing
         } else if (!e.isSneaking() && active) {
-            this.active.remove(p);
+            this.active.remove(p.getUniqueId());
             cooldowns.put(p, M.ms() + getConfig().cooldown);
             SoundPlayer sp = SoundPlayer.of(p);
             sp.play(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1.0f, 10.0f);
@@ -259,7 +256,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
                 continue;
             }
 
-            boolean ready = !hasCooldown(i);
+            boolean ready = hasCooldown(i);
             int availablePower = getBlockPower(getLevelPercent(i));
             blockPower.compute(i, (k, v) -> {
                 if ((k == null || v == null) || (ready && v != availablePower)) {
@@ -287,7 +284,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
             }
         }
 
-        return cooldowns.containsKey(i);
+        return !cooldowns.containsKey(i);
     }
 
     @Override

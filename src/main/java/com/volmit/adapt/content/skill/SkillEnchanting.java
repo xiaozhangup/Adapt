@@ -37,8 +37,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
     private final Map<Player, Long> cooldowns;
@@ -51,7 +51,7 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
         setDisplayName(Localizer.dLocalize("skill", "enchanting", "name"));
         setInterval(3909);
         setIcon(Material.KNOWLEDGE_BOOK);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new EnchantingQuickEnchant());
         registerAdaptation(new EnchantingLapisReturn());
         registerAdaptation(new EnchantingXPReturn()); //

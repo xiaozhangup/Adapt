@@ -31,11 +31,11 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class EnchantingLapisReturn extends SimpleAdaptation<EnchantingLapisReturn.Config> {
-    private final Map<Player, Long> cooldown = new HashMap<>();
+    private final Map<Player, Long> cooldown = new WeakHashMap<>();
 
     public EnchantingLapisReturn() {
         super("enchanting-lapis-return");

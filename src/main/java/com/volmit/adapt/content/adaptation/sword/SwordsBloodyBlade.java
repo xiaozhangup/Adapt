@@ -35,8 +35,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SwordsBloodyBlade extends SimpleAdaptation<SwordsBloodyBlade.Config> {
     private final Map<Player, Long> cooldowns;
@@ -52,7 +52,7 @@ public class SwordsBloodyBlade extends SimpleAdaptation<SwordsBloodyBlade.Config
         setInterval(5534);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @Override

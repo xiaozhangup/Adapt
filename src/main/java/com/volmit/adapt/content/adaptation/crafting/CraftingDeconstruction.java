@@ -32,7 +32,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruction.Config> {
     private final List<Integer> holds = new ArrayList<>();

@@ -33,8 +33,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
     private final Map<Player, Long> cooldowns;
@@ -49,7 +49,7 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

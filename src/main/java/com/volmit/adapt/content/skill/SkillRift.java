@@ -37,8 +37,8 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillRift extends SimpleSkill<SkillRift.Config> {
     private final Map<Player, Long> lasttp;
@@ -57,7 +57,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
         registerAdaptation(new RiftGate());
         registerAdaptation(new RiftBlink());
         registerAdaptation(new RiftDescent());
-        lasttp = new HashMap<>();
+        lasttp = new WeakHashMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

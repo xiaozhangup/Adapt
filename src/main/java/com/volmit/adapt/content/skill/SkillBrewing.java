@@ -43,8 +43,8 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.meta.PotionMeta;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
     private final Map<Player, Long> cooldowns;
@@ -57,7 +57,7 @@ public class SkillBrewing extends SimpleSkill<SkillBrewing.Config> {
         setDisplayName(Localizer.dLocalize("skill", "brewing", "name"));
         setInterval(5851);
         setIcon(Material.LINGERING_POTION);
-        cooldowns = new HashMap<>();
+        cooldowns = new WeakHashMap<>();
         registerAdaptation(new BrewingLingering()); // Features
         registerAdaptation(new BrewingSuperHeated());
         registerAdaptation(new BrewingAbsorption()); // Brews

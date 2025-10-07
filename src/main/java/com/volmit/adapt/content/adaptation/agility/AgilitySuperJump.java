@@ -34,8 +34,8 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> {
     private final Map<Player, Long> lastJump;
@@ -51,7 +51,7 @@ public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> 
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(9999);
-        lastJump = new HashMap<>();
+        lastJump = new WeakHashMap<>();
     }
 
     private double getJumpHeight(int level) {

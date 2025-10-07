@@ -34,14 +34,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
 
 public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
-    private final Map<Player, Long> lastJump = new HashMap<>();
-    private final Map<Player, Boolean> canBlink = new HashMap<>();
+    private final Map<Player, Long> lastJump = new WeakHashMap<>();
+    private final Map<Player, Boolean> canBlink = new WeakHashMap<>();
 
     private final double jumpVelocity = -0.0784000015258789;
 
