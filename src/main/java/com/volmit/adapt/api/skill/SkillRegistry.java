@@ -50,9 +50,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SkillRegistry extends TickedObject {
     public static final KMap<String, Skill<?>> skills = new KMap<>();

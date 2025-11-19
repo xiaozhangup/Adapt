@@ -38,9 +38,6 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 public class SkillRift extends SimpleSkill<SkillRift.Config> {
     private final KWeakMap<Player, Long> lasttp;
 

@@ -20,8 +20,6 @@ package com.volmit.adapt.util;
 
 import com.volmit.adapt.util.collection.KList;
 
-import java.util.ArrayList;
-
 public class RollingSequence extends Average {
     private double median;
     private double max;

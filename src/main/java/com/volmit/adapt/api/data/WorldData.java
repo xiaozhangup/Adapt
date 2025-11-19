@@ -32,9 +32,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class WorldData extends TickedObject {
     private static final KMap<World, WorldData> mantles = new KMap<>();
 

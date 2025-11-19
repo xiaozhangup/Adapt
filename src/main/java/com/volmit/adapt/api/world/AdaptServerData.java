@@ -23,9 +23,6 @@ import com.volmit.adapt.util.collection.KList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 public class AdaptServerData {

@@ -36,11 +36,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bukkit.Sound;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Data
 @NoArgsConstructor
 public class PlayerSkillLine {

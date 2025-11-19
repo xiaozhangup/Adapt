@@ -30,8 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
-import java.util.List;
-
 public class VectorHandler implements DecreeParameterHandler<Vector> {
 
     private static final KList<String> randoms = new KList<>("here", "0,0,0", "0,0", "look", "player:<name>");

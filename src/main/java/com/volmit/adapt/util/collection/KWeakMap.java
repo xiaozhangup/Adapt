@@ -23,8 +23,10 @@ import com.volmit.adapt.util.Consumer2;
 import com.volmit.adapt.util.Consumer3;
 import com.volmit.adapt.util.Queue;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 @SuppressWarnings("ALL")
 public class KWeakMap<K, V> extends WeakHashMap<K, V> {

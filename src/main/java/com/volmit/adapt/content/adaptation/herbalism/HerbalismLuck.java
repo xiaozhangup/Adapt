@@ -34,8 +34,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class HerbalismLuck extends SimpleAdaptation<HerbalismLuck.Config> {
     private static final KList<Material> herbalLuckFood = new KList<>(
             Material.POTATOES,
