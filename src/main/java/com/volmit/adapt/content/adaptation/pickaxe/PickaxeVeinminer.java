@@ -20,6 +20,8 @@ package com.volmit.adapt.content.adaptation.pickaxe;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.world.PlayerAdaptation;
+import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -104,29 +106,18 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
                     Adapt.verbose("Player " + p.getName() + " doesn't have permission.");
                     continue;
                 }
-                if (getPlayer(p).getData().getSkillLines() != null
-                        && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
-                        && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
-                                .get("pickaxe-autosmelt") != null
-                        && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
-                                .get("pickaxe-autosmelt").getLevel() > 0) {
-                    if (getPlayer(p).getData().getSkillLines() != null
-                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
-                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
-                                    .get("pickaxe-drop-to-inventory") != null
-                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
-                                    .get("pickaxe-drop-to-inventory").getLevel() > 0) {
+                PlayerSkillLine line = getPlayer(p).getData().getSkillLineNullable("pickaxe");
+                PlayerAdaptation autoSmelt = line != null ? line.getAdaptation("pickaxe-autosmelt") : null;
+                PlayerAdaptation drop2Inv = line != null ? line.getAdaptation("pickaxe-drop-to-inventory") : null;
+                if (autoSmelt != null && autoSmelt.getLevel() > 0) {
+                    if (drop2Inv != null && drop2Inv.getLevel() > 0) {
                         PickaxeAutosmelt.autosmeltBlockDTI(b, p);
                     } else {
                         PickaxeAutosmelt.autosmeltBlock(b, p);
                     }
                 } else {
-                    if (getPlayer(p).getData().getSkillLines() != null
-                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations() != null
-                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
-                                    .get("pickaxe-drop-to-inventory") != null
-                            && getPlayer(p).getData().getSkillLines().get("pickaxe").getAdaptations()
-                                    .get("pickaxe-drop-to-inventory").getLevel() > 0) {
+                    if (drop2Inv != null
+                            && drop2Inv.getLevel() > 0) {
                         b.getDrops(p.getInventory().getItemInMainHand(), p).forEach(item -> {
                             HashMap<Integer, ItemStack> extra = p.getInventory().addItem(item);
                             extra.forEach((k, v) -> p.getWorld().dropItem(p.getLocation(), v));

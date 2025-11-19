@@ -29,6 +29,7 @@ import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.tick.Ticked;
 import com.volmit.adapt.api.world.AdaptPlayer;
+import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.event.AdaptAdaptationUseEvent;
@@ -55,15 +56,13 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default <F> F getStorage(Player p, String key, F defaultValue) {
         PlayerData data = getPlayer(p).getData();
-        if (data.getSkillLines().containsKey(getSkill().getName())
-                && data.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())) {
-            Object o = data.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getStorage()
-                    .get(key);
+        PlayerSkillLine line = data.getSkillLineNullable(getSkill().getName());
+        if (line == null) return defaultValue;
+        PlayerAdaptation adaptation = line.getAdaptation(getName());
+        if (adaptation == null) return defaultValue;
+        Object o = adaptation.getStorage().get(key);
             return o == null ? defaultValue : (F) o;
         }
-
-        return defaultValue;
-    }
 
     default <F> F getStorage(Player p, String key) {
         return getStorage(p, key, null);
@@ -71,13 +70,12 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default boolean setStorage(Player p, String key, Object value) {
         PlayerData data = getPlayer(p).getData();
-        if (data.getSkillLines().containsKey(getSkill().getName())
-                && data.getSkillLines().get(getSkill().getName()).getAdaptations().containsKey(getName())) {
-            data.getSkillLines().get(getSkill().getName()).getAdaptations().get(getName()).getStorage().put(key, value);
-            return true;
-        }
-
-        return false;
+        PlayerSkillLine line = data.getSkillLineNullable(getSkill().getName());
+        if (line == null) return false;
+        PlayerAdaptation adaptation = line.getAdaptation(getName());
+        if (adaptation == null) return false;
+        adaptation.getStorage().put(key, value);
+        return true;
     }
 
     default boolean canUse(AdaptPlayer player) {
@@ -179,15 +177,16 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default Set<Protector> getProtectors() {
         Set<Protector> protectors = new HashSet<>(Adapt.instance.getProtectorRegistry().getDefaultProtectors());
-        Map<String, Boolean> overrides = AdaptConfig.get().getProtectionOverrides().getOrDefault(this.getName(),
-                Collections.emptyMap());
+        Map<String, Boolean> overrides = AdaptConfig.get().getProtectionOverrides().getOrDefault(this.getName(), Collections.emptyMap());
         overrides.forEach((protector, enabled) -> {
             if (enabled) {
-                Protector p = Adapt.instance.getProtectorRegistry().getAllProtectors().stream()
-                        .filter(pr -> pr.getName().equals(protector)).findFirst().orElse(null);
+                Protector p = Adapt.instance.getProtectorRegistry().getAllProtectors()
+                        .stream()
+                        .filter(pr -> pr.getName().equals(protector))
+                        .findFirst()
+                        .orElse(null);
                 if (p == null) {
-                    Adapt.error("Could not find protector " + protector + " for adaptation " + this.getName()
-                            + ". Skipping...");
+                    Adapt.error("Could not find protector " + protector + " for adaptation " + this.getName() + ". Skipping...");
                 } else {
                     protectors.add(p);
                 }
@@ -270,8 +269,7 @@ public interface Adaptation<T> extends Ticked, Component {
                 return false;
             }
         } catch (Exception e) {
-            if (e instanceof IndexOutOfBoundsException) { // This is that fucking bug with Citizens Spoofing Players. I
-                                                            // hate it.
+            if (e instanceof IndexOutOfBoundsException) { // This is that fucking bug with Citizens Spoofing Players. I hate it.
                 Adapt.verbose("Citizens/PacketSpoofing is Messing stuff up again. I hate it.");
                 Adapt.verbose(e.getMessage());
             } else {
@@ -429,7 +427,8 @@ public interface Adaptation<T> extends Ticked, Component {
         spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 0.855f);
         Window w = new UIWindow(player);
         w.setTag("skill/" + getSkill().getName() + "/" + getName());
-        w.setDecorator((window, position, row) -> new UIElement("bg").setName(" ")
+        w.setDecorator((window, position, row) -> new UIElement("bg")
+                .setName(" ")
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
         w.setResolution(WindowResolution.W9_H6);

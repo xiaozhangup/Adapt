@@ -19,6 +19,8 @@
 package com.volmit.adapt.content.adaptation.rift;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.world.PlayerAdaptation;
+import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
@@ -68,8 +70,9 @@ public class RiftEnderchest extends SimpleAdaptation<RiftEnderchest.Config> {
 
             if ((e.getAction() == Action.RIGHT_CLICK_AIR) || (e.getAction() == Action.LEFT_CLICK_AIR)
                     || (e.getAction() == Action.LEFT_CLICK_BLOCK)) {
-                if (getPlayer(p).getData().getSkillLines().get("rift").getAdaptations().get("rift-resist") != null
-                        && getPlayer(p).getData().getSkillLines().get("rift").getAdaptations().get("rift-resist")
+                PlayerSkillLine line = getPlayer(p).getData().getSkillLine("rift");
+                PlayerAdaptation adaptation = line != null ? line.getAdaptation("rift-resist") : null;
+                if (adaptation != null && adaptation
                                 .getLevel() > 0) {
                     RiftResist.riftResistStackAdd(p, 10, 2);
                 }
