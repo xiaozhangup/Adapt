@@ -18,6 +18,7 @@
 
 package com.volmit.adapt.content.item;
 
+import com.volmit.adapt.util.collection.KList;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,13 +31,13 @@ import java.util.Set;
 import static org.bukkit.Material.*;
 
 public class ItemListings {
-    public static final List<EntityType> additionalInvalid = List.of(EntityType.ARMOR_STAND, EntityType.ITEM_FRAME,
+    public static final KList<EntityType> additionalInvalid = new KList<>(EntityType.ARMOR_STAND, EntityType.ITEM_FRAME,
             EntityType.PAINTING, EntityType.LEASH_KNOT, EntityType.EVOKER_FANGS, EntityType.MARKER);
-    public static List<Material> flowers = List.of(Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
+    public static KList<Material> flowers = new KList<>(Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
             Material.ALLIUM, Material.AZURE_BLUET, Material.RED_TULIP, Material.ORANGE_TULIP, Material.WHITE_TULIP,
             Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.LILAC,
             Material.ROSE_BUSH, Material.PEONY, Material.WITHER_ROSE);
-    public static List<Material> food = List.of(Material.APPLE, Material.BAKED_POTATO, Material.BEETROOT,
+    public static KList<Material> food = new KList<>(Material.APPLE, Material.BAKED_POTATO, Material.BEETROOT,
             Material.BEETROOT_SOUP, Material.BREAD, Material.CARROT, Material.CHORUS_FRUIT, Material.COOKED_CHICKEN,
             Material.COOKED_COD, Material.COOKED_MUTTON, Material.COOKED_PORKCHOP, Material.COOKED_RABBIT,
             Material.COOKED_SALMON, Material.COOKIE, Material.DRIED_KELP, Material.GOLDEN_APPLE, Material.GLOW_BERRIES,
@@ -47,12 +48,12 @@ public class ItemListings {
             Material.SWEET_BERRIES, Material.TROPICAL_FISH
 
     );
-    public static List<Material> farmable = List.of(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT,
+    public static KList<Material> farmable = new KList<>(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT,
             Material.ROOTED_DIRT, Material.WHEAT, Material.ATTACHED_MELON_STEM, Material.ATTACHED_PUMPKIN_STEM,
             Material.MELON_STEM, Material.PUMPKIN_STEM, Material.POTATOES, Material.SWEET_BERRY_BUSH, Material.CARROTS,
             Material.BEETROOTS, Material.DIRT_PATH);
     @Getter
-    public static List<Material> fishingDrops = List.of(Material.COD, Material.COD, Material.COD, Material.COD,
+    public static KList<Material> fishingDrops = new KList<>(Material.COD, Material.COD, Material.COD, Material.COD,
             Material.COD, Material.COD, Material.SALMON, Material.SALMON, Material.SALMON, Material.SALMON,
             Material.PUFFERFISH, Material.TROPICAL_FISH, Material.COD, Material.COD, Material.COD, Material.COD,
             Material.COD, Material.COD, Material.SALMON, Material.SALMON, Material.SALMON, Material.SALMON,

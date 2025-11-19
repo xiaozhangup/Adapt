@@ -246,7 +246,10 @@ public class Adapt extends VolmitPlugin {
                             if (split[0].equals("skill")) {
                                 try {
                                     instance.getAdaptServer().getSkillRegistry().getSkill(split[1]).getAdaptations()
-                                            .where(a -> a.getId().equals(split[2])).get(0)
+                                            .stream()
+                                            .filter(a -> a.getId().equals(split[2]))
+                                            .findFirst()
+                                            .orElseThrow()
                                             .openGui(Bukkit.getPlayer(UUID.fromString(s)));
 
                                 } catch (Throwable e) {

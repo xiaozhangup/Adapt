@@ -82,7 +82,7 @@ public class VectorHandler implements DecreeParameterHandler<Vector> {
             } else if (in.trim().toLowerCase().startsWith("player:")) {
                 String v = in.trim().split("\\Q:\\E")[1];
 
-                List<?> px = DecreeSystem.getHandler(Player.class).getPossibilities(v);
+                KList<?> px = DecreeSystem.getHandler(Player.class).getPossibilities(v);
 
                 if (px != null && px.isNotEmpty()) {
                     return ((Player) px.get(0)).getLocation().toVector();

@@ -9,6 +9,7 @@ api-version: '${apiversion}'
 depend:
   - WhaleMechanism
   - SlimeCargoNext
+  - CarbKotlin
 softdepend:
   - PlaceholderAPI
   - WorldGuard

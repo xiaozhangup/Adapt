@@ -23,11 +23,10 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "2.1.21"
     id "io.freefair.lombok" version "8.10.2"
     id "com.gradleup.shadow" version "8.3.5"
-    id 'systems.manifold.manifold-gradle-plugin' version '0.0.2-alpha'
 //    id 'com.diffplug.spotless' version '7.0.4'
 }
 
-version '1.16.7'
+version '1.16.8'
 def apiVersion = '1.21'
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'
@@ -65,10 +64,6 @@ processResources {
     }
 }
 
-manifold {
-    manifoldVersion = '2025.1.27'
-}
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -98,9 +93,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    implementation "systems.manifold:manifold-ext-rt:${manifold.manifoldVersion.get()}"
-    annotationProcessor "systems.manifold:manifold-ext:${manifold.manifoldVersion.get()}"
-
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'xyz.xenondevs:particle:1.8.4'
     implementation 'com.frengor:ultimateadvancementapi-shadeable:2.6.0:mojang-mapped'
@@ -111,8 +103,8 @@ dependencies {
     compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.1'
     compileOnly 'me.xiaozhangup:OrangDomain:1.0.1'
     compileOnly 'me.xiaozhangup:WhaleMechanism:1.0.1'
-    compileOnly 'net.momirealms:craft-engine-core:0.0.57.1'
-    compileOnly 'net.momirealms:craft-engine-bukkit:0.0.57.1'
+    compileOnly 'net.momirealms:craft-engine-core:0.0.60'
+    compileOnly 'net.momirealms:craft-engine-bukkit:0.0.60'
     compileOnly 'com.github.retrooper:packetevents-spigot:2.7.0'
     compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
     compileOnly 'org.apache.commons:commons-lang3:3.12.0'
@@ -140,12 +132,10 @@ compileJava {
  */
 shadowJar {
     append("plugin.yml")
-    relocate 'manifold', 'com.volmit.adapt.util.manifold'
     relocate 'com.fren_gor.ultimateAdvancementAPI', 'com.volmit.adapt.util.advancements'
     relocate 'com.jeff_media.customblockdata', 'com.volmit.adapt.util.customblocks'
     relocate 'xyz.xenondevs.particle', 'com.volmit.adapt.util.particle'
     dependencies {
-        include(dependency('systems.manifold:'))
         include(dependency('xyz.xenondevs:'))
         include(dependency('com.frengor:ultimateadvancementapi-shadeable:'))
         include(dependency('net.byteflux:'))

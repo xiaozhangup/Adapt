@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -103,13 +104,13 @@ public class PapiExpansion extends PlaceholderExpansion {
         adaptationMap.put("name", (playerData, adaptation) -> getAdaptionLocalizedName(adaptation));
     }
 
-    private static <T> List<T> getElementsFromSecond(List<T> list) {
-        if (list == null || list.size() < 2) {
-            return new ArrayList<>();
-        }
-
-        return list.subList(1, list.size());
+private static List<String> getElementsFromSecond(String[] array) {
+    if (array == null || array.length < 2) {
+        return new ArrayList<>();
     }
+
+    return Arrays.asList(array).subList(1, array.length);
+}
 
     private Integer getAdaptionLevel(Adaptation<?> adaptation, PlayerData playerData) {
         List<Skill<?>> skills = Adapt.instance.getAdaptServer().getSkillRegistry().getSkills();
@@ -184,7 +185,7 @@ public class PapiExpansion extends PlaceholderExpansion {
         // Handle colored icons
         if (key.equals("icons")) {
             List<String> icons = new ArrayList<>();
-            for (String s : getElementsFromSecond(args.toList())) {
+            for (String s : getElementsFromSecond(args)) {
                 var skill = SkillRegistry.skills.get(s);
                 var made = p.getNullableSkillLine(skill.getName());
 
@@ -219,7 +220,7 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         if (key.equals("miniicons")) {
             List<String> icons = new ArrayList<>();
-            for (String s : getElementsFromSecond(args.toList())) {
+            for (String s : getElementsFromSecond(args)) {
                 var skill = SkillRegistry.skills.get(s);
                 var made = p.getNullableSkillLine(skill.getName());
 

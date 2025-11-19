@@ -19,6 +19,7 @@
 package com.volmit.adapt.util;
 
 import com.volmit.adapt.Adapt;
+import com.volmit.adapt.util.collection.KMap;
 import com.volmit.adapt.util.reflect.events.ReflectiveEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,16 +33,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class VolmitPlugin extends JavaPlugin implements Listener {
     public static boolean bad = false;
-    private Map<String, IController> controllers;
+    private KMap<String, IController> controllers;
     private List<IController> cachedControllers;
-    private Map<Class<? extends IController>, IController> cachedClassControllers;
+    private KMap<Class<? extends IController>, IController> cachedClassControllers;
 
     public void l(Object l) {
         Adapt.info("[" + getName() + "]: " + l);
@@ -145,8 +143,8 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         if (bad) {
             return;
         }
-        controllers = new HashMap<>();
-        cachedClassControllers = new HashMap<>();
+        controllers = new KMap<>();
+        cachedClassControllers = new KMap<>();
 
         for (Field i : getClass().getDeclaredFields()) {
             if (i.isAnnotationPresent(Control.class)) {
@@ -270,18 +268,7 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
     }
 
     public File getDataFile(String... strings) {
-        List<String> s = new ArrayList<>();
-        s.add(strings);
-        File f = new File(getDataFolder(), String.join(File.separator, s));
-        f.getParentFile().mkdirs();
-        return f;
-    }
-
-    public File getDataFileList(String pre, String[] strings) {
-        List<String> v = new ArrayList<>();
-        v.add(strings);
-        v.add(0, pre);
-        File f = new File(getDataFolder(), String.join(File.separator, v));
+        File f = new File(getDataFolder(), String.join(File.separator, strings));
         f.getParentFile().mkdirs();
         return f;
     }
@@ -291,19 +278,7 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
             return super.getDataFolder();
         }
 
-        List<String> s = new ArrayList<>();
-        s.add(strings);
-        File f = new File(getDataFolder(), String.join(File.separator, s));
-        f.mkdirs();
-
-        return f;
-    }
-
-    public File getDataFolderList(String pre, String[] strings) {
-        List<String> v = new ArrayList<>();
-        v.add(strings);
-        v.add(0, pre);
-        File f = new File(getDataFolder(), String.join(File.separator, v));
+        File f = new File(getDataFolder(), String.join(File.separator, strings));
         f.mkdirs();
 
         return f;

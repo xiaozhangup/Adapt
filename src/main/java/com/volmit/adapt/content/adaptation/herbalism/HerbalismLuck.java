@@ -23,6 +23,7 @@ import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.collection.KList;
 import com.volmit.adapt.util.reflect.registries.Materials;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -36,10 +37,17 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class HerbalismLuck extends SimpleAdaptation<HerbalismLuck.Config> {
-    private static final List<Material> herbalLuckFood = List.of(Material.POTATOES, Material.CARROTS,
-            Material.BEETROOTS, Material.APPLE);
-    private static final List<Material> herbalLuckSeeds = List.of(Material.MELON_SEEDS, Material.PUMPKIN_SEEDS,
-            Material.COCOA_BEANS);
+    private static final KList<Material> herbalLuckFood = new KList<>(
+            Material.POTATOES,
+            Material.CARROTS,
+            Material.BEETROOTS,
+            Material.APPLE
+    );
+    private static final KList<Material> herbalLuckSeeds = new KList<>(
+            Material.MELON_SEEDS,
+            Material.PUMPKIN_SEEDS,
+            Material.COCOA_BEANS
+    );
 
     public HerbalismLuck() {
         super("herbalism-luck");

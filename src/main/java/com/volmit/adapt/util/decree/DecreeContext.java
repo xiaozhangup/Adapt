@@ -21,13 +21,14 @@ package com.volmit.adapt.util.decree;
 
 import com.volmit.adapt.util.ChronoLatch;
 import com.volmit.adapt.util.VolmitSender;
+import com.volmit.adapt.util.collection.KMap;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DecreeContext {
     private static final ChronoLatch cl = new ChronoLatch(60000);
-    private static final Map<Thread, VolmitSender> context = new HashMap<>();
+    private static final KMap<Thread, VolmitSender> context = new KMap<>();
 
     public static VolmitSender get() {
         return context.get(Thread.currentThread());

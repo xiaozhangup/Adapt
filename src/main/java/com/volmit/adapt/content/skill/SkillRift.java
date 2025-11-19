@@ -23,6 +23,7 @@ import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.content.adaptation.rift.*;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
+import com.volmit.adapt.util.collection.KWeakMap;
 import com.volmit.adapt.util.reflect.registries.Attributes;
 import com.volmit.adapt.util.reflect.registries.EntityTypes;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class SkillRift extends SimpleSkill<SkillRift.Config> {
-    private final Map<Player, Long> lasttp;
+    private final KWeakMap<Player, Long> lasttp;
 
     public SkillRift() {
         super("rift", Localizer.dLocalize("skill", "rift", "icon"));
@@ -57,7 +58,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
         registerAdaptation(new RiftGate());
         registerAdaptation(new RiftBlink());
         registerAdaptation(new RiftDescent());
-        lasttp = new WeakHashMap<>();
+        lasttp = new KWeakMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

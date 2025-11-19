@@ -32,8 +32,6 @@ public class Reflect {
         if (enumNames.length == 0)
             throw new IllegalArgumentException("Need at least one enum name");
         for (String enumName : enumNames) {
-            if (enumNames.isEmpty())
-                return null;
             Optional<E> optionalEnum = getEnum(enumClass, enumName);
             if (optionalEnum.isPresent())
                 return optionalEnum.get();

@@ -29,6 +29,9 @@ import com.volmit.adapt.api.xp.XPMultiplier;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.collection.KList;
+import com.volmit.adapt.util.collection.KMap;
+import com.volmit.adapt.util.collection.KSet;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -46,10 +49,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @NoArgsConstructor
 public class PlayerData {
     private static final Gson GSON = new Gson();
-    private final Map<String, PlayerSkillLine> skillLines = new ConcurrentHashMap<>();
-    private Map<String, Double> stats = new ConcurrentHashMap<>();
+    private final KMap<String, PlayerSkillLine> skillLines = new KMap<>();
+    private KMap<String, Double> stats = new KMap<>();
     private String last = "none";
-    private Set<String> advancements = ConcurrentHashMap.newKeySet();
+    private KSet<String> advancements = new KSet<>();
     private Discovery<String> seenBiomes = new Discovery<>();
     private Discovery<EntityType> seenMobs = new Discovery<>();
     private Discovery<Material> seenFoods = new Discovery<>();
@@ -103,7 +106,7 @@ public class PlayerData {
 
     public void update(AdaptPlayer p) {
         double m = 1;
-        for (XPMultiplier i : multipliers.copy()) {
+        for (XPMultiplier i : new KList<>(multipliers)) {
             if (i.isExpired()) {
                 multipliers.remove(i);
                 continue;

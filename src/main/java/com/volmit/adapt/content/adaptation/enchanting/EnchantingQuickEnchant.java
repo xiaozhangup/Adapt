@@ -24,6 +24,7 @@ import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.collection.KMap;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -89,12 +90,12 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
                 && e.getCursor().getAmount() == 1) {
             ItemStack item = e.getCurrentItem();
             ItemStack book = e.getCursor();
-            Map<Enchantment, Integer> itemEnchants = new HashMap<>(item.getType().equals(Material.ENCHANTED_BOOK)
+            KMap<Enchantment, Integer> itemEnchants = new KMap<>(item.getType().equals(Material.ENCHANTED_BOOK)
                     ? ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants()
                     : item.getEnchantments());
-            Map<Enchantment, Integer> bookEnchants = new HashMap<>(eb.getStoredEnchants());
-            Map<Enchantment, Integer> newEnchants = itemEnchants.copy();
-            Map<Enchantment, Integer> addEnchants = new HashMap<>();
+            KMap<Enchantment, Integer> bookEnchants = new KMap<>(eb.getStoredEnchants());
+            KMap<Enchantment, Integer> newEnchants = itemEnchants.copy();
+            KMap<Enchantment, Integer> addEnchants = new KMap<>();
             int power = itemEnchants.values().stream().mapToInt(i -> i).sum();
 
             if (bookEnchants.isEmpty()) {

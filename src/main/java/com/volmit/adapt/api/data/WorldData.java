@@ -22,6 +22,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.data.unit.Earnings;
 import com.volmit.adapt.api.tick.TickedObject;
 import com.volmit.adapt.util.J;
+import com.volmit.adapt.util.collection.KMap;
 import com.volmit.adapt.util.spatial.mantle.Mantle;
 import com.volmit.adapt.util.spatial.matter.SpatialMatter;
 import lombok.Getter;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorldData extends TickedObject {
-    private static final Map<World, WorldData> mantles = new HashMap<>();
+    private static final KMap<World, WorldData> mantles = new KMap<>();
 
     static {
         SpatialMatter.registerSliceType(new Earnings.EarningsMatter());

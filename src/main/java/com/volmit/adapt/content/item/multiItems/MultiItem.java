@@ -21,6 +21,7 @@ package com.volmit.adapt.content.item.multiItems;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.BukkitGson;
 import com.volmit.adapt.util.WindowResolution;
+import com.volmit.adapt.util.collection.KList;
 import lombok.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -87,9 +88,9 @@ public interface MultiItem {
     }
 
     default ItemStack nextMatching(ItemStack item, Predicate<ItemStack> predicate) {
-        List<ItemStack> items = getItems(item);
+        KList<ItemStack> items = getItems(item);
         for (int i = 0; i < items.size(); i++) {
-            if (predicate.test(items[i])) {
+            if (predicate.test(items.get(i))) {
                 return switchTo(item, i);
             }
         }
@@ -114,18 +115,18 @@ public interface MultiItem {
                 .map(MultiItem::serializeStack).collect(Collectors.toList())).build());
     }
 
-    default List<ItemStack> getItems(ItemStack multi) {
+    default KList<ItemStack> getItems(ItemStack multi) {
         MultiItemData d = getMultiItemData(multi);
 
         if (d == null) {
-            return new ArrayList<>();
+            return new KList<>();
         }
 
         return d.getItems();
     }
 
-    default List<ItemStack> explode(ItemStack multi) {
-        List<ItemStack> it = new ArrayList<>();
+    default KList<ItemStack> explode(ItemStack multi) {
+        KList<ItemStack> it = new KList<>();
         it.add(getRealItem(multi));
         it.add(getItems(multi));
         return it;
@@ -178,12 +179,12 @@ public interface MultiItem {
         @Singular
         List<String> rawItems;
 
-        List<ItemStack> getItems() {
-            return rawItems.stream().map(MultiItem::deserializeStack).collect(Collectors.toList());
+        KList<ItemStack> getItems() {
+            return rawItems.stream().map(MultiItem::deserializeStack).collect(KList.collector());
         }
 
         void setItems(List<ItemStack> is) {
-            rawItems = is.stream().map(MultiItem::serializeStack).collect(Collectors.toList());
+            rawItems = is.stream().map(MultiItem::serializeStack).collect(KList.collector());
         }
     }
 }

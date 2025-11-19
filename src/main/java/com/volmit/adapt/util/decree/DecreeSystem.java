@@ -39,12 +39,12 @@ public interface DecreeSystem extends CommandExecutor, TabCompleter {
     KList<DecreeParameterHandler<?>> handlers = Adapt.initialize("com.volmit.adapt.util.decree.handlers", null)
             .kConvert((i) -> (DecreeParameterHandler<?>) i);
 
-    static List<String> enhanceArgs(String[] args) {
+    static KList<String> enhanceArgs(String[] args) {
         return enhanceArgs(args, true);
     }
 
-    static List<String> enhanceArgs(String[] args, boolean trim) {
-        List<String> a = new ArrayList<>();
+    static KList<String> enhanceArgs(String[] args, boolean trim) {
+        KList<String> a = new KList<>();
 
         if (args.length == 0) {
             return a;
@@ -144,7 +144,7 @@ public interface DecreeSystem extends CommandExecutor, TabCompleter {
     @Override
     default List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias,
             @NotNull String[] args) {
-        List<String> enhanced = new ArrayList<>(List.of(args));
+        KList<String> enhanced = new KList<>(args);
         KList<String> v = getRoot().tabComplete(enhanced, String.join(" ", enhanced));
         v.removeDuplicates();
 
