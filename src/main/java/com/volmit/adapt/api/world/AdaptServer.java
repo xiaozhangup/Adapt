@@ -221,14 +221,14 @@ public class AdaptServer extends TickedObject {
         if (AdaptConfig.get().isUseSql()) {
             String sqlData = Adapt.instance.getSqlManager().fetchData(player);
             if (sqlData != null) {
-                return Adapt.gson.fromJson(sqlData, PlayerData.class);
+                return Json.fromJson(sqlData, PlayerData.class);
             }
         }
 
         File f = new File(Adapt.instance.getDataFolder("data", "players"), player + ".json");
         if (f.exists()) {
             try {
-                return Adapt.gson.fromJson(IO.readAll(f), PlayerData.class);
+                return Json.fromJson(IO.readAll(f), PlayerData.class);
             } catch (Throwable ignored) {
                 Adapt.verbose("Failed to load player data for " + player);
             }
@@ -282,8 +282,7 @@ public class AdaptServer extends TickedObject {
         File f = new File(Adapt.instance.getDataFolder("data"), "server-data.json");
         if (f.exists()) {
             try {
-                String text = IO.readAll(f);
-                data = Adapt.gson.fromJson(text, AdaptServerData.class);
+                data = Json.fromJson(IO.readAll(f), AdaptServerData.class);
             } catch (Throwable ignored) {
                 Adapt.verbose("Failed to load global boosts data");
             }
@@ -292,7 +291,12 @@ public class AdaptServer extends TickedObject {
 
     @SneakyThrows
     public void save() {
-        IO.writeAll(new File(Adapt.instance.getDataFolder("data"), "server-data.json"),
-                new JSONObject(data).toString(4));
+        IO.writeAll(
+                new File(
+                        Adapt.instance.getDataFolder("data"),
+                        "server-data.json"
+                ),
+                Json.toJson(data, true)
+        );
     }
 }

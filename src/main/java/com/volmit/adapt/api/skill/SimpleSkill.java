@@ -31,7 +31,7 @@ import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.IO;
 import com.volmit.adapt.util.J;
-import com.volmit.adapt.util.JSONObject;
+import com.volmit.adapt.util.Json;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.md_5.bungee.api.ChatColor;
@@ -106,7 +106,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
 
                 if (!l.exists()) {
                     try {
-                        IO.writeAll(l, new JSONObject(Adapt.gson.toJson(dummy)).toString(4));
+                        IO.writeAll(l, Json.toJson(dummy, true));
                     } catch (IOException e) {
                         e.printStackTrace();
                         config = dummy;
@@ -115,8 +115,8 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
                 }
 
                 try {
-                    config = Adapt.gson.fromJson(IO.readAll(l), getConfigurationClass());
-                    IO.writeAll(l, new JSONObject(Adapt.gson.toJson(config)).toString(4));
+                    config = Json.fromJson(IO.readAll(l), getConfigurationClass());
+                    IO.writeAll(l, Json.toJson(config, true));
                 } catch (IOException e) {
                     e.printStackTrace();
                     config = dummy;

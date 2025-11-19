@@ -20,7 +20,7 @@ package com.volmit.adapt;
 
 import com.volmit.adapt.api.xp.Curves;
 import com.volmit.adapt.util.IO;
-import com.volmit.adapt.util.JSONObject;
+import com.volmit.adapt.util.Json;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
@@ -88,7 +88,7 @@ public class AdaptConfig {
 
             if (!l.exists()) {
                 try {
-                    IO.writeAll(l, new JSONObject(Adapt.gson.toJson(dummy)).toString(4));
+                    IO.writeAll(l, Json.toJson(dummy, true));
                 } catch (IOException e) {
                     e.printStackTrace();
                     config = dummy;
@@ -97,8 +97,8 @@ public class AdaptConfig {
             }
 
             try {
-                config = Adapt.gson.fromJson(IO.readAll(l), AdaptConfig.class);
-                IO.writeAll(l, new JSONObject(Adapt.gson.toJson(config)).toString(4));
+                config = Json.fromJson(IO.readAll(l), AdaptConfig.class);
+                IO.writeAll(l, Json.toJson(config, true));
             } catch (IOException e) {
                 e.printStackTrace();
                 config = new AdaptConfig();

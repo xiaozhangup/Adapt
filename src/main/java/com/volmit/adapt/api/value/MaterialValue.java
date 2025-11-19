@@ -22,7 +22,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.util.IO;
-import com.volmit.adapt.util.JSONObject;
+import com.volmit.adapt.util.Json;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -52,7 +52,7 @@ public class MaterialValue {
     public static void save() {
         File l = Adapt.instance.getDataFile("data", "value-cache.json");
         try {
-            IO.writeAll(l, new JSONObject(Adapt.gson.toJson(valueCache)).toString(4));
+            IO.writeAll(l, Json.toJson(valueCache, true));
         } catch (IOException e) {
             Adapt.verbose("Failed to save value cache");
         }
@@ -63,7 +63,7 @@ public class MaterialValue {
         if (!l.exists()) {
             MaterialValue dummy = new MaterialValue();
             try {
-                IO.writeAll(l, new JSONObject(Adapt.gson.toJson(dummy)).toString(4));
+                IO.writeAll(l, Json.toJson(dummy, true));
             } catch (IOException e) {
                 e.printStackTrace();
                 return dummy;
@@ -71,7 +71,7 @@ public class MaterialValue {
         }
 
         try {
-            return Adapt.gson.fromJson(IO.readAll(l), MaterialValue.class);
+            return Json.fromJson(IO.readAll(l), MaterialValue.class);
         } catch (IOException e) {
             e.printStackTrace();
             return new MaterialValue();

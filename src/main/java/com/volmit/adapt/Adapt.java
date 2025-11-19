@@ -60,7 +60,6 @@ import static com.volmit.adapt.util.decree.context.AdaptationListingHandler.init
 
 public class Adapt extends VolmitPlugin {
     public static Adapt instance;
-    public static Gson gson;
     public static HashMap<String, String> wordKey = new HashMap<>();
     private static VolmitSender sender;
     public final EffectManager adaptEffectManager = new EffectManager(this);
@@ -81,7 +80,6 @@ public class Adapt extends VolmitPlugin {
 
     public Adapt() {
         super();
-        gson = new Gson();
         instance = this;
     }
 
