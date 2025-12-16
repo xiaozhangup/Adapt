@@ -861,6 +861,11 @@
       "description": "When you Kill something / Break a block With a sword it teleports the drops into your inventory",
       "lore1": "Whenever an item is dropped from a mob/block you break it goes into your inventory if it can."
     },
+    "sheartoinventory": {
+      "name": "Shear To Inventory",
+      "description": "When you shear a sheep, the wool teleports into your inventory",
+      "lore1": "Auto-Pickup Wool"
+    },
     "invisibility": {
       "name": "Vanishing Step",
       "description": "When you are struck you gain invisibility, at the cost of hunger",

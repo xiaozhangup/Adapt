@@ -67,6 +67,7 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
         registerAdaptation(new HunterStrength());
         registerAdaptation(new HunterResistance());
         registerAdaptation(new HunterDropToInventory());
+        registerAdaptation(new HunterShearToInventory());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("horrible_person")
                 .title(Localizer.dLocalize("advancement", "horrible_person", "title"))
                 .description(Localizer.dLocalize("advancement", "horrible_person", "description"))
