@@ -113,13 +113,12 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
 
     @Override
     public void onTick() {
-        if (activeStands.isEmpty()) {
-            return;
-        }
-
-        Iterator<Block> it = activeStands.keySet().iterator();
-
         J.s(() -> {
+            if (activeStands.isEmpty()) {
+                return;
+            }
+
+            Iterator<Block> it = activeStands.keySet().iterator();
             while (it.hasNext()) {
                 BlockState s = it.next().getState();
 

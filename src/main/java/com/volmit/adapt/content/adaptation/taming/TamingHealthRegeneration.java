@@ -80,16 +80,6 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
                 if (level > 0) {
                     Adapt.verbose("[PRE] Current Health: " + tam.getHealth() + " Max Health: " + mh);
                     tam.addPotionEffect(PotionEffectType.REGENERATION.createEffect(25 * getLevel(p), 3));
-                    J.a(() -> {
-                        try {
-                            Thread.sleep(getLevel(p) * 2000L);
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        // Adapt.verbose("[POST] Current Health: " + tam.getHealth() + " Max Health: " +
-                        // mh);
-
-                    });
 
                     if (getConfig().showParticles) {
                         Adapt.verbose("Healing tamed entity " + tam.getUniqueId() + " with particles");

@@ -5,6 +5,7 @@ import com.volmit.adapt.util.decree.DecreeParameterHandler;
 import com.volmit.adapt.util.decree.exceptions.DecreeParsingException;
 import org.bukkit.Sound;
 
+@SuppressWarnings("ALL")
 public class SoundHandler implements DecreeParameterHandler<Sound> {
     @Override
     public KList<Sound> getPossibilities() {

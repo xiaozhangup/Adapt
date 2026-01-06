@@ -115,11 +115,9 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
     @Override
     public void onTick() {
-        var players = Adapt.instance.getAdaptServer().getAdaptPlayers();
-        var executor = MultiBurst.burst.burst(players.size());
-
-        for (Player p : players) {
-            executor.queue(() -> {
+        J.s(() -> {
+            var players = Adapt.instance.getAdaptServer().getAdaptPlayers();
+            for (Player p : players) {
                 if (p == null || !p.isOnline() || !p.clientConnected())
                     return;
 
@@ -146,9 +144,8 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
                     lArmor = Double.isNaN(lArmor) ? 0 : lArmor;
                     attribute.setModifier(MODIFIER, MODIFIER_KEY, lArmor, AttributeModifier.Operation.ADD_NUMBER);
                 }
-            });
-        }
-        executor.complete();
+            }
+        });
     }
 
     @EventHandler

@@ -70,30 +70,32 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
 
     @Override
     public void onTick() {
-        for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
-            if (!p.clientConnected()) {
-                continue;
-            }
+        J.s(() -> {
+            for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+                if (!p.clientConnected()) {
+                    continue;
+                }
 
-            var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
+                var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
 
-            if (!hasAdaptation(p)) {
-                attribute.removeModifier(MODIFIER, MODIFIER_KEY);
-                continue;
-            }
-            double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).stream().mapToDouble(Modifier::getAmount)
-                    .filter(d -> !Double.isNaN(d)).max().orElse(0);
-            double armor = getMaxArmorPoints(getLevelPercent(p));
-            armor = Double.isNaN(armor) ? 0 : armor;
+                if (!hasAdaptation(p)) {
+                    attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+                    continue;
+                }
+                double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).stream().mapToDouble(Modifier::getAmount)
+                        .filter(d -> !Double.isNaN(d)).max().orElse(0);
+                double armor = getMaxArmorPoints(getLevelPercent(p));
+                armor = Double.isNaN(armor) ? 0 : armor;
 
-            if (oldArmor < armor) {
-                attribute.setModifier(MODIFIER, MODIFIER_KEY,
-                        Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))),
-                        AttributeModifier.Operation.ADD_NUMBER);
-            } else if (oldArmor > armor) {
-                attribute.setModifier(MODIFIER, MODIFIER_KEY, armor, AttributeModifier.Operation.ADD_NUMBER);
+                if (oldArmor < armor) {
+                    attribute.setModifier(MODIFIER, MODIFIER_KEY,
+                            Math.min(armor, oldArmor + getMaxArmorPerTick(getLevelPercent(p))),
+                            AttributeModifier.Operation.ADD_NUMBER);
+                } else if (oldArmor > armor) {
+                    attribute.setModifier(MODIFIER, MODIFIER_KEY, armor, AttributeModifier.Operation.ADD_NUMBER);
+                }
             }
-        }
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

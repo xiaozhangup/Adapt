@@ -63,19 +63,17 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
 
     @Override
     public void onTick() {
-        for (World i : Bukkit.getServer().getWorlds()) {
-            J.s(() -> {
+        J.s(() -> {
+            for (World i : Bukkit.getServer().getWorlds()) {
                 Collection<Tameable> gl = i.getEntitiesByClass(Tameable.class);
 
-                J.a(() -> {
-                    for (Tameable j : gl) {
-                        if (j.isTamed() && j.getOwner() instanceof Player p && p.clientConnected()) {
-                            update(j, getLevel(p));
-                        }
+                for (Tameable j : gl) {
+                    if (j.isTamed() && j.getOwner() instanceof Player p && p.clientConnected()) {
+                        update(j, getLevel(p));
                     }
-                });
-            });
-        }
+                }
+            }
+        });
     }
 
     private void update(Tameable j, int level) {

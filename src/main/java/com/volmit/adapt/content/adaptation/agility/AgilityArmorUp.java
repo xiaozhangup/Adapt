@@ -23,6 +23,7 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
@@ -78,60 +79,62 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
 
     @Override
     public void onTick() {
-        for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
-            if (!p.clientConnected()) {
-                continue;
-            }
-
-            var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
-            if (attribute == null)
-                continue;
-
-            try {
-                attribute.removeModifier(MODIFIER, MODIFIER_KEY);
-            } catch (Exception e) {
-                Adapt.verbose("Failed to remove windup modifier: " + e.getMessage());
-            }
-
-            if (p.isSwimming() || p.isFlying() || p.isGliding() || p.isSneaking()) {
-                ticksRunning.remove(p);
-                continue;
-            }
-
-            if (p.isSprinting() && hasAdaptation(p)) {
-                ticksRunning.compute(p, (k, v) -> {
-                    if (v == null) {
-                        return 1;
-                    }
-                    return v + 1;
-                });
-
-                Integer tr = ticksRunning.get(p);
-
-                if (tr == null || tr <= 0) {
+        J.s(() -> {
+            for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+                if (!p.clientConnected()) {
                     continue;
                 }
 
-                double factor = getLevelPercent(p);
-                double ticksToMax = getWindupTicks(factor);
-                double progress = Math.min(M.lerpInverse(0, ticksToMax, tr), 1);
-                double armorInc = M.lerp(0, getWindupArmor(factor), progress);
+                var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
+                if (attribute == null)
+                    continue;
 
-                if (getConfig().showParticles) {
-                    if (M.r(0.2 * progress)) {
-                        p.getWorld().spawnParticle(Particle.END_ROD, p.getLocation(), 1);
-                    }
-
-                    if (M.r(0.25 * progress)) {
-                        p.getWorld().spawnParticle(Particle.WAX_ON, p.getLocation(), 1, 0, 0, 0, 0);
-                    }
+                try {
+                    attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+                } catch (Exception e) {
+                    Adapt.verbose("Failed to remove windup modifier: " + e.getMessage());
                 }
-                attribute.setModifier(MODIFIER, MODIFIER_KEY, armorInc * 10,
-                        AttributeModifier.Operation.MULTIPLY_SCALAR_1);
-            } else {
-                ticksRunning.remove(p);
+
+                if (p.isSwimming() || p.isFlying() || p.isGliding() || p.isSneaking()) {
+                    ticksRunning.remove(p);
+                    continue;
+                }
+
+                if (p.isSprinting() && hasAdaptation(p)) {
+                    ticksRunning.compute(p, (k, v) -> {
+                        if (v == null) {
+                            return 1;
+                        }
+                        return v + 1;
+                    });
+
+                    Integer tr = ticksRunning.get(p);
+
+                    if (tr == null || tr <= 0) {
+                        continue;
+                    }
+
+                    double factor = getLevelPercent(p);
+                    double ticksToMax = getWindupTicks(factor);
+                    double progress = Math.min(M.lerpInverse(0, ticksToMax, tr), 1);
+                    double armorInc = M.lerp(0, getWindupArmor(factor), progress);
+
+                    if (getConfig().showParticles) {
+                        if (M.r(0.2 * progress)) {
+                            p.getWorld().spawnParticle(Particle.END_ROD, p.getLocation(), 1);
+                        }
+
+                        if (M.r(0.25 * progress)) {
+                            p.getWorld().spawnParticle(Particle.WAX_ON, p.getLocation(), 1, 0, 0, 0, 0);
+                        }
+                    }
+                    attribute.setModifier(MODIFIER, MODIFIER_KEY, armorInc * 10,
+                            AttributeModifier.Operation.MULTIPLY_SCALAR_1);
+                } else {
+                    ticksRunning.remove(p);
+                }
             }
-        }
+        });
     }
 
     @Override
