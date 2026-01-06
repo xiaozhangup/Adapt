@@ -54,6 +54,11 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player player : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (player.isInWater() && hasAdaptation(player)) {

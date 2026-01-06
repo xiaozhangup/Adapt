@@ -173,6 +173,11 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         J.s(this::checkActiveViews);
     }

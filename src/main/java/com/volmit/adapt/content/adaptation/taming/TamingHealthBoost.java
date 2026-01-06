@@ -62,6 +62,11 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         J.s(() -> {
             for (World i : Bukkit.getServer().getWorlds()) {

@@ -26,7 +26,7 @@ plugins {
 //    id 'com.diffplug.spotless' version '7.0.4'
 }
 
-version '1.16.9'
+version '1.16.10'
 def apiVersion = '1.21'
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'

@@ -133,6 +133,11 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         if (!this.isEnabled()) {
             return;

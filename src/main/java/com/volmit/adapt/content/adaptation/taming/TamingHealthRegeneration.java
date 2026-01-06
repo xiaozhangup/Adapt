@@ -103,6 +103,11 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (UUID i : lastDamage.keySet()) {
             if (M.ms() - lastDamage.get(i) > 8000) {

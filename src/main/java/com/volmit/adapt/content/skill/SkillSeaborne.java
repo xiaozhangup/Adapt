@@ -81,6 +81,11 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         if (!this.isEnabled()) {
             return;

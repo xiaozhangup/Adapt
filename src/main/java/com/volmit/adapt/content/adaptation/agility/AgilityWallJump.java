@@ -91,6 +91,11 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             int level = getLevel(p);

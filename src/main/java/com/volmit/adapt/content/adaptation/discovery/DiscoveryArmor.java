@@ -114,6 +114,11 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         J.s(() -> {
             var players = Adapt.instance.getAdaptServer().getAdaptPlayers();

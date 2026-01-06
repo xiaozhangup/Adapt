@@ -51,6 +51,11 @@ public class SeaborneTurtlesVision extends SimpleAdaptation<SeaborneTurtlesVisio
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player player : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (player.isInWater() && hasAdaptation(player)) {

@@ -40,6 +40,11 @@ public class SkillChronos extends SimpleSkill<SkillChronos.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         if (!this.isEnabled()) {
             return;

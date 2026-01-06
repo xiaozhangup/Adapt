@@ -88,6 +88,11 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     }
 
     @Override
+    protected boolean needsTicking() {
+        return false;
+    }
+
+    @Override
     public Class<T> getConfigurationClass() {
         return configType;
     }

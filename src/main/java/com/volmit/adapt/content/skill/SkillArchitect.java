@@ -146,6 +146,11 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             shouldReturnForPlayer(i, () -> checkStatTrackers(getPlayer(i)));

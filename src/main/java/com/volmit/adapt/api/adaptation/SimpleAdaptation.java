@@ -77,6 +77,11 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
     }
 
     @Override
+    protected boolean needsTicking() {
+        return false;
+    }
+
+    @Override
     public Class<T> getConfigurationClass() {
         return configType;
     }

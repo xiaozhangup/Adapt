@@ -74,6 +74,11 @@ public class HerbalismGrowthAura extends SimpleAdaptation<HerbalismGrowthAura.Co
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             try {

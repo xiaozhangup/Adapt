@@ -59,6 +59,11 @@ public class SkillStealth extends SimpleSkill<SkillStealth.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         if (!this.isEnabled()) {
             return;

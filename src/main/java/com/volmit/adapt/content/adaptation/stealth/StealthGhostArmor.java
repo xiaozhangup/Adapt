@@ -69,6 +69,11 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         J.s(() -> {
             for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {

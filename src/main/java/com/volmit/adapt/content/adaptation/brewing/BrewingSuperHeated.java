@@ -112,6 +112,11 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         J.s(() -> {
             if (activeStands.isEmpty()) {

@@ -86,6 +86,11 @@ public class StealthSpeed extends SimpleAdaptation<StealthSpeed.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         List<Player> toRemove = new ArrayList<>();
         for (Player p : sneaking) {

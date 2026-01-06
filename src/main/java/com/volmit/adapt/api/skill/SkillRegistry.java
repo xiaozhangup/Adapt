@@ -77,6 +77,11 @@ public class SkillRegistry extends TickedObject {
         registerSkill(SkillNether.class);
     }
 
+    @Override
+    protected boolean needsTicking() {
+        return false;
+    }
+
     @EventHandler
     public void on(PlayerExpChangeEvent e) {
         Player p = e.getPlayer();

@@ -249,6 +249,11 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (!hasAdaptation(i)) {

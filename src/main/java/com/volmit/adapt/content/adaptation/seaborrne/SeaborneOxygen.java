@@ -53,6 +53,11 @@ public class SeaborneOxygen extends SimpleAdaptation<SeaborneOxygen.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (i.getLocation().getBlock().getType() == Material.WATER && hasAdaptation(i)) {

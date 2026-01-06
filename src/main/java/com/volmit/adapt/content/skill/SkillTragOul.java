@@ -135,6 +135,11 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         if (!this.isEnabled()) {
             return;

@@ -78,6 +78,11 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         J.s(() -> {
             for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {

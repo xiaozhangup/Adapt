@@ -148,6 +148,11 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (shouldReturnForPlayer(i)) {

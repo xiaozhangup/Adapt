@@ -56,10 +56,16 @@ public abstract class TickedObject implements Ticked, Listener {
         this.lastTick = M.ms();
         this.identifier = Adapt.instance.getTicker().generateId();
         this.unregistered = new AtomicBoolean(false);
-        Adapt.instance.getTicker().register(this);
+
         Adapt.instance.registerListener(this);
+        if (needsTicking()) {
+            Adapt.instance.getTicker().register(this);
+        }
     }
 
+    protected boolean needsTicking() {
+        return true;
+    }
 
     @Override
     public void unregister() {

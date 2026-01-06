@@ -50,6 +50,10 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
         placementWand = new PlacementWand(this, getConfig().maxBlocks);
         J.sr(() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!hasAdaptation(player)) {
+                    continue;
+                }
+
                 placementWand.renderBlockEntity(player);
             }
         }, 5);

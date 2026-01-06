@@ -109,6 +109,11 @@ public class SkillNether extends SimpleSkill<SkillNether.Config> {
     }
 
     @Override
+    public boolean needsTicking() {
+        return true;
+    }
+
+    @Override
     public void onTick() {
         if (!this.isEnabled()) {
             return;

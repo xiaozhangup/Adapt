@@ -36,7 +36,7 @@ class PlacementWand(
     private val flatFaceCache = mutableMapOf<BlockFace, Set<BlockFace>>()
 
     fun renderBlockEntity(player: Player) {
-        if (!isWand(player.inventory.itemInMainHand) || !adapt.hasAdaptation(player)) {
+        if (!isWand(player.inventory.itemInMainHand)) {
             clearPlayerEntities(player)
             return
         }
