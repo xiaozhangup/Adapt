@@ -24,11 +24,11 @@ import com.volmit.adapt.api.potion.PotionBuilder;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.PotionTypes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 public class BrewingHealthBoost extends SimpleAdaptation<BrewingHealthBoost.Config> {
     public BrewingHealthBoost() {
@@ -44,13 +44,13 @@ public class BrewingHealthBoost extends SimpleAdaptation<BrewingHealthBoost.Conf
         setInterval(1330);
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-healthboost").brewingTime(320).fuelCost(16)
                 .ingredient(Material.GOLDEN_APPLE)
-                .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionTypes.INSTANT_HEAL, false, false))
+                .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.HEALING, false, false))
                 .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Life").setColor(Color.RED)
                         .addEffect(PotionEffectType.HEALTH_BOOST, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-healthboost").brewingTime(320).fuelCost(16)
                 .ingredient(Material.ENCHANTED_GOLDEN_APPLE)
-                .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionTypes.INSTANT_HEAL, false, false))
+                .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.HEALING, false, false))
                 .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Life").setColor(Color.RED)
                         .addEffect(PotionEffectType.HEALTH_BOOST, 1200, 2, true, true, true).build())
                 .build());

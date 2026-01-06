@@ -20,10 +20,10 @@ package com.volmit.adapt.content.adaptation.pickaxe;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
@@ -103,7 +103,7 @@ public class PickaxeChisel extends SimpleAdaptation<PickaxeChisel.Config> {
                 ItemStack is = getDropFor(b);
                 if (M.r(getDropChance(getLevelPercent(p)))) {
                     if (getConfig().showParticles) {
-                        e.getClickedBlock().getWorld().spawnParticle(Particles.ITEM_CRACK, c, 14, 0.10, 0.01, 0.01, 0.1,
+                        e.getClickedBlock().getWorld().spawnParticle(Particle.ITEM, c, 14, 0.10, 0.01, 0.01, 0.1,
                                 is);
                     }
                     spw.play(p.getLocation(), Sound.BLOCK_DEEPSLATE_PLACE, 1.25f, 0.787f);
@@ -112,9 +112,9 @@ public class PickaxeChisel extends SimpleAdaptation<PickaxeChisel.Config> {
                             c.clone().subtract(p.getLocation().getDirection().clone().multiply(0.1)), is);
                 } else {
                     if (getConfig().showParticles) {
-                        e.getClickedBlock().getWorld().spawnParticle(Particles.ITEM_CRACK, c, 3, 0.01, 0.01, 0.01, 0.1,
+                        e.getClickedBlock().getWorld().spawnParticle(Particle.ITEM, c, 3, 0.01, 0.01, 0.01, 0.1,
                                 is);
-                        e.getClickedBlock().getWorld().spawnParticle(Particles.BLOCK_CRACK, c, 9, 0.1, 0.1, 0.1,
+                        e.getClickedBlock().getWorld().spawnParticle(Particle.BLOCK, c, 9, 0.1, 0.1, 0.1,
                                 e.getClickedBlock().getBlockData());
                     }
                 }

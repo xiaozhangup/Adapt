@@ -26,12 +26,12 @@ import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.reflect.registries.Enchantments;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -58,7 +58,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
     static void autosmeltBlockDTI(Block b, Player p) {
         int fortune = getFortuneOreMultiplier(
-                p.getInventory().getItemInMainHand().getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
+                p.getInventory().getItemInMainHand().getEnchantments().get(Enchantment.FORTUNE));
         SoundPlayer spw = SoundPlayer.of(b.getWorld());
         switch (b.getType()) {
             case IRON_ORE, DEEPSLATE_IRON_ORE -> {
@@ -105,7 +105,7 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
 
     static void autosmeltBlock(Block b, Player p) {
         int fortune = getFortuneOreMultiplier(
-                p.getInventory().getItemInMainHand().getEnchantments().get(Enchantments.LOOT_BONUS_BLOCKS));
+                p.getInventory().getItemInMainHand().getEnchantments().get(Enchantment.FORTUNE));
         SoundPlayer spw = SoundPlayer.of(b.getWorld());
         switch (b.getType()) {
             case IRON_ORE, DEEPSLATE_IRON_ORE -> {

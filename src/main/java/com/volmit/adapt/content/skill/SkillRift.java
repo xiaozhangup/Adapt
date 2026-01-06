@@ -24,11 +24,10 @@ import com.volmit.adapt.content.adaptation.rift.*;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
 import com.volmit.adapt.util.collection.KWeakMap;
-import com.volmit.adapt.util.reflect.registries.Attributes;
-import com.volmit.adapt.util.reflect.registries.EntityTypes;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -91,7 +90,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
 
     private void handleEntityDamageByEntity(Entity entity, Player p, double damage) {
         if (entity instanceof LivingEntity living) {
-            var attribute = Version.get().getAttribute(living, Attributes.GENERIC_MAX_HEALTH);
+            var attribute = Version.get().getAttribute(living, Attribute.MAX_HEALTH);
             double baseHealth = attribute == null ? 1 : attribute.getBaseValue();
             double multiplier = switch (entity.getType()) {
                 case ENDERMAN -> getConfig().damageEndermanXPMultiplier;
@@ -102,7 +101,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
             double xp = multiplier * Math.min(damage, baseHealth);
             if (xp > 0)
                 xp(p, xp);
-        } else if (entity.getType() == EntityTypes.ENDER_CRYSTAL) {
+        } else if (entity.getType() == EntityType.END_CRYSTAL) {
             xp(p, getConfig().damageEndCrystalXP);
         }
     }

@@ -23,7 +23,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.PotionEffectTypes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -77,7 +76,7 @@ public class HunterResistance extends SimpleAdaptation<HunterResistance.Config> 
                 } else {
                     addPotionStacks(p, PotionEffectType.HUNGER, getConfig().baseHungerFromLevel - getLevel(p),
                             getConfig().baseHungerDuration * getLevel(p), getConfig().stackHungerPenalty);
-                    addPotionStacks(p, PotionEffectTypes.DAMAGE_RESISTANCE, getLevel(p),
+                    addPotionStacks(p, PotionEffectType.RESISTANCE, getLevel(p),
                             getConfig().baseEffectbyLevel * getLevel(p), getConfig().stackBuff);
                 }
             } else {
@@ -85,7 +84,7 @@ public class HunterResistance extends SimpleAdaptation<HunterResistance.Config> 
                     Material mat = Material.getMaterial(getConfig().consumable);
                     if (mat != null && p.getInventory().contains(mat)) {
                         p.getInventory().removeItem(new ItemStack(mat, 1));
-                        addPotionStacks(p, PotionEffectTypes.DAMAGE_RESISTANCE, getLevel(p),
+                        addPotionStacks(p, PotionEffectType.RESISTANCE, getLevel(p),
                                 getConfig().baseEffectbyLevel * getLevel(p), getConfig().stackBuff);
                     } else {
                         if (getConfig().poisonPenalty) {

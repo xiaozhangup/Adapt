@@ -27,10 +27,10 @@ import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.hunter.*;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -188,7 +188,7 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
         shouldReturnForPlayer(p, () -> {
             if (e.getEntity().getType().equals(EntityType.CREEPER)) {
                 double cmult = getConfig().creeperKillMultiplier;
-                var attribute = Version.get().getAttribute(e.getEntity(), Attributes.GENERIC_MAX_HEALTH);
+                var attribute = Version.get().getAttribute(e.getEntity(), Attribute.MAX_HEALTH);
                 double xpAmount = (attribute == null ? 1 : attribute.getValue()) * getConfig().killMaxHealthXPMultiplier
                         * cmult;
                 if (e.getEntity().getPortalCooldown() > 0) {
@@ -215,7 +215,7 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
 
     private void handleEntityKill(Player p, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
-            var attribute = Version.get().getAttribute(livingEntity, Attributes.GENERIC_MAX_HEALTH);
+            var attribute = Version.get().getAttribute(livingEntity, Attribute.MAX_HEALTH);
             double xpAmount = (attribute == null ? 1 : attribute.getValue()) * getConfig().killMaxHealthXPMultiplier;
             if (entity.getPortalCooldown() > 0) {
                 xpAmount *= getConfig().spawnerMobReductionXpMultiplier;

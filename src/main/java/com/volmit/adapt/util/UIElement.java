@@ -19,9 +19,8 @@
 package com.volmit.adapt.util;
 
 import com.volmit.adapt.util.collection.KList;
-import com.volmit.adapt.util.reflect.registries.Enchantments;
-import com.volmit.adapt.util.reflect.registries.ItemFlags;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -235,15 +234,15 @@ public class UIElement implements Element {
             im.setDisplayName(getName());
             im.setLore(getLore().copy());
             if (isEnchanted()) {
-                im.addEnchant(Enchantments.DURABILITY, 1, true);
+                im.addEnchant(Enchantment.UNBREAKING, 1, true);
             }
             // Hide all attributes and enchants and stuff!
             im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            im.addItemFlags(ItemFlags.HIDE_POTION_EFFECTS);
             im.addItemFlags(ItemFlag.HIDE_DYE);
             im.addItemFlags(ItemFlag.HIDE_DESTROYS);
             im.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            im.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP); // TODO Fix this method
 
             is.setItemMeta(im);
             return is;

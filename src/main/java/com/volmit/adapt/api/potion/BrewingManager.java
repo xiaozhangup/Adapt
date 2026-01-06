@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.J;
-import com.volmit.adapt.util.reflect.Reflect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BrewingStand;
@@ -19,7 +18,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionType;
 
 import java.util.List;
 import java.util.Map;
@@ -97,11 +95,9 @@ public class BrewingManager implements Listener {
             if (s == null)
                 continue;
             PotionMeta meta = (PotionMeta) s.getItemMeta();
-            var opt = Reflect.getEnum(PotionType.class, "UNCRAFTABLE");
-            if (opt.isEmpty() && meta.getBasePotionType() != null)
+            if (meta.getBasePotionType() == null) {
                 continue;
-            if (opt.isPresent() && meta.getBasePotionType() == opt.get())
-                continue;
+            }
             ItemStack newStack = s.clone();
             if (m == Material.GUNPOWDER) {
                 newStack.setType(Material.SPLASH_POTION);

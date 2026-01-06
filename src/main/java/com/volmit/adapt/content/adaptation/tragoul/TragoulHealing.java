@@ -24,11 +24,11 @@ import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -86,7 +86,7 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
             double healAmount = e.getDamage() * healPercentage;
             Adapt.verbose("Healing " + p.getName() + " for " + healAmount + " (" + healPercentage * 100 + "% of "
                     + e.getDamage() + " damage)");
-            var attribute = Version.get().getAttribute(p, Attributes.GENERIC_MAX_HEALTH);
+            var attribute = Version.get().getAttribute(p, Attribute.MAX_HEALTH);
             p.setHealth(Math.min(attribute == null ? p.getHealth() : attribute.getValue(), p.getHealth() + healAmount));
 
         }

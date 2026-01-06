@@ -22,10 +22,10 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -115,7 +115,7 @@ public class HerbalismGrowthAura extends SimpleAdaptation<HerbalismGrowthAura.Co
                                             spw.play(a.getLocation(), Sound.BLOCK_CHORUS_FLOWER_DEATH, 0.25f,
                                                     RNG.r.f(0.3f, 0.7f));
                                             if (getConfig().showParticles) {
-                                                p.spawnParticle(Particles.VILLAGER_HAPPY,
+                                                p.spawnParticle(Particle.HAPPY_VILLAGER,
                                                         a.getLocation().clone().add(0.5, 0.5, 0.5), 3, 0.3, 0.3, 0.3,
                                                         0.9);
                                             }

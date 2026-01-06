@@ -22,11 +22,11 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -83,7 +83,7 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
                 continue;
             }
 
-            var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
+            var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
             if (attribute == null)
                 continue;
 

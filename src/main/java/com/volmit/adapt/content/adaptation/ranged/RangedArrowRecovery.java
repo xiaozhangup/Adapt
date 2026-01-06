@@ -5,9 +5,9 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.Enchantments;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,7 +39,7 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
     @EventHandler
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player player && hasAdaptation(player)) {
-            if (!event.getBow().containsEnchantment(Enchantments.ARROW_INFINITE)) {
+            if (!event.getBow().containsEnchantment(Enchantment.INFINITY)) {
                 if (event.getProjectile() instanceof Arrow arrow) {
                     shotArrows.put(arrow, player);
                 }

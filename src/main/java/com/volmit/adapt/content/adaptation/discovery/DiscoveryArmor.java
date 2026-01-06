@@ -24,12 +24,12 @@ import com.volmit.adapt.api.version.Modifier;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.collection.KMap;
-import com.volmit.adapt.util.reflect.registries.Attributes;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -96,7 +96,7 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
             if (a > 2 && M.r(0.005 * a)) {
                 Vector v = VectorMath.directionNoNormal(l, b.getLocation().add(0.5, 0.5, 0.5));
                 if (getConfig().showParticles) {
-                    l.getWorld().spawnParticle(Particles.ENCHANTMENT_TABLE, l.clone().add(0, 1, 0), 0, v.getX(),
+                    l.getWorld().spawnParticle(Particle.ENCHANT, l.clone().add(0, 1, 0), 0, v.getX(),
                             v.getY(), v.getZ());
                 }
             }
@@ -129,7 +129,7 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
                     return;
                 playerData.put(p.getUniqueId(), now + UPDATE_COOLDOWN);
 
-                var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
+                var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
                 if (attribute == null)
                     return;
 

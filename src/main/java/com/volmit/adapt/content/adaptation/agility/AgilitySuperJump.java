@@ -20,10 +20,9 @@ package com.volmit.adapt.content.adaptation.agility;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Particles;
-import com.volmit.adapt.util.reflect.registries.PotionEffectTypes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -32,6 +31,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.Map;
@@ -103,7 +103,7 @@ public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> 
 
             if (velocity.getY() > 0) {
                 double jumpVelocity = 0.4;
-                PotionEffect jumpPotion = p.getPotionEffect(PotionEffectTypes.JUMP);
+                PotionEffect jumpPotion = p.getPotionEffect(PotionEffectType.JUMP_BOOST);
 
                 if (jumpPotion != null) {
                     jumpVelocity += (double) ((float) jumpPotion.getAmplifier() + 1) * 0.1F;
@@ -120,7 +120,7 @@ public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> 
                     spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1.25f, 0.7f);
                     spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1.25f, 1.7f);
                     if (getConfig().showParticles) {
-                        p.getWorld().spawnParticle(Particles.BLOCK_CRACK, p.getLocation().clone().add(0, 0.3, 0), 15,
+                        p.getWorld().spawnParticle(Particle.BLOCK, p.getLocation().clone().add(0, 0.3, 0), 15,
                                 0.1, 0.8, 0.1, 0.1,
                                 p.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData());
                     }

@@ -24,7 +24,6 @@ import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.reflect.registries.PotionEffectTypes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -35,6 +34,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class RiftResist extends SimpleAdaptation<RiftResist.Config> {
     public RiftResist() {
@@ -59,7 +59,7 @@ public class RiftResist extends SimpleAdaptation<RiftResist.Config> {
         spw.play(p.getLocation(), Sound.BLOCK_CONDUIT_AMBIENT_SHORT, 1f, 0.01f);
         spw.play(p.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1f, 0.01f);
         p.addPotionEffect(
-                new PotionEffect(PotionEffectTypes.DAMAGE_RESISTANCE, duration, amplifier, true, false, false));
+                new PotionEffect(PotionEffectType.RESISTANCE, duration, amplifier, true, false, false));
     }
 
     public static boolean hasRiftResistPerk(AdaptPlayer p) {

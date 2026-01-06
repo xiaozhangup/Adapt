@@ -21,12 +21,12 @@ package com.volmit.adapt.content.adaptation.taming;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -79,7 +79,7 @@ public class TamingDamage extends SimpleAdaptation<TamingDamage.Config> {
     }
 
     private void update(Tameable j, int level) {
-        var attribute = Version.get().getAttribute(j, Attributes.GENERIC_ATTACK_DAMAGE);
+        var attribute = Version.get().getAttribute(j, Attribute.ATTACK_DAMAGE);
         if (attribute == null)
             return;
         attribute.removeModifier(MODIFIER, MODIFIER_KEY);

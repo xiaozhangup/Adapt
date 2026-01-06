@@ -28,10 +28,10 @@ import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.adaptation.seaborrne.*;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -163,7 +163,7 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
     }
 
     private double getBaseHealth(LivingEntity entity) {
-        var attribute = Version.get().getAttribute(entity, Attributes.GENERIC_MAX_HEALTH);
+        var attribute = Version.get().getAttribute(entity, Attribute.MAX_HEALTH);
         return attribute == null ? 0 : attribute.getBaseValue();
     }
 

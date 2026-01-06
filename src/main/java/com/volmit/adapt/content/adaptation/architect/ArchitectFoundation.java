@@ -21,7 +21,6 @@ package com.volmit.adapt.content.adaptation.architect;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -241,7 +240,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
             spw.play(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
         });
         if (getConfig().showParticles) {
-            vfxCuboidOutline(block, Particles.ENCHANTMENT_TABLE);
+            vfxCuboidOutline(block, Particle.ENCHANT);
         }
     }
 

@@ -23,9 +23,9 @@ import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.skill.SkillHerbalism;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -116,7 +116,7 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
                 spw.play(p.getLocation(), Sound.ITEM_SHOVEL_FLATTEN, 1f, 0.66f);
                 spw.play(p.getLocation(), Sound.BLOCK_BAMBOO_SAPLING_BREAK, 1f, 0.66f);
                 if (getConfig().showParticles) {
-                    p.spawnParticle(Particles.VILLAGER_HAPPY, p.getLocation().clone().add(0.5, 0.5, 0.5),
+                    p.spawnParticle(Particle.HAPPY_VILLAGER, p.getLocation().clone().add(0.5, 0.5, 0.5),
                             getLevel(p) * 3, 0.3 * getLevel(p), 0.3 * getLevel(p), 0.3 * getLevel(p), 0.9);
                 }
             } else {

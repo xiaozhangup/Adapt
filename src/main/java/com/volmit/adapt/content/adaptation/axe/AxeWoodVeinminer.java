@@ -24,7 +24,6 @@ import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -141,7 +140,7 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                             }
                         }
                         if (getConfig().showParticles) {
-                            this.vfxCuboidOutline(blocks, Particles.ENCHANTMENT_TABLE);
+                            this.vfxCuboidOutline(blocks, Particle.ENCHANT);
                         }
                     }
                 });

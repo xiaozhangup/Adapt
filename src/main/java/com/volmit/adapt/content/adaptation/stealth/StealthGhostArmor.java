@@ -23,10 +23,10 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Modifier;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -75,7 +75,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                 continue;
             }
 
-            var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
+            var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
 
             if (!hasAdaptation(p)) {
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
@@ -111,7 +111,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                     return;
                 }
 
-                var attribute = Version.get().getAttribute(p, Attributes.GENERIC_ARMOR);
+                var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
                 if (attribute == null)
                     return;
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);

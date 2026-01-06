@@ -2,7 +2,6 @@ package com.volmit.adapt.api.potion;
 
 import com.google.common.collect.Lists;
 import com.volmit.adapt.api.version.Version;
-import com.volmit.adapt.util.reflect.Reflect;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Color;
@@ -23,7 +22,7 @@ public class PotionBuilder {
     private String name;
     private Color color;
     private boolean upgraded, extended;
-    private PotionType baseType = Reflect.getEnum(PotionType.class, "UNCRAFTABLE").orElse(null);
+    private PotionType baseType = null;
 
     private PotionBuilder(Type type) {
         this.type = type;

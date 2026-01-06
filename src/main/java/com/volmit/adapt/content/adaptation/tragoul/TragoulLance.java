@@ -81,10 +81,13 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
 
         for (Entity e : origin.getNearbyEntities(range, range, range)) {
             if (e instanceof LivingEntity le && le != p) {
-                double distance = origin.getLocation().distance(le.getLocation());
-                if (distance < minDistance) {
-                    nearest = le;
-                    minDistance = distance;
+                if (le.getLastDamageCause() instanceof EntityDamageByEntityEvent eve) {
+                    if (eve.getDamager() != p) continue;
+                    double distance = origin.getLocation().distance(le.getLocation());
+                    if (distance < minDistance) {
+                        nearest = le;
+                        minDistance = distance;
+                    }
                 }
             }
         }

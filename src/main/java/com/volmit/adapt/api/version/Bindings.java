@@ -2,7 +2,6 @@ package com.volmit.adapt.api.version;
 
 import com.volmit.adapt.api.potion.PotionBuilder;
 import com.volmit.adapt.util.CustomModel;
-import com.volmit.adapt.util.reflect.Reflect;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,9 +32,17 @@ public class Bindings {
         if (type == null) {
             meta.setBasePotionType(null);
         } else if (builder.isExtended()) {
-            meta.setBasePotionType(Reflect.getEnum(PotionType.class, "LONG_" + type.name()).orElse(type));
+            try {
+                meta.setBasePotionType(PotionType.valueOf("LONG_" + type.name()));
+            } catch (IllegalArgumentException ex) {
+                meta.setBasePotionType(type);
+            }
         } else if (builder.isUpgraded()) {
-            meta.setBasePotionType(Reflect.getEnum(PotionType.class, "STRONG_" + type.name()).orElse(type));
+            try {
+                meta.setBasePotionType(PotionType.valueOf("STRONG_" + type.name()));
+            } catch (IllegalArgumentException ex) {
+                meta.setBasePotionType(type);
+            }
         } else {
             meta.setBasePotionType(type);
         }

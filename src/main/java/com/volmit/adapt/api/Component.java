@@ -26,7 +26,6 @@ import com.volmit.adapt.api.value.MaterialValue;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.reflect.registries.PotionTypes;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -54,8 +53,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static com.volmit.adapt.util.reflect.registries.Particles.ENCHANTMENT_TABLE;
-import static com.volmit.adapt.util.reflect.registries.Particles.REDSTONE;
 import static org.bukkit.potion.PotionType.*;
 import static xyz.xenondevs.particle.utils.MathUtils.RANDOM;
 
@@ -207,11 +204,11 @@ public interface Component {
             var type = p.getBasePotionType();
             if (List.of(NIGHT_VISION, INVISIBILITY, FIRE_RESISTANCE, WATER_BREATHING).contains(type))
                 amplifier = e;
-            else if (List.of(PotionTypes.JUMP, PotionTypes.SPEED, STRENGTH).contains(type))
+            else if (List.of(LEAPING, SWIFTNESS, STRENGTH).contains(type))
                 amplifier = g;
             else if (SLOWNESS == type)
                 amplifier = u ? l ? 100 : 400 : t;
-            else if (List.of(POISON, PotionTypes.REGEN).contains(type))
+            else if (List.of(POISON, REGENERATION).contains(type))
                 amplifier = h;
             else if (List.of(WEAKNESS, SLOW_FALLING).contains(type))
                 amplifier = t;
@@ -340,7 +337,7 @@ public interface Component {
                         double zCoord = Math.cos(j) * radius;
 
                         Location loc = particleLocation.clone().add(xCoord, yCoord, zCoord);
-                        world.spawnParticle(REDSTONE, loc, 0, 0, 0, 0, dustOptions);
+                        world.spawnParticle(Particle.DUST, loc, 0, 0, 0, 0, dustOptions);
                     }
                 }
 
@@ -390,7 +387,7 @@ public interface Component {
                         double zCoord = Math.cos(j) * radius;
 
                         Location loc = particleLocation.clone().add(xCoord, yCoord, zCoord);
-                        world.spawnParticle(REDSTONE, loc, 0, 0, 0, 0, dustOptions);
+                        world.spawnParticle(Particle.DUST, loc, 0, 0, 0, 0, dustOptions);
                     }
                 }
 
@@ -424,22 +421,22 @@ public interface Component {
                     double t = (double) i / (particleCount - 1);
 
                     // Edges along X-axis
-                    world.spawnParticle(REDSTONE, minX + t * (maxX - minX), minY, minZ, 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, minX + t * (maxX - minX), maxY, minZ, 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, minX + t * (maxX - minX), minY, maxZ, 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, minX + t * (maxX - minX), maxY, maxZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX + t * (maxX - minX), minY, minZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX + t * (maxX - minX), maxY, minZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX + t * (maxX - minX), minY, maxZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX + t * (maxX - minX), maxY, maxZ, 0, 0, 0, 0, dustOptions);
 
                     // Edges along Y-axis
-                    world.spawnParticle(REDSTONE, minX, minY + t * (maxY - minY), minZ, 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, maxX, minY + t * (maxY - minY), minZ, 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, minX, minY + t * (maxY - minY), maxZ, 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, maxX, minY + t * (maxY - minY), maxZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX, minY + t * (maxY - minY), minZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, maxX, minY + t * (maxY - minY), minZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX, minY + t * (maxY - minY), maxZ, 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, maxX, minY + t * (maxY - minY), maxZ, 0, 0, 0, 0, dustOptions);
 
                     // Edges along Z-axis
-                    world.spawnParticle(REDSTONE, minX, minY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, maxX, minY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, minX, maxY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
-                    world.spawnParticle(REDSTONE, maxX, maxY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX, minY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, maxX, minY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, minX, maxY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
+                    world.spawnParticle(Particle.DUST, maxX, maxY, minZ + t * (maxZ - minZ), 0, 0, 0, 0, dustOptions);
                 }
 
                 tick++;
@@ -484,7 +481,7 @@ public interface Component {
                         double zCoord = currentRadius * Math.cos(phi);
 
                         Location loc = particleLocation.clone().add(xCoord, yCoord, zCoord);
-                        world.spawnParticle(REDSTONE, loc, 0, 0, 0, 0, dustOptions);
+                        world.spawnParticle(Particle.DUST, loc, 0, 0, 0, 0, dustOptions);
                     }
                 }
 
@@ -505,7 +502,7 @@ public interface Component {
             double z = range * Math.cos(phi);
 
             Location particleLocation = center.clone().add(x, y, z);
-            world.spawnParticle(REDSTONE, particleLocation, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, particleLocation, 0, 0, 0, 0, dustOptions);
         }
     }
 
@@ -529,7 +526,7 @@ public interface Component {
         double l = v.length();
         v.normalize();
         if (AdaptConfig.get().isUseEnchantmentTableParticleForActiveEffects()) {
-            from.getWorld().spawnParticle(ENCHANTMENT_TABLE, to, 1, 6, 6, 6, 0.6);
+            from.getWorld().spawnParticle(Particle.ENCHANT, to, 1, 6, 6, 6, 0.6);
         }
     }
 
@@ -669,7 +666,7 @@ public interface Component {
         List<Location> hollowCube = getHollowCuboid(blockStart.getLocation(), blockEnd.getLocation(), 0.25);
         Particle.DustOptions dustOptions = new Particle.DustOptions(color, size);
         for (Location l : hollowCube) {
-            blockStart.getWorld().spawnParticle(REDSTONE, l, 2, 0F, 0F, 0F, 0.000, dustOptions);
+            blockStart.getWorld().spawnParticle(Particle.DUST, l, 2, 0F, 0F, 0F, 0.000, dustOptions);
         }
     }
 
@@ -718,7 +715,7 @@ public interface Component {
             z = z / magnitude * range;
 
             Location particleLocation = center.clone().add(x, y, z);
-            world.spawnParticle(REDSTONE, particleLocation, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, particleLocation, 0, 0, 0, 0, dustOptions);
         }
     }
 
@@ -739,7 +736,7 @@ public interface Component {
                 double x = radius * Math.cos(angle);
                 double z = radius * Math.sin(angle);
                 Location particleLocation = center.clone().add(x, 0, z);
-                world.spawnParticle(REDSTONE, particleLocation, particleCount, 0, 0, 0, dustOptions);
+                world.spawnParticle(Particle.DUST, particleLocation, particleCount, 0, 0, 0, dustOptions);
 
                 tick++;
             }
@@ -779,7 +776,7 @@ public interface Component {
             Location particleLoc = new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
             particleLoc.setX(location.getX() + Math.cos(d) * radius);
             particleLoc.setZ(location.getZ() + Math.sin(d) * radius);
-            location.getWorld().spawnParticle(REDSTONE, particleLoc, 1, new Particle.DustOptions(color, 1));
+            location.getWorld().spawnParticle(Particle.DUST, particleLoc, 1, new Particle.DustOptions(color, 1));
         }
     }
 
@@ -822,13 +819,13 @@ public interface Component {
 
     default void vfxXP(Player p, Location l, int amt) {
         if (AdaptConfig.get().isUseEnchantmentTableParticleForActiveEffects()) {
-            p.spawnParticle(ENCHANTMENT_TABLE, l, Math.min(amt / 10, 20), 0.5, 0.5, 0.5, 1);
+            p.spawnParticle(Particle.ENCHANT, l, Math.min(amt / 10, 20), 0.5, 0.5, 0.5, 1);
         }
     }
 
     default void vfxXP(Location l) {
         if (AdaptConfig.get().isUseEnchantmentTableParticleForActiveEffects()) {
-            l.getWorld().spawnParticle(ENCHANTMENT_TABLE, l.add(0, 1.7, 0), 3, 0.1, 0.1, 0.1, 3);
+            l.getWorld().spawnParticle(Particle.ENCHANT, l.add(0, 1.7, 0), 3, 0.1, 0.1, 0.1, 3);
         }
     }
 

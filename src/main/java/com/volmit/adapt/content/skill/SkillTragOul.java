@@ -29,7 +29,6 @@ import com.volmit.adapt.content.adaptation.tragoul.TragoulHealing;
 import com.volmit.adapt.content.adaptation.tragoul.TragoulLance;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import de.slikey.effectlib.effect.CloudEffect;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
@@ -101,7 +100,7 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
                 if (getConfig().showParticles) {
                     CloudEffect ce = new CloudEffect(Adapt.instance.adaptEffectManager);
                     ce.mainParticle = Particle.ASH;
-                    ce.cloudParticle = Particles.REDSTONE;
+                    ce.cloudParticle = Particle.DUST;
                     ce.duration = 10000;
                     ce.iterations = 1000;
                     ce.setEntity(p);

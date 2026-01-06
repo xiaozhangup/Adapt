@@ -25,11 +25,11 @@ import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.reflect.events.api.ReflectiveHandler;
 import com.volmit.adapt.util.reflect.events.api.entity.EntityDismountEvent;
 import com.volmit.adapt.util.reflect.events.api.entity.EntityMountEvent;
-import com.volmit.adapt.util.reflect.registries.Attributes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -102,7 +102,7 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
                 continue;
             }
 
-            var attribute = Version.get().getAttribute(p, Attributes.GENERIC_MOVEMENT_SPEED);
+            var attribute = Version.get().getAttribute(p, Attribute.MOVEMENT_SPEED);
             if (attribute == null)
                 continue;
 

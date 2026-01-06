@@ -24,10 +24,10 @@ import com.volmit.adapt.api.potion.PotionBuilder;
 import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.PotionEffectTypes;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 public class BrewingNausea extends SimpleAdaptation<BrewingNausea.Config> {
@@ -46,13 +46,13 @@ public class BrewingNausea extends SimpleAdaptation<BrewingNausea.Config> {
                 .ingredient(Material.BROWN_MUSHROOM)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
                 .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Nausea").setColor(Color.LIME)
-                        .addEffect(PotionEffectTypes.CONFUSION, 600, 1, true, true, true).build())
+                        .addEffect(PotionEffectType.NAUSEA, 600, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-nausea-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.CRIMSON_FUNGUS)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
                 .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Nausea 2").setColor(Color.LIME)
-                        .addEffect(PotionEffectTypes.CONFUSION, 300, 2, true, true, true).build())
+                        .addEffect(PotionEffectType.NAUSEA, 300, 2, true, true, true).build())
                 .build());
     }
 

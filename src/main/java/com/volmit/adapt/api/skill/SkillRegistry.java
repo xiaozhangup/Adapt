@@ -33,11 +33,7 @@ import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.M;
 import com.volmit.adapt.util.SoundPlayer;
 import com.volmit.adapt.util.collection.KMap;
-import com.volmit.adapt.util.reflect.registries.Particles;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -117,9 +113,9 @@ public class SkillRegistry extends TickedObject {
             spw.play(e.getClickedBlock().getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 0.35f, 0.755f);
             SkillsGui.open(p);
             e.setCancelled(true);
-            p.getWorld().spawnParticle(Particles.CRIT_MAGIC, e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5),
+            p.getWorld().spawnParticle(Particle.CRIT, e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5),
                     25, 0, 0, 0, 1.1);
-            p.getWorld().spawnParticle(Particles.ENCHANTMENT_TABLE,
+            p.getWorld().spawnParticle(Particle.ENCHANT,
                     e.getClickedBlock().getLocation().clone().add(0.5, 1, 0.5), 12, 0, 0, 0, 1.1);
         }
 

@@ -28,7 +28,6 @@ import com.volmit.adapt.content.adaptation.discovery.DiscoveryXpResist;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.reflect.registries.Particles;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -149,7 +148,7 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
         if (d.isNewDiscovery(bd.getAsString())) {
             xp(p, getConfig().discoverBlockBaseXP + (getValue(bd) * getConfig().discoverBlockValueXPMultiplier));
             if (getConfig().showParticles) {
-                p.spawnParticle(Particles.TOTEM, l.clone().add(0.5, 0.5, 0.5), 9, 0, 0, 0, 0.3);
+                p.spawnParticle(Particle.TOTEM_OF_UNDYING, l.clone().add(0.5, 0.5, 0.5), 9, 0, 0, 0, 0.3);
             }
         }
 
