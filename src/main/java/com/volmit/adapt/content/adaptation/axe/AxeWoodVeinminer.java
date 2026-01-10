@@ -82,7 +82,8 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                 return;
             }
 
-            if (!isAxe(p.getInventory().getItemInMainHand())) {
+            ItemStack tool = p.getInventory().getItemInMainHand();
+            if (!isAxe(tool)) {
                 return;
             }
 
@@ -124,14 +125,14 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                         PlayerAdaptation adaptation = line != null
                                 ? line.getAdaptation("axe-drop-to-inventory") : null;
                         if (adaptation != null && adaptation.getLevel() > 0) {
-                            Collection<ItemStack> items = blocks.getDrops();
+                            Collection<ItemStack> items = blocks.getDrops(tool);
                             for (ItemStack item : items) {
                                 safeGiveItem(p, item);
                                 Adapt.verbose("Giving item: " + item);
                             }
                             blocks.setType(Material.AIR);
                         } else {
-                            blocks.breakNaturally(p.getInventory().getItemInMainHand());
+                            blocks.breakNaturally(tool);
                             SoundPlayer spw = SoundPlayer.of(blocks.getWorld());
                             spw.play(e.getBlock().getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.01f, 0.25f);
                             if (getConfig().showParticles) {
