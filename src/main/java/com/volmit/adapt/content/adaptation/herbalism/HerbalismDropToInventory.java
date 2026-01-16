@@ -75,14 +75,20 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
         }
         if (p.getInventory().getItemInMainHand().getType().name().endsWith("_HOE")) {
             List<Item> items = new KList<>(e.getItems());
-            e.getItems().clear();
             for (Item i : items) {
-                sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
-                xp(p, 2);
-                if (!p.getInventory().addItem(i.getItemStack()).isEmpty()) {
-                    p.getWorld().dropItem(p.getLocation(), i.getItemStack());
+                var leftover = p.getInventory().addItem(i.getItemStack());
+                if (leftover.isEmpty()) {
+                    e.getItems().remove(i);
+                    xp(p, 2);
+                } else {
+                    int addedAmount = i.getItemStack().getAmount() - leftover.get(0).getAmount();
+                    if (addedAmount > 0) {
+                        xp(p, 2);
+                    }
+                    i.setItemStack(leftover.get(0));
                 }
             }
+            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
         }
     }
 

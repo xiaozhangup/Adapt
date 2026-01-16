@@ -78,13 +78,15 @@ public class AxeDropToInventory extends SimpleAdaptation<AxeDropToInventory.Conf
         }
         if (p.getInventory().getItemInMainHand().getType().name().endsWith("_AXE")) {
             List<Item> items = new KList<>(e.getItems());
-            e.getItems().clear();
             for (Item i : items) {
-                sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
-                if (!p.getInventory().addItem(i.getItemStack()).isEmpty()) {
-                    p.getWorld().dropItem(p.getLocation(), i.getItemStack());
+                var leftover = p.getInventory().addItem(i.getItemStack());
+                if (leftover.isEmpty()) {
+                    e.getItems().remove(i);
+                } else {
+                    i.setItemStack(leftover.get(0));
                 }
             }
+            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
         }
     }
 

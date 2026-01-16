@@ -36,6 +36,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -84,13 +85,15 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
         }
         if (p.getInventory().getItemInMainHand().getType().name().endsWith("_SWORD")) {
             List<Item> items = new KList<>(e.getItems());
-            e.getItems().clear();
-            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
             for (Item i : items) {
-                if (!p.getInventory().addItem(i.getItemStack()).isEmpty()) {
-                    p.getWorld().dropItem(p.getLocation(), i.getItemStack());
+                var leftover = p.getInventory().addItem(i.getItemStack());
+                if (leftover.isEmpty()) {
+                    e.getItems().remove(i);
+                } else {
+                    i.setItemStack(leftover.get(0));
                 }
             }
+            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
         }
     }
 
@@ -110,13 +113,17 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
         if (e.getEntity().getKiller() != null
                 && e.getEntity().getKiller().getClass().getSimpleName().equals("CraftPlayer")) {
             SoundPlayer sp = SoundPlayer.of(p);
-            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
-            e.getDrops().forEach(i -> {
-                if (!p.getInventory().addItem(i).isEmpty()) {
-                    p.getWorld().dropItem(p.getLocation(), i);
+            List<ItemStack> toRemove = new KList<>();
+            for (ItemStack i : e.getDrops()) {
+                var leftover = p.getInventory().addItem(i);
+                if (leftover.isEmpty()) {
+                    toRemove.add(i);
+                } else {
+                    i.setAmount(leftover.get(0).getAmount());
                 }
-            });
-            e.getDrops().clear();
+            }
+            e.getDrops().removeAll(toRemove);
+            sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
         }
     }
 
