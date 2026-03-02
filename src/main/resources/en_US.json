@@ -843,6 +843,11 @@
       "name": "Harvest & Replant",
       "description": "Right click a crop with a hoe to harvest & replant it.",
       "lore1": "Blocks Replant Radius"
+    },
+    "notrample": {
+      "name": "Farmland Keeper",
+      "description": "Prevents you from trampling farmland.",
+      "lore1": "Farmland will not be trampled when you walk on it."
     }
   },
   "hunter": {
