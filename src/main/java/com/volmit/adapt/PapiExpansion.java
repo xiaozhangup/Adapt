@@ -160,6 +160,10 @@ private static List<String> getElementsFromSecond(String[] array) {
 
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
+        if (!Adapt.instance.getAdaptServer().isPlayerLoaded(player.getUniqueId())) {
+            return "";
+        }
+
         String[] args = params.split("_");
         PlayerData p = Adapt.instance.getAdaptServer().peekData(player.getUniqueId());
         String key = args[0];

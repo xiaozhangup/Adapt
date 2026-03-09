@@ -251,6 +251,17 @@ public class AdaptServer extends TickedObject {
         throw new RuntimeException("Failed to find AdaptPlayer for " + p.getName() + " (" + p.getUniqueId() + ")");
     }
 
+    public boolean isPlayerLoaded(UUID uuid) {
+        var cont = players.containsKey(uuid);
+        if (!cont) return false;
+
+        var p = players.get(uuid);
+        if (p == null) return false;
+
+        if (!p.isActive()) return false;
+        return p.getData() != null;
+    }
+
     public List<Player> getAdaptPlayers() {
         List<Player> result = new ArrayList<>(players.size());
         for (Map.Entry<UUID, AdaptPlayer> entry : players.entrySet()) {
