@@ -228,7 +228,7 @@ public interface Adaptation<T> extends Ticked, Component {
 
     default boolean hasAdaptation(Player p) {
         try {
-            if (p == null || p.isDead()) { // Check if player is not invalid
+            if (p == null || p.isDead() || !Adapt.instance.getAdaptServer().isPlayerLoaded(p.getUniqueId())) { // Check if player is not invalid
                 return false;
             }
             if (!this.getSkill().isEnabled()) {
