@@ -13,6 +13,8 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.block.TileState
+import org.bukkit.block.data.Levelled
+import org.bukkit.block.data.Waterlogged
 import org.bukkit.block.data.type.Slab
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
@@ -112,10 +114,21 @@ class PlacementWand(
             return
         }
 
-        connectedBlocks.forEach { connectedBlock ->
+        for (connectedBlock in connectedBlocks) {
             val targetBlock = connectedBlock.getRelative(face)
+            var waterlogged = false
+            if (targetBlock.type == Material.WATER) {
+                val targetLevelled = targetBlock.blockData as? Levelled
+                if (targetLevelled != null && targetLevelled.level == targetLevelled.maximumLevel) {
+                    waterlogged = true
+                }
+            }
+
             targetBlock.type = connectedBlock.type
             targetBlock.blockData = connectedBlock.blockData
+
+            val targetData = targetBlock.blockData as? Waterlogged ?: continue
+            targetData.isWaterlogged = waterlogged
         }
 
         sendActionBarMessage(player, "放置了 $takeCount 个<lang:${type.translationKey()}>")
@@ -136,7 +149,7 @@ class PlacementWand(
 
     private fun findConnectedBlocks(startBlock: Block, face: BlockFace, maxBlocks: Int, filter: (Block) -> Boolean): Set<Block> {
         val targetBlock = startBlock.getRelative(face)
-        if (!targetBlock.type.isAir || !filter(targetBlock)) return emptySet()
+        if (!isReplaceable(targetBlock) || !filter(targetBlock)) return emptySet()
 
         val startType = startBlock.type
         val visited = mutableSetOf<Block>()
@@ -157,7 +170,7 @@ class PlacementWand(
                 val nextBlock = currentBlock.getRelative(direction)
                 if (visited.add(nextBlock) && nextBlock.type == startType) {
                     val nextTarget = nextBlock.getRelative(face)
-                    if (nextTarget.type.isAir && filter(nextTarget)) {
+                    if (isReplaceable(nextTarget) && filter(nextTarget)) {
                         queue.add(nextBlock)
                         result.add(nextBlock)
                     }
@@ -166,6 +179,10 @@ class PlacementWand(
         }
 
         return result
+    }
+
+    private fun isReplaceable(block: Block): Boolean {
+        return block.type.isAir || block.type == Material.WATER || block.type == Material.LAVA
     }
 
     private fun buildTargetBlockKey(block: Block, face: BlockFace): String {
