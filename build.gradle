@@ -23,6 +23,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "2.1.21"
     id "io.freefair.lombok" version "8.10.2"
     id "com.gradleup.shadow" version "8.3.5"
+    id "org.jetbrains.kotlin.plugin.lombok" version '2.1.21'
 //    id 'com.diffplug.spotless' version '7.0.4'
 }
 
@@ -97,6 +98,7 @@ dependencies {
     implementation 'xyz.xenondevs:particle:1.8.4'
     implementation 'com.frengor:ultimateadvancementapi-shadeable:2.7.2:mojang-mapped'
     implementation 'com.jeff-media:custom-block-data:2.2.3'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
 
     // Dynamically Loaded
     compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.11-R0.1-SNAPSHOT'

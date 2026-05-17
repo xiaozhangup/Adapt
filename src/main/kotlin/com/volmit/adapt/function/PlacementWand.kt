@@ -69,7 +69,12 @@ class PlacementWand(
                 meta.glowColorOverride = glowColor
                 meta.isGlowing = true
                 meta.brightnessOverride = brightness
-                meta.blockState = SpigotConversionUtil.fromBukkitBlockData(connectedBlock.blockData)
+
+                val blockData = connectedBlock.blockData
+                if (blockData is Waterlogged) {
+                    blockData.isWaterlogged = false
+                }
+                meta.blockState = SpigotConversionUtil.fromBukkitBlockData(blockData)
             }
         }
 

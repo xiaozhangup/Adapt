@@ -39,13 +39,15 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
         var player = event.getPlayer();
         var block = event.getBlock();
         if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SPAWNER
-                || !canBlockBreak(player, event.getBlock()))
+                || !canBlockBreak(player, event.getBlock())) {
             return;
+        }
         var level = getLevel(player);
-        if (level == 1
-                && !player.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH)) {
+        boolean silk = player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH);
+        if (level == 1 && !silk) {
             return;
-        } else if (level > 1 && !player.isSneaking()) {
+        }
+        if (level > 1 && !player.isSneaking() && !silk) {
             return;
         }
 
