@@ -7,35 +7,37 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class WorldProtector implements Protector {
     @Override
     public boolean canBlockBreak(Player player, Block block, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(block.getWorld().getName());
+        return player.isOp() || !getWorlds().contains(block.getWorld().getName());
     }
 
     @Override
     public boolean canBlockPlace(Player player, Block block, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(block.getWorld().getName());
+        return player.isOp() || !getWorlds().contains(block.getWorld().getName());
     }
 
     @Override
     public boolean canPVP(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(entityLocation.getWorld().getName());
+        return player.isOp() || !getWorlds().contains(entityLocation.getWorld().getName());
     }
 
     @Override
     public boolean canPVE(Player player, Location entityLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(entityLocation.getWorld().getName());
+        return player.isOp() || !getWorlds().contains(entityLocation.getWorld().getName());
     }
 
     @Override
     public boolean canInteract(Player player, Location targetLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(targetLocation.getWorld().getName());
+        return player.isOp() || !getWorlds().contains(targetLocation.getWorld().getName());
     }
 
     @Override
     public boolean canAccessChest(Player player, Location chestLocation, Adaptation<?> adaptation) {
-        return player.isOp() || !OrangDomain.INSTANCE.getWorlds().contains(chestLocation.getWorld().getName());
+        return player.isOp() || !getWorlds().contains(chestLocation.getWorld().getName());
     }
 
     @Override
@@ -46,6 +48,10 @@ public class WorldProtector implements Protector {
     @Override
     public boolean isEnabledByDefault() {
         return true;
+    }
+    
+    private List<String> getWorlds() {
+        return OrangDomain.world.getGlobalProtect();
     }
 
 }

@@ -103,7 +103,7 @@ dependencies {
     // Dynamically Loaded
     compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.11-R0.1-SNAPSHOT'
     compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.2'
-    compileOnly 'me.xiaozhangup:OrangDomain:1.0.1'
+    compileOnly 'me.xiaozhangup:OrangDomain:1.0.2'
     compileOnly 'me.xiaozhangup:WhaleMechanism:1.0.1'
     compileOnly 'net.momirealms:craft-engine-core:0.0.66'
     compileOnly 'net.momirealms:craft-engine-bukkit:0.0.66'
