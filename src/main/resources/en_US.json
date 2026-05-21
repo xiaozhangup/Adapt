@@ -983,6 +983,17 @@
       "lore1": "Makes Spawners breakable with silk touch.",
       "lore2": "Makes Spawners breakable while sneaking."
     },
+    "silkbuddingamethyst": {
+      "name": "Pickaxe Silk-Budding Amethyst",
+      "description": "Makes Budding Amethyst drop when broken",
+      "lore1": "Makes Budding Amethyst breakable with silk touch.",
+      "lore2": "Makes Budding Amethyst breakable without silk touch."
+    },
+    "mendingsculkshrieker": {
+      "name": "Pickaxe Mending Sculk Shrieker",
+      "description": "Makes Sculk Shriekers drop as active blocks when broken",
+      "lore1": "Makes Sculk Shriekers breakable with mending."
+    },
     "veinminer": {
       "name": "Veinminer",
       "description": "Allows you to break blocks in a Vein/Cluster of Vanilla ores",

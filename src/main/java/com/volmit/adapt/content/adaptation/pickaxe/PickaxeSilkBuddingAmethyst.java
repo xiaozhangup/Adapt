@@ -13,13 +13,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Config> {
-    public PickaxeSilkSpawner() {
-        super("pickaxe-silk-spawner");
-        registerConfiguration(PickaxeSilkSpawner.Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "silkspawner", "description"));
-        setDisplayName(Localizer.dLocalize("pickaxe", "silkspawner", "name"));
-        setIcon(Material.SPAWNER);
+public class PickaxeSilkBuddingAmethyst extends SimpleAdaptation<PickaxeSilkBuddingAmethyst.Config> {
+    public PickaxeSilkBuddingAmethyst() {
+        super("pickaxe-silk-budding-amethyst");
+        registerConfiguration(PickaxeSilkBuddingAmethyst.Config.class);
+        setDescription(Localizer.dLocalize("pickaxe", "silkbuddingamethyst", "description"));
+        setDisplayName(Localizer.dLocalize("pickaxe", "silkbuddingamethyst", "name"));
+        setIcon(Material.BUDDING_AMETHYST);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
@@ -31,7 +31,7 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
     public void onBlockBreak(BlockBreakEvent event) {
         var player = event.getPlayer();
         var block = event.getBlock();
-        if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SPAWNER
+        if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.BUDDING_AMETHYST
                 || !canBlockBreak(player, event.getBlock())) {
             return;
         }
@@ -40,15 +40,12 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
         if (level == 1 && !silk) {
             return;
         }
-        if (level > 1 && !player.isSneaking() && !silk) {
-            return;
-        }
 
         event.setDropItems(false);
-        var spawner = new ItemStack(Material.SPAWNER);
+        var buddingAmethyst = new ItemStack(Material.BUDDING_AMETHYST);
         var state = block.getState();
 
-        NaturalBlockDrop.drop(block, state, player, spawner);
+        NaturalBlockDrop.drop(block, state, player, buddingAmethyst);
     }
 
     @Override
@@ -58,7 +55,7 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "silkspawner", "lore" + (level < 2 ? 1 : 2)));
+        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "silkbuddingamethyst", "lore" + (level < 2 ? 1 : 2)));
     }
 
     @Override

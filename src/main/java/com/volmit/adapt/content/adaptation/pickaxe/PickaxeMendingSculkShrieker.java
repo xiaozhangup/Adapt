@@ -7,19 +7,21 @@ import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.NaturalBlockDrop;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.block.data.type.SculkShrieker;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
 
-public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Config> {
-    public PickaxeSilkSpawner() {
-        super("pickaxe-silk-spawner");
-        registerConfiguration(PickaxeSilkSpawner.Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "silkspawner", "description"));
-        setDisplayName(Localizer.dLocalize("pickaxe", "silkspawner", "name"));
-        setIcon(Material.SPAWNER);
+public class PickaxeMendingSculkShrieker extends SimpleAdaptation<PickaxeMendingSculkShrieker.Config> {
+    public PickaxeMendingSculkShrieker() {
+        super("pickaxe-mending-sculk-shrieker");
+        registerConfiguration(PickaxeMendingSculkShrieker.Config.class);
+        setDescription(Localizer.dLocalize("pickaxe", "mendingsculkshrieker", "description"));
+        setDisplayName(Localizer.dLocalize("pickaxe", "mendingsculkshrieker", "name"));
+        setIcon(Material.SCULK_SHRIEKER);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
@@ -31,24 +33,24 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
     public void onBlockBreak(BlockBreakEvent event) {
         var player = event.getPlayer();
         var block = event.getBlock();
-        if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SPAWNER
+        if (!event.isDropItems() || !hasAdaptation(player) || block.getType() != Material.SCULK_SHRIEKER
                 || !canBlockBreak(player, event.getBlock())) {
             return;
         }
-        var level = getLevel(player);
-        boolean silk = player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH);
-        if (level == 1 && !silk) {
-            return;
-        }
-        if (level > 1 && !player.isSneaking() && !silk) {
+        if (!player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
             return;
         }
 
         event.setDropItems(false);
-        var spawner = new ItemStack(Material.SPAWNER);
+        var item = new ItemStack(Material.SCULK_SHRIEKER);
+        var data = block.getBlockData();
         var state = block.getState();
+        if (item.getItemMeta() instanceof BlockDataMeta meta) {
+            meta.setBlockData(data);
+            item.setItemMeta(meta);
+        }
 
-        NaturalBlockDrop.drop(block, state, player, spawner);
+        NaturalBlockDrop.drop(block, state, player, item);
     }
 
     @Override
@@ -58,7 +60,7 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "silkspawner", "lore" + (level < 2 ? 1 : 2)));
+        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "mendingsculkshrieker", "lore1"));
     }
 
     @Override
@@ -75,8 +77,8 @@ public class PickaxeSilkSpawner extends SimpleAdaptation<PickaxeSilkSpawner.Conf
         boolean permanent = false;
         boolean enabled = true;
         int baseCost = 6;
-        int maxLevel = 2;
-        int initialCost = 4;
+        int maxLevel = 1;
+        int initialCost = 8;
         double costFactor = 2.325;
     }
 }
