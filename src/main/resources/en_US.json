@@ -990,9 +990,9 @@
       "lore2": "Makes Budding Amethyst breakable without silk touch."
     },
     "mendingsculkshrieker": {
-      "name": "Pickaxe Mending Sculk Shrieker",
+      "name": "Pickaxe Silk-Sculk Shrieker",
       "description": "Makes Sculk Shriekers drop as active blocks when broken",
-      "lore1": "Makes Sculk Shriekers breakable with mending."
+      "lore1": "Makes Sculk Shriekers breakable with silk touch."
     },
     "veinminer": {
       "name": "Veinminer",
