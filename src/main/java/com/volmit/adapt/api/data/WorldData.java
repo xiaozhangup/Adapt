@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.api.data;
 
-import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.data.unit.Earnings;
 import com.volmit.adapt.api.tick.TickedObject;
 import com.volmit.adapt.util.J;
@@ -31,6 +30,8 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
+
+import java.io.File;
 
 public class WorldData extends TickedObject {
     private static final KMap<World, WorldData> mantles = new KMap<>();
@@ -46,7 +47,7 @@ public class WorldData extends TickedObject {
     public WorldData(World world) {
         super("world-data", world.getUID().toString(), 30_000);
         this.world = world;
-        mantle = new Mantle(Adapt.instance.getDataFolder("data", "mantle", world.getName()), world.getMaxHeight());
+        mantle = new Mantle(new File(world.getWorldFolder(), "adapt/mantle"), world.getMaxHeight());
     }
 
     public static void stop() {
