@@ -23,6 +23,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
+import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplayBuilder;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.volmit.adapt.Adapt;
@@ -70,15 +71,15 @@ public class AdaptAdvancement {
         }
 
         var icon = getModel() != null ? getModel().toItemStack() : new ItemStack(getIcon());
-        AdvancementDisplay d = new AdvancementDisplay.Builder(icon, getTitle()).description(getDescription())
+        AdvancementDisplay d = new AdvancementDisplayBuilder(icon, getTitle()).description(getDescription())
                 .frame(getFrame()).showToast(toast).x(1f + depth).y(1f + index).build();
 
         if (parent == null) {
             if (background == null)
                 throw new IllegalArgumentException("Background cannot be null");
 
-            return new MainAdvancement(Adapt.instance.getManager().createAdvancementTab(getKey()), getKey(), d,
-                    background);
+            return new MainAdvancement(Adapt.instance.getManager().createAdvancementTab(getKey(), background), getKey(),
+                    d);
         }
 
         return new SubAdvancement(getKey(), d, parent, getVisibility());
@@ -105,8 +106,8 @@ public class AdaptAdvancement {
     private static class MainAdvancement extends RootAdvancement {
 
         public MainAdvancement(@NotNull AdvancementTab advancementTab, @NotNull String key,
-                @NotNull AdvancementDisplay display, @NotNull String backgroundTexture) {
-            super(advancementTab, key, display, backgroundTexture);
+                @NotNull AdvancementDisplay display) {
+            super(advancementTab, key, display);
         }
 
         @Override
@@ -127,7 +128,7 @@ public class AdaptAdvancement {
 
         public SubAdvancement(@NotNull String key, @NotNull AdvancementDisplay display, @NotNull Advancement parent,
                 @NotNull AdvancementVisibility visibility) {
-            super(key, display, parent);
+            super(parent, key, display);
             this.visibility = visibility;
         }
 

@@ -20,10 +20,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id 'java'
     id 'java-library'
-    id "org.jetbrains.kotlin.jvm" version "2.1.21"
-    id "io.freefair.lombok" version "8.10.2"
-    id "com.gradleup.shadow" version "8.3.5"
-    id "org.jetbrains.kotlin.plugin.lombok" version '2.1.21'
+    id "org.jetbrains.kotlin.jvm" version "2.3.20"
+    id "io.freefair.lombok" version "9.5.0"
+    id "com.gradleup.shadow" version "9.4.3"
+    id "org.jetbrains.kotlin.plugin.lombok" version '2.3.20'
 //    id 'com.diffplug.spotless' version '7.0.4'
 }
 
@@ -43,13 +43,13 @@ file(jar.archiveFile.get().getAsFile().getParentFile().getParentFile().getParent
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "25"
         freeCompilerArgs = ["-Xjvm-default=all"]
     }
 }
@@ -91,17 +91,17 @@ repositories {
 
 dependencies {
     // Provided or Classpath
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    compileOnly 'org.projectlombok:lombok:1.18.46'
+    annotationProcessor 'org.projectlombok:lombok:1.18.46'
 
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'xyz.xenondevs:particle:1.8.4'
-    implementation 'com.frengor:ultimateadvancementapi-shadeable:2.7.2:mojang-mapped'
+    implementation 'com.frengor:ultimateadvancementapi-shadeable:3.0.0-beta-2'
     implementation 'com.jeff-media:custom-block-data:2.2.3'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 
     // Dynamically Loaded
-    compileOnly 'me.xiaozhangup.octopus:octopus-api:1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'me.xiaozhangup.octopus:octopus-api:26.2-R0.1-SNAPSHOT'
     compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.2'
     compileOnly 'me.xiaozhangup:OrangDomain:1.0.2'
     compileOnly 'me.xiaozhangup:WhaleMechanism:1.0.1'

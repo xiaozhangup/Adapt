@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.MinecraftKeyWrapper;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.AdvancementDisplayWrapper;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.AdvancementFrameTypeWrapper;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.AdvancementWrapper;
+import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.PreparedAdvancementWrapper;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.packets.PacketPlayOutAdvancementsWrapper;
 import com.google.common.base.Preconditions;
 import org.bukkit.Material;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class AdvancementUtils {
 
     public static final MinecraftKeyWrapper ROOT_KEY, NOTIFICATION_KEY;
+    private static final PreparedAdvancementWrapper ROOT_PREPARED;
     private static final AdvancementWrapper ROOT;
 
     static {
@@ -26,10 +28,11 @@ public class AdvancementUtils {
             ROOT_KEY = MinecraftKeyWrapper.craft("com.fren_gor", "root");
             NOTIFICATION_KEY = MinecraftKeyWrapper.craft("com.fren_gor", "notification");
             AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(new ItemStack(Material.GRASS_BLOCK),
-                    "§f§lNotifications§1§2§3§4§5§6§7§8§9§0",
-                    "§7Notification page.\n§7Close and reopen advancements to hide.", AdvancementFrameTypeWrapper.TASK,
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy("§f§lNotifications§1§2§3§4§5§6§7§8§9§0"),
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy("§7Notification page.\n§7Close and reopen advancements to hide."), AdvancementFrameTypeWrapper.TASK,
                     0, 0, "textures/block/stone.png");
-            ROOT = AdvancementWrapper.craftRootAdvancement(ROOT_KEY, display, 1);
+            ROOT_PREPARED = PreparedAdvancementWrapper.craft(ROOT_KEY, 1);
+            ROOT = ROOT_PREPARED.toAdvancementWrapper(display);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
@@ -58,9 +61,11 @@ public class AdvancementUtils {
         Preconditions.checkArgument(icon.getType() != Material.AIR, "ItemStack is air.");
 
         try {
-            AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(icon, title, description,
+            AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(icon,
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy(title),
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy(description),
                     frame.getNMSWrapper(), 1, 0, true, false, false);
-            AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(NOTIFICATION_KEY, ROOT, display,
+            AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(NOTIFICATION_KEY, ROOT_PREPARED, display,
                     1);
             PacketPlayOutAdvancementsWrapper.craftSendPacket(Map.of(ROOT, 1, notification, 1)).sendTo(player);
             PacketPlayOutAdvancementsWrapper.craftRemovePacket(Set.of(ROOT_KEY, NOTIFICATION_KEY)).sendTo(player);

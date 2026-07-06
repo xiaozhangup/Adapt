@@ -5,6 +5,7 @@ import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
+import com.fren_gor.ultimateAdvancementAPI.database.impl.InMemory;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.skill.Skill;
@@ -32,8 +33,8 @@ public class AdvancementManager {
         advancements = new HashMap<>();
     }
 
-    AdvancementTab createAdvancementTab(String namespace) {
-        return main.createAdvancementTab(instance, "adapt_" + namespace);
+    AdvancementTab createAdvancementTab(String namespace, String backgroundTexture) {
+        return main.createAdvancementTab(instance, "adapt_" + namespace, backgroundTexture);
     }
 
     public void grant(AdaptPlayer player, String key, boolean toast) {
@@ -90,7 +91,7 @@ public class AdvancementManager {
 
         if (!AdaptConfig.get().isAdvancements() || !enabled.compareAndSet(false, true))
             return;
-        main.enableInMemory();
+        main.enable(() -> new InMemory(main));
 
         for (Skill<?> i : instance.getAdaptServer().getSkillRegistry().getSkills()) {
             AdaptAdvancement aa = i.buildAdvancements();
