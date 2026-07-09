@@ -54,7 +54,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static org.bukkit.potion.PotionType.*;
-import static xyz.xenondevs.particle.utils.MathUtils.RANDOM;
+import static java.util.concurrent.ThreadLocalRandom.current;
 
 public interface Component {
     default void wisdom(Player p, long w) {
@@ -495,8 +495,8 @@ public interface Component {
         World world = center.getWorld();
 
         for (int i = 0; i < particleCount; i++) {
-            double theta = 2 * Math.PI * RANDOM.nextDouble();
-            double phi = Math.PI / 2 * RANDOM.nextDouble(); // Adjusted range of phi to create a dome
+            double theta = 2 * Math.PI * current().nextDouble();
+            double phi = Math.PI / 2 * current().nextDouble(); // Adjusted range of phi to create a dome
             double x = range * Math.sin(phi) * Math.cos(theta);
             double y = range * Math.sin(phi) * Math.sin(theta);
             double z = range * Math.cos(phi);
@@ -704,9 +704,9 @@ public interface Component {
         for (int i = 0; i < particleCount; i++) {
             double x, y, z;
             do {
-                x = RANDOM.nextDouble() * 2 - 1;
-                y = RANDOM.nextDouble() * 2 - 1;
-                z = RANDOM.nextDouble() * 2 - 1;
+                x = current().nextDouble() * 2 - 1;
+                y = current().nextDouble() * 2 - 1;
+                z = current().nextDouble() * 2 - 1;
             } while (x * x + y * y + z * z > 1);
 
             double magnitude = Math.sqrt(x * x + y * y + z * z);

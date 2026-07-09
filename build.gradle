@@ -27,7 +27,7 @@ plugins {
 //    id 'com.diffplug.spotless' version '7.0.4'
 }
 
-version '1.16.11'
+version '1.16.12'
 def apiVersion = '1.21'
 def name = getRootProject().getName() // Defined in settings.gradle
 def main = 'com.volmit.adapt.Adapt'
@@ -95,25 +95,20 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.46'
 
     compileOnly 'me.clip:placeholderapi:2.11.6'
-    implementation 'xyz.xenondevs:particle:1.8.4'
     implementation 'com.frengor:ultimateadvancementapi-shadeable:3.0.0-beta-2'
     implementation 'com.jeff-media:custom-block-data:2.2.3'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
 
     // Dynamically Loaded
     compileOnly 'me.xiaozhangup.octopus:octopus-api:26.2-R0.1-SNAPSHOT'
     compileOnly 'me.xiaozhangup:SlimeCargoNext:1.0.2'
     compileOnly 'me.xiaozhangup:OrangDomain:1.0.2'
     compileOnly 'me.xiaozhangup:WhaleMechanism:1.0.1'
-    compileOnly 'net.momirealms:craft-engine-core:0.0.66'
-    compileOnly 'net.momirealms:craft-engine-bukkit:0.0.66'
     compileOnly 'com.github.retrooper:packetevents-spigot:2.11.1'
     compileOnly 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
     compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     compileOnly 'com.google.code.gson:gson:2.10'
     compileOnly 'com.elmakers.mine.bukkit:EffectLib:10.10'
     compileOnly 'com.google.guava:guava:30.1-jre'
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 configurations.configureEach {
@@ -136,9 +131,7 @@ shadowJar {
     append("plugin.yml")
     relocate 'com.fren_gor.ultimateAdvancementAPI', 'com.volmit.adapt.util.advancements'
     relocate 'com.jeff_media.customblockdata', 'com.volmit.adapt.util.customblocks'
-    relocate 'xyz.xenondevs.particle', 'com.volmit.adapt.util.particle'
     dependencies {
-        include(dependency('xyz.xenondevs:'))
         include(dependency('com.frengor:ultimateadvancementapi-shadeable:'))
         include(dependency('net.byteflux:'))
         include(dependency('com.jeff-media:custom-block-data:'))

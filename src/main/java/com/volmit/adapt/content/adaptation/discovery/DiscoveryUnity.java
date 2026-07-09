@@ -33,7 +33,7 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 
 import java.util.List;
 
-import static xyz.xenondevs.particle.utils.MathUtils.RANDOM;
+import static java.util.concurrent.ThreadLocalRandom.current;
 
 public class DiscoveryUnity extends SimpleAdaptation<DiscoveryUnity.Config> {
     public DiscoveryUnity() {
@@ -68,10 +68,10 @@ public class DiscoveryUnity extends SimpleAdaptation<DiscoveryUnity.Config> {
             // get a random skill that they have unlocked already
             List<PlayerSkillLine> skills = ap.getData().getSkillLines().sortV();
             if (skills.size() > 0) {
-                PlayerSkillLine skill = skills.get(RANDOM.nextInt(skills.size()));
+                PlayerSkillLine skill = skills.get(current().nextInt(skills.size()));
                 // give them a random amount of XP in that skill
                 skill.giveXPFresh(Adapt.instance.getAdaptServer().getPlayer(p).getNot(),
-                        getXPGained(getLevelPercent(getLevel(p)), RANDOM.nextInt(3) + 1));
+                        getXPGained(getLevelPercent(getLevel(p)), current().nextInt(3) + 1));
             }
 
         }

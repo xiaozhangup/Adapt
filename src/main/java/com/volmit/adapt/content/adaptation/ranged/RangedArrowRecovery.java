@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
-import static xyz.xenondevs.particle.utils.MathUtils.RANDOM;
+import static java.util.concurrent.ThreadLocalRandom.current;
 
 public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Config> {
     private final Map<Arrow, Player> shotArrows;
@@ -54,7 +54,7 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
             if (shooter != null && hasAdaptation(shooter)) {
                 int level = getLevel(shooter);
                 double chance = getConfig().hitChance[level - 1] / 100.0;
-                if (RANDOM.nextDouble() < chance) {
+                if (current().nextDouble() < chance) {
                     ItemStack arrowStack = new ItemStack(Material.ARROW, 1);
                     shooter.getInventory().addItem(arrowStack);
                     Adapt.info("Arrow added to inventory.");
