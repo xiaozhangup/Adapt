@@ -44,8 +44,9 @@ public class XP {
     }
 
     public static void xpSilent(AdaptPlayer p, Skill skill, double xp) {
-        if (p.getSkillLine(skill.getName()) != null) {
-            p.getSkillLine(skill.getName()).giveXP(null, xp);
+        PlayerSkillLine skillLine = p.getSkillLine(skill.getName());
+        if (skillLine != null) {
+            skillLine.giveXPSilent(p.getNot(), xp);
         }
     }
 

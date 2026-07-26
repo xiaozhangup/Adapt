@@ -30,10 +30,13 @@ import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.api.xp.XPMultiplier;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
+import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.collection.KList;
 import com.volmit.adapt.util.collection.KMap;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.xiaozhangup.whale.module.pet.Pets;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
 @Data
@@ -135,25 +138,29 @@ public class PlayerSkillLine {
     }
 
     public void giveXP(Notifier p, double xp) {
-        // freshness -= xp * 0.005; // Increased from 0.001
-        freshness -= Math.pow(xp, 2) * 0.0001; // Exponential decrease, attempt
-        xp = multiplier * xp;
-        this.xp += xp;
+        giveXP(p, xp, true, true);
+    }
 
-        if (p != null) {
-            last = M.ms();
-            if (AdaptConfig.get().isActionbarNotifyXp()) {
-                p.notifyXP(line, xp);
-            }
-
-        }
+    public void giveXPSilent(Notifier p, double xp) {
+        giveXP(p, xp, true, false);
     }
 
     public void giveXPFresh(Notifier p, double xp) {
-        xp = multiplier * xp;
+        giveXP(p, xp, false, true);
+    }
+
+    private void giveXP(Notifier p, double amount, boolean reduceFreshness, boolean notify) {
+        if (!Bukkit.isPrimaryThread()) {
+            J.s(() -> giveXP(p, amount, reduceFreshness, notify));
+            return;
+        }
+        if (reduceFreshness) {
+            freshness -= Math.pow(amount, 2) * 0.0001;
+        }
+        double xp = Pets.addSkillExperience(p.getTarget().getPlayer(), line, multiplier * amount);
         this.xp += xp;
 
-        if (p != null) {
+        if (notify) {
             last = M.ms();
             if (AdaptConfig.get().isActionbarNotifyXp()) {
                 p.notifyXP(line, xp);
