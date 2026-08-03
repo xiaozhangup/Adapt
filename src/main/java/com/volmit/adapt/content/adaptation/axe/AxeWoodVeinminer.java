@@ -29,6 +29,8 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,6 +42,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> {
+    private static final BlockFace[] LEAF_CHECK_FACES = {
+            BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH
+    };
+
     public AxeWoodVeinminer() {
         super("axe-wood-veinminer");
         registerConfiguration(AxeWoodVeinminer.Config.class);
@@ -90,6 +96,10 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
             Block block = e.getBlock();
             int level = getLevel(p);
             if (ItemListings.isLog(block.getType()) || (level >= 5 && ItemListings.isLeaves(block.getType()))) {
+                if (hasPersistentAdjacentLeaves(block)) {
+                    return;
+                }
+
                 Set<Block> blockMap = new HashSet<>();
                 int blockCount = 0;
                 for (int i = 0; i < getRadius(level); i++) {
@@ -151,6 +161,22 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
 
     @Override
     public void onTick() {
+    }
+
+    private boolean hasPersistentAdjacentLeaves(Block block) {
+        Material type = block.getType();
+        Block current = block;
+        int checked = 0;
+        int maxHeight = block.getWorld().getMaxHeight();
+        while (checked++ < 96 && current.getY() < maxHeight && current.getType() == type) {
+            for (BlockFace face : LEAF_CHECK_FACES) {
+                if (current.getRelative(face).getBlockData() instanceof Leaves leaves && leaves.isPersistent()) {
+                    return true;
+                }
+            }
+            current = current.getRelative(BlockFace.UP);
+        }
+        return false;
     }
 
     @Override
