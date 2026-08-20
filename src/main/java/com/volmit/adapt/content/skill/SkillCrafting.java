@@ -28,7 +28,7 @@ import com.volmit.adapt.content.adaptation.crafting.*;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,11 +46,11 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillCrafting() {
-        super("crafting", Localizer.dLocalize("skill", "crafting", "icon"));
+        super("crafting", Localizer.component("skill", "crafting", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#d3b78b"));
-        setDescription(Localizer.dLocalize("skill", "crafting", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "crafting", "name"));
+        setColor(TextColor.color(0xd3b78b));
+        setDescription(Localizer.component("skill", "crafting", "description"));
+        setDisplayName(Localizer.component("skill", "crafting", "name"));
         setInterval(3789);
         setIcon(Material.CRAFTING_TABLE);
         registerAdaptation(new CraftingDeconstruction());
@@ -61,26 +61,26 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
         registerAdaptation(new CraftingReconstruction());
         registerAdaptation(new CraftingCorals());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE).key("challenge_craft_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_craft_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_craft_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_craft_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_craft_1k", "description"))
                 .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "crafting", "challenge_craft_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE).key("challenge_craft_5k")
-                        .title(Localizer.dLocalize("advancement", "challenge_craft_5k", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_craft_5k", "description"))
+                        .title(Localizer.component("advancement", "challenge_craft_5k", "title"))
+                        .description(Localizer.component("advancement", "challenge_craft_5k", "description"))
                         .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "crafting",
                                 "challenge_craft_5k"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE).key("challenge_craft_50k")
-                                .title(Localizer.dLocalize("advancement", "challenge_craft_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_craft_50k", "description"))
+                                .title(Localizer.component("advancement", "challenge_craft_50k", "title"))
+                                .description(Localizer.component("advancement", "challenge_craft_50k", "description"))
                                 .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "crafting",
                                         "challenge_craft_50k"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE)
                                         .key("challenge_craft_500k")
-                                        .title(Localizer.dLocalize("advancement", "challenge_craft_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_craft_500k",
+                                        .title(Localizer.component("advancement", "challenge_craft_500k", "title"))
+                                        .description(Localizer.component("advancement", "challenge_craft_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "crafting",
                                                 "challenge_craft_500k"))
@@ -88,9 +88,9 @@ public class SkillCrafting extends SimpleSkill<SkillCrafting.Config> {
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE)
                                                 .key("challenge_craft_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_craft_5m",
+                                                .title(Localizer.component("advancement", "challenge_craft_5m",
                                                         "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_craft_5m",
+                                                .description(Localizer.component("advancement", "challenge_craft_5m",
                                                         "description"))
                                                 .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement",
                                                         "crafting", "challenge_craft_5m"))

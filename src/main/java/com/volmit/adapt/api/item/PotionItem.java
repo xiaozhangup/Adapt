@@ -18,13 +18,17 @@
 
 package com.volmit.adapt.api.item;
 
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Form;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.Registry;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.Locale;
 
 public abstract class PotionItem implements DataItem<PotionItem.Data> {
     @Override
@@ -33,8 +37,11 @@ public abstract class PotionItem implements DataItem<PotionItem.Data> {
     }
 
     @Override
-    public void applyLore(Data data, List<String> lore) {
-        lore.add(C.GREEN + "Grants " + data.getType().getName() + " " + Form.toRoman(data.getPower() + 1));
+    public void applyLore(Data data, List<Component> lore) {
+        String effectName = Registry.MOB_EFFECT.getKeyOrThrow(data.getType()).getKey().toUpperCase(Locale.ROOT);
+        lore.add(Components.mini("<green>Grants <effect> <power></green>",
+                Placeholder.unparsed("effect", effectName),
+                Placeholder.unparsed("power", Form.toRoman(data.getPower() + 1))));
     }
 
     @Override

@@ -31,6 +31,8 @@ import java.util.zip.GZIPOutputStream;
  * Tectonic Plates are fully atomic & thread safe
  */
 public class MantleRegion {
+    private static final int VERSIONED_MAGIC = 0x41444D32;
+    private static final int VERSION = 1;
     private final int sectionHeight;
     private final AtomicReferenceArray<MantleChunk> chunks;
 
@@ -75,13 +77,26 @@ public class MantleRegion {
     }
 
     public static MantleRegion read(int worldHeight, File file) throws IOException, ClassNotFoundException {
-        FileInputStream fin = new FileInputStream(file);
-        GZIPInputStream gzi = new GZIPInputStream(fin);
-        DataInputStream din = new DataInputStream(gzi);
-        MantleRegion p = new MantleRegion(worldHeight, din);
-        din.close();
+        try (DataInputStream din = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
+            return new MantleRegion(worldHeight, din);
+        }
+    }
 
-        return p;
+    static StoredRegion readVersioned(File file) throws IOException, ClassNotFoundException {
+        try (DataInputStream din = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
+            if (din.readInt() != VERSIONED_MAGIC) {
+                throw new IOException("Invalid versioned Mantle region header");
+            }
+            int version = din.readInt();
+            if (version != VERSION) {
+                throw new IOException("Unsupported Mantle region version " + version);
+            }
+            int minHeight = din.readInt();
+            int maxHeight = din.readInt();
+            MantleHeight.validate(minHeight, maxHeight);
+            return new StoredRegion(minHeight, maxHeight,
+                    new MantleRegion(maxHeight - minHeight, din));
+        }
     }
 
     /**
@@ -145,11 +160,28 @@ public class MantleRegion {
         MantleChunk chunk = get(x, z);
 
         if (chunk == null) {
-            chunk = new MantleChunk(sectionHeight, x & 31, z & 31);
-            chunks.set(index(x, z), chunk);
+            MantleChunk created = new MantleChunk(sectionHeight, x & 31, z & 31);
+            int index = index(x, z);
+            if (chunks.compareAndSet(index, null, created)) {
+                chunk = created;
+            } else {
+                chunk = chunks.get(index);
+            }
         }
 
         return chunk;
+    }
+
+    MantleRegion shiftedCopy(int newWorldHeight, int sectionOffset) {
+        MantleRegion shifted = new MantleRegion(newWorldHeight, x, z);
+        int newSectionHeight = newWorldHeight >> 4;
+        for (int i = 0; i < chunks.length(); i++) {
+            MantleChunk chunk = chunks.get(i);
+            if (chunk != null) {
+                shifted.chunks.set(i, chunk.shiftedCopy(newSectionHeight, sectionOffset));
+            }
+        }
+        return shifted;
     }
 
     private int index(int x, int z) {
@@ -165,11 +197,19 @@ public class MantleRegion {
      *             shit happens
      */
     public void write(File file) throws IOException {
-        FileOutputStream fos = new FileOutputStream(file);
-        GZIPOutputStream gzo = new GZIPOutputStream(fos);
-        DataOutputStream dos = new DataOutputStream(gzo);
-        write(dos);
-        dos.close();
+        try (DataOutputStream dos = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
+            write(dos);
+        }
+    }
+
+    void writeVersioned(File file, int minHeight, int maxHeight) throws IOException {
+        try (DataOutputStream dos = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
+            dos.writeInt(VERSIONED_MAGIC);
+            dos.writeInt(VERSION);
+            dos.writeInt(minHeight);
+            dos.writeInt(maxHeight);
+            write(dos);
+        }
     }
 
     /**
@@ -194,5 +234,8 @@ public class MantleRegion {
                 dos.writeBoolean(false);
             }
         }
+    }
+
+    record StoredRegion(int minHeight, int maxHeight, MantleRegion region) {
     }
 }

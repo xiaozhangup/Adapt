@@ -28,7 +28,7 @@ import com.volmit.adapt.content.adaptation.hunter.*;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -50,11 +50,11 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillHunter() {
-        super("hunter", Localizer.dLocalize("skill", "hunter", "icon"));
+        super("hunter", Localizer.component("skill", "hunter", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#db472c"));
-        setDescription(Localizer.dLocalize("skill", "hunter", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "hunter", "name"));
+        setColor(TextColor.color(0xdb472c));
+        setDescription(Localizer.component("skill", "hunter", "description"));
+        setDisplayName(Localizer.component("skill", "hunter", "name"));
         setInterval(4150);
         setIcon(Material.BONE);
         cooldowns = new WeakHashMap<>();
@@ -69,38 +69,38 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
         registerAdaptation(new HunterDropToInventory());
         registerAdaptation(new HunterShearToInventory());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("horrible_person")
-                .title(Localizer.dLocalize("advancement", "horrible_person", "title"))
-                .description(Localizer.dLocalize("advancement", "horrible_person", "description"))
+                .title(Localizer.component("advancement", "horrible_person", "title"))
+                .description(Localizer.component("advancement", "horrible_person", "description"))
                 .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter", "horrible_person"))
                 .frame(AdvancementFrameType.GOAL).visibility(AdvancementVisibility.HIDDEN).build());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("challenge_turtle_egg_smasher")
-                .title(Localizer.dLocalize("advancement", "challenge_turtle_egg_smasher", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_turtle_egg_smasher", "description"))
+                .title(Localizer.component("advancement", "challenge_turtle_egg_smasher", "title"))
+                .description(Localizer.component("advancement", "challenge_turtle_egg_smasher", "description"))
                 .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter", "challenge_turtle_egg_smasher"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.TURTLE_EGG).key("challenge_turtle_egg_annihilator")
-                        .title(Localizer.dLocalize("advancement", "challenge_turtle_egg_annihilator", "title"))
+                        .title(Localizer.component("advancement", "challenge_turtle_egg_annihilator", "title"))
                         .description(
-                                Localizer.dLocalize("advancement", "challenge_turtle_egg_annihilator", "description"))
+                                Localizer.component("advancement", "challenge_turtle_egg_annihilator", "description"))
                         .model(CustomModel.get(Material.TURTLE_EGG, "advancement", "hunter",
                                 "challenge_turtle_egg_annihilator"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.BONE).key("challenge_novice_hunter")
-                .title(Localizer.dLocalize("advancement", "challenge_novice_hunter", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_novice_hunter", "description"))
+                .title(Localizer.component("advancement", "challenge_novice_hunter", "title"))
+                .description(Localizer.component("advancement", "challenge_novice_hunter", "description"))
                 .model(CustomModel.get(Material.BONE, "advancement", "hunter", "challenge_novice_hunter"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.IRON_SWORD).key("challenge_intermediate_hunter")
-                        .title(Localizer.dLocalize("advancement", "challenge_intermediate_hunter", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_intermediate_hunter", "description"))
+                        .title(Localizer.component("advancement", "challenge_intermediate_hunter", "title"))
+                        .description(Localizer.component("advancement", "challenge_intermediate_hunter", "description"))
                         .model(CustomModel.get(Material.IRON_SWORD, "advancement", "hunter",
                                 "challenge_intermediate_hunter"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.DIAMOND_SWORD).key("challenge_advanced_hunter")
-                                .title(Localizer.dLocalize("advancement", "challenge_advanced_hunter", "title"))
+                                .title(Localizer.component("advancement", "challenge_advanced_hunter", "title"))
                                 .description(
-                                        Localizer.dLocalize("advancement", "challenge_advanced_hunter", "description"))
+                                        Localizer.component("advancement", "challenge_advanced_hunter", "description"))
                                 .model(CustomModel.get(Material.DIAMOND_SWORD, "advancement", "hunter",
                                         "challenge_advanced_hunter"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
@@ -108,13 +108,13 @@ public class SkillHunter extends SimpleSkill<SkillHunter.Config> {
                         .build())
                 .build());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.CREEPER_HEAD).key("challenge_creeper_conqueror")
-                .title(Localizer.dLocalize("advancement", "challenge_creeper_conqueror", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_creeper_conqueror", "description"))
+                .title(Localizer.component("advancement", "challenge_creeper_conqueror", "title"))
+                .description(Localizer.component("advancement", "challenge_creeper_conqueror", "description"))
                 .model(CustomModel.get(Material.CREEPER_HEAD, "advancement", "hunter", "challenge_creeper_conqueror"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.TNT).key("challenge_creeper_annihilator")
-                        .title(Localizer.dLocalize("advancement", "challenge_creeper_annihilator", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_creeper_annihilator", "description"))
+                        .title(Localizer.component("advancement", "challenge_creeper_annihilator", "title"))
+                        .description(Localizer.component("advancement", "challenge_creeper_annihilator", "description"))
                         .model(CustomModel.get(Material.TNT, "advancement", "hunter", "challenge_creeper_annihilator"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());

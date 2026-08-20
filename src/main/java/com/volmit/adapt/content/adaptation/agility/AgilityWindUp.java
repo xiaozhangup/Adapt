@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.agility;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
@@ -36,9 +39,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
 
 public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-wind-up".getBytes());
@@ -49,42 +53,49 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
     public AgilityWindUp() {
         super("agility-wind-up");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("agility", "windup", "description"));
-        setDisplayName(Localizer.dLocalize("agility", "windup", "name"));
+        setDescription(Localizer.component("agility", "windup", "description"));
+        setDisplayName(Localizer.component("agility", "windup", "name"));
         setIcon(Material.POWERED_RAIL);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
         setInitialCost(getConfig().initialCost);
         setInterval(120);
-        ticksRunning = new WeakHashMap<>();
+        ticksRunning = new HashMap<>();
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getWindupSpeed(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("agility", "windup", "lore1"));
-        v.addLore(C.YELLOW + "* " + Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1) + C.GRAY + " "
-                + Localizer.dLocalize("agility", "windup", "lore2"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getWindupSpeed(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("agility", "windup", "lore1"))));
+        v.addLore(Components.mini("<yellow>* <duration><gray> <lore>",
+                Placeholder.unparsed("duration", Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1)),
+                Placeholder.component("lore", Localizer.component("agility", "windup", "lore2"))));
     }
 
     @EventHandler
     public void on(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         ticksRunning.remove(p);
+        removeModifier(p);
     }
 
     @ReflectiveHandler
     public void on(EntityMountEvent event) {
         if (event.getEntity().getType() != EntityType.PLAYER)
             return;
-        ticksRunning.remove((Player) event.getEntity());
+        Player player = (Player) event.getEntity();
+        ticksRunning.remove(player);
+        removeModifier(player);
     }
 
     @ReflectiveHandler
     public void on(EntityDismountEvent event) {
         if (event.getEntity().getType() != EntityType.PLAYER)
             return;
-        ticksRunning.remove((Player) event.getEntity());
+        Player player = (Player) event.getEntity();
+        ticksRunning.remove(player);
+        removeModifier(player);
     }
 
     private double getWindupTicks(double factor) {
@@ -102,8 +113,7 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
 
     @Override
     public void onTick() {
-        J.s(() -> {
-            for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+        for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
                 if (!p.clientConnected()) {
                     continue;
                 }
@@ -152,8 +162,23 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
                 } else {
                     ticksRunning.remove(p);
                 }
-            }
-        });
+        }
+    }
+
+    private void removeModifier(Player player) {
+        var attribute = Version.get().getAttribute(player, Attribute.MOVEMENT_SPEED);
+        if (attribute != null) {
+            attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+        }
+    }
+
+    @Override
+    public void unregister() {
+        HashSet<Player> players = new HashSet<>(ticksRunning.keySet());
+        players.addAll(Adapt.instance.getAdaptServer().getAdaptPlayers());
+        players.forEach(this::removeModifier);
+        ticksRunning.clear();
+        super.unregister();
     }
 
     @Override

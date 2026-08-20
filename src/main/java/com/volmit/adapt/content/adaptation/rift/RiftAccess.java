@@ -22,11 +22,11 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.type.Shapeless;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.item.BoundEnderPearl;
 import com.volmit.adapt.util.*;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.tuple.Pair;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -34,30 +34,30 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.UUID;
 
 import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
 
 public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
-    private final Map<Pair<ChunkPos, Location>, List<InventoryView>> activeViewsMap = new ConcurrentHashMap<>();
-    private final Map<ChunkPos, AtomicInteger> tickets = new ConcurrentHashMap<>();
+    private final Map<StorageKey, ActiveViews> activeViewsMap = new HashMap<>();
+    private final Map<ChunkPos, Integer> tickets = new HashMap<>();
 
     public RiftAccess() {
         super("rift-access");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("rift", "remoteaccess", "description"));
-        setDisplayName(Localizer.dLocalize("rift", "remoteaccess", "name"));
+        setDescription(Localizer.component("rift", "remoteaccess", "description"));
+        setDisplayName(Localizer.component("rift", "remoteaccess", "name"));
         setMaxLevel(1);
         setIcon(Material.NETHER_STAR);
         setBaseCost(getConfig().baseCost);
@@ -71,13 +71,21 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "remoteaccess", "lore1"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "remoteaccess", "lore2"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "remoteaccess", "lore3"));
+        v.addLore(italic("lore1"));
+        v.addLore(italic("lore2"));
+        v.addLore(italic("lore3"));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    private static net.kyori.adventure.text.Component italic(String key) {
+        return Components.mini("<italic><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "remoteaccess", key)));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(PlayerInteractEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Player p = e.getPlayer();
         ItemStack mainHand = p.getInventory().getItemInMainHand();
         ItemStack offHand = p.getInventory().getItemInOffHand();
@@ -158,17 +166,42 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
             sp.play(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1f);
             return;
         }
+        UUID playerId = p.getUniqueId();
+        AdaptPlayer expectedPlayer = getPlayer(p);
+        UUID worldId = b.getWorld().getUID();
+        int x = b.getX();
+        int y = b.getY();
+        int z = b.getZ();
         loadChunkAsync(b.getLocation(), chunk -> {
-            if (b.getState() instanceof InventoryHolder holder) {
-                InventoryView view = p.openInventory(holder.getInventory());
-                if (view == null)
-                    return;
-                activeViewsMap
-                        .computeIfAbsent(Pair.of(new ChunkPos(chunk).add(), b.getLocation()), k -> new ArrayList<>())
-                        .add(view);
+            Player current = Bukkit.getPlayer(playerId);
+            World world = Bukkit.getWorld(worldId);
+            if (isUnregistered() || current == null || !current.isOnline() || world == null
+                    || !chunk.getWorld().equals(world) || chunk.getX() != x >> 4 || chunk.getZ() != z >> 4
+                    || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                    || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                return;
             }
-            sp.play(p.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
-            sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
+            Block currentBlock = world.getBlockAt(x, y, z);
+            if (!canAccessChest(current, currentBlock.getLocation())) {
+                SoundPlayer.of(current).play(current.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1f);
+                return;
+            }
+            if (!(currentBlock.getState() instanceof InventoryHolder holder)) {
+                return;
+            }
+            InventoryView view = current.openInventory(holder.getInventory());
+            if (view == null)
+                return;
+            activeViewsMap.compute(StorageKey.of(currentBlock), (location, active) -> {
+                ActiveViews result = active == null
+                        ? new ActiveViews(addTicket(new ChunkPos(worldId, x >> 4, z >> 4)), new ArrayList<>())
+                        : active;
+                result.views().add(view);
+                return result;
+            });
+            SoundPlayer sounds = SoundPlayer.of(current);
+            sounds.play(current.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 1f, 0.10f);
+            sounds.play(current.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 0.10f);
         });
     }
 
@@ -179,21 +212,20 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     @Override
     public void onTick() {
-        J.s(this::checkActiveViews);
+        checkActiveViews();
     }
 
     private void checkActiveViews() {
-        Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator = activeViewsMap.entrySet()
-                .iterator();
+        Iterator<Map.Entry<StorageKey, ActiveViews>> mapIterator = activeViewsMap.entrySet().iterator();
         while (mapIterator.hasNext()) {
-            Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry = mapIterator.next();
+            Map.Entry<StorageKey, ActiveViews> entry = mapIterator.next();
             removeInvalidViews(entry);
             removeEntryIfViewsEmpty(mapIterator, entry);
         }
     }
 
-    private void removeInvalidViews(Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry) {
-        List<InventoryView> views = entry.getValue();
+    private void removeInvalidViews(Map.Entry<StorageKey, ActiveViews> entry) {
+        List<InventoryView> views = entry.getValue().views();
         for (int ii = views.size() - 1; ii >= 0; ii--) {
             InventoryView i = views.get(ii);
             if (shouldRemoveView(i)) {
@@ -208,12 +240,12 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
                 || (location == null || !isStorage(location.getBlock().getBlockData()));
     }
 
-    private void removeEntryIfViewsEmpty(Iterator<Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>>> mapIterator,
-            Map.Entry<Pair<ChunkPos, Location>, List<InventoryView>> entry) {
-        List<InventoryView> views = entry.getValue();
+    private void removeEntryIfViewsEmpty(Iterator<Map.Entry<StorageKey, ActiveViews>> mapIterator,
+            Map.Entry<StorageKey, ActiveViews> entry) {
+        List<InventoryView> views = entry.getValue().views();
         if (views.isEmpty()) {
             mapIterator.remove();
-            entry.getKey().getLeft().remove();
+            removeTicket(entry.getValue().chunk(), true);
         }
     }
 
@@ -259,12 +291,57 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
     }
 
     private void invClose(Block block) {
-        List<InventoryView> views = activeViewsMap.get(block.getLocation());
-        if (views != null) {
-            for (InventoryView view : views) {
-                view.getPlayer().closeInventory();
+        ActiveViews active = activeViewsMap.remove(StorageKey.of(block));
+        if (active != null) {
+            closeViews(active.views());
+            removeTicket(active.chunk(), true);
+        }
+    }
+
+    @EventHandler
+    public void on(WorldUnloadEvent event) {
+        UUID worldId = event.getWorld().getUID();
+        Iterator<Map.Entry<StorageKey, ActiveViews>> views = activeViewsMap.entrySet().iterator();
+        while (views.hasNext()) {
+            Map.Entry<StorageKey, ActiveViews> entry = views.next();
+            if (entry.getKey().worldId().equals(worldId)) {
+                ActiveViews active = entry.getValue();
+                views.remove();
+                closeViews(active.views());
+                removeTicket(active.chunk(), false);
             }
-            activeViewsMap.remove(block.getLocation());
+        }
+
+        Iterator<ChunkPos> chunks = tickets.keySet().iterator();
+        while (chunks.hasNext()) {
+            ChunkPos chunk = chunks.next();
+            if (chunk.worldId().equals(worldId)) {
+                event.getWorld().removePluginChunkTicket(chunk.x(), chunk.z(), Adapt.instance);
+                chunks.remove();
+            }
+        }
+    }
+
+    @Override
+    public void unregister() {
+        for (ActiveViews active : activeViewsMap.values()) {
+            closeViews(active.views());
+            removeTicket(active.chunk(), false);
+        }
+        activeViewsMap.clear();
+        for (ChunkPos chunk : tickets.keySet()) {
+            World world = Bukkit.getWorld(chunk.worldId());
+            if (world != null) {
+                world.removePluginChunkTicket(chunk.x(), chunk.z(), Adapt.instance);
+            }
+        }
+        tickets.clear();
+        super.unregister();
+    }
+
+    private void closeViews(List<InventoryView> views) {
+        for (InventoryView view : views) {
+            view.getPlayer().closeInventory();
         }
     }
 
@@ -288,40 +365,48 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
         int initialCost = 15;
     }
 
-    @EqualsAndHashCode
-    private class ChunkPos {
-        @EqualsAndHashCode.Exclude
-        private final WeakReference<World> world;
-        private final String name;
-        private final int x, z;
+    private ChunkPos addTicket(ChunkPos chunk) {
+        World world = Bukkit.getWorld(chunk.worldId());
+        if (world == null) {
+            return chunk;
+        }
+        int count = tickets.getOrDefault(chunk, 0);
+        tickets.put(chunk, count + 1);
+        if (count == 0) {
+            world.addPluginChunkTicket(chunk.x(), chunk.z(), Adapt.instance);
+        }
+        return chunk;
+    }
 
-        private ChunkPos(Chunk chunk) {
-            this.world = new WeakReference<>(chunk.getWorld());
-            this.name = chunk.getWorld().getName();
-            this.x = chunk.getX();
-            this.z = chunk.getZ();
+    private void removeTicket(ChunkPos chunk, boolean requestUnload) {
+        Integer count = tickets.get(chunk);
+        if (count == null) {
+            return;
+        }
+        if (count > 1) {
+            tickets.put(chunk, count - 1);
+            return;
         }
 
-        public ChunkPos add() {
-            World world = this.world.get();
-            if (world == null)
-                return this;
-            if (tickets.computeIfAbsent(this, k -> new AtomicInteger()).getAndIncrement() == 0)
-                world.addPluginChunkTicket(x, z, Adapt.instance);
-            return this;
-        }
-
-        public void remove() {
-            World world = this.world.get();
-            if (world == null) {
-                tickets.remove(this);
-                return;
-            }
-            if (tickets.computeIfAbsent(this, k -> new AtomicInteger()).decrementAndGet() <= 0) {
-                world.removePluginChunkTicket(x, z, Adapt.instance);
-                world.unloadChunkRequest(x, z);
-                tickets.remove(this);
+        tickets.remove(chunk);
+        World world = Bukkit.getWorld(chunk.worldId());
+        if (world != null) {
+            world.removePluginChunkTicket(chunk.x(), chunk.z(), Adapt.instance);
+            if (requestUnload) {
+                world.unloadChunkRequest(chunk.x(), chunk.z());
             }
         }
+    }
+
+    private record StorageKey(UUID worldId, int x, int y, int z) {
+        private static StorageKey of(Block block) {
+            return new StorageKey(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ());
+        }
+    }
+
+    private record ChunkPos(UUID worldId, int x, int z) {
+    }
+
+    private record ActiveViews(ChunkPos chunk, List<InventoryView> views) {
     }
 }

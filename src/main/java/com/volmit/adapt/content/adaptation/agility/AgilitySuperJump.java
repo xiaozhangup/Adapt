@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.agility;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
@@ -34,8 +37,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> {
     private final Map<Player, Long> lastJump;
@@ -43,15 +46,15 @@ public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> 
     public AgilitySuperJump() {
         super("agility-super-jump");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("agility", "superjump", "description"));
-        setDisplayName(Localizer.dLocalize("agility", "superjump", "name"));
+        setDescription(Localizer.component("agility", "superjump", "description"));
+        setDisplayName(Localizer.component("agility", "superjump", "name"));
         setIcon(Material.LEATHER_BOOTS);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(9999);
-        lastJump = new WeakHashMap<>();
+        lastJump = new HashMap<>();
     }
 
     private double getJumpHeight(int level) {
@@ -60,9 +63,11 @@ public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getJumpHeight(level), 0) + C.GRAY + " "
-                + Localizer.dLocalize("agility", "superjump", "lore1"));
-        v.addLore(C.LIGHT_PURPLE + " " + Localizer.dLocalize("agility", "superjump", "lore2"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getJumpHeight(level), 0)),
+                Placeholder.component("lore", Localizer.component("agility", "superjump", "lore1"))));
+        v.addLore(Components.mini("<light_purple> <lore>",
+                Placeholder.component("lore", Localizer.component("agility", "superjump", "lore2"))));
 
     }
 

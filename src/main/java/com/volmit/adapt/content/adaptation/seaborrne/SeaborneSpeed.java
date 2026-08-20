@@ -20,11 +20,11 @@ package com.volmit.adapt.content.adaptation.seaborrne;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
-import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -36,8 +36,8 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
     public SeaborneSpeed() {
         super("seaborne-speed");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("seaborn", "dolphingrace", "description"));
-        setDisplayName(Localizer.dLocalize("seaborn", "dolphingrace", "name"));
+        setDescription(Localizer.component("seaborn", "dolphingrace", "description"));
+        setDisplayName(Localizer.component("seaborn", "dolphingrace", "name"));
         setIcon(Material.TRIDENT);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -48,9 +48,12 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("seaborn", "dolphingrace", "lore1") + C.GREEN + (level) + C.GRAY
-                + Localizer.dLocalize("seaborn", "dolphingrace", "lore2"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("seaborn", "dolphingrace", "lore3"));
+        v.addLore(Components.mini("<gray><lore1><green><level><gray><lore2>",
+                Placeholder.component("lore1", Localizer.component("seaborn", "dolphingrace", "lore1")),
+                Placeholder.unparsed("level", Integer.toString(level)),
+                Placeholder.component("lore2", Localizer.component("seaborn", "dolphingrace", "lore2"))));
+        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore",
+                Localizer.component("seaborn", "dolphingrace", "lore3"))));
     }
 
     @Override
@@ -65,10 +68,10 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
                 if (player.getLocation().getBlock().isLiquid()) {
                     if (player.getInventory().getBoots() != null
                             && player.getInventory().getBoots().containsEnchantment(Enchantment.DEPTH_STRIDER)) {
-                        return;
+                        continue;
                     } else {
-                        J.s(() -> player.addPotionEffect(
-                                new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 62, getLevel(player))));
+                        player.addPotionEffect(
+                                new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 62, getLevel(player)));
                     }
                 }
             }

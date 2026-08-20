@@ -1,10 +1,12 @@
 package com.volmit.adapt.content.adaptation.pickaxe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.NaturalBlockDrop;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,8 +19,8 @@ public class PickaxeSilkBuddingAmethyst extends SimpleAdaptation<PickaxeSilkBudd
     public PickaxeSilkBuddingAmethyst() {
         super("pickaxe-silk-budding-amethyst");
         registerConfiguration(PickaxeSilkBuddingAmethyst.Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "silkbuddingamethyst", "description"));
-        setDisplayName(Localizer.dLocalize("pickaxe", "silkbuddingamethyst", "name"));
+        setDescription(Localizer.component("pickaxe", "silkbuddingamethyst", "description"));
+        setDisplayName(Localizer.component("pickaxe", "silkbuddingamethyst", "name"));
         setIcon(Material.BUDDING_AMETHYST);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -55,7 +57,8 @@ public class PickaxeSilkBuddingAmethyst extends SimpleAdaptation<PickaxeSilkBudd
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "silkbuddingamethyst", "lore" + (level < 2 ? 1 : 2)));
+        v.addLore(Components.mini("<green><lore></green>", Placeholder.component("lore",
+                Localizer.component("pickaxe", "silkbuddingamethyst", "lore" + (level < 2 ? 1 : 2)))));
     }
 
     @Override

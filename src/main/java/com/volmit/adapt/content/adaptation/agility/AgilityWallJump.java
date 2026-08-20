@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.agility;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
@@ -33,8 +36,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
     private final Map<Player, Double> airjumps;
@@ -42,29 +45,33 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
     public AgilityWallJump() {
         super("agility-wall-jump");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("agility", "walljump", "description"));
-        setDisplayName(Localizer.dLocalize("agility", "walljump", "name"));
+        setDescription(Localizer.component("agility", "walljump", "description"));
+        setDisplayName(Localizer.component("agility", "walljump", "name"));
         setIcon(Material.LADDER);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setInterval(50);
-        airjumps = new WeakHashMap<>();
+        airjumps = new HashMap<>();
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + getMaxJumps(level) + C.GRAY + " "
-                + Localizer.dLocalize("agility", "walljump", "lore1"));
-        v.addLore(C.GREEN + "+ " + Form.pc(getJumpHeight(level), 0) + C.GRAY + " "
-                + Localizer.dLocalize("agility", "walljump", "lore2"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Integer.toString(getMaxJumps(level))),
+                Placeholder.component("lore", Localizer.component("agility", "walljump", "lore1"))));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getJumpHeight(level), 0)),
+                Placeholder.component("lore", Localizer.component("agility", "walljump", "lore2"))));
     }
 
     @EventHandler
     public void on(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        airjumps.remove(p);
+        if (airjumps.remove(p) != null && !p.hasGravity()) {
+            p.setGravity(true);
+        }
     }
 
     private int getMaxJumps(int level) {
@@ -85,7 +92,9 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
         if (airjumps.containsKey(p)) {
             if (p.isOnGround()
                     && !p.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial().isAir()) {
-                airjumps.remove(p);
+                if (airjumps.remove(p) != null && !p.hasGravity()) {
+                    p.setGravity(true);
+                }
             }
         }
     }
@@ -98,69 +107,83 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
     @Override
     public void onTick() {
         for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
-            int level = getLevel(p);
-            if (level <= 0) {
-                continue;
-            }
+                int level = getLevel(p);
+                if (level <= 0) {
+                    if (airjumps.remove(p) != null && !p.hasGravity()) {
+                        p.setGravity(true);
+                    }
+                    continue;
+                }
 
-            Double j = airjumps.get(p);
+                Double j = airjumps.get(p);
 
-            if (j != null && j - 0.25 >= getMaxJumps(level)) {
-                p.setGravity(true);
-                continue;
-            }
+                if (j != null && j - 0.25 >= getMaxJumps(level)) {
+                    p.setGravity(true);
+                    continue;
+                }
 
-            if (p.isFlying() || !p.isSneaking() || p.getFallDistance() < 0.3) {
-                boolean jumped = false;
+                if (p.isFlying() || !p.isSneaking() || p.getFallDistance() < 0.3) {
+                    boolean jumped = false;
 
-                if (!p.hasGravity() && p.getFallDistance() > 0.45 && canStick(p)) {
-                    j = j == null ? 0 : j;
-                    j++;
+                    if (!p.hasGravity() && p.getFallDistance() > 0.45 && canStick(p)) {
+                        j = j == null ? 0 : j;
+                        j++;
 
-                    if (j - 0.25 <= getMaxJumps(level) && getStick(p) != null) {
-                        jumped = true;
-                        p.setVelocity(p.getVelocity().setY(getJumpHeight(level)));
-                        if (getConfig().showParticles) {
+                        if (j - 0.25 <= getMaxJumps(level) && getStick(p) != null) {
+                            jumped = true;
+                            p.setVelocity(p.getVelocity().setY(getJumpHeight(level)));
+                            if (getConfig().showParticles) {
 
-                            p.getWorld().spawnParticle(Particle.BLOCK, p.getLocation().clone().add(0, 0.3, 0),
-                                    15, 0.1, 0.8, 0.1, 0.1, getStick(p).getBlockData());
+                                p.getWorld().spawnParticle(Particle.BLOCK, p.getLocation().clone().add(0, 0.3, 0),
+                                        15, 0.1, 0.8, 0.1, 0.1, getStick(p).getBlockData());
+                            }
+                        }
+                        airjumps.put(p, j);
+                    }
+
+                    if (!jumped && !p.hasGravity()) {
+                        p.setGravity(true);
+                        SoundPlayer spw = SoundPlayer.of(p.getWorld());
+                        spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.439f);
+                    }
+                    continue;
+                }
+
+                if (canStick(p)) {
+                    if (p.hasGravity()) {
+                        SoundPlayer spw = SoundPlayer.of(p.getWorld());
+                        spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.89f);
+                        spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_CHAIN, 1f, 1.39f);
+                        if (getConfig().showParticles && getStick(p) != null) {
+                            p.getWorld().spawnParticle(Particle.BLOCK, p.getLocation().clone().add(0, 0.3, 0), 15,
+                                    0.1, 0.2, 0.1, 0.1, getStick(p).getBlockData());
                         }
                     }
-                    airjumps.put(p, j);
+
+                    p.setGravity(false);
+                    Vector c = p.getVelocity();
+                    p.setVelocity(p.getVelocity().setY((c.getY() * 0.35) - 0.0025));
+                    Double vv = airjumps.get(p);
+                    vv = vv == null ? 0 : vv;
+                    vv += 0.0127;
+                    airjumps.put(p, vv);
                 }
 
-                if (!jumped && !p.hasGravity()) {
+                if (!canStick(p) && !p.hasGravity()) {
                     p.setGravity(true);
-                    SoundPlayer spw = SoundPlayer.of(p.getWorld());
-                    spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.439f);
                 }
-                continue;
-            }
+        }
+    }
 
-            if (canStick(p)) {
-                if (p.hasGravity()) {
-                    SoundPlayer spw = SoundPlayer.of(p.getWorld());
-                    spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 0.89f);
-                    spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_CHAIN, 1f, 1.39f);
-                    if (getConfig().showParticles && getStick(p) != null) {
-                        p.getWorld().spawnParticle(Particle.BLOCK, p.getLocation().clone().add(0, 0.3, 0), 15,
-                                0.1, 0.2, 0.1, 0.1, getStick(p).getBlockData());
-                    }
-                }
-
-                p.setGravity(false);
-                Vector c = p.getVelocity();
-                p.setVelocity(p.getVelocity().setY((c.getY() * 0.35) - 0.0025));
-                Double vv = airjumps.get(p);
-                vv = vv == null ? 0 : vv;
-                vv += 0.0127;
-                airjumps.put(p, vv);
-            }
-
-            if (!canStick(p) && !p.hasGravity()) {
-                p.setGravity(true);
+    @Override
+    public void unregister() {
+        for (Player player : airjumps.keySet()) {
+            if (!player.hasGravity()) {
+                player.setGravity(true);
             }
         }
+        airjumps.clear();
+        super.unregister();
     }
 
     private boolean canStick(Player p) {

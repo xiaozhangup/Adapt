@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.discovery;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
@@ -37,8 +39,8 @@ public class DiscoveryXpResist extends SimpleAdaptation<DiscoveryXpResist.Config
     public DiscoveryXpResist() {
         super("discovery-xp-resist");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("discovery", "resist", "description"));
-        setDisplayName(Localizer.dLocalize("discovery", "resist", "name"));
+        setDescription(Localizer.component("discovery", "resist", "description"));
+        setDisplayName(Localizer.component("discovery", "resist", "name"));
         setIcon(Material.EMERALD);
         setInterval(5215);
         setBaseCost(getConfig().baseCost);
@@ -50,11 +52,14 @@ public class DiscoveryXpResist extends SimpleAdaptation<DiscoveryXpResist.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("discovery", "resist", "lore0"));
-        v.addLore(C.GREEN + "+ " + Form.pc(getEffectiveness(getLevelPercent(level)), 0) + C.GRAY
-                + Localizer.dLocalize("discovery", "resist", "lore1"));
-        v.addLore(C.GREEN + "+ " + getXpTaken(level) + " " + C.GRAY
-                + Localizer.dLocalize("discovery", "resist", "lore2"));
+        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("discovery", "resist", "lore0"))));
+        v.addLore(Components.mini("<green>+ <amount></green><gray><lore></gray>",
+                Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("discovery", "resist", "lore1"))));
+        v.addLore(Components.mini("<green>+ <amount> </green><gray><lore></gray>",
+                Placeholder.unparsed("amount", Integer.toString(getXpTaken(level))),
+                Placeholder.component("lore", Localizer.component("discovery", "resist", "lore2"))));
     }
 
     private double getEffectiveness(double factor) {

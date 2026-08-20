@@ -19,11 +19,12 @@
 package com.volmit.adapt.content.adaptation.hunter;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,8 +34,8 @@ public class HunterAdrenaline extends SimpleAdaptation<HunterAdrenaline.Config> 
     public HunterAdrenaline() {
         super("hunter-adrenaline");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("hunter", "adrenaline", "description"));
-        setDisplayName(Localizer.dLocalize("hunter", "adrenaline", "name"));
+        setDescription(Localizer.component("hunter", "adrenaline", "description"));
+        setDisplayName(Localizer.component("hunter", "adrenaline", "name"));
         setIcon(Material.LEATHER_HELMET);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -46,8 +47,9 @@ public class HunterAdrenaline extends SimpleAdaptation<HunterAdrenaline.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getDamage(level), 0) + C.GRAY + " "
-                + Localizer.dLocalize("hunter", "adrenaline", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getDamage(level), 0)),
+                Placeholder.component("lore", Localizer.component("hunter", "adrenaline", "lore1"))));
     }
 
     private double getDamage(int level) {

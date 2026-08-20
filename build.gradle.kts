@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -30,7 +31,9 @@ plugins {
 }
 
 version = "1.16.12"
-val apiVersion = "1.21"
+val apiVersion = "26.2"
+val effectLibVersion = "10.10"
+val packetEventsVersion = "2.13.0"
 val pluginName = rootProject.name
 val main = "com.volmit.adapt.Adapt"
 val outputJar = layout.buildDirectory.file("libs/Adapt-$version-all.jar")
@@ -54,7 +57,7 @@ java {
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_25)
-        freeCompilerArgs.add("-Xjvm-default=all")
+        jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
     }
 }
 
@@ -65,6 +68,7 @@ tasks.processResources {
             "version" to version,
             "main" to main,
             "apiversion" to apiVersion,
+            "effectlibversion" to effectLibVersion,
         )
     }
 }
@@ -107,12 +111,10 @@ dependencies {
     compileOnly("me.xiaozhangup:SlimeCargoNext:1.0.2")
     compileOnly("me.xiaozhangup:OrangDomain:1.0.2")
     compileOnly("me.xiaozhangup:WhaleMechanism:1.0.1")
-    compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
+    compileOnly("com.github.retrooper:packetevents-spigot:$packetEventsVersion")
     compileOnly("com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2")
     compileOnly("org.apache.commons:commons-lang3:3.12.0")
-    compileOnly("com.google.code.gson:gson:2.10")
-    compileOnly("com.elmakers.mine.bukkit:EffectLib:10.10")
-    compileOnly("com.google.guava:guava:30.1-jre")
+    compileOnly("com.elmakers.mine.bukkit:EffectLib:$effectLibVersion")
 }
 
 configurations.configureEach {

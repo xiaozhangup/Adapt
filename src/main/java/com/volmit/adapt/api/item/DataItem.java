@@ -20,10 +20,13 @@ package com.volmit.adapt.api.item;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.BukkitGson;
+import com.volmit.adapt.util.Components;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
@@ -34,7 +37,9 @@ public interface DataItem<T> {
 
     Class<T> getType();
 
-    void applyLore(T data, List<String> lore);
+    String getDataKey();
+
+    void applyLore(T data, List<Component> lore);
 
     void applyMeta(T data, ItemMeta meta);
 
@@ -43,25 +48,15 @@ public interface DataItem<T> {
     }
 
     default T getData(ItemStack stack) {
-        if (stack != null && stack.getType().equals(getMaterial()) && stack.getItemMeta() != null) {
-            String r = stack.getItemMeta().getPersistentDataContainer().get(
-                    new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""),
-                    PersistentDataType.STRING);
-            if (r != null) {
-                return BukkitGson.gson.fromJson(r, getType());
-            }
+        String json = readAndMigrateData(stack);
+        if (json != null) {
+            return BukkitGson.gson.fromJson(json, getType());
         }
-
         return null;
     }
 
     default boolean hasData(ItemStack stack) {
-        if (stack != null && stack.getType().equals(getMaterial()) && stack.getItemMeta() != null) {
-            return stack.getItemMeta().getPersistentDataContainer().has(
-                    new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""),
-                    PersistentDataType.STRING);
-        }
-        return false;
+        return readAndMigrateData(stack) != null;
     }
 
     default void setData(ItemStack item, T t) {
@@ -77,13 +72,51 @@ public interface DataItem<T> {
         }
 
         applyMeta(t, meta);
-        List<String> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         applyLore(t, lore);
-        meta.setLore(lore);
+        Component displayName = meta.displayName();
+        if (displayName != null) {
+            meta.displayName(Components.itemColors(displayName));
+        }
+        meta.lore(lore.stream().map(Components::itemColors).toList());
         meta.getPersistentDataContainer().set(
-                new NamespacedKey(Adapt.instance, getType().getCanonicalName().hashCode() + ""),
+                dataKey(),
                 PersistentDataType.STRING, BukkitGson.gson.toJson(t));
         item.setItemMeta(meta);
         return item;
+    }
+
+    private String readAndMigrateData(ItemStack stack) {
+        if (stack == null || !stack.getType().equals(getMaterial())) {
+            return null;
+        }
+
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return null;
+        }
+
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        String json = data.get(dataKey(), PersistentDataType.STRING);
+        if (json != null) {
+            return json;
+        }
+
+        NamespacedKey legacyKey = legacyDataKey();
+        json = data.get(legacyKey, PersistentDataType.STRING);
+        if (json != null) {
+            data.set(dataKey(), PersistentDataType.STRING, json);
+            data.remove(legacyKey);
+            stack.setItemMeta(meta);
+        }
+        return json;
+    }
+
+    private NamespacedKey dataKey() {
+        return new NamespacedKey(Adapt.instance, "data_item/" + getDataKey());
+    }
+
+    private NamespacedKey legacyDataKey() {
+        return new NamespacedKey(Adapt.instance, Integer.toString(getType().getCanonicalName().hashCode()));
     }
 }

@@ -21,40 +21,46 @@ package com.volmit.adapt.content.adaptation.stealth;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
-    private final List<Player> sneaking;
+    private static final int EFFECT_DURATION = PotionEffect.INFINITE_DURATION;
+    private final Map<UUID, AppliedEffect> sneaking;
 
     public StealthSight() {
         super("stealth-vision");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("stealth", "nightvision", "description"));
-        setDisplayName(Localizer.dLocalize("stealth", "nightvision", "name"));
+        setDescription(Localizer.component("stealth", "nightvision", "description"));
+        setDisplayName(Localizer.component("stealth", "nightvision", "name"));
         setIcon(Material.POTION);
         setBaseCost(getConfig().baseCost);
         setInterval(1500);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
         setMaxLevel(getConfig().maxLevel);
-        sneaking = new ArrayList<>();
+        sneaking = new HashMap<>();
 
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("stealth", "nightvision", "lore1") + C.GREEN
-                + Localizer.dLocalize("stealth", "nightvision", "lore2") + C.GRAY
-                + Localizer.dLocalize("stealth", "nightvision", "lore3"));
+        v.addLore(Components.mini("<gray><lore1><green><lore2><gray><lore3>",
+                Placeholder.component("lore1", Localizer.component("stealth", "nightvision", "lore1")),
+                Placeholder.component("lore2", Localizer.component("stealth", "nightvision", "lore2")),
+                Placeholder.component("lore3", Localizer.component("stealth", "nightvision", "lore3"))));
     }
 
     @EventHandler
@@ -67,12 +73,11 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
         if (!hasAdaptation(p)) {
             return;
         }
-        sneaking.add(p);
-        if (!p.isSneaking()) {
+        if (e.isSneaking()) {
             sp.play(p.getLocation(), Sound.BLOCK_FUNGUS_BREAK, 1, 0.99f);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000, 0, false, false));
+            applyEffect(p);
         } else {
-            p.removePotionEffect(PotionEffectType.NIGHT_VISION);
+            restoreEffect(p, sneaking.remove(p.getUniqueId()));
         }
     }
 
@@ -83,14 +88,94 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
 
     @Override
     public void onTick() {
-        List<Player> toRemove = new ArrayList<>();
-        for (Player p : sneaking) {
-            if (hasAdaptation(p) && !p.isSneaking()) {
-                toRemove.add(p);
-                J.s(() -> p.removePotionEffect(PotionEffectType.NIGHT_VISION));
+        Iterator<Map.Entry<UUID, AppliedEffect>> iterator = sneaking.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, AppliedEffect> entry = iterator.next();
+            Player player = org.bukkit.Bukkit.getPlayer(entry.getKey());
+            if (player == null || !player.isOnline()) {
+                iterator.remove();
+                continue;
+            }
+            if (!hasAdaptation(player) || !player.isSneaking()) {
+                iterator.remove();
+                restoreEffect(player, entry.getValue());
+                continue;
+            }
+            PotionEffect current = player.getPotionEffect(PotionEffectType.NIGHT_VISION);
+            if (!entry.getValue().matches(current)) {
+                iterator.remove();
+            } else {
+                entry.getValue().lastDuration = current.getDuration();
             }
         }
-        sneaking.removeAll(toRemove);
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        restoreEffect(event.getPlayer(), sneaking.remove(event.getPlayer().getUniqueId()));
+    }
+
+    @Override
+    public void unregister() {
+        for (Map.Entry<UUID, AppliedEffect> entry : sneaking.entrySet()) {
+            Player player = org.bukkit.Bukkit.getPlayer(entry.getKey());
+            if (player != null) {
+                restoreEffect(player, entry.getValue());
+            }
+        }
+        sneaking.clear();
+        super.unregister();
+    }
+
+    private void applyEffect(Player player) {
+        PotionEffect original = player.getPotionEffect(PotionEffectType.NIGHT_VISION);
+        PotionEffect applied = new PotionEffect(PotionEffectType.NIGHT_VISION, EFFECT_DURATION, 0,
+                false, false, true);
+        if (player.addPotionEffect(applied)) {
+            PotionEffect current = player.getPotionEffect(PotionEffectType.NIGHT_VISION);
+            if (current != null && current.getAmplifier() == 0 && !current.isAmbient()
+                    && !current.hasParticles() && current.hasIcon()) {
+                sneaking.put(player.getUniqueId(), new AppliedEffect(original, current.getDuration(), M.ms()));
+            }
+        }
+    }
+
+    private void restoreEffect(Player player, AppliedEffect applied) {
+        if (applied == null || !applied.matches(player.getPotionEffect(PotionEffectType.NIGHT_VISION))) {
+            return;
+        }
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        PotionEffect original = applied.original;
+        if (original == null) {
+            return;
+        }
+        int remaining = original.isInfinite()
+                ? PotionEffect.INFINITE_DURATION
+                : original.getDuration() - (int) ((M.ms() - applied.appliedAt) / 50L);
+        if (remaining > 0) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, remaining, original.getAmplifier(),
+                    original.isAmbient(), original.hasParticles(), original.hasIcon()));
+        }
+    }
+
+    private static final class AppliedEffect {
+        private final PotionEffect original;
+        private final long appliedAt;
+        private int lastDuration;
+
+        private AppliedEffect(PotionEffect original, int lastDuration, long appliedAt) {
+            this.original = original;
+            this.lastDuration = lastDuration;
+            this.appliedAt = appliedAt;
+        }
+
+        private boolean matches(PotionEffect current) {
+            return current != null && current.getAmplifier() == 0 && !current.isAmbient()
+                    && !current.hasParticles() && current.hasIcon()
+                    && (current.isInfinite() && lastDuration == PotionEffect.INFINITE_DURATION
+                            || !current.isInfinite() && current.getDuration() > 0
+                                    && current.getDuration() <= lastDuration);
+        }
     }
 
     @Override

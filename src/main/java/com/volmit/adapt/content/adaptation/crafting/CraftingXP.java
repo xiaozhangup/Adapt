@@ -18,8 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -30,17 +34,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
-    private final Map<Player, Long> cooldown = new WeakHashMap<>();
+    private final Map<Player, Long> cooldown = new HashMap<>();
 
     public CraftingXP() {
         super("crafting-xp");
         registerConfiguration(CraftingXP.Config.class);
-        setDisplayName(Localizer.dLocalize("crafting", "xp", "name"));
-        setDescription(Localizer.dLocalize("crafting", "xp", "description"));
+        setDisplayName(Localizer.component("crafting", "xp", "name"));
+        setDescription(Localizer.component("crafting", "xp", "description"));
         setIcon(Material.EXPERIENCE_BOTTLE);
         setInterval(5580);
         setBaseCost(getConfig().baseCost);
@@ -51,7 +55,7 @@ public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("crafting", "xp", "lore1"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("crafting", "xp", "lore1"))));
     }
 
     @EventHandler

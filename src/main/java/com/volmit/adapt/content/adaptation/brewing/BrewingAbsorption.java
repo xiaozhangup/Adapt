@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingAbsorption extends SimpleAdaptation<BrewingAbsorption.Config
     public BrewingAbsorption() {
         super("brewing-absorption");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "absorption", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "absorption", "name"));
+        setDescription(Localizer.component("brewing", "absorption", "description"));
+        setDisplayName(Localizer.component("brewing", "absorption", "name"));
         setIcon(Material.QUARTZ);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingAbsorption extends SimpleAdaptation<BrewingAbsorption.Config
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-absorption-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.QUARTZ)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.HEALING, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Absorption").setColor(Color.GRAY)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Absorption")).setColor(Color.GRAY)
                         .addEffect(PotionEffectType.ABSORPTION, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-absorption-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.QUARTZ_BLOCK)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.HEALING, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Haste 2").setColor(Color.GRAY)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Haste 2")).setColor(Color.GRAY)
                         .addEffect(PotionEffectType.ABSORPTION, 600, 2, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "absorption", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "absorption", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "absorption", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "absorption", "lore2"))));
     }
 
     @Override

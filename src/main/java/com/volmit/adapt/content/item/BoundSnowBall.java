@@ -20,10 +20,12 @@ package com.volmit.adapt.content.item;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.item.DataItem;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -56,8 +58,10 @@ public class BoundSnowBall implements DataItem<BoundSnowBall.Data> {
 
     public static boolean isBindableItem(ItemStack t) {
         if (t.getType().equals(Material.SNOWBALL)) {
-            if (t.getItemMeta() != null && t.getItemMeta().getLore() != null) {
-                if (t.getItemMeta().getLore().get(0).contains(Localizer.dLocalize("items", "boundsnowball", "name"))) {
+            ItemMeta meta = t.getItemMeta();
+            if (meta != null && meta.hasLore() && meta.lore() != null && !meta.lore().isEmpty()) {
+                if (Components.plain(meta.lore().getFirst())
+                        .contains(Components.plain(Localizer.component("items", "boundsnowball", "name")))) {
                     Adapt.verbose("Snowball is bindable: " + t.getType().name());
                     return true;
                 }
@@ -77,16 +81,23 @@ public class BoundSnowBall implements DataItem<BoundSnowBall.Data> {
     }
 
     @Override
-    public void applyLore(Data data, List<String> lore) {
-        lore.add(C.WHITE + Localizer.dLocalize("items", "boundsnowball", "name"));
-        lore.add(C.GRAY + Localizer.dLocalize("items", "boundsnowball", "usage1"));
+    public String getDataKey() {
+        return "bound_snowball";
+    }
+
+    @Override
+    public void applyLore(Data data, List<Component> lore) {
+        lore.add(Components.mini("<white><text></white>",
+                Placeholder.component("text", Localizer.component("items", "boundsnowball", "name"))));
+        lore.add(Components.mini("<gray><text></gray>",
+                Placeholder.component("text", Localizer.component("items", "boundsnowball", "usage1"))));
     }
 
     @Override
     public void applyMeta(Data data, ItemMeta meta) {
         meta.addEnchant(Enchantment.BINDING_CURSE, 10, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DYE);
-        meta.setDisplayName(Localizer.dLocalize("items", "boundsnowball", "name"));
+        meta.displayName(Localizer.component("items", "boundsnowball", "name"));
     }
 
     @AllArgsConstructor

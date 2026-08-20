@@ -1,49 +1,35 @@
 package com.volmit.adapt.util;
 
-import com.volmit.adapt.util.collection.KList;
-
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-public class Sphere implements Iterator<BlockPosition>, Cloneable {
-    private final KList<BlockPosition> blocks;
-    private int i = 0;
+public final class Sphere implements Iterable<BlockPosition> {
+    private final List<BlockPosition> blocks;
 
     public Sphere(int radius) {
-        int dist = radius * radius * radius;
+        int dist = radius * radius;
 
-        blocks = new KList<>();
+        List<BlockPosition> positions = new ArrayList<>();
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
                 for (int y = -radius; y <= radius; y++) {
                     if (x * x + z * z + y * y > dist)
                         continue;
 
-                    blocks.add(new BlockPosition(x, y, z));
+                    positions.add(new BlockPosition(x, y, z));
                 }
             }
         }
+        blocks = List.copyOf(positions);
     }
 
-    private Sphere(KList<BlockPosition> blocks) {
-        this.blocks = blocks.copy();
-    }
-
-    public void reset() {
-        i = 0;
+    public int size() {
+        return blocks.size();
     }
 
     @Override
-    public boolean hasNext() {
-        return i < blocks.size();
-    }
-
-    @Override
-    public BlockPosition next() {
-        return blocks.get(i++);
-    }
-
-    @Override
-    public Sphere clone() {
-        return new Sphere(blocks);
+    public Iterator<BlockPosition> iterator() {
+        return blocks.iterator();
     }
 }

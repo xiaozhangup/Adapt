@@ -18,10 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.enchanting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,17 +33,17 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class EnchantingLapisReturn extends SimpleAdaptation<EnchantingLapisReturn.Config> {
-    private final Map<Player, Long> cooldown = new WeakHashMap<>();
+    private final Map<Player, Long> cooldown = new HashMap<>();
 
     public EnchantingLapisReturn() {
         super("enchanting-lapis-return");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("enchanting", "lapisreturn", "description"));
-        setDisplayName(Localizer.dLocalize("enchanting", "lapisreturn", "name"));
+        setDescription(Localizer.component("enchanting", "lapisreturn", "description"));
+        setDisplayName(Localizer.component("enchanting", "lapisreturn", "name"));
         setIcon(Material.LAPIS_LAZULI);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -52,7 +54,8 @@ public class EnchantingLapisReturn extends SimpleAdaptation<EnchantingLapisRetur
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("enchanting", "lapisreturn", "lore1"));
+        v.addLore(Components.mini("<green><lore></green>",
+                Placeholder.component("lore", Localizer.component("enchanting", "lapisreturn", "lore1"))));
     }
 
     @EventHandler

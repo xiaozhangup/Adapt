@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.discovery;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Modifier;
@@ -51,8 +53,8 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
     public DiscoveryArmor() {
         super("discovery-world-armor");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("discovery", "armor", "description"));
-        setDisplayName(Localizer.dLocalize("discovery", "armor", "name"));
+        setDescription(Localizer.component("discovery", "armor", "description"));
+        setDisplayName(Localizer.component("discovery", "armor", "name"));
         setIcon(Material.TURTLE_HELMET);
         setInterval(305);
         setBaseCost(getConfig().baseCost);
@@ -63,9 +65,12 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Localizer.dLocalize("discovery", "armor", "lore1") + C.GRAY + ", "
-                + Localizer.dLocalize("discovery", "armor", "lore2"));
-        v.addLore(C.YELLOW + "~ " + Localizer.dLocalize("discovery", "armor", "lore3") + C.BLUE + " +" + level * 0.25);
+        v.addLore(Components.mini("<green>+ <lore1></green><gray>, <lore2></gray>",
+                Placeholder.component("lore1", Localizer.component("discovery", "armor", "lore1")),
+                Placeholder.component("lore2", Localizer.component("discovery", "armor", "lore2"))));
+        v.addLore(Components.mini("<yellow>~ <lore></yellow><blue> +<bonus></blue>",
+                Placeholder.component("lore", Localizer.component("discovery", "armor", "lore3")),
+                Placeholder.unparsed("bonus", Double.toString(level * 0.25))));
     }
 
     public double getArmorPoints(Material m) {
@@ -76,12 +81,9 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
     public double getArmor(Location l, int level) {
         Block center = l.getBlock();
         double armorValue = 0.0;
-        double count = 0;
+        int count = 0;
 
-        var sphere = SPHERE.clone();
-
-        while (sphere.hasNext()) {
-            var r = sphere.next();
+        for (var r : SPHERE) {
             Block b = center.getRelative(r.getX(), r.getY(), r.getZ());
             if (b.isEmpty() || b.isLiquid())
                 continue;
@@ -102,6 +104,9 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
             }
         }
 
+        if (count == 0) {
+            return 0;
+        }
         return Math.min((armorValue / count) * (level / 2D) * 0.65, 10);
     }
 
@@ -120,42 +125,60 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
     @Override
     public void onTick() {
-        J.s(() -> {
-            var players = Adapt.instance.getAdaptServer().getAdaptPlayers();
-            for (Player p : players) {
-                if (p == null || !p.isOnline() || !p.clientConnected())
-                    return;
+        var players = Adapt.instance.getAdaptServer().getAdaptPlayers();
+        for (Player p : players) {
+            if (p == null || !p.isOnline() || !p.clientConnected())
+                continue;
 
-                long now = M.ms();
-                var nextUpdate = playerData.getOrDefault(p.getUniqueId(), now);
-                if (nextUpdate > now)
-                    return;
-                playerData.put(p.getUniqueId(), now + UPDATE_COOLDOWN);
-
-                var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
-                if (attribute == null)
-                    return;
-
-                if (!hasAdaptation(p)) {
-                    attribute.removeModifier(MODIFIER, MODIFIER_KEY);
-                } else {
-                    double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).stream()
-                            .mapToDouble(Modifier::getAmount).max().orElse(0);
-
-                    double armor = getArmor(p.getLocation(), getLevel(p));
-                    armor = Double.isNaN(armor) ? 0 : armor;
-
-                    double lArmor = M.lerp(oldArmor, armor, 0.3);
-                    lArmor = Double.isNaN(lArmor) ? 0 : lArmor;
-                    attribute.setModifier(MODIFIER, MODIFIER_KEY, lArmor, AttributeModifier.Operation.ADD_NUMBER);
-                }
+            long now = M.ms();
+            var nextUpdate = playerData.get(p.getUniqueId());
+            if (nextUpdate == null) {
+                long stagger = Math.floorMod(p.getUniqueId().hashCode(), (int) UPDATE_COOLDOWN);
+                playerData.put(p.getUniqueId(), now + stagger);
+                continue;
             }
-        });
+            if (nextUpdate > now)
+                continue;
+            playerData.put(p.getUniqueId(), now + UPDATE_COOLDOWN);
+
+            var attribute = Version.get().getAttribute(p, Attribute.ARMOR);
+            if (attribute == null)
+                continue;
+
+            if (!hasAdaptation(p)) {
+                attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+            } else {
+                double oldArmor = attribute.getModifier(MODIFIER, MODIFIER_KEY).stream()
+                        .mapToDouble(Modifier::getAmount).max().orElse(0);
+
+                double armor = getArmor(p.getLocation(), getLevel(p));
+                armor = Double.isNaN(armor) ? 0 : armor;
+
+                double lArmor = M.lerp(oldArmor, armor, 0.3);
+                lArmor = Double.isNaN(lArmor) ? 0 : lArmor;
+                attribute.setModifier(MODIFIER, MODIFIER_KEY, lArmor, AttributeModifier.Operation.ADD_NUMBER);
+            }
+        }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         playerData.remove(event.getPlayer().getUniqueId());
+        removeModifier(event.getPlayer());
+    }
+
+    private void removeModifier(Player player) {
+        var attribute = Version.get().getAttribute(player, Attribute.ARMOR);
+        if (attribute != null) {
+            attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+        }
+    }
+
+    @Override
+    public void unregister() {
+        Adapt.instance.getAdaptServer().getAdaptPlayers().forEach(this::removeModifier);
+        playerData.clear();
+        super.unregister();
     }
 
     @Override

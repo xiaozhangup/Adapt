@@ -18,10 +18,14 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.MaterialChar;
 import com.volmit.adapt.api.recipe.type.Shaped;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -35,8 +39,8 @@ public class CraftingCorals extends SimpleAdaptation<CraftingCorals.Config> {
     public CraftingCorals() {
         super("crafting-corals");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("crafting", "corals", "description"));
-        setDisplayName(Localizer.dLocalize("crafting", "corals", "name"));
+        setDescription(Localizer.component("crafting", "corals", "description"));
+        setDisplayName(Localizer.component("crafting", "corals", "name"));
         setIcon(Material.HORN_CORAL);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -101,7 +105,8 @@ public class CraftingCorals extends SimpleAdaptation<CraftingCorals.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("crafting", "corals", "lore1"));
+        v.addLore(Components.mini("<green>+ <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "corals", "lore1"))));
     }
 
     @Override

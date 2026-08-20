@@ -26,11 +26,15 @@ import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.util.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +51,7 @@ public class SkillsGui {
         Window w = new UIWindow(player);
         w.setViewportHeight(4); // Resize GUI
         w.setTag("/");
-        w.setDecorator((window, position, row) -> new UIElement("bg").setName(" ")
+        w.setDecorator((window, position, row) -> new UIElement("bg").setName(Component.space())
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
 
@@ -84,10 +88,14 @@ public class SkillsGui {
                 w.setElement(pos, row,
                         new UIElement("skill-" + sk.getName()).setMaterial(new MaterialBlock(sk.getIcon()))
                                 .setModel(sk.getModel()).setName(sk.getDisplayName(i.getLevel())).setProgress(1D)
-                                .addLore(C.UNDERLINE + "" + C.WHITE + i.getKnowledge() + C.RESET + " " + C.GRAY
-                                        + Localizer.dLocalize("snippets", "gui", "knowledge"))
-                                .addLore(C.ITALIC + "" + C.DARK_GREEN + adaptationLevel + " " + C.GRAY
-                                        + Localizer.dLocalize("snippets", "gui", "powerused"))
+                                .addLore(Components.mini("<white><knowledge></white> <gray><label></gray>",
+                                        Placeholder.unparsed("knowledge", Long.toString(i.getKnowledge())),
+                                        Placeholder.component("label",
+                                                Localizer.component("snippets", "gui", "knowledge"))))
+                                .addLore(Components.mini("<dark_green><level> </dark_green><gray><label></gray>",
+                                        Placeholder.unparsed("level", Integer.toString(adaptationLevel)),
+                                        Placeholder.component("label",
+                                                Localizer.component("snippets", "gui", "powerused"))))
                                 .onLeftClick((e) -> {
                                     w.close();
                                     sk.openGui(true, player);
@@ -99,16 +107,18 @@ public class SkillsGui {
                 int unlearnAllRow = w.getViewportHeight() - 1;
                 if (w.getElement(unlearnAllPos, unlearnAllRow) != null)
                     unlearnAllRow++;
+                Component unlearnName = AdaptConfig.get().isHardcoreNoRefunds()
+                        ? Components.mini(
+                                "<gray><name> </gray><dark_red><bold><warning></bold></dark_red>",
+                                Placeholder.component("name", Localizer.component("snippets", "gui", "unlearnall")),
+                                Placeholder.component("warning",
+                                        Localizer.component("snippets", "adaptmenu", "norefunds")))
+                        : Components.mini("<gray><name></gray>",
+                                Placeholder.component("name", Localizer.component("snippets", "gui", "unlearnall")));
                 w.setElement(unlearnAllPos, unlearnAllRow,
                         new UIElement("unlearn-all").setMaterial(new MaterialBlock(Material.BARRIER))
                                 .setModel(CustomModel.get(Material.BARRIER, "snippets", "gui", "unlearnall"))
-                                .setName(
-                                        "" + C.RESET + C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnall")
-                                                + (AdaptConfig.get().isHardcoreNoRefunds()
-                                                        ? " " + C.DARK_RED + C.BOLD
-                                                                + Localizer.dLocalize("snippets", "adaptmenu",
-                                                                        "norefunds")
-                                                        : ""))
+                                .setName(unlearnName)
                                 .onLeftClick((e) -> {
                                     Adapt.instance.getAdaptServer().getSkillRegistry().getSkills()
                                             .forEach(skill -> skill.getAdaptations()
@@ -118,9 +128,13 @@ public class SkillsGui {
                                     spw.play(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.4f, 0.755f);
                                     w.close();
                                     if (AdaptConfig.get().getLearnUnlearnButtonDelayTicks() != 0) {
-                                        player.sendTitle(" ",
-                                                C.GRAY + Localizer.dLocalize("snippets", "gui", "unlearnedall"), 1, 5,
-                                                11);
+                                        player.showTitle(Title.title(Components.mini(" "),
+                                                Components.mini("<gray><message>",
+                                                        Placeholder.component("message",
+                                                                Localizer.component("snippets", "gui",
+                                                                        "unlearnedall"))),
+                                                Title.Times.times(Duration.ofMillis(50), Duration.ofMillis(250),
+                                                        Duration.ofMillis(550))));
                                     }
                                     J.s(() -> open(player), AdaptConfig.get().getLearnUnlearnButtonDelayTicks());
                                 }));
@@ -128,24 +142,30 @@ public class SkillsGui {
 
             w.setElement(w.getPosition(24), w.getRow(24),
                     new UIElement("all_skill").setMaterial(new MaterialBlock(Material.WRITABLE_BOOK))
-                            .setName(C.WHITE + "查看所有属性").addLore(C.GRAY + "总计 21 种").onLeftClick((e) -> {
+                            .setName(Components.mini("<white>查看所有属性</white>"))
+                            .addLore(Components.mini("<gray>总计 21 种</gray>")).onLeftClick((e) -> {
                                 AllSkillsGui.open(player);
                             }));
 
             for (int slot : locked) { // 未解锁的显示未点亮
                 w.setElement(w.getPosition(slot), w.getRow(slot),
                         new UIElement("locked_skill_" + slot)
-                                .setMaterial(new MaterialBlock(Material.RED_STAINED_GLASS_PANE)).setName(C.RED + "未点亮")
-                                .addLore(C.GRAY + "在游戏过程中点亮").onLeftClick((e) -> {
+                                .setMaterial(new MaterialBlock(Material.RED_STAINED_GLASS_PANE))
+                                .setName(Components.mini("<red>未点亮</red>"))
+                                .addLore(Components.mini("<gray>在游戏过程中点亮</gray>")).onLeftClick((e) -> {
                                     w.close();
-                                    Adapt.messagePlayer(player, C.GRAY + "所有属性均会在游戏过程中根据你的经历(如伐木, 钓鱼, 探索等) 而点亮!");
+                                    Adapt.messagePlayer(player, Components.mini(
+                                            "<gray>所有属性均会在游戏过程中根据你的经历(如伐木, 钓鱼, 探索等) 而点亮!"));
                                 }));
             }
 
-            w.setTitle(Localizer.dLocalize("snippets", "gui", "level") + " "
-                    + (int) XP.getLevelForXp(adaptPlayer.getData().getMasterXp()) + " ("
-                    + adaptPlayer.getData().getUsedPower() + "/" + adaptPlayer.getData().getMaxPower() + " "
-                    + Localizer.dLocalize("snippets", "gui", "powerused") + ")");
+            w.setTitle(Components.mini("<label> <level> (<used>/<max> <power>)",
+                    Placeholder.component("label", Localizer.component("snippets", "gui", "level")),
+                    Placeholder.unparsed("level",
+                            Integer.toString((int) XP.getLevelForXp(adaptPlayer.getData().getMasterXp()))),
+                    Placeholder.unparsed("used", Integer.toString(adaptPlayer.getData().getUsedPower())),
+                    Placeholder.unparsed("max", Integer.toString(adaptPlayer.getData().getMaxPower())),
+                    Placeholder.component("power", Localizer.component("snippets", "gui", "powerused"))));
             w.open();
             w.onClosed((e) -> Adapt.instance.getGuiLeftovers().remove(player.getUniqueId().toString()));
             Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);

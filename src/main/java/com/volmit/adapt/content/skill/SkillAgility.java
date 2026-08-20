@@ -32,27 +32,28 @@ import com.volmit.adapt.content.adaptation.agility.AgilityWindUp;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
-    private final Map<UUID, Location> lastLocations;
+    private final Map<UUID, Movement> pendingMovement = new HashMap<>();
 
     public SkillAgility() {
-        super("agility", Localizer.dLocalize("skill", "agility", "icon"));
+        super("agility", Localizer.component("skill", "agility", "icon"));
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("skill", "agility", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "agility", "name"));
-        setColor(ChatColor.of("#8cb684"));
+        setDescription(Localizer.component("skill", "agility", "description"));
+        setDisplayName(Localizer.component("skill", "agility", "name"));
+        setColor(TextColor.color(0x8cb684));
         setInterval(975);
         setIcon(Material.FEATHER);
         registerAdaptation(new AgilityWindUp());
@@ -60,25 +61,25 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
         registerAdaptation(new AgilitySuperJump());
         registerAdaptation(new AgilityArmorUp());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.LEATHER_BOOTS).key("challenge_move_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_move_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_move_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_move_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_move_1k", "description"))
                 .model(CustomModel.get(Material.LEATHER_BOOTS, "advancement", "agility", "challenge_move_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.IRON_BOOTS).key("challenge_sprint_5k")
-                        .title(Localizer.dLocalize("advancement", "challenge_sprint_5k", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_sprint_5k", "description"))
+                        .title(Localizer.component("advancement", "challenge_sprint_5k", "title"))
+                        .description(Localizer.component("advancement", "challenge_sprint_5k", "description"))
                         .model(CustomModel.get(Material.IRON_BOOTS, "advancement", "agility", "challenge_sprint_5k"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.DIAMOND_BOOTS).key("challenge_sprint_50k")
-                                .title(Localizer.dLocalize("advancement", "challenge_sprint_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_sprint_50k", "description"))
+                                .title(Localizer.component("advancement", "challenge_sprint_50k", "title"))
+                                .description(Localizer.component("advancement", "challenge_sprint_50k", "description"))
                                 .model(CustomModel.get(Material.DIAMOND_BOOTS, "advancement", "agility",
                                         "challenge_sprint_50k"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.NETHERITE_BOOTS)
                                         .key("challenge_sprint_500k")
-                                        .title(Localizer.dLocalize("advancement", "challenge_sprint_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_sprint_500k",
+                                        .title(Localizer.component("advancement", "challenge_sprint_500k", "title"))
+                                        .description(Localizer.component("advancement", "challenge_sprint_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.NETHERITE_BOOTS, "advancement", "agility",
                                                 "challenge_sprint_500k"))
@@ -87,8 +88,8 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
                                 .build())
                         .build())
                 .child(AdaptAdvancement.builder().icon(Material.GOLDEN_BOOTS).key("challenge_sprint_marathon")
-                        .title(Localizer.dLocalize("advancement", "challenge_sprint_marathon", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_sprint_marathon", "description"))
+                        .title(Localizer.component("advancement", "challenge_sprint_marathon", "title"))
+                        .description(Localizer.component("advancement", "challenge_sprint_marathon", "description"))
                         .model(CustomModel.get(Material.GOLDEN_BOOTS, "advancement", "agility",
                                 "challenge_sprint_marathon"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
@@ -103,36 +104,48 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
                 .reward(getConfig().challengeSprint5kReward).build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_sprint_marathon").goal(42195).stat("move")
                 .reward(getConfig().challengeSprintMarathonReward).build());
-        lastLocations = new HashMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerMoveEvent e) {
-        Player p = e.getPlayer();
-        if (e.isCancelled()) {
+        Location from = e.getFrom();
+        Location to = e.getTo();
+        if (e.isCancelled() || to == null || from.getWorld() == null || !from.getWorld().equals(to.getWorld())) {
             return;
         }
-        shouldReturnForPlayer(p, e, () -> {
-            if (e.getFrom().getWorld() != null && e.getTo() != null
-                    && e.getFrom().getWorld().equals(e.getTo().getWorld())) {
-                double d = e.getFrom().distance(e.getTo());
-                AdaptPlayer adaptPlayer = getPlayer(p);
-                adaptPlayer.getData().addStat("move", d);
 
-                if (p.isSneaking()) {
-                    adaptPlayer.getData().addStat("move.sneak", d);
-                } else if (p.isFlying()) {
-                    adaptPlayer.getData().addStat("move.fly", d);
-                } else if (p.isSwimming()) {
-                    adaptPlayer.getData().addStat("move.swim", d);
-                } else if (p.isSprinting()) {
-                    adaptPlayer.getData().addStat("move.sprint", d);
-                }
+        double x = from.getX() - to.getX();
+        double y = from.getY() - to.getY();
+        double z = from.getZ() - to.getZ();
+        double distanceSquared = x * x + y * y + z * z;
+        if (distanceSquared == 0) {
+            return;
+        }
 
-                // Add XP for moving
-                xpSilent(p, getConfig().moveXpPassive * d);
-            }
-        });
+        Player p = e.getPlayer();
+        UUID playerId = p.getUniqueId();
+        if (!Adapt.instance.getAdaptServer().isPlayerLoaded(playerId) || !isEnabled()
+                || hasBlacklistPermission(p, this) || isWorldBlacklisted(p) || isInCreativeOrSpectator(p)) {
+            return;
+        }
+
+        double distance = Math.sqrt(distanceSquared);
+        Movement movement = pendingMovement.computeIfAbsent(playerId, ignored -> new Movement());
+        movement.total += distance;
+        if (p.isSneaking()) {
+            movement.sneak += distance;
+        } else if (p.isFlying()) {
+            movement.fly += distance;
+        } else if (p.isSwimming()) {
+            movement.swim += distance;
+        } else if (p.isSprinting()) {
+            movement.sprint += distance;
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        pendingMovement.remove(event.getPlayer().getUniqueId());
     }
 
     @Override
@@ -143,8 +156,13 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
     @Override
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+            Movement movement = pendingMovement.remove(i.getUniqueId());
             shouldReturnForPlayer(i, () -> {
-                checkStatTrackers(getPlayer(i));
+                AdaptPlayer adaptPlayer = getPlayer(i);
+                if (movement != null) {
+                    flushMovement(i, adaptPlayer, movement);
+                }
+                checkStatTrackers(adaptPlayer);
 
                 // Check for sprinting
                 if (i.isSprinting() && !i.isFlying() && !i.isSwimming() && !i.isSneaking()) {
@@ -168,6 +186,22 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
                 }
             });
         }
+        pendingMovement.keySet().removeIf(uuid -> !Adapt.instance.getAdaptServer().isPlayerLoaded(uuid));
+    }
+
+    private void flushMovement(Player player, AdaptPlayer adaptPlayer, Movement movement) {
+        adaptPlayer.getData().addStat("move", movement.total);
+        addMovementStat(adaptPlayer, "move.sneak", movement.sneak);
+        addMovementStat(adaptPlayer, "move.fly", movement.fly);
+        addMovementStat(adaptPlayer, "move.swim", movement.swim);
+        addMovementStat(adaptPlayer, "move.sprint", movement.sprint);
+        xpSilent(player, getConfig().moveXpPassive * movement.total);
+    }
+
+    private void addMovementStat(AdaptPlayer player, String stat, double distance) {
+        if (distance > 0) {
+            player.getData().addStat(stat, distance);
+        }
     }
 
     @Override
@@ -186,5 +220,13 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
         double jumpXpPassive = 0.25;
         double climbXpPassive = 1.25;
         double moveXpPassive = 0.1;
+    }
+
+    private static final class Movement {
+        private double total;
+        private double sneak;
+        private double fly;
+        private double swim;
+        private double sprint;
     }
 }

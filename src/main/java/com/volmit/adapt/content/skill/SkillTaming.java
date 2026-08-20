@@ -25,7 +25,7 @@ import com.volmit.adapt.content.adaptation.taming.TamingHealthBoost;
 import com.volmit.adapt.content.adaptation.taming.TamingHealthRegeneration;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -41,11 +41,11 @@ public class SkillTaming extends SimpleSkill<SkillTaming.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillTaming() {
-        super("taming", Localizer.dLocalize("skill", "taming", "icon"));
+        super("taming", Localizer.component("skill", "taming", "icon"));
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("skill", "taming", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "taming", "name"));
-        setColor(ChatColor.of("#af9d83"));
+        setDescription(Localizer.component("skill", "taming", "description"));
+        setDisplayName(Localizer.component("skill", "taming", "name"));
+        setColor(TextColor.color(0xaf9d83));
         setInterval(3480);
         setIcon(Material.LEAD);
         cooldowns = new WeakHashMap<>();

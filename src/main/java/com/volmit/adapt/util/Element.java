@@ -18,6 +18,7 @@
 
 package com.volmit.adapt.util;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -33,9 +34,9 @@ public interface Element {
 
     String getId();
 
-    String getName();
+    Component getName();
 
-    Element setName(String name);
+    Element setName(Component name);
 
     CustomModel getModel();
 
@@ -57,9 +58,9 @@ public interface Element {
 
     boolean isBackgrond();
 
-    Element addLore(String loreLine);
+    Element addLore(Component loreLine);
 
-    List<String> getLore();
+    List<Component> getLore();
 
     Element call(ElementEvent event, Element context);
 

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.volmit.adapt.api.version.Version;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class PotionBuilder {
     private final List<PotionEffect> effects = Lists.newArrayList();
     private final Type type;
 
-    private String name;
+    private Component name;
     private Color color;
     private boolean upgraded, extended;
     private PotionType baseType = null;
@@ -53,7 +54,7 @@ public class PotionBuilder {
         return this;
     }
 
-    public PotionBuilder setName(String name) {
+    public PotionBuilder setName(Component name) {
         this.name = name;
         return this;
     }

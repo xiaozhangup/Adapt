@@ -135,11 +135,6 @@ public class MaterialValue {
         List<MaterialRecipe> r = new ArrayList<>();
         try {
             ItemStack is = new ItemStack(mat);
-            try {
-                is.setDurability((short) -1);
-            } catch (Throwable e) {
-                Adapt.verbose("Failed to set durability of " + mat.name());
-            }
             Bukkit.getRecipesFor(is).forEach(i -> {
                 if (i instanceof AdaptRecipe) {
                     Adapt.verbose("Skipping Adapt Recipe to prevent duplicates, " + mat.name() + " -> "

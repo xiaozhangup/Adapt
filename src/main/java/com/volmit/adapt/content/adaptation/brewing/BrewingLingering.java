@@ -18,16 +18,20 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.data.WorldData;
-import com.volmit.adapt.api.world.PlayerAdaptation;
-import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.content.matter.BrewingStandOwner;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,12 +40,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.UUID;
+
 public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> {
+    private final BrewingOwnerLevelCache ownerLevelCache = new BrewingOwnerLevelCache();
+
     public BrewingLingering() {
         super("brewing-lingering");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "lingering", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "lingering", "name"));
+        setDescription(Localizer.component("brewing", "lingering", "description"));
+        setDisplayName(Localizer.component("brewing", "lingering", "name"));
         setIcon(Material.CLOCK);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -52,10 +60,13 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Form.duration((long) getDurationBoost(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("brewing", "lingering", "lore1"));
-        v.addLore(C.GREEN + Form.pc(getPercentBoost(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("brewing", "lingering", "lore2"));
+        v.addLore(Components.mini("<green><duration><gray> <lore>",
+                Placeholder.unparsed("duration",
+                        Form.duration((long) getDurationBoost(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("brewing", "lingering", "lore1"))));
+        v.addLore(Components.mini("<green><amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getPercentBoost(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("brewing", "lingering", "lore2"))));
     }
 
     public double getDurationBoost(double factor) {
@@ -72,45 +83,63 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
             return;
         }
         if (e.getBlock().getType().equals(Material.BREWING_STAND)) {
-            BrewingStandOwner owner = WorldData.of(e.getBlock().getWorld()).getMantle().get(e.getBlock().getX(),
-                    e.getBlock().getY(), e.getBlock().getZ(), BrewingStandOwner.class);
-
-            if (owner != null) {
-                J.s(() -> {
-                    PlayerData data = null;
-                    ItemStack[] c = ((BrewingStand) e.getBlock().getState()).getInventory().getStorageContents();
-                    boolean ef = false;
-                    for (int i = 0; i < c.length; i++) {
-                        ItemStack is = c[i];
-
-                        if (is != null && is.getItemMeta() != null && is.getItemMeta() instanceof PotionMeta p) {
-                            is = is.clone();
-                            data = data == null ? getServer().peekData(owner.getOwner()) : data;
-
-                            if (data.getSkillLines().containsKey(getSkill().getName()) && data
-                                    .getSkillLine(getSkill().getName()).getAdaptations().containsKey(getName())) {
-                                PlayerAdaptation a = data.getSkillLine(getSkill().getName()).getAdaptations()
-                                        .get(getName());
-
-                                if (a.getLevel() > 0) {
-                                    double factor = getLevelPercent(a.getLevel());
-                                    ef = enhance(factor, is, p) || ef;
-                                    c[i] = is;
-                                }
-                            }
-                        }
-                    }
-
-                    if (ef) {
-                        ((BrewingStand) e.getBlock().getState()).getInventory().setStorageContents(c);
-                        SoundPlayer spw = SoundPlayer.of(e.getBlock().getWorld());
-                        spw.play(e.getBlock().getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 1f, 0.75f);
-                        spw.play(e.getBlock().getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 1f, 1.75f);
-                    }
-                });
-            } else {
-                Adapt.verbose("No Owner");
+            UUID worldId = e.getBlock().getWorld().getUID();
+            int x = e.getBlock().getX();
+            int y = e.getBlock().getY();
+            int z = e.getBlock().getZ();
+            ItemStack[] expectedResults = new ItemStack[3];
+            for (int i = 0; i < expectedResults.length && i < e.getResults().size(); i++) {
+                ItemStack result = e.getResults().get(i);
+                expectedResults[i] = result == null ? null : result.clone();
             }
+            WorldData.of(e.getBlock().getWorld()).getMantle().getAsync(x, y, z, BrewingStandOwner.class)
+                    .whenComplete((owner, error) -> J.s(() ->
+                            requestEnhancement(worldId, x, y, z, expectedResults, owner, error)));
+        }
+    }
+
+    private void requestEnhancement(UUID worldId, int x, int y, int z, ItemStack[] expectedResults,
+            BrewingStandOwner owner, Throwable error) {
+        if (error != null || owner == null) {
+            Adapt.verbose(error == null ? "No Owner" : "Failed to load brewing stand owner");
+            return;
+        }
+        ownerLevelCache.get(owner.getOwner(), this, M.ms()).thenAccept(level -> {
+            if (level != null && level > 0) {
+                J.s(() -> enhanceStand(worldId, x, y, z, expectedResults, level));
+            }
+        });
+    }
+
+    private void enhanceStand(UUID worldId, int x, int y, int z, ItemStack[] expectedResults, int level) {
+        World world = Bukkit.getWorld(worldId);
+        if (world == null) {
+            return;
+        }
+        BlockState state = world.getBlockAt(x, y, z).getState();
+        if (!(state instanceof BrewingStand stand)) {
+            return;
+        }
+
+        boolean enhanced = false;
+        double factor = getLevelPercent(level);
+        for (int i = 0; i < expectedResults.length; i++) {
+            ItemStack expected = expectedResults[i];
+            ItemStack current = stand.getInventory().getItem(i);
+            if (expected == null || current == null || !current.equals(expected)) {
+                continue;
+            }
+            ItemStack copy = current.clone();
+            if (copy.getItemMeta() instanceof PotionMeta potion && enhance(factor, copy, potion)) {
+                stand.getInventory().setItem(i, copy);
+                enhanced = true;
+            }
+        }
+
+        if (enhanced) {
+            SoundPlayer sounds = SoundPlayer.of(world);
+            sounds.play(stand.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 1f, 0.75f);
+            sounds.play(stand.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 1f, 1.75f);
         }
     }
 

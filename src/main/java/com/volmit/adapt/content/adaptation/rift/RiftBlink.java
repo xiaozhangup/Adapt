@@ -20,11 +20,13 @@ package com.volmit.adapt.content.adaptation.rift;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.event.AdaptAdaptationTeleportEvent;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -36,22 +38,24 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.UUID;
 
 import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
 
 public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
-    private final Map<Player, Long> lastJump = new WeakHashMap<>();
-    private final Map<Player, Boolean> canBlink = new WeakHashMap<>();
+    private final Map<UUID, Long> lastJump = new HashMap<>();
+    private final Map<UUID, BlinkWindow> blinkWindows = new HashMap<>();
+    private long nextWindowGeneration;
 
     private final double jumpVelocity = -0.0784000015258789;
 
     public RiftBlink() {
         super("rift-blink");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("rift", "blink", "description"));
-        setDisplayName(Localizer.dLocalize("rift", "blink", "name"));
+        setDescription(Localizer.component("rift", "blink", "description"));
+        setDisplayName(Localizer.component("rift", "blink", "name"));
         setIcon(Material.FEATHER);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -70,26 +74,32 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + (getBlinkDistance(level)) + C.GRAY + " "
-                + Localizer.dLocalize("rift", "blink", "lore1"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "blink", "lore2") + C.DARK_PURPLE
-                + Localizer.dLocalize("rift", "blink", "lore3"));
+        v.addLore(Components.mini("<green>+ <distance><gray> <lore>",
+                Placeholder.unparsed("distance", String.valueOf(getBlinkDistance(level))),
+                Placeholder.component("lore", Localizer.component("rift", "blink", "lore1"))));
+        v.addLore(Components.mini("<italic><lore2></italic><dark_purple><lore3>",
+                Placeholder.component("lore2", Localizer.component("rift", "blink", "lore2")),
+                Placeholder.component("lore3", Localizer.component("rift", "blink", "lore3"))));
     }
 
     @EventHandler
     public void on(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        lastJump.remove(p);
-        canBlink.remove(p);
+        UUID playerId = e.getPlayer().getUniqueId();
+        lastJump.remove(playerId);
+        restoreTemporaryFlight(e.getPlayer(), blinkWindows.remove(playerId));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void on(PlayerToggleFlightEvent e) {
         Player p = e.getPlayer();
+        UUID playerId = p.getUniqueId();
+        if (!Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+            return;
+        }
         if (hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL) && !p.isFlying()) {
             e.setCancelled(true);
-            p.setAllowFlight(false);
-            if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration()) {
+            restoreTemporaryFlight(p, blinkWindows.remove(playerId));
+            if (lastJump.get(playerId) != null && M.ms() - lastJump.get(playerId) <= getCooldownDuration()) {
                 return;
             }
             if (p.isSprinting()) {
@@ -107,10 +117,11 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
                 SoundPlayer spw = SoundPlayer.of(p.getWorld());
                 if (!isSafe(loc)) {
                     spw.play(p.getLocation(), Sound.BLOCK_CONDUIT_DEACTIVATE, 1f, 1.24f);
-                    lastJump.put(p, M.ms());
+                    lastJump.put(playerId, M.ms());
                     return;
                 }
-                PlayerSkillLine line = getPlayer(p).getData().getSkillLineNullable("rift");
+                AdaptPlayer expectedPlayer = getPlayer(p);
+                PlayerSkillLine line = expectedPlayer.getData().getSkillLineNullable("rift");
                 PlayerAdaptation adaptation = line != null ? line.getAdaptation("rift-resist") : null;
                 if (adaptation != null && adaptation.getLevel() > 0) {
                     RiftResist.riftResistStackAdd(p, 10, 5);
@@ -121,20 +132,38 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
                             l -> l.getBlock().isPassable());
                 }
                 Vector v = p.getVelocity().clone();
-                loadChunkAsync(loc, chunk -> {
-                    Location toLoc = loc.add(0, 1, 0);
+                Location target = loc.clone();
+                Location origin = locOG.clone();
+                UUID targetWorldId = target.getWorld().getUID();
+                loadChunkAsync(target, chunk -> {
+                    Player online = Bukkit.getPlayer(playerId);
+                    World targetWorld = Bukkit.getWorld(targetWorldId);
+                    if (online == null || targetWorld == null
+                            || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                            || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                        return;
+                    }
+                    Location eventTarget = target.clone();
+                    eventTarget.setWorld(targetWorld);
+                    Location toLoc = eventTarget.clone().add(0, 1, 0);
 
                     AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(),
-                            getPlayer(p), this, locOG, loc);
+                            expectedPlayer, this, origin, eventTarget);
                     Bukkit.getPluginManager().callEvent(event);
                     if (event.isCancelled()) {
                         return;
                     }
 
-                    J.s(() -> p.teleport(toLoc, PlayerTeleportEvent.TeleportCause.PLUGIN));
-                    J.s(() -> p.setVelocity(v.multiply(3)), 2);
+                    online.teleport(toLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                    J.s(() -> {
+                        Player current = Bukkit.getPlayer(playerId);
+                        if (current != null && Adapt.instance.getAdaptServer().isCurrentPlayer(playerId,
+                                expectedPlayer)) {
+                            current.setVelocity(v.clone().multiply(3));
+                        }
+                    }, 2);
                 });
-                lastJump.put(p, M.ms());
+                lastJump.put(playerId, M.ms());
                 spw.play(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.50f, 1.0f);
                 vfxLevelUp(p);
             }
@@ -143,12 +172,21 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
 
     @EventHandler
     public void on(PlayerMoveEvent e) {
+        if (e.getTo() == null || (e.getFrom().getX() == e.getTo().getX()
+                && e.getFrom().getY() == e.getTo().getY() && e.getFrom().getZ() == e.getTo().getZ())) {
+            return;
+        }
         Player p = e.getPlayer();
+        UUID playerId = p.getUniqueId();
+        if (!Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+            return;
+        }
         boolean isJumping = p.getVelocity().getY() > jumpVelocity;
         boolean canFlight = p.getAllowFlight();
-        if (isJumping && !canBlink.containsKey(p) && hasAdaptation(p) && p.getGameMode().equals(GameMode.SURVIVAL)
+        if (isJumping && !blinkWindows.containsKey(playerId) && hasAdaptation(p)
+                && p.getGameMode().equals(GameMode.SURVIVAL)
                 && p.isSprinting() && !p.isFlying()) {
-            if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration()) {
+            if (lastJump.get(playerId) != null && M.ms() - lastJump.get(playerId) <= getCooldownDuration()) {
                 if (!canFlight)
                     p.setAllowFlight(false);
                 return;
@@ -166,25 +204,50 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
             }
 
             if (isSafe(loc)) {
-                canBlink.put(p, true);
+                BlinkWindow window = new BlinkWindow(++nextWindowGeneration, canFlight);
+                blinkWindows.put(playerId, window);
                 p.setAllowFlight(true);
                 Adapt.verbose("Allowing flight for " + p.getName());
-                J.a(() -> {
-                    if (!canFlight)
-                        p.setAllowFlight(false);
-                    p.setFlying(false);
-                    Adapt.verbose("Disabling flight for " + p.getName());
-                    canBlink.remove(p);
+                J.s(() -> {
+                    if (!blinkWindows.remove(playerId, window)) {
+                        return;
+                    }
+                    Player online = Bukkit.getPlayer(playerId);
+                    if (online != null && Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+                        if (!window.hadFlight()) {
+                            online.setAllowFlight(false);
+                        }
+                        online.setFlying(false);
+                        Adapt.verbose("Disabling flight for " + online.getName());
+                    }
                 }, 25);
             }
-        } else {
-            canBlink.remove(p);
         }
     }
 
     private boolean isSafe(Location l) {
         return l.getBlock().getType().isSolid() && !l.getBlock().getRelative(BlockFace.UP).getType().isSolid()
                 && !l.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType().isSolid();
+    }
+
+    private void restoreTemporaryFlight(Player player, BlinkWindow window) {
+        if (window != null && !window.hadFlight()) {
+            player.setFlying(false);
+            player.setAllowFlight(false);
+        }
+    }
+
+    @Override
+    public void unregister() {
+        blinkWindows.forEach((playerId, window) -> {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                restoreTemporaryFlight(player, window);
+            }
+        });
+        blinkWindows.clear();
+        lastJump.clear();
+        super.unregister();
     }
 
     @Override
@@ -213,5 +276,8 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
         int initialCost = 1;
         double baseDistance = 6;
         double distanceFactor = 5;
+    }
+
+    private record BlinkWindow(long generation, boolean hadFlight) {
     }
 }

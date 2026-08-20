@@ -24,6 +24,7 @@ import com.volmit.adapt.api.version.Modifier;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -32,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
@@ -42,8 +44,8 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
     public StealthGhostArmor() {
         super("stealth-ghost-armor");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("stealth", "ghostarmor", "description"));
-        setDisplayName(Localizer.dLocalize("stealth", "ghostarmor", "name"));
+        setDescription(Localizer.component("stealth", "ghostarmor", "description"));
+        setDisplayName(Localizer.component("stealth", "ghostarmor", "name"));
         setIcon(Material.NETHERITE_CHESTPLATE);
         setInterval(5353);
         setBaseCost(getConfig().baseCost);
@@ -54,10 +56,14 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.f(getMaxArmorPoints(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("stealth", "ghostarmor", "lore1"));
-        v.addLore(C.GREEN + "+ " + Form.f(getMaxArmorPerTick(getLevelPercent(level)), 1) + C.GRAY + " "
-                + Localizer.dLocalize("stealth", "ghostarmor", "lore2"));
+        v.addLore(stat(Form.f(getMaxArmorPoints(getLevelPercent(level)), 0), "lore1"));
+        v.addLore(stat(Form.f(getMaxArmorPerTick(getLevelPercent(level)), 1), "lore2"));
+    }
+
+    private static net.kyori.adventure.text.Component stat(String amount, String key) {
+        return Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", amount),
+                Placeholder.component("lore", Localizer.component("stealth", "ghostarmor", key)));
     }
 
     public double getMaxArmorPoints(double factor) {
@@ -75,8 +81,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
 
     @Override
     public void onTick() {
-        J.s(() -> {
-            for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+        for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
                 if (!p.clientConnected()) {
                     continue;
                 }
@@ -99,8 +104,7 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                 } else if (oldArmor > armor) {
                     attribute.setModifier(MODIFIER, MODIFIER_KEY, armor, AttributeModifier.Operation.ADD_NUMBER);
                 }
-            }
-        });
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -124,6 +128,24 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
                 attribute.removeModifier(MODIFIER, MODIFIER_KEY);
             });
         }
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        removeModifier(event.getPlayer());
+    }
+
+    private void removeModifier(Player player) {
+        var attribute = Version.get().getAttribute(player, Attribute.ARMOR);
+        if (attribute != null) {
+            attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+        }
+    }
+
+    @Override
+    public void unregister() {
+        Adapt.instance.getAdaptServer().getAdaptPlayers().forEach(this::removeModifier);
+        super.unregister();
     }
 
     @Override

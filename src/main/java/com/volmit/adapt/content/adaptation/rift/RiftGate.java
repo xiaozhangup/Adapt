@@ -21,28 +21,36 @@ package com.volmit.adapt.content.adaptation.rift;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.type.Shapeless;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.event.AdaptAdaptationTeleportEvent;
 import com.volmit.adapt.content.item.BoundEyeOfEnder;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.UUID;
+
+import static com.volmit.adapt.api.adaptation.chunk.ChunkLoading.loadChunkAsync;
 
 public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
     public RiftGate() {
         super("rift-gate");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("rift", "gate", "description"));
-        setDisplayName(Localizer.dLocalize("rift", "gate", "name"));
+        setDescription(Localizer.component("rift", "gate", "description"));
+        setDisplayName(Localizer.component("rift", "gate", "name"));
         setIcon(Material.END_PORTAL_FRAME);
         setBaseCost(0);
         setCostFactor(0);
@@ -56,14 +64,20 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.YELLOW + Localizer.dLocalize("rift", "gate", "lore1"));
-        v.addLore(C.RED + Localizer.dLocalize("rift", "gate", "lore2"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "gate", "lore3") + C.UNDERLINE + C.RED
-                + Localizer.dLocalize("rift", "gate", "lore4"));
+        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "gate", "lore1"))));
+        v.addLore(Components.mini("<red><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "gate", "lore2"))));
+        v.addLore(Components.mini("<italic><lore3></italic><red><lore4>",
+                Placeholder.component("lore3", Localizer.component("rift", "gate", "lore3")),
+                Placeholder.component("lore4", Localizer.component("rift", "gate", "lore4"))));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(PlayerInteractEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Player p = e.getPlayer();
         ItemStack hand = p.getInventory().getItemInMainHand();
         ItemStack offHand = p.getInventory().getItemInOffHand();
@@ -156,11 +170,12 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         SoundPlayer sp = SoundPlayer.of(p);
         Location l = BoundEyeOfEnder.getLocation(p.getInventory().getItemInMainHand());
         ItemStack hand = p.getInventory().getItemInMainHand();
+        int eyeSlot = p.getInventory().getHeldItemSlot();
+        ItemStack expectedEye = hand.clone();
+        expectedEye.setAmount(1);
+        AdaptPlayer expectedPlayer = getPlayer(p);
 
-        if (getConfig().consumeOnUse) {
-            xp(p, 75);
-            decrementItemstack(hand, p);
-        } else {
+        if (!getConfig().consumeOnUse) {
             if (p.getCooldown(Material.ENDER_EYE) > 0) {
                 sp.play(p.getLocation(), Sound.BLOCK_REDSTONE_TORCH_BURNOUT, 1, 1);
                 return;
@@ -168,7 +183,7 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
         }
         p.setCooldown(Material.ENDER_EYE, 150);
 
-        if (RiftResist.hasRiftResistPerk(getPlayer(p))) {
+        if (RiftResist.hasRiftResistPerk(expectedPlayer)) {
             RiftResist.riftResistStackAdd(p, 150, 3);
         }
 
@@ -179,34 +194,86 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
             sp.play(l, Sound.BLOCK_BELL_RESONATE, 1f, 0.1f);
         }
 
-        J.a(() -> {
-            long dur = 4000; // time in miliseconds
-            double radius = 2.0;
-            double adder = 0.0;
-            Color color = Color.fromBGR(0, 0, 0);
-            vfxFastRing(p.getLocation(), radius, color);
-            while (dur > 0) {
-                dur -= 50;
-                adder += 0.02;
-                radius *= 0.9; // reduce the radius by 20%
-                vfxFastRing(p.getLocation().add(0, adder, 0), radius, color);
-                J.sleep(50);
+        Color color = Color.fromBGR(0, 0, 0);
+        vfxFastRing(p.getLocation(), 2.0, color);
+        new BukkitRunnable() {
+            private int ticks;
+            private double radius = 2.0;
+            private double height;
+
+            @Override
+            public void run() {
+                if (!p.isOnline() || ticks++ >= 80) {
+                    cancel();
+                    return;
+                }
+                height += 0.02;
+                radius *= 0.9;
+                vfxFastRing(p.getLocation().add(0, height, 0), radius, color);
             }
-        });
+        }.runTaskTimer(Adapt.instance, 1L, 1L);
         vfxLevelUp(p);
         sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 5.35f, 0.1f);
+        UUID playerId = p.getUniqueId();
+        UUID targetWorldId = l == null || l.getWorld() == null ? null : l.getWorld().getUID();
+        double targetX = l == null ? 0 : l.getX();
+        double targetY = l == null ? 0 : l.getY();
+        double targetZ = l == null ? 0 : l.getZ();
+        float targetYaw = l == null ? 0 : l.getYaw();
+        float targetPitch = l == null ? 0 : l.getPitch();
         J.s(() -> {
-            AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(),
-                    getPlayer(p), this, p.getLocation(), l);
-            Bukkit.getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
+            Player online = Bukkit.getPlayer(playerId);
+            World targetWorld = targetWorldId == null ? null : Bukkit.getWorld(targetWorldId);
+            if (online == null || !online.isOnline() || targetWorld == null
+                    || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                    || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
                 return;
             }
+            Location target = new Location(targetWorld, targetX, targetY, targetZ, targetYaw, targetPitch);
+            loadChunkAsync(target, chunk -> {
+                Player current = Bukkit.getPlayer(playerId);
+                World currentTargetWorld = Bukkit.getWorld(targetWorldId);
+                if (current == null || !current.isOnline() || currentTargetWorld == null
+                        || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                        || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                    return;
+                }
+                Location loadedTarget = target.clone();
+                loadedTarget.setWorld(currentTargetWorld);
+                if (getConfig().consumeOnUse && !matchesEye(current, eyeSlot, expectedEye)) {
+                    return;
+                }
+                AdaptAdaptationTeleportEvent event = new AdaptAdaptationTeleportEvent(!Bukkit.isPrimaryThread(),
+                        expectedPlayer, this, current.getLocation(), loadedTarget);
+                Bukkit.getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    return;
+                }
+                if (getConfig().consumeOnUse && !matchesEye(current, eyeSlot, expectedEye)) {
+                    return;
+                }
 
-            p.teleport(l, PlayerTeleportEvent.TeleportCause.PLUGIN);
-            vfxLevelUp(p);
-            sp.play(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 5.35f, 0.1f);
+                if (!current.teleport(loadedTarget, PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+                    return;
+                }
+                if (getConfig().consumeOnUse && matchesEye(current, eyeSlot, expectedEye)) {
+                    ItemStack eye = current.getInventory().getItem(eyeSlot);
+                    if (eye.getAmount() > 1) {
+                        eye.setAmount(eye.getAmount() - 1);
+                    } else {
+                        current.getInventory().setItem(eyeSlot, null);
+                    }
+                    xp(current, 75);
+                }
+                vfxLevelUp(current);
+                SoundPlayer.of(current).play(current.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 5.35f, 0.1f);
+            });
         }, 85);
+    }
+
+    private boolean matchesEye(Player player, int slot, ItemStack expectedEye) {
+        ItemStack eye = player.getInventory().getItem(slot);
+        return eye != null && eye.getAmount() > 0 && eye.isSimilar(expectedEye);
     }
 
     @Override

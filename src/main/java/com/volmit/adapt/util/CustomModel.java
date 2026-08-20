@@ -83,12 +83,32 @@ public record CustomModel(Material material, int model, NamespacedKey modelKey) 
                 }
 
                 return new CustomModel(
-                        json.has("material") ? Material.valueOf(json.get("material").getAsString()) : fallback,
+                        readMaterial(json, fallback, path),
                         json.has("model") ? json.get("model").getAsInt() : 0,
                         json.has("modelKey")
                                 ? NamespacedKey.fromString(json.get("modelKey").getAsString())
                                 : EMPTY_KEY);
             });
+        }
+
+        private Material readMaterial(JsonObject json, Material fallback, String... path) {
+            if (!json.has("material")) {
+                return fallback;
+            }
+
+            try {
+                String configured = json.get("material").getAsString();
+                Material material = Material.matchMaterial(configured);
+                if (material != null) {
+                    return material;
+                }
+                Adapt.warn("Invalid material '" + configured + "' at models.json path "
+                        + String.join(".", path) + "; using " + fallback.name() + " instead.");
+            } catch (RuntimeException e) {
+                Adapt.warn("Invalid material at models.json path " + String.join(".", path)
+                        + "; using " + fallback.name() + " instead.");
+            }
+            return fallback;
         }
 
         public CustomModel set(CustomModel data, String... path) {

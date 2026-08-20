@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingSaturation extends SimpleAdaptation<BrewingSaturation.Config
     public BrewingSaturation() {
         super("brewing-saturation");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "saturation", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "saturation", "name"));
+        setDescription(Localizer.component("brewing", "saturation", "description"));
+        setDisplayName(Localizer.component("brewing", "saturation", "name"));
         setIcon(Material.BAKED_POTATO);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingSaturation extends SimpleAdaptation<BrewingSaturation.Config
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-saturation-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.BAKED_POTATO)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.REGENERATION, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Saturation")
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Saturation"))
                         .setColor(Color.ORANGE).addEffect(PotionEffectType.SATURATION, 1, 4, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-saturation-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.HAY_BLOCK)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.REGENERATION, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Saturation 2")
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Saturation 2"))
                         .setColor(Color.ORANGE).addEffect(PotionEffectType.SATURATION, 1, 8, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "saturation", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "saturation", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "saturation", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "saturation", "lore2"))));
     }
 
     @Override

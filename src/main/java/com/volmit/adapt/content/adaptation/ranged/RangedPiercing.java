@@ -18,10 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.ranged;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractArrow;
@@ -38,8 +40,8 @@ public class RangedPiercing extends SimpleAdaptation<RangedPiercing.Config> {
     public RangedPiercing() {
         super("ranged-piercing");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("ranged", "arrowpiercing", "description"));
-        setDisplayName(Localizer.dLocalize("ranged", "arrowpiercing", "name"));
+        setDescription(Localizer.component("ranged", "arrowpiercing", "description"));
+        setDisplayName(Localizer.component("ranged", "arrowpiercing", "name"));
         setIcon(Material.SHEARS);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -50,7 +52,9 @@ public class RangedPiercing extends SimpleAdaptation<RangedPiercing.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + level + C.GRAY + " " + Localizer.dLocalize("ranged", "arrowpiercing", "lore1"));
+        v.addLore(Components.mini("<green>+ <level></green><gray> <lore></gray>",
+                Placeholder.unparsed("level", Integer.toString(level)),
+                Placeholder.component("lore", Localizer.component("ranged", "arrowpiercing", "lore1"))));
     }
 
     @EventHandler

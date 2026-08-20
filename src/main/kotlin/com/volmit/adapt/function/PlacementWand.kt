@@ -2,12 +2,14 @@ package com.volmit.adapt.function
 
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes
 import com.volmit.adapt.content.adaptation.architect.ArchitectPlacement
+import com.volmit.adapt.util.Components
 import io.github.retrooper.packetevents.util.SpigotConversionUtil
 import me.xiaozhangup.slimecargo.command.takeItems
 import me.xiaozhangup.whale.lib.entitylib.meta.display.BlockDisplayMeta
 import me.xiaozhangup.whale.util.PlayerBaffle
 import me.xiaozhangup.whale.util.entity.VirtualEntity
-import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -34,7 +36,6 @@ class PlacementWand(
     private val wandDistance = 8
     private val brightness = (15 shl 4) or (15 shl 20)
     private val glowColor = Color.fromRGB(242, 224, 255).asRGB()
-    private val miniMessage = MiniMessage.miniMessage()
     private val flatFaceCache = mutableMapOf<BlockFace, Set<BlockFace>>()
 
     fun renderBlockEntity(player: Player) {
@@ -98,7 +99,10 @@ class PlacementWand(
         val type = block.type
 
         if (block.state is TileState) {
-            sendActionBarMessage(player, "不支持放置<lang:${type.translationKey()}>")
+            sendActionBarMessage(player, Components.mini(
+                "<#85ced1>◆ 不支持放置<material>",
+                Placeholder.component("material", Component.translatable(type.translationKey()))
+            ))
             return
         }
 
@@ -108,14 +112,14 @@ class PlacementWand(
         }
         if (connectedBlocks.isEmpty()) return
 
-        val takeCount = calculateRequiredItems(connectedBlocks, type)
-        if (takeCount == -1) {
-            sendActionBarMessage(player, "不支持放置<lang:${type.translationKey()}>")
-            return
-        }
+        val takeCount = calculateRequiredItems(connectedBlocks)
 
         if (!player.takeItems(ItemStack(type), takeCount)) {
-            sendActionBarMessage(player, "不足 $takeCount 个<lang:${type.translationKey()}>")
+            sendActionBarMessage(player, Components.mini(
+                "<#85ced1>◆ 不足 <count> 个<material>",
+                Placeholder.unparsed("count", takeCount.toString()),
+                Placeholder.component("material", Component.translatable(type.translationKey()))
+            ))
             return
         }
 
@@ -136,17 +140,26 @@ class PlacementWand(
             targetData.isWaterlogged = waterlogged
         }
 
-        sendActionBarMessage(player, "放置了 $takeCount 个<lang:${type.translationKey()}>")
+        sendActionBarMessage(player, Components.mini(
+            "<#85ced1>◆ 放置了 <count> 个<material>",
+            Placeholder.unparsed("count", takeCount.toString()),
+            Placeholder.component("material", Component.translatable(type.translationKey()))
+        ))
     }
 
     fun clearPlayerEntities(player: Player) {
-        val uniqueId = player.uniqueId
-        playerDisplayEntities[uniqueId]?.forEach { entity ->
+        clearPlayerEntities(player.uniqueId)
+    }
+
+    fun clearPlayerEntities(playerId: UUID) {
+        playerDisplayEntities[playerId]?.forEach { entity ->
             entity.despawn()
         }
-        playerDisplayEntities.remove(uniqueId)
-        playerLastTargetBlock.remove(uniqueId)
+        playerDisplayEntities.remove(playerId)
+        playerLastTargetBlock.remove(playerId)
     }
+
+    fun trackedPlayerIds(): Set<UUID> = (playerDisplayEntities.keys + playerLastTargetBlock.keys).toSet()
 
     private fun isWand(item: ItemStack) : Boolean {
         return item.type == Material.BREEZE_ROD && !item.hasItemMeta()
@@ -194,28 +207,15 @@ class PlacementWand(
         return "${face.ordinal}_${block.world.name}_${block.x}_${block.y}_${block.z}"
     }
 
-    private fun sendActionBarMessage(player: Player, message: String) {
-        player.sendActionBar(miniMessage.deserialize("<color:#85ced1>◆ $message"))
+    private fun sendActionBarMessage(player: Player, message: Component) {
+        player.sendActionBar(message)
     }
 
-    private fun calculateRequiredItems(connectedBlocks: Set<Block>, type: Material): Int {
-        val typeName = type.data.simpleName
-        var take = 0
-
-        for (block in connectedBlocks) {
-            take += when (typeName) {
-                "MaterialData", "Stairs", "Snowable", "Directional",
-                "Wall", "Orientable", "Fence", "Gate", "Leaves",
-                "GlassPane", "MultipleFacing" -> 1
-                "Slab" -> {
-                    val slab = block.blockData as Slab
-                    if (slab.type == Slab.Type.DOUBLE) 2 else 1
-                }
-                else -> return -1
-            }
+    private fun calculateRequiredItems(connectedBlocks: Set<Block>): Int {
+        return connectedBlocks.sumOf { block ->
+            val blockData = block.blockData
+            if (blockData is Slab && blockData.type == Slab.Type.DOUBLE) 2 else 1
         }
-
-        return take
     }
 
     private fun getFlatFace(face: BlockFace): Set<BlockFace> {

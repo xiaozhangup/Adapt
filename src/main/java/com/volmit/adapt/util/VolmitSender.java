@@ -32,8 +32,8 @@ import com.volmit.adapt.util.decree.virtual.VirtualDecreeCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.title.Title;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -45,13 +45,10 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents a volume sender. A command sender with extra crap in its
@@ -59,15 +56,15 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author cyberpwn
  */
 public class VolmitSender implements CommandSender {
+    private static final String COLOR_NAMES = String.join("|", NamedTextColor.NAMES.keys());
+    private static final Pattern COLOR_OPEN = Pattern.compile(
+            "<(?:color:)?(#[0-9a-fA-F]{6}|" + COLOR_NAMES + ")>");
+    private static final Pattern COLOR_CLOSE = Pattern.compile(
+            "</(?:color|#[0-9a-fA-F]{6}|" + COLOR_NAMES + ")>");
     @Getter
     private static final Map<String, String> helpCache = new HashMap<>();
     private final CommandSender s;
-    public boolean useConsoleCustomColors = true;
-    public boolean useCustomColorsIngame = true;
-    public int spinh = -20;
-    public int spins = 7;
-    public int spinb = 8;
-    private String tag;
+    private Component tag;
     @Getter
     @Setter
     private String command;
@@ -79,11 +76,11 @@ public class VolmitSender implements CommandSender {
      *            the command sender
      */
     public VolmitSender(CommandSender s) {
-        tag = "";
+        tag = Component.empty();
         this.s = s;
     }
 
-    public VolmitSender(CommandSender s, String tag) {
+    public VolmitSender(CommandSender s, Component tag) {
         this.tag = tag;
         this.s = s;
     }
@@ -123,7 +120,7 @@ public class VolmitSender implements CommandSender {
      *
      * @return the command tag
      */
-    public String getTag() {
+    public Component getTag() {
         return tag;
     }
 
@@ -133,7 +130,7 @@ public class VolmitSender implements CommandSender {
      * @param tag
      *            the tag
      */
-    public void setTag(String tag) {
+    public void setTag(Component tag) {
         this.tag = tag;
     }
 
@@ -239,147 +236,67 @@ public class VolmitSender implements CommandSender {
     }
 
     public void hr() {
-        s.sendMessage("========================================================");
-    }
-
-    public void sendTitle(String title, String subtitle, int i, int s, int o) {
-        player().showTitle(Title.title(createComponent(title), createComponent(subtitle),
-                Title.Times.times(Duration.ofMillis(i), Duration.ofMillis(s), Duration.ofMillis(o))));
-    }
-
-    public void sendProgress(double percent, String thing) {
-        // noinspection IfStatementWithIdenticalBranches
-        if (percent < 0) {
-            int l = 44;
-            int g = (int) (1D * l);
-            sendTitle(C.ADAPT + thing + " ", 0, 500, 250);
-            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>"
-                    + Form.repeat(" ", l - g));
-        } else {
-            int l = 44;
-            int g = (int) (percent * l);
-            sendTitle(C.ADAPT + thing + " " + C.BLUE + "<font:minecraft:uniform>" + Form.pc(percent, 0), 0, 500, 250);
-            sendActionNoProcessing(pulse("#00BFFF", "#003366", 1D) + "<underlined> " + Form.repeat(" ", g) + "<reset>"
-                    + Form.repeat(" ", l - g));
-        }
-    }
-
-    public void sendAction(String action) {
-        player().sendActionBar(createNoPrefixComponent(action));
-    }
-
-    public void sendActionNoProcessing(String action) {
-        player().sendActionBar(createNoPrefixComponentNoProcessing(action));
-    }
-
-    public void sendTitle(String subtitle, int i, int s, int o) {
-        player().showTitle(Title.title(createNoPrefixComponent(" "), createNoPrefixComponent(subtitle),
-                Title.Times.times(Duration.ofMillis(i), Duration.ofMillis(s), Duration.ofMillis(o))));
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean canUseCustomColors(VolmitSender volmitSender) {
-        return volmitSender.isPlayer() ? useCustomColorsIngame : useConsoleCustomColors;
-    }
-
-    private Component createNoPrefixComponent(String message) {
-        if (!canUseCustomColors(this)) {
-            String t = C.translateAlternateColorCodes('&', MiniMessage.miniMessage().stripTags(message));
-            return MiniMessage.miniMessage().deserialize(t);
-        }
-
-        String t = C.translateAlternateColorCodes('&', message);
-        String a = C.aura(t, spinh, spins, spinb, 0.36);
-        return MiniMessage.miniMessage().deserialize(a);
-    }
-
-    private Component createNoPrefixComponentNoProcessing(String message) {
-        return MiniMessage.builder().postProcessor(c -> c).build().deserialize(message);
-    }
-
-    private Component createComponent(String message) {
-        if (!canUseCustomColors(this)) {
-            String t = C.translateAlternateColorCodes('&', MiniMessage.miniMessage().stripTags(getTag() + message));
-            return MiniMessage.miniMessage().deserialize(t);
-        }
-
-        String t = C.translateAlternateColorCodes('&', getTag() + message);
-        String a = C.aura(t, spinh, spins, spinb);
-        return MiniMessage.miniMessage().deserialize(a);
-    }
-
-    private Component createComponentRaw(String message) {
-        if (!canUseCustomColors(this)) {
-            String t = C.translateAlternateColorCodes('&', MiniMessage.miniMessage().stripTags(getTag() + message));
-            return MiniMessage.miniMessage().deserialize(t);
-        }
-
-        String t = C.translateAlternateColorCodes('&', getTag() + message);
-        return MiniMessage.miniMessage().deserialize(t);
-    }
-
-    public <T> void showWaiting(String passive, CompletableFuture<T> f) {
-        AtomicInteger v = new AtomicInteger();
-        AtomicReference<T> g = new AtomicReference<>();
-        v.set(J.ar(() -> {
-            if (f.isDone() && g.get() != null) {
-                J.car(v.get());
-                sendAction(" ");
-                return;
-            }
-
-            sendProgress(-1, passive);
-        }, 0));
-        J.a(() -> {
-            try {
-                g.set(f.get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
-
+        s.sendMessage(Components.mini("========================================================"));
     }
 
     @Override
     public void sendMessage(String message) {
+        sendMessage(Components.mini(message));
+    }
+
+    @Override
+    public void sendMessage(Component message) {
         if (s instanceof CommandDummy) {
             return;
         }
-
-        if ((!useCustomColorsIngame && s instanceof Player) || !useConsoleCustomColors) {
-            s.sendMessage(C.translateAlternateColorCodes('&', getTag() + message));
-            return;
-        }
-
-        if (message.contains("<NOMINI>")) {
-            s.sendMessage(C.translateAlternateColorCodes('&', getTag() + message.replaceAll("\\Q<NOMINI>\\E", "")));
-            return;
-        }
-        s.sendMessage(createComponent(message));
-    }
-
-    public void sendMessageBasic(String message) {
-        s.sendMessage(C.translateAlternateColorCodes('&', getTag() + message));
+        s.sendMessage(aura(tag.append(message)));
     }
 
     public void sendMessageRaw(String message) {
         if (s instanceof CommandDummy) {
             return;
         }
+        s.sendMessage(tag.append(Components.mini(message)));
+    }
 
-        if ((!useCustomColorsIngame && s instanceof Player) || !useConsoleCustomColors) {
-            s.sendMessage(C.translateAlternateColorCodes('&', message));
-            return;
+    private Component aura(Component message) {
+        Matcher matcher = COLOR_OPEN.matcher(Components.miniString(message));
+        StringBuilder mini = new StringBuilder();
+        while (matcher.find()) {
+            TextColor color = matcher.group(1).charAt(0) == '#'
+                    ? TextColor.fromHexString(matcher.group(1))
+                    : NamedTextColor.NAMES.value(matcher.group(1));
+            matcher.appendReplacement(mini, Matcher.quoteReplacement(gradient(Objects.requireNonNull(color))));
         }
+        matcher.appendTail(mini);
+        return Components.mini(COLOR_CLOSE.matcher(mini).replaceAll("</gradient>"));
+    }
 
-        if (message.contains("<NOMINI>")) {
-            s.sendMessage(message.replaceAll("\\Q<NOMINI>\\E", ""));
-            return;
-        }
+    private String gradient(TextColor color) {
+        java.awt.Color base = new java.awt.Color(color.value());
+        return pulse(hex(spin(base, -20, 7, 8)), hex(spin(base, 20, -7, -8)), 0.3);
+    }
 
-        s.sendMessage(createComponentRaw(message));
+    private java.awt.Color spin(java.awt.Color color, int hue, int saturation, int brightness) {
+        float[] hsb = java.awt.Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        hsb[0] = spinHue(hsb[0], hue);
+        hsb[1] = spinChannel(hsb[1], saturation);
+        hsb[2] = spinChannel(hsb[2], brightness);
+        return java.awt.Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
+    }
+
+    private float spinHue(float value, int shift) {
+        float shifted = (((int) Math.floor(value * 360) + shift) % 360) / 360F;
+        return shifted < 0 ? 1F - shifted : shifted;
+    }
+
+    private float spinChannel(float value, int shift) {
+        float shifted = ((int) Math.floor(value * 255) + shift) / 255F;
+        return Math.max(0F, Math.min(shifted, 1F));
+    }
+
+    private String hex(java.awt.Color color) {
+        return "#%06x".formatted(color.getRGB() & 0xffffff);
     }
 
     @Override
@@ -509,8 +426,8 @@ public class VolmitSender implements CommandSender {
 
             sendMessageRaw(s);
         } else {
-            sendMessage(
-                    C.RED + "There are no subcommands in this group! Contact support, this is a command design issue!");
+            sendMessage(Components.mini(
+                    "<red>There are no subcommands in this group! Contact support, this is a command design issue!"));
         }
     }
 
@@ -596,7 +513,7 @@ public class VolmitSender implements CommandSender {
                 return wrapper;
             }));
         } else {
-            sendMessage(i.getPath());
+            sendMessage(Component.text(i.getPath()));
         }
     }
 

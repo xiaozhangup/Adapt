@@ -1,13 +1,14 @@
 package com.volmit.adapt.content.adaptation.pickaxe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.NaturalBlockDrop;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
-import org.bukkit.block.data.type.SculkShrieker;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,8 +20,8 @@ public class PickaxeMendingSculkShrieker extends SimpleAdaptation<PickaxeMending
     public PickaxeMendingSculkShrieker() {
         super("pickaxe-mending-sculk-shrieker");
         registerConfiguration(PickaxeMendingSculkShrieker.Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "mendingsculkshrieker", "description"));
-        setDisplayName(Localizer.dLocalize("pickaxe", "mendingsculkshrieker", "name"));
+        setDescription(Localizer.component("pickaxe", "mendingsculkshrieker", "description"));
+        setDisplayName(Localizer.component("pickaxe", "mendingsculkshrieker", "name"));
         setIcon(Material.SCULK_SHRIEKER);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -60,7 +61,8 @@ public class PickaxeMendingSculkShrieker extends SimpleAdaptation<PickaxeMending
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "mendingsculkshrieker", "lore1"));
+        v.addLore(Components.mini("<green><lore></green>",
+                Placeholder.component("lore", Localizer.component("pickaxe", "mendingsculkshrieker", "lore1"))));
     }
 
     @Override

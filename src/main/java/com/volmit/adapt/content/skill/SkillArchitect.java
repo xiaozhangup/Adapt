@@ -32,8 +32,10 @@ import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,40 +43,41 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillArchitect() {
-        super("architect", Localizer.dLocalize("skill", "architect", "icon"));
+        super("architect", Localizer.component("skill", "architect", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#85ced1"));
-        setDescription(Localizer.dLocalize("skill", "architect", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "architect", "name"));
+        setColor(TextColor.color(0x85ced1));
+        setDescription(Localizer.component("skill", "architect", "description"));
+        setDisplayName(Localizer.component("skill", "architect", "name"));
         setInterval(3100);
         setIcon(Material.IRON_BARS);
         cooldowns = new WeakHashMap<>();
         registerAdvancement(AdaptAdvancement.builder().icon(Material.BRICK).key("challenge_place_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_place_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_place_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_place_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_place_1k", "description"))
                 .model(CustomModel.get(Material.BRICK, "advancement", "architect", "challenge_place_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.BRICK).key("challenge_place_5k")
-                        .title(Localizer.dLocalize("advancement", "challenge_place_5k", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_place_5k", "description"))
+                        .title(Localizer.component("advancement", "challenge_place_5k", "title"))
+                        .description(Localizer.component("advancement", "challenge_place_5k", "description"))
                         .model(CustomModel.get(Material.BRICK, "advancement", "architect", "challenge_place_5k"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.NETHER_BRICK).key("challenge_place_50k")
-                                .title(Localizer.dLocalize("advancement", "challenge_place_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_place_50k", "description"))
+                                .title(Localizer.component("advancement", "challenge_place_50k", "title"))
+                                .description(Localizer.component("advancement", "challenge_place_50k", "description"))
                                 .model(CustomModel.get(Material.NETHER_BRICK, "advancement", "architect",
                                         "challenge_place_50k"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.NETHER_BRICK)
                                         .key("challenge_place_500k")
-                                        .title(Localizer.dLocalize("advancement", "challenge_place_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_place_500k",
+                                        .title(Localizer.component("advancement", "challenge_place_500k", "title"))
+                                        .description(Localizer.component("advancement", "challenge_place_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.NETHER_BRICK, "advancement", "architect",
                                                 "challenge_place_500k"))
@@ -82,9 +85,9 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.IRON_INGOT)
                                                 .key("challenge_place_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_place_5m",
+                                                .title(Localizer.component("advancement", "challenge_place_5m",
                                                         "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_place_5m",
+                                                .description(Localizer.component("advancement", "challenge_place_5m",
                                                         "description"))
                                                 .model(CustomModel.get(Material.IRON_INGOT, "advancement", "architect",
                                                         "challenge_place_5m"))
@@ -124,13 +127,19 @@ public class SkillArchitect extends SimpleSkill<SkillArchitect.Config> {
                 adaptPlayer.getData().addStat("blocks.placed.value", v);
 
                 handleBlockCooldown(p, () -> {
-                    try {
-                        J.a(() -> xp(p, e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5),
-                                blockXP(e.getBlock(), getConfig().xpBase + v)));
-                    } catch (Exception ignored) {
-                        Adapt.verbose("Failed to give XP to " + p.getName() + " for placing "
-                                + e.getBlock().getType().name());
-                    }
+                    int x = e.getBlock().getX();
+                    int y = e.getBlock().getY();
+                    int z = e.getBlock().getZ();
+                    Location location = e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5);
+                    UUID playerId = p.getUniqueId();
+                    queueBlockXP(e.getBlock().getWorld(), x, y, z, getConfig().xpBase + v, amount -> {
+                        Player online = Bukkit.getPlayer(playerId);
+                        if (online != null
+                                && Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, adaptPlayer)
+                                && Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+                            xp(online, location, amount);
+                        }
+                    });
                 });
             }
         });

@@ -18,6 +18,7 @@
 
 package com.volmit.adapt.util;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -72,9 +73,9 @@ public interface Window {
 
     Window setViewportHeight(int height);
 
-    String getTitle();
+    Component getTitle();
 
-    Window setTitle(String title);
+    Window setTitle(Component title);
 
     String getTag();
 

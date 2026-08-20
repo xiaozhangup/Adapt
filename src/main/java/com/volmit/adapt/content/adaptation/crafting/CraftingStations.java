@@ -18,8 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
@@ -37,8 +41,8 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
     public CraftingStations() {
         super("crafting-stations");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("crafting", "stations", "description"));
-        setDisplayName(Localizer.dLocalize("crafting", "stations", "name"));
+        setDescription(Localizer.component("crafting", "stations", "description"));
+        setDisplayName(Localizer.component("crafting", "stations", "name"));
         setIcon(Material.CRAFTING_TABLE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -49,10 +53,10 @@ public class CraftingStations extends SimpleAdaptation<CraftingStations.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("crafting", "stations", "lore2"));
-        v.addLore(C.GRAY + "");
-        v.addLore(C.RED + Localizer.dLocalize("crafting", "stations", "lore3"));
-        v.addLore(C.GRAY + Localizer.dLocalize("crafting", "stations", "lore4"));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("crafting", "stations", "lore2"))));
+        v.addLore(Components.mini("<gray>"));
+        v.addLore(Components.mini("<red><lore>", Placeholder.component("lore", Localizer.component("crafting", "stations", "lore3"))));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("crafting", "stations", "lore4"))));
     }
 
     @SuppressWarnings("UnstableApiUsage")

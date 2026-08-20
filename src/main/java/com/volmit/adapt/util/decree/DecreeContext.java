@@ -19,29 +19,20 @@
 
 package com.volmit.adapt.util.decree;
 
-import com.volmit.adapt.util.ChronoLatch;
 import com.volmit.adapt.util.VolmitSender;
-import com.volmit.adapt.util.collection.KMap;
 
 public class DecreeContext {
-    private static final ChronoLatch cl = new ChronoLatch(60000);
-    private static final KMap<Thread, VolmitSender> context = new KMap<>();
+    private static final ThreadLocal<VolmitSender> context = new ThreadLocal<>();
 
     public static VolmitSender get() {
-        return context.get(Thread.currentThread());
+        return context.get();
     }
 
     public static void touch(VolmitSender c) {
-        synchronized (context) {
-            context.put(Thread.currentThread(), c);
+        context.set(c);
+    }
 
-            if (cl.flip()) {
-                for (Thread i : context.k()) {
-                    if (!i.isAlive()) {
-                        context.remove(i);
-                    }
-                }
-            }
-        }
+    public static void clear() {
+        context.remove();
     }
 }

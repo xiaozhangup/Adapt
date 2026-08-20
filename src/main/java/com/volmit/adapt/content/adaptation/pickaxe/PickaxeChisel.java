@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.pickaxe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
@@ -38,8 +40,8 @@ public class PickaxeChisel extends SimpleAdaptation<PickaxeChisel.Config> {
     public PickaxeChisel() {
         super("pickaxe-chisel");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "chisel", "description"));
-        setDisplayName(Localizer.dLocalize("pickaxe", "chisel", "name"));
+        setDescription(Localizer.component("pickaxe", "chisel", "description"));
+        setDisplayName(Localizer.component("pickaxe", "chisel", "name"));
         setIcon(Material.IRON_NUGGET);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -50,10 +52,12 @@ public class PickaxeChisel extends SimpleAdaptation<PickaxeChisel.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getDropChance(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("pickaxe", "chisel", "lore1"));
-        v.addLore(C.RED + "- " + getDamagePerBlock(getLevelPercent(level)) + C.GRAY + " "
-                + Localizer.dLocalize("pickaxe", "chisel", "lore2"));
+        v.addLore(Components.mini("<green>+ <chance></green><gray> <lore></gray>",
+                Placeholder.unparsed("chance", Form.pc(getDropChance(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("pickaxe", "chisel", "lore1"))));
+        v.addLore(Components.mini("<red>- <damage></red><gray> <lore></gray>",
+                Placeholder.unparsed("damage", Integer.toString(getDamagePerBlock(getLevelPercent(level)))),
+                Placeholder.component("lore", Localizer.component("pickaxe", "chisel", "lore2"))));
     }
 
     private int getCooldownTime(double levelPercent) {

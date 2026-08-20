@@ -9,6 +9,7 @@ import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.AdvancementW
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.PreparedAdvancementWrapper;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.packets.PacketPlayOutAdvancementsWrapper;
 import com.google.common.base.Preconditions;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,8 +29,11 @@ public class AdvancementUtils {
             ROOT_KEY = MinecraftKeyWrapper.craft("com.fren_gor", "root");
             NOTIFICATION_KEY = MinecraftKeyWrapper.craft("com.fren_gor", "notification");
             AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(new ItemStack(Material.GRASS_BLOCK),
-                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy("§f§lNotifications§1§2§3§4§5§6§7§8§9§0"),
-                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy("§7Notification page.\n§7Close and reopen advancements to hide."), AdvancementFrameTypeWrapper.TASK,
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy(
+                            Components.legacyString(Components.mini("<white><bold>Notifications"))),
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy(Components.legacyString(
+                            Components.mini("<gray>Notification page.\nClose and reopen advancements to hide."))),
+                    AdvancementFrameTypeWrapper.TASK,
                     0, 0, "textures/block/stone.png");
             ROOT_PREPARED = PreparedAdvancementWrapper.craft(ROOT_KEY, 1);
             ROOT = ROOT_PREPARED.toAdvancementWrapper(display);
@@ -49,11 +53,10 @@ public class AdvancementUtils {
      *            The displayed title of the toast.
      * @param frame
      *            The {@link AdvancementFrameType} of the toast.
-     * @see UltimateAdvancementAPI#displayCustomToast(Player, ItemStack, String,
-     *      AdvancementFrameType)
+     * @see UltimateAdvancementAPI#displayCustomToast(Player, ItemStack, String, AdvancementFrameType)
      */
-    public static void displayToast(@NotNull Player player, @NotNull ItemStack icon, @NotNull String title,
-            @NotNull String description, @NotNull AdvancementFrameType frame) {
+    public static void displayToast(@NotNull Player player, @NotNull ItemStack icon, @NotNull Component title,
+            @NotNull Component description, @NotNull AdvancementFrameType frame) {
         Preconditions.checkNotNull(player, "Player is null.");
         Preconditions.checkNotNull(icon, "Icon is null.");
         Preconditions.checkNotNull(title, "Title is null.");
@@ -62,8 +65,10 @@ public class AdvancementUtils {
 
         try {
             AdvancementDisplayWrapper display = AdvancementDisplayWrapper.craft(icon,
-                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy(title),
-                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.fromLegacy(description),
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils
+                            .fromLegacy(Components.legacyString(title)),
+                    com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils
+                            .fromLegacy(Components.legacyString(description)),
                     frame.getNMSWrapper(), 1, 0, true, false, false);
             AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(NOTIFICATION_KEY, ROOT_PREPARED, display,
                     1);
@@ -73,4 +78,5 @@ public class AdvancementUtils {
             e.printStackTrace();
         }
     }
+
 }

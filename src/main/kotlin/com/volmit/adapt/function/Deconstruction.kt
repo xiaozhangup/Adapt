@@ -153,24 +153,10 @@ object Deconstruction {
             val items = mutableListOf<ItemStack>()
             when(r) {
                 is ShapedRecipe -> {
-                    r.choiceMap.values.map { u ->
-                        if (u is RecipeChoice.MaterialChoice) {
-                            items += u.itemStack
-                        }
-                        if (u is RecipeChoice.ExactChoice) {
-                            items += u.itemStack
-                        }
-                    }
+                    items += r.choiceMap.values.mapNotNull { it.representativeItem() }
                 }
                 is ShapelessRecipe -> {
-                    r.choiceList.forEach { u ->
-                        if (u is RecipeChoice.MaterialChoice) {
-                            items += u.itemStack
-                        }
-                        if (u is RecipeChoice.ExactChoice) {
-                            items += u.itemStack
-                        }
-                    }
+                    items += r.choiceList.mapNotNull { it.representativeItem() }
                 }
                 else -> {}
             }
@@ -183,5 +169,13 @@ object Deconstruction {
         }
 
         return recipe to list
+    }
+
+    private fun RecipeChoice.representativeItem(): ItemStack? {
+        return when (this) {
+            is RecipeChoice.MaterialChoice -> choices.firstOrNull()?.let(::ItemStack)
+            is RecipeChoice.ExactChoice -> choices.firstOrNull()?.clone()
+            else -> null
+        }
     }
 }

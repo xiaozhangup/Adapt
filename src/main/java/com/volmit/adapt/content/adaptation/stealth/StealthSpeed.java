@@ -21,38 +21,44 @@ package com.volmit.adapt.content.adaptation.stealth;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public class StealthSpeed extends SimpleAdaptation<StealthSpeed.Config> {
-    private final List<Player> sneaking;
+    private static final int EFFECT_DURATION = PotionEffect.INFINITE_DURATION;
+    private final Map<UUID, AppliedEffect> sneaking;
 
     public StealthSpeed() {
         super("stealth-speed");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("stealth", "speed", "description"));
-        setDisplayName(Localizer.dLocalize("stealth", "speed", "name"));
+        setDescription(Localizer.component("stealth", "speed", "description"));
+        setDisplayName(Localizer.component("stealth", "speed", "name"));
         setIcon(Material.MUSHROOM_STEW);
         setBaseCost(getConfig().baseCost);
         setInterval(2000);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        sneaking = new ArrayList<>();
+        sneaking = new HashMap<>();
 
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getSpeed(getLevelPercent(level)), 0) + C.GRAY
-                + Localizer.dLocalize("stealth", "speed", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount><gray><lore>",
+                Placeholder.unparsed("amount", Form.pc(getSpeed(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("stealth", "speed", "lore1"))));
     }
 
     @EventHandler
@@ -71,12 +77,11 @@ public class StealthSpeed extends SimpleAdaptation<StealthSpeed.Config> {
             return;
         }
 
-        sneaking.add(p);
-        if (!p.isSneaking()) {
+        if (e.isSneaking()) {
             sp.play(p.getLocation(), Sound.BLOCK_FUNGUS_BREAK, 1, 0.99f);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1000, getLevel(p), false, false));
+            applyEffect(p, getLevel(p));
         } else {
-            p.removePotionEffect(PotionEffectType.SPEED);
+            restoreEffect(p, sneaking.remove(p.getUniqueId()));
         }
 
     }
@@ -92,14 +97,96 @@ public class StealthSpeed extends SimpleAdaptation<StealthSpeed.Config> {
 
     @Override
     public void onTick() {
-        List<Player> toRemove = new ArrayList<>();
-        for (Player p : sneaking) {
-            if (hasAdaptation(p) && !p.isSneaking()) {
-                toRemove.add(p);
-                J.s(() -> p.removePotionEffect(PotionEffectType.SPEED));
+        Iterator<Map.Entry<UUID, AppliedEffect>> iterator = sneaking.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, AppliedEffect> entry = iterator.next();
+            Player player = org.bukkit.Bukkit.getPlayer(entry.getKey());
+            if (player == null || !player.isOnline()) {
+                iterator.remove();
+                continue;
+            }
+            if (!hasAdaptation(player) || !player.isSneaking()) {
+                iterator.remove();
+                restoreEffect(player, entry.getValue());
+                continue;
+            }
+            PotionEffect current = player.getPotionEffect(PotionEffectType.SPEED);
+            if (!entry.getValue().matches(current)) {
+                iterator.remove();
+            } else {
+                entry.getValue().lastDuration = current.getDuration();
             }
         }
-        sneaking.removeAll(toRemove);
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        restoreEffect(event.getPlayer(), sneaking.remove(event.getPlayer().getUniqueId()));
+    }
+
+    @Override
+    public void unregister() {
+        for (Map.Entry<UUID, AppliedEffect> entry : sneaking.entrySet()) {
+            Player player = org.bukkit.Bukkit.getPlayer(entry.getKey());
+            if (player != null) {
+                restoreEffect(player, entry.getValue());
+            }
+        }
+        sneaking.clear();
+        super.unregister();
+    }
+
+    private void applyEffect(Player player, int amplifier) {
+        PotionEffect original = player.getPotionEffect(PotionEffectType.SPEED);
+        PotionEffect applied = new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, amplifier,
+                false, false, true);
+        if (player.addPotionEffect(applied)) {
+            PotionEffect current = player.getPotionEffect(PotionEffectType.SPEED);
+            if (current != null && current.getAmplifier() == amplifier && !current.isAmbient()
+                    && !current.hasParticles() && current.hasIcon()) {
+                sneaking.put(player.getUniqueId(), new AppliedEffect(original, amplifier, current.getDuration(), M.ms()));
+            }
+        }
+    }
+
+    private void restoreEffect(Player player, AppliedEffect applied) {
+        if (applied == null || !applied.matches(player.getPotionEffect(PotionEffectType.SPEED))) {
+            return;
+        }
+        player.removePotionEffect(PotionEffectType.SPEED);
+        PotionEffect original = applied.original;
+        if (original == null) {
+            return;
+        }
+        int remaining = original.isInfinite()
+                ? PotionEffect.INFINITE_DURATION
+                : original.getDuration() - (int) ((M.ms() - applied.appliedAt) / 50L);
+        if (remaining > 0) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, remaining, original.getAmplifier(),
+                    original.isAmbient(), original.hasParticles(), original.hasIcon()));
+        }
+    }
+
+    private static final class AppliedEffect {
+        private final PotionEffect original;
+        private final int amplifier;
+        private final long appliedAt;
+        private int lastDuration;
+
+        private AppliedEffect(PotionEffect original, int amplifier, int lastDuration, long appliedAt) {
+            this.original = original;
+            this.amplifier = amplifier;
+            this.lastDuration = lastDuration;
+            this.appliedAt = appliedAt;
+        }
+
+        private boolean matches(PotionEffect current) {
+            return current != null && current.getAmplifier() == amplifier && !current.isAmbient()
+                    && !current.hasParticles() && current.hasIcon()
+                    && (current.isInfinite() && lastDuration == PotionEffect.INFINITE_DURATION
+                            || !current.isInfinite() && current.getDuration() > 0
+                                    && current.getDuration() <= lastDuration);
+        }
     }
 
     @Override

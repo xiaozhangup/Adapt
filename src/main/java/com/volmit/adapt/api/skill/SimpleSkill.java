@@ -28,13 +28,15 @@ import com.volmit.adapt.api.tick.TickedObject;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.AdaptStatTracker;
 import com.volmit.adapt.content.item.ItemListings;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.IO;
-import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Json;
+import com.volmit.adapt.util.Components;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -52,11 +54,11 @@ import java.util.UUID;
 @Data
 public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     private final String name;
-    private final String emojiName;
-    private ChatColor color;
+    private final Component emojiName;
+    private TextColor color;
     private double minXp;
-    private String description;
-    private String displayName;
+    private Component description;
+    private Component displayName;
     private Material icon;
     @EqualsAndHashCode.Exclude
     private List<Adaptation<?>> adaptations;
@@ -67,24 +69,20 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     private Class<T> configType;
     private T config;
 
-    public SimpleSkill(String name, String emojiName) {
+    public SimpleSkill(String name, Component emojiName) {
         super("skill", UUID.randomUUID() + "-skill-" + name, 50);
         statTrackers = new ArrayList<>();
         recipes = new ArrayList<>();
         cachedAdvancements = new ArrayList<>();
         this.emojiName = emojiName;
         adaptations = new ArrayList<>();
-        setColor(ChatColor.WHITE);
+        setColor(NamedTextColor.WHITE);
         this.name = name;
         setIcon(Material.BOOK);
-        setDescription("No Description Provided");
+        setDescription(Component.text("No Description Provided"));
         setMinXp(100);
         setAdvancementBackground("minecraft:textures/block/deepslate_tiles.png");
 
-        J.a(() -> {
-            J.attempt(this::getConfig);
-            getAdaptations().forEach(i -> J.attempt(i::getConfig));
-        }, 1);
     }
 
     @Override
@@ -111,7 +109,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
 
                 if (!l.exists()) {
                     try {
-                        IO.writeAll(l, Json.toJson(dummy, true));
+                        IO.writeAllAtomic(l, Json.toJson(dummy, true));
                     } catch (IOException e) {
                         e.printStackTrace();
                         config = dummy;
@@ -120,9 +118,9 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
                 }
 
                 try {
-                    config = Json.fromJson(IO.readAll(l), getConfigurationClass());
-                    IO.writeAll(l, Json.toJson(config, true));
-                } catch (IOException e) {
+                    T loaded = Json.fromJson(IO.readAll(l), getConfigurationClass());
+                    config = loaded == null ? dummy : loaded;
+                } catch (Throwable e) {
                     e.printStackTrace();
                     config = dummy;
                     return config;
@@ -208,18 +206,25 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     }
 
     @Override
-    public String getDisplayName() {
+    public Component getDisplayName() {
         return displayName == null
                 ? Skill.super.getDisplayName()
-                : (C.RESET + "" + C.BOLD + getColor() + getEmojiName() + " " + displayName);
+                : Component.text().color(getColor())
+                        .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                        .decoration(TextDecoration.STRIKETHROUGH, false)
+                        .decoration(TextDecoration.UNDERLINED, false).decoration(TextDecoration.ITALIC, false)
+                        .append(getEmojiName()).append(Component.space()).append(displayName).build();
     }
 
     @Override
-    public String getTitleDisplay() {
+    public Component getTitleDisplay() {
         return displayName == null
                 ? Skill.super.getDisplayName()
-                : (C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " "
-                        + displayName);
+                : Component.text().color(Components.darker(getColor()))
+                        .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                        .decoration(TextDecoration.STRIKETHROUGH, false)
+                        .decoration(TextDecoration.UNDERLINED, false).decoration(TextDecoration.ITALIC, false)
+                        .append(getEmojiName()).append(Component.space()).append(displayName).build();
     }
 
     @Override
@@ -253,6 +258,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     @Override
     public void registerAdaptation(Adaptation<?> a) {
         if (!a.isEnabled()) {
+            a.unregister();
             return;
         }
 
@@ -263,6 +269,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
     @Override
     public void unregister() {
         adaptations.forEach(Adaptation::unregister);
+        super.unregister();
     }
 
     @Override

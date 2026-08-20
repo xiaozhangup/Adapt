@@ -21,6 +21,10 @@ package com.volmit.adapt.api.notification;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import lombok.Builder;
 import lombok.Data;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+
+import java.time.Duration;
 
 @Data
 @Builder
@@ -32,9 +36,9 @@ public class TitleNotification implements Notification {
     @Builder.Default
     private final long out = 750;
     @Builder.Default
-    private final String title = " ";
+    private final Component title = Component.space();
     @Builder.Default
-    private final String subtitle = " ";
+    private final Component subtitle = Component.space();
     @Builder.Default
     private final String group = "default";
 
@@ -50,7 +54,7 @@ public class TitleNotification implements Notification {
 
     @Override
     public void play(AdaptPlayer p) {
-        p.getPlayer().sendTitle(title.isEmpty() ? " " : title, subtitle, (int) (in / 50D), (int) (stay / 50D),
-                (int) (out / 50D));
+        p.getPlayer().showTitle(Title.title(title, subtitle,
+                Title.Times.times(Duration.ofMillis(in), Duration.ofMillis(stay), Duration.ofMillis(out))));
     }
 }

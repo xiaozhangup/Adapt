@@ -29,7 +29,7 @@ import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -48,15 +48,29 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
+    private static final Map<String, String> LEGACY_POTION_EFFECT_NAMES = Map.ofEntries(
+            Map.entry("slowness", "SLOW"),
+            Map.entry("haste", "FAST_DIGGING"),
+            Map.entry("mining_fatigue", "SLOW_DIGGING"),
+            Map.entry("strength", "INCREASE_DAMAGE"),
+            Map.entry("instant_health", "HEAL"),
+            Map.entry("instant_damage", "HARM"),
+            Map.entry("jump_boost", "JUMP"),
+            Map.entry("nausea", "CONFUSION"),
+            Map.entry("resistance", "DAMAGE_RESISTANCE"));
+
     public SkillDiscovery() {
-        super("discovery", Localizer.dLocalize("skill", "discovery", "icon"));
+        super("discovery", Localizer.component("skill", "discovery", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#96d3d8"));
-        setDescription(Localizer.dLocalize("skill", "discovery", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "discovery", "name"));
+        setColor(TextColor.color(0x96d3d8));
+        setDescription(Localizer.component("skill", "discovery", "description"));
+        setDisplayName(Localizer.component("skill", "discovery", "name"));
         setInterval(500);
         setIcon(Material.FILLED_MAP);
         registerAdaptation(new DiscoveryUnity());
@@ -136,11 +150,13 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
     }
 
     private void scheduleSeeWorld(Player p) {
-        try {
-            J.a(() -> seeWorld(p, p.getWorld()), 15);
-        } catch (Exception e) {
-            Adapt.error("Failed to discover world " + p.getWorld().getName());
-        }
+        UUID playerId = p.getUniqueId();
+        J.s(() -> {
+            Player online = Bukkit.getPlayer(playerId);
+            if (online != null && Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+                seeWorld(online, online.getWorld());
+            }
+        }, 15);
     }
 
     public void seeBlock(Player p, BlockData bd, Location l) {
@@ -219,7 +235,9 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
 
     public void seeWorld(Player p, World world) {
         Discovery<String> d = getPlayer(p).getData().getSeenWorlds();
-        if (d.isNewDiscovery(world.getName() + "-" + world.getSeed())) {
+        String worldId = world.getUID().toString();
+        String legacyWorldId = world.getName() + "-" + world.getSeed();
+        if (d.isNewDiscovery(worldId, List.of(legacyWorldId))) {
             xp(p, getConfig().discoverWorldXP);
         }
 
@@ -235,7 +253,14 @@ public class SkillDiscovery extends SimpleSkill<SkillDiscovery.Config> {
 
     public void seePotionEffect(Player p, PotionEffect e) {
         Discovery<String> d = getPlayer(p).getData().getSeenPotionEffects();
-        if (d.isNewDiscovery(e.getType().getName() + " " + Form.toRoman(e.getAmplifier()).trim())) {
+        NamespacedKey key = Registry.MOB_EFFECT.getKeyOrThrow(e.getType());
+        String suffix = " " + Form.toRoman(e.getAmplifier()).trim();
+        String canonicalLegacyName = key.getKey().toUpperCase(Locale.ROOT);
+        String oldLegacyName = LEGACY_POTION_EFFECT_NAMES.get(key.getKey());
+        List<String> legacyIds = oldLegacyName == null
+                ? List.of(canonicalLegacyName + suffix)
+                : List.of(canonicalLegacyName + suffix, oldLegacyName + suffix);
+        if (d.isNewDiscovery(key + suffix, legacyIds)) {
             xp(p, getConfig().discoverPotionXP);
         }
     }

@@ -19,7 +19,6 @@
 package com.volmit.adapt.util;
 
 import com.volmit.adapt.Adapt;
-import lombok.Getter;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,15 +29,13 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * Features:
  * - Dynamic thread pool with intelligent sizing
- * - Overflow protection with caller-runs policy
+ * - Overflow protection that never blocks the caller thread
  * - Rate limiting for warning messages
- * - Support for both regular and virtual threads
  * - Sliding window performance monitoring
  */
 public class MultiBurst {
     // Public static instances for global use
     public static final MultiBurst burst = new MultiBurst();
-    public static final MultiBurst virtualBurst = new MultiBurst(Executors.newVirtualThreadPerTaskExecutor());
 
     // Configuration constants
     private static final int DEFAULT_CORE_POOL_SIZE = 2;
@@ -47,7 +44,6 @@ public class MultiBurst {
     private static final long WARNING_THROTTLE_MS = 20_000; // 20 seconds between warnings
     private static final long PERFORMANCE_WINDOW_MS = 1000; // 1 second window for QPS tracking
 
-    @Getter
     private final ExecutorService service;
     private final AtomicInteger threadIdGenerator = new AtomicInteger(0);
     private final AtomicLong lastWarningTime = new AtomicLong(0);
@@ -61,60 +57,28 @@ public class MultiBurst {
     }
 
     /**
-     * Creates a MultiBurst with a custom ExecutorService
-     *
-     * @param service the ExecutorService to use
-     */
-    public MultiBurst(ExecutorService service) {
-        this.service = service;
-    }
-
-    /**
-     * Execute multiple tasks concurrently and wait for completion
-     *
-     * @param tasks the tasks to execute
-     */
-    public void burst(Runnable... tasks) {
-        burst(tasks.length).queue(tasks).complete();
-    }
-
-    /**
-     * Execute multiple tasks synchronously in the current thread
-     *
-     * @param tasks the tasks to execute
-     */
-    public void sync(Runnable... tasks) {
-        for (Runnable task : tasks) {
-            task.run();
-        }
-    }
-
-    /**
-     * Create a BurstExecutor for batch task execution
-     *
-     * @param estimatedTasks estimated number of tasks (for optimization)
-     * @return a new BurstExecutor instance
-     */
-    public BurstExecutor burst(int estimatedTasks) {
-        return new BurstExecutor(service, estimatedTasks);
-    }
-
-    /**
-     * Create a BurstExecutor with default estimation
-     *
-     * @return a new BurstExecutor instance
-     */
-    public BurstExecutor burst() {
-        return burst(16);
-    }
-
-    /**
      * Execute a task asynchronously without waiting for completion
      *
      * @param task the task to execute
      */
     public void lazy(Runnable task) {
         service.execute(task);
+    }
+
+    public static void shutdownAll() {
+        shutdown(burst.service);
+    }
+
+    private static void shutdown(ExecutorService executor) {
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     /**
@@ -164,8 +128,8 @@ public class MultiBurst {
      * Handles uncaught exceptions in worker threads
      */
     private void handleUncaughtException(Thread thread, Throwable exception) {
-        Adapt.info("Uncaught exception in thread " + thread.getName());
-        exception.printStackTrace();
+        Adapt.instance.getLogger().log(java.util.logging.Level.SEVERE,
+                "Uncaught exception in thread " + thread.getName(), exception);
     }
 
     /**
@@ -175,21 +139,20 @@ public class MultiBurst {
         long currentTime = System.currentTimeMillis();
 
         // Throttle warning messages to prevent spam
-        if (shouldLogWarning(currentTime)) {
+        if (!executor.isShutdown() && shouldLogWarning(currentTime)) {
             double overloadRate = performanceMonitor.recordAndGetRate();
             Adapt.warn(String.format(
-                    "MultiBurst thread pool is overloaded! Running task in caller thread. " +
+                    "MultiBurst thread pool is overloaded; rejecting async work to protect the server thread. " +
                             "(%.1f overloaded tasks/second)",
                     overloadRate
             ));
-        } else {
+        } else if (!executor.isShutdown()) {
             performanceMonitor.recordOverload();
         }
 
-        // Execute in caller thread if executor is still running
-        if (!executor.isShutdown()) {
-            task.run();
-        }
+        throw new RejectedExecutionException(executor.isShutdown()
+                ? "Adapt async executor is shut down"
+                : "Adapt async executor is overloaded");
     }
 
     /**

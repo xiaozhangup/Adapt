@@ -18,10 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.enchanting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -30,17 +32,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class EnchantingXPReturn extends SimpleAdaptation<EnchantingXPReturn.Config> {
-    private final Map<Player, Long> cooldown = new WeakHashMap<>();
+    private final Map<Player, Long> cooldown = new HashMap<>();
 
     public EnchantingXPReturn() {
         super("enchanting-xp-return");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("enchanting", "return", "description"));
-        setDisplayName(Localizer.dLocalize("enchanting", "return", "name"));
+        setDescription(Localizer.component("enchanting", "return", "description"));
+        setDisplayName(Localizer.component("enchanting", "return", "name"));
         setIcon(Material.EXPERIENCE_BOTTLE);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -51,9 +53,11 @@ public class EnchantingXPReturn extends SimpleAdaptation<EnchantingXPReturn.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("enchanting", "return", "lore1"));
-        v.addLore(C.GREEN + "" + getConfig().xpReturn * (level * level)
-                + Localizer.dLocalize("enchanting", "return", "lore2"));
+        v.addLore(Components.mini("<gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("enchanting", "return", "lore1"))));
+        v.addLore(Components.mini("<green><amount><lore></green>",
+                Placeholder.unparsed("amount", Integer.toString(getConfig().xpReturn * (level * level))),
+                Placeholder.component("lore", Localizer.component("enchanting", "return", "lore2"))));
     }
 
     @EventHandler

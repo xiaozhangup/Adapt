@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.ranged;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -39,8 +41,8 @@ public class RangedForce extends SimpleAdaptation<RangedForce.Config> {
     public RangedForce() {
         super("ranged-force");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("ranged", "forceshot", "description"));
-        setDisplayName(Localizer.dLocalize("ranged", "forceshot", "name"));
+        setDescription(Localizer.component("ranged", "forceshot", "description"));
+        setDisplayName(Localizer.component("ranged", "forceshot", "name"));
         setIcon(Material.ARROW);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -48,15 +50,16 @@ public class RangedForce extends SimpleAdaptation<RangedForce.Config> {
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
         registerAdvancement(AdaptAdvancement.builder().icon(Material.SPECTRAL_ARROW).key("challenge_force_30")
-                .title(Localizer.dLocalize("ranged", "forceshot", "advancementname"))
-                .description(Localizer.dLocalize("ranged", "forceshot", "advancementlore"))
+                .title(Localizer.component("ranged", "forceshot", "advancementname"))
+                .description(Localizer.component("ranged", "forceshot", "advancementlore"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getSpeed(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("ranged", "forceshot", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
+                Placeholder.unparsed("amount", Form.pc(getSpeed(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("ranged", "forceshot", "lore1"))));
     }
 
     private double getSpeed(double factor) {

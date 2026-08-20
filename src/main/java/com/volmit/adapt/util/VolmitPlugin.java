@@ -19,8 +19,10 @@
 package com.volmit.adapt.util;
 
 import com.volmit.adapt.Adapt;
+import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.util.collection.KMap;
 import com.volmit.adapt.util.reflect.events.ReflectiveEvents;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,7 +62,9 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         registerInstance();
         registerControllers();
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this::tickControllers, 0, 0);
+        if (!getControllers().isEmpty()) {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this::tickControllers, 1, 1);
+        }
         J.a(this::outputInfo);
         registerListener(this);
         start();
@@ -85,7 +89,9 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
             getDataFolder("info").mkdirs();
             outputPluginInfo();
         } catch (Throwable ignored) {
-            Adapt.verbose("Failed to output info");
+            if (AdaptConfig.get().isVerbose()) {
+                getLogger().fine("Failed to output info");
+            }
 
         }
     }
@@ -99,8 +105,8 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        stop();
         Bukkit.getScheduler().cancelTasks(this);
+        stop();
         unregisterListener(this);
         unregisterAll();
     }
@@ -222,9 +228,9 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    public String getTag() {
+    public Component getTag() {
         if (bad) {
-            return "";
+            return Component.empty();
         }
         return getTag("");
     }
@@ -288,5 +294,5 @@ public abstract class VolmitPlugin extends JavaPlugin implements Listener {
 
     public abstract void stop();
 
-    public abstract String getTag(String subTag);
+    public abstract Component getTag(String subTag);
 }

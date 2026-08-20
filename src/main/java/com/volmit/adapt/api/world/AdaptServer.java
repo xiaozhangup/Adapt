@@ -33,6 +33,8 @@ import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.content.item.ExperienceOrb;
 import com.volmit.adapt.content.item.KnowledgeOrb;
 import com.volmit.adapt.util.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import com.volmit.adapt.util.IO;
 import lombok.Getter;
 import lombok.NonNull;
@@ -52,10 +54,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class AdaptServer extends TickedObject {
-    private final ReentrantLock clearLock = new ReentrantLock();
     private final Map<UUID, AdaptPlayer> players = new ConcurrentHashMap<>();
     @Getter
     private final List<SpatialXP> spatialTickets = new ArrayList<>();
@@ -113,7 +113,11 @@ public class AdaptServer extends TickedObject {
 
     public void join(Player p) {
         AdaptPlayer a = new AdaptPlayer(p);
-        players.put(p.getUniqueId(), a);
+        AdaptPlayer previous = players.put(p.getUniqueId(), a);
+        if (previous != null) {
+            previous.unregister();
+        }
+        a.startLoading();
     }
 
     public void quit(UUID p) {
@@ -121,15 +125,12 @@ public class AdaptServer extends TickedObject {
         if (a == null)
             return;
         a.unregister();
-        if (AdaptConfig.get().isUseSql()) {
-            Adapt.instance.getSqlManager().updateTime(p, 0L);
-        }
     }
 
     @Override
     public void unregister() {
-        new HashSet<>(players.keySet()).forEach(this::quit);
         skillRegistry.unregister();
+        new HashSet<>(players.keySet()).forEach(this::quit);
         save();
         super.unregister();
     }
@@ -146,8 +147,11 @@ public class AdaptServer extends TickedObject {
                 SoundNotification.builder().sound(Sound.ENTITY_SHULKER_OPEN).volume(1f).pitch(1.655f).build()
                         .play(getPlayer(p));
                 getPlayer(p).getNot().queue(AdvancementNotification.builder().icon(Material.BOOK)
-                        .model(CustomModel.get(Material.BOOK, "snippets", "gui", "knowledge")).title(C.GRAY + "+ "
-                                + C.WHITE + data.getKnowledge() + " " + skill.getDisplayName() + " Knowledge")
+                        .model(CustomModel.get(Material.BOOK, "snippets", "gui", "knowledge"))
+                        .title(Components.mini("<gray>+ <white><amount> <skill>",
+                                Placeholder.unparsed("amount", Long.toString(data.getKnowledge())),
+                                Placeholder.component("skill",
+                                        skill.getDisplayName().append(Components.mini(" Knowledge")))))
                         .build());
             } else {
                 ExperienceOrb.Data datax = ExperienceOrb.get(s.getItem());
@@ -182,9 +186,11 @@ public class AdaptServer extends TickedObject {
             for (Skill<?> i : getSkillRegistry().getSkills()) {
                 for (Adaptation<?> j : i.getAdaptations()) {
                     if (j.isAdaptationRecipe(e.getRecipe()) && !j.hasAdaptation(p)) {
-                        String action = C.RESET + i.getColor().toString() + i.getEmojiName() +
-                                " 需要技能 \"" + j.getDisplayName() +
-                                "\" 来合成";
+                        Component action = Components.mini("<emoji> 需要技能 \"<adaptation>",
+                                Placeholder.component("emoji", i.getEmojiName()),
+                                Placeholder.component("adaptation",
+                                        j.getDisplayName().append(Components.mini("\" 来合成"))))
+                                .color(i.getColor());
 
                         Adapt.actionbar(p, action);
                         sp.play(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.5f, 1.8f);
@@ -202,28 +208,30 @@ public class AdaptServer extends TickedObject {
             spatialTickets.removeIf(ticket -> M.ms() > ticket.getMs());
         }
 
-        J.a(() -> {
-            if (!clearLock.tryLock())
-                return;
-
-            try {
-                players.values().removeIf(AdaptPlayer::shouldUnload);
-            } finally {
-                clearLock.unlock();
+        for (Map.Entry<UUID, AdaptPlayer> entry : players.entrySet()) {
+            AdaptPlayer adaptPlayer = entry.getValue();
+            if (adaptPlayer.shouldUnload() && players.remove(entry.getKey(), adaptPlayer)) {
+                adaptPlayer.unregister();
             }
-        });
+        }
     }
 
     public PlayerData peekData(UUID player) {
-        if (Bukkit.getPlayer(player) != null) {
-            return getPlayer(Bukkit.getPlayer(player)).getData();
+        AdaptPlayer online = players.get(player);
+        if (online != null && online.isActive()) {
+            return online.getData();
         }
 
         if (AdaptConfig.get().isUseSql()) {
-            String sqlData = Adapt.instance.getSqlManager().fetchData(player);
-            if (sqlData != null) {
-                return Json.fromJson(sqlData, PlayerData.class);
+            Optional<String> cached = Adapt.instance.getSqlManager().getCachedData(player);
+            if (cached.isPresent()) {
+                try {
+                    return Json.fromJson(cached.get(), PlayerData.class);
+                } catch (Throwable e) {
+                    Adapt.error("Failed to decode cached SQL data for " + player);
+                }
             }
+            Adapt.instance.getSqlManager().fetchDataAsync(player);
         }
 
         File f = new File(Adapt.instance.getDataFolder("data", "players"), player + ".json");
@@ -240,7 +248,7 @@ public class AdaptServer extends TickedObject {
 
     @NonNull
     public Optional<PlayerData> getPlayerData(@NonNull UUID uuid) {
-        return Optional.ofNullable(players.get(uuid)).map(AdaptPlayer::getData);
+        return Optional.ofNullable(players.get(uuid)).filter(AdaptPlayer::isActive).map(AdaptPlayer::getData);
     }
 
     public AdaptPlayer getPlayer(Player p) {
@@ -261,6 +269,10 @@ public class AdaptServer extends TickedObject {
 
         if (!p.isActive()) return false;
         return p.getData() != null;
+    }
+
+    public boolean isCurrentPlayer(UUID uuid, AdaptPlayer expected) {
+        return players.get(uuid) == expected;
     }
 
     public List<Player> getAdaptPlayers() {

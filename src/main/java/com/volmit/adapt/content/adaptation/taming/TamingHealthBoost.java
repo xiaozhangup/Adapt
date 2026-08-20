@@ -18,31 +18,40 @@
 
 package com.volmit.adapt.content.adaptation.taming;
 
+import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.EntitiesLoadEvent;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-tame-health-boost".getBytes());
     private static final NamespacedKey MODIFIER_KEY = NamespacedKey.fromString("adapt:tame-health-boost");
+    private final Map<UUID, Integer> ownerLevels = new HashMap<>();
 
     public TamingHealthBoost() {
         super("tame-health");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("taming", "health", "description"));
-        setDisplayName(Localizer.dLocalize("taming", "health", "name"));
+        setDescription(Localizer.component("taming", "health", "description"));
+        setDisplayName(Localizer.component("taming", "health", "name"));
         setIcon(Material.COOKED_BEEF);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -53,8 +62,9 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getHealthBoost(level), 0) + C.GRAY + " "
-                + Localizer.dLocalize("taming", "health", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getHealthBoost(level), 0)),
+                Placeholder.component("lore", Localizer.component("taming", "health", "lore1"))));
     }
 
     private double getHealthBoost(int level) {
@@ -68,29 +78,108 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
 
     @Override
     public void onTick() {
-        J.s(() -> {
-            for (World i : Bukkit.getServer().getWorlds()) {
-                Collection<Tameable> gl = i.getEntitiesByClass(Tameable.class);
+        Map<UUID, Integer> changedOwners = new HashMap<>();
+        for (Player player : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+            int level = getLevel(player);
+            Integer previous = ownerLevels.put(player.getUniqueId(), level);
+            if (previous == null || previous != level) {
+                changedOwners.put(player.getUniqueId(), level);
+            }
+        }
+        if (!changedOwners.isEmpty()) {
+            refreshOwners(changedOwners);
+        }
+    }
 
-                for (Tameable j : gl) {
-                    if (j.isTamed() && j.getOwner() instanceof Player p && p.clientConnected()) {
-                        update(j, getLevel(p));
-                    }
+    @EventHandler
+    public void on(EntityTameEvent event) {
+        if (event.getEntity() instanceof Tameable tameable) {
+            removeModifier(tameable);
+            J.s(() -> updateForOnlineOwner(tameable));
+        }
+    }
+
+    @EventHandler
+    public void on(EntitiesLoadEvent event) {
+        for (Entity entity : event.getEntities()) {
+            if (entity instanceof Tameable tameable) {
+                removeModifier(tameable);
+                updateForOnlineOwner(tameable);
+            }
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        ownerLevels.remove(event.getPlayer().getUniqueId());
+    }
+
+    private void refreshOwners(Map<UUID, Integer> changedOwners) {
+        for (World world : Bukkit.getWorlds()) {
+            for (Tameable tameable : world.getEntitiesByClass(Tameable.class)) {
+                if (!tameable.isTamed() || tameable.getOwner() == null) {
+                    continue;
+                }
+                Integer level = changedOwners.get(tameable.getOwner().getUniqueId());
+                if (level != null) {
+                    update(tameable, level);
                 }
             }
-        });
+        }
+    }
+
+    private void updateForOnlineOwner(Tameable tameable) {
+        if (!tameable.isTamed() || tameable.getOwner() == null) {
+            return;
+        }
+        Player owner = Bukkit.getPlayer(tameable.getOwner().getUniqueId());
+        if (owner == null || !owner.clientConnected()
+                || !Adapt.instance.getAdaptServer().isPlayerLoaded(owner.getUniqueId())) {
+            return;
+        }
+        int level = getLevel(owner);
+        ownerLevels.put(owner.getUniqueId(), level);
+        update(tameable, level);
     }
 
     private void update(Tameable j, int level) {
         var attribute = Version.get().getAttribute(j, Attribute.MAX_HEALTH);
         if (attribute == null)
             return;
-        attribute.removeModifier(MODIFIER, MODIFIER_KEY);
 
-        if (level > 0) {
-            attribute.addModifier(MODIFIER, MODIFIER_KEY, getHealthBoost(level),
-                    AttributeModifier.Operation.ADD_SCALAR);
+        var modifiers = attribute.getModifier(MODIFIER, MODIFIER_KEY);
+        if (level <= 0) {
+            if (!modifiers.isEmpty()) {
+                attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+            }
+            return;
         }
+
+        double amount = getHealthBoost(level);
+        if (modifiers.size() == 1 && Math.abs(modifiers.getFirst().getAmount() - amount) < 1.0E-9
+                && modifiers.getFirst().getOperation() == AttributeModifier.Operation.ADD_SCALAR) {
+            return;
+        }
+        attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+        attribute.addModifier(MODIFIER, MODIFIER_KEY, amount, AttributeModifier.Operation.ADD_SCALAR);
+    }
+
+    private void removeModifier(Tameable tameable) {
+        var attribute = Version.get().getAttribute(tameable, Attribute.MAX_HEALTH);
+        if (attribute != null) {
+            attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+        }
+    }
+
+    @Override
+    public void unregister() {
+        for (World world : Bukkit.getWorlds()) {
+            for (Tameable tameable : world.getEntitiesByClass(Tameable.class)) {
+                removeModifier(tameable);
+            }
+        }
+        ownerLevels.clear();
+        super.unregister();
     }
 
     @Override

@@ -22,12 +22,14 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.tick.TickedObject;
 import com.volmit.adapt.api.world.AdaptPlayer;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.M;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.util.Arrays;
 import java.util.Queue;
@@ -65,13 +67,17 @@ public class Notifier extends TickedObject {
             lastSkillValues.put(line, lastSkillValues.get(line) + value);
             lastInstance = M.ms();
 
-            StringBuilder sb = new StringBuilder();
+            Component message = Component.empty();
 
             for (String i : lastSkills.sortKNumber().reverse()) {
                 Skill sk = getServer().getSkillRegistry().getSkill(i);
-                sb.append(i.equals(line) ? sk.getDisplayName() : sk.getShortName()).append(C.RESET).append(C.GRAY)
-                        .append(" +").append(C.WHITE).append(line.equals(i) ? C.UNDERLINE : "")
-                        .append(Form.f(lastSkillValues.get(i).intValue())).append(C.RESET).append(C.GRAY).append("XP ");
+                boolean current = i.equals(line);
+                message = message.append(Components.mini(
+                        current
+                                ? "<skill><reset><gray> +<white><underlined><value><reset><gray>XP "
+                                : "<skill><reset><gray> +<white><value><reset><gray>XP ",
+                        Placeholder.component("skill", current ? sk.getDisplayName() : sk.getShortName()),
+                        Placeholder.unparsed("value", Form.f(lastSkillValues.get(i).intValue()))));
             }
 
             while (lastSkills.size() > 5) {
@@ -81,7 +87,7 @@ public class Notifier extends TickedObject {
             }
 
             target.getActionBarNotifier().queue(ActionBarNotification.builder().duration(0).maxTTL(M.ms() + 100)
-                    .title(sb.toString()).group("xp").build());
+                    .title(message).group("xp").build());
         } catch (Throwable e) {
             Adapt.verbose("Failed to notify xp: " + e.getMessage());
         }

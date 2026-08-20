@@ -18,10 +18,14 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.MaterialChar;
 import com.volmit.adapt.api.recipe.type.Shaped;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -35,8 +39,8 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
     public CraftingSkulls() {
         super("crafting-skulls");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("crafting", "skulls", "description"));
-        setDisplayName(Localizer.dLocalize("crafting", "skulls", "name"));
+        setDescription(Localizer.component("crafting", "skulls", "description"));
+        setDisplayName(Localizer.component("crafting", "skulls", "name"));
         setIcon(Material.WITHER_SKELETON_SKULL);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -67,16 +71,25 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore1"));
-        v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore2"));
-        v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore3"));
-        v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore4"));
-        v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore5"));
-        v.addLore(" ");
-        v.addLore(C.YELLOW + "- " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore6"));
-        v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore7"));
-        v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore8"));
-        v.addLore(C.YELLOW + "  " + C.GRAY + Localizer.dLocalize("crafting", "skulls", "lore9"));
+        v.addLore(Components.mini("<green>+ <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore1"))));
+        v.addLore(Components.mini("<yellow>- <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore2"))));
+        v.addLore(Components.mini("<yellow>- <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore3"))));
+        v.addLore(Components.mini("<yellow>- <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore4"))));
+        v.addLore(Components.mini("<yellow>- <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore5"))));
+        v.addLore(Components.mini(" "));
+        v.addLore(Components.mini("<yellow>- <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore6"))));
+        v.addLore(Components.mini("<yellow>  <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore7"))));
+        v.addLore(Components.mini("<yellow>  <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore8"))));
+        v.addLore(Components.mini("<yellow>  <gray><lore>",
+                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore9"))));
     }
 
     @Override

@@ -17,11 +17,13 @@
 -----------------------------------------------------------------------------*/
 package com.volmit.adapt.content.adaptation.nether;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -38,8 +40,8 @@ public class NetherFireResist extends SimpleAdaptation<NetherFireResist.Config> 
     public NetherFireResist() {
         super("nether-fire-resist");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("nether", "fireresist", "description"));
-        setDisplayName(Localizer.dLocalize("nether", "fireresist", "name"));
+        setDescription(Localizer.component("nether", "fireresist", "description"));
+        setDisplayName(Localizer.component("nether", "fireresist", "name"));
         setIcon(Material.BLAZE_POWDER);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -50,8 +52,9 @@ public class NetherFireResist extends SimpleAdaptation<NetherFireResist.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.RED + "+ " + Form.pc(getFireResist(level), 0) + C.GRAY + " "
-                + Localizer.dLocalize("nether", "fireresist", "lore1"));
+        v.addLore(Components.mini("<red>+ <amount></red><gray> <lore></gray>",
+                Placeholder.unparsed("amount", Form.pc(getFireResist(level), 0)),
+                Placeholder.component("lore", Localizer.component("nether", "fireresist", "lore1"))));
     }
 
     @EventHandler(priority = EventPriority.HIGH)

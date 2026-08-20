@@ -18,41 +18,51 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
+import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.data.WorldData;
-import com.volmit.adapt.api.world.PlayerAdaptation;
-import com.volmit.adapt.api.world.PlayerData;
-import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.matter.BrewingStandOwner;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.world.WorldUnloadEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Config> {
 
     private static final int MAX_CHECKS_BEFORE_REMOVE = 20;
     private final Map<Block, Integer> activeStands = new HashMap<>();
+    private final Map<StandKey, BrewingStandOwner> standOwners = new HashMap<>();
+    private final Map<StandKey, CompletableFuture<BrewingStandOwner>> ownerLookups = new HashMap<>();
+    private final BrewingOwnerLevelCache ownerLevelCache = new BrewingOwnerLevelCache();
 
     public BrewingSuperHeated() {
         super("brewing-super-heated");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "superheated", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "superheated", "name"));
+        setDescription(Localizer.component("brewing", "superheated", "description"));
+        setDisplayName(Localizer.component("brewing", "superheated", "name"));
         setIcon(Material.LAVA_BUCKET);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -63,10 +73,12 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Form.pc(getFireBoost(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("brewing", "superheated", "lore1"));
-        v.addLore(C.GREEN + Form.pc(getLavaBoost(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("brewing", "superheated", "lore2"));
+        v.addLore(Components.mini("<green><amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getFireBoost(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("brewing", "superheated", "lore1"))));
+        v.addLore(Components.mini("<green><amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getLavaBoost(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("brewing", "superheated", "lore2"))));
     }
 
     public double getLavaBoost(double factor) {
@@ -82,11 +94,12 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
         if (e.isCancelled()) {
             return;
         }
-        J.s(() -> {
-            if (e.getDestination().getType().equals(InventoryType.BREWING)) {
-                activeStands.put(e.getDestination().getLocation().getBlock(), MAX_CHECKS_BEFORE_REMOVE);
-            }
-        });
+        if (!e.getDestination().getType().equals(InventoryType.BREWING)
+                || e.getDestination().getLocation() == null) {
+            return;
+        }
+        Block block = e.getDestination().getLocation().getBlock();
+        J.s(() -> track(block));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -94,9 +107,10 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
         if (e.isCancelled()) {
             return;
         }
+        Block block = e.getBlock();
         J.s(() -> {
-            if (((BrewingStand) e.getBlock().getState()).getBrewingTime() > 0) {
-                activeStands.put(e.getBlock(), MAX_CHECKS_BEFORE_REMOVE);
+            if (block.getState() instanceof BrewingStand stand && stand.getBrewingTime() > 0) {
+                track(block);
             }
         });
     }
@@ -106,8 +120,17 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
         if (e.getClickedInventory() == null || e.isCancelled()) {
             return;
         }
-        if (e.getView().getTopInventory().getType().equals(InventoryType.BREWING)) {
-            activeStands.put(e.getView().getTopInventory().getLocation().getBlock(), MAX_CHECKS_BEFORE_REMOVE);
+        if (e.getView().getTopInventory().getType().equals(InventoryType.BREWING)
+                && e.getView().getTopInventory().getLocation() != null) {
+            track(e.getView().getTopInventory().getLocation().getBlock());
+        }
+    }
+
+    private void track(Block block) {
+        if (activeStands.put(block, MAX_CHECKS_BEFORE_REMOVE) == null) {
+            StandKey key = StandKey.of(block);
+            standOwners.remove(key);
+            ownerLookups.remove(key);
         }
     }
 
@@ -118,54 +141,98 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
 
     @Override
     public void onTick() {
-        J.s(() -> {
-            if (activeStands.isEmpty()) {
-                return;
-            }
+        if (activeStands.isEmpty()) {
+            return;
+        }
 
-            Iterator<Block> it = activeStands.keySet().iterator();
-            while (it.hasNext()) {
-                BlockState s = it.next().getState();
+        long now = M.ms();
+        Iterator<Map.Entry<Block, Integer>> it = activeStands.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Block, Integer> entry = it.next();
+            StandKey key = StandKey.of(entry.getKey());
+            BlockState s = entry.getKey().getState();
 
-                if (s instanceof BrewingStand b) {
-                    if (b.getBrewingTime() <= 0) {
-                        J.s(() -> {
-                            BrewingStand bb = (BrewingStand) s.getBlock().getState();
-                            if (bb.getBrewingTime() <= 0) {
-                                if (activeStands.get(b.getBlock()) == 0) {
-                                    activeStands.remove(b.getBlock());
-                                }
-                                if (activeStands.containsKey(b.getBlock())) {
-                                    activeStands.put(b.getBlock(), activeStands.get(b.getBlock()) - 1);
-                                }
-                            }
-                        });
-                        continue;
-                    }
-
-                    BrewingStandOwner owner = WorldData.of(b.getWorld()).getMantle().get(b.getX(), b.getY(), b.getZ(),
-                            BrewingStandOwner.class);
-
-                    if (owner == null) {
+            if (s instanceof BrewingStand b) {
+                if (b.getBrewingTime() <= 0) {
+                    int checksLeft = entry.getValue() - 1;
+                    if (checksLeft <= 0) {
                         it.remove();
-                        continue;
-                    }
-
-                    PlayerData p = getServer().peekData(owner.getOwner());
-
-                    PlayerSkillLine line = p.getSkillLineNullable(getSkill().getName());
-                    PlayerAdaptation adaptation = line != null
-                            ? line.getAdaptation(getName()) : null;
-                    if (adaptation != null && adaptation.getLevel() > 0) {
-                        updateHeat(b, getLevelPercent(adaptation.getLevel()));
+                        forget(key);
                     } else {
-                        it.remove();
+                        entry.setValue(checksLeft);
                     }
+                    continue;
+                }
+
+                BrewingStandOwner owner = standOwners.get(key);
+                if (owner == null) {
+                    requestOwner(b.getBlock(), key);
+                    continue;
+                }
+
+                Integer level = ownerLevelCache.get(owner.getOwner(), this, now).getNow(null);
+                if (level == null) {
+                    continue;
+                }
+                if (level > 0) {
+                    updateHeat(b, getLevelPercent(level));
                 } else {
                     it.remove();
+                    forget(key);
                 }
+            } else {
+                it.remove();
+                forget(key);
             }
-        });
+        }
+    }
+
+    private void requestOwner(Block block, StandKey key) {
+        if (ownerLookups.containsKey(key)) {
+            return;
+        }
+        CompletableFuture<BrewingStandOwner> lookup = WorldData.of(block.getWorld()).getMantle()
+                .getAsync(key.x(), key.y(), key.z(), BrewingStandOwner.class);
+        ownerLookups.put(key, lookup);
+        lookup.whenComplete((owner, error) -> J.s(() -> {
+            if (!ownerLookups.remove(key, lookup)) {
+                return;
+            }
+            Block current = key.block();
+            if (current == null || !activeStands.containsKey(current)) {
+                return;
+            }
+            if (error != null || owner == null) {
+                activeStands.remove(current);
+                standOwners.remove(key);
+                if (error != null) {
+                    Adapt.verbose("Failed to load brewing stand owner at " + key);
+                }
+                return;
+            }
+            standOwners.put(key, owner);
+        }));
+    }
+
+    private void forget(StandKey key) {
+        standOwners.remove(key);
+        ownerLookups.remove(key);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void on(BlockBreakEvent event) {
+        if (!event.isCancelled() && event.getBlock().getType() == Material.BREWING_STAND) {
+            activeStands.remove(event.getBlock());
+            forget(StandKey.of(event.getBlock()));
+        }
+    }
+
+    @EventHandler
+    public void on(WorldUnloadEvent event) {
+        UUID worldId = event.getWorld().getUID();
+        activeStands.keySet().removeIf(block -> block.getWorld().equals(event.getWorld()));
+        standOwners.keySet().removeIf(key -> key.worldId().equals(worldId));
+        ownerLookups.keySet().removeIf(key -> key.worldId().equals(worldId));
     }
 
     private void updateHeat(BrewingStand b, double factor) {
@@ -225,5 +292,16 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
         double multiplierFactor = 1.33;
         double fireMultiplier = 0.14;
         double lavaMultiplier = 0.69;
+    }
+
+    private record StandKey(UUID worldId, int x, int y, int z) {
+        private static StandKey of(Block block) {
+            return new StandKey(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ());
+        }
+
+        private Block block() {
+            World world = Bukkit.getWorld(worldId);
+            return world == null ? null : world.getBlockAt(x, y, z);
+        }
     }
 }

@@ -46,7 +46,6 @@ public class AdaptConfig {
     public List<String> blacklistedWorlds = List.of("some_world_adapt_should_not_run_in", "anotherWorldFolderName");
     public int experienceMaxLevel = 1000;
     boolean preventHunterSkillsWhenHungerApplied = true;
-    private boolean hotReload = false;
     private ValueConfig value = new ValueConfig();
     private boolean metrics = true;
     private String language = "zh_CN";
@@ -67,16 +66,13 @@ public class AdaptConfig {
     private boolean escClosesAllGuis = false;
     private boolean guiBackButton = true;
     private boolean customModels = true;
-    private boolean automaticGradients = false;
     private int learnUnlearnButtonDelayTicks = 14;
     private int maxRecipeListPrecaution = 25;
     private boolean actionbarNotifyXp = true;
     private boolean actionbarNotifyLevel = true;
     private boolean unlearnAllButton = false;
     private SqlSettings sql = new SqlSettings();
-    private Protector protectorSupport = new Protector();
-    private Map<String, Map<String, Boolean>> protectionOverrides = Map.of("adaptation-name",
-            Map.of("WorldGuard", true));
+    private Map<String, Map<String, Boolean>> protectionOverrides = Map.of();
 
     @Setter
     private boolean verbose = false;
@@ -88,7 +84,7 @@ public class AdaptConfig {
 
             if (!l.exists()) {
                 try {
-                    IO.writeAll(l, Json.toJson(dummy, true));
+                    IO.writeAllAtomic(l, Json.toJson(dummy, true));
                 } catch (IOException e) {
                     e.printStackTrace();
                     config = dummy;
@@ -97,26 +93,15 @@ public class AdaptConfig {
             }
 
             try {
-                config = Json.fromJson(IO.readAll(l), AdaptConfig.class);
-                IO.writeAll(l, Json.toJson(config, true));
-            } catch (IOException e) {
+                AdaptConfig loaded = Json.fromJson(IO.readAll(l), AdaptConfig.class);
+                config = loaded == null ? dummy : loaded;
+            } catch (Throwable e) {
                 e.printStackTrace();
-                config = new AdaptConfig();
+                config = dummy;
             }
         }
 
         return config;
-    }
-
-    @Getter
-    public static class Protector {
-        private boolean worldguard = true;
-        private boolean griefdefender = true;
-        private boolean factionsClaim = false;
-        private boolean residence = true;
-        private boolean chestProtect = true;
-        private boolean griefprevention = true;
-        private boolean lockettePro = true;
     }
 
     @Getter
@@ -126,7 +111,6 @@ public class AdaptConfig {
         private String database = "adapt";
         private String username = "user";
         private String password = "password";
-        private int poolSize = 10;
         private long connectionTimeout = 5000;
     }
 

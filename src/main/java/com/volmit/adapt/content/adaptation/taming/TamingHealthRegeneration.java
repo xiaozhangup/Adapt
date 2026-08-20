@@ -23,42 +23,41 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import static org.bukkit.Particle.HEART;
 
 public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegeneration.Config> {
-    private final Map<UUID, Long> lastDamage = new HashMap<>();
+    private static final long DAMAGE_COOLDOWN_MS = 8_000;
+    private final NamespacedKey lastDamageKey;
 
     public TamingHealthRegeneration() {
         super("tame-health-regeneration");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("taming", "regeneration", "description"));
-        setDisplayName(Localizer.dLocalize("taming", "regeneration", "name"));
+        setDescription(Localizer.component("taming", "regeneration", "description"));
+        setDisplayName(Localizer.component("taming", "regeneration", "name"));
         setIcon(Material.GOLDEN_APPLE);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
-        setInterval(1033);
         setCostFactor(getConfig().costFactor);
+        lastDamageKey = new NamespacedKey(Adapt.instance, "tame-regeneration-last-damage");
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.f(getRegenSpeed(level), 0) + C.GRAY + " "
-                + Localizer.dLocalize("taming", "regeneration", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.f(getRegenSpeed(level), 0)),
+                Placeholder.component("lore", Localizer.component("taming", "regeneration", "lore1"))));
     }
 
     @EventHandler
@@ -67,9 +66,10 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
             return;
         }
         if (e.getEntity() instanceof Tameable tam && tam.getOwner() instanceof Player p && hasAdaptation(p)) {
-            if (lastDamage.containsKey(tam.getUniqueId())) {
+            Long damagedAt = tam.getPersistentDataContainer().get(lastDamageKey, PersistentDataType.LONG);
+            if (damagedAt != null && M.ms() - damagedAt <= DAMAGE_COOLDOWN_MS) {
                 Adapt.verbose("Tamed Entity " + tam.getUniqueId() + " last damaged "
-                        + (M.ms() - lastDamage.get(tam.getUniqueId())) + "ms ago");
+                        + (M.ms() - damagedAt) + "ms ago");
                 return;
             }
             var attribute = Version.get().getAttribute(tam, Attribute.MAX_HEALTH);
@@ -79,7 +79,7 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
                 int level = getLevel(p);
                 if (level > 0) {
                     Adapt.verbose("[PRE] Current Health: " + tam.getHealth() + " Max Health: " + mh);
-                    tam.addPotionEffect(PotionEffectType.REGENERATION.createEffect(25 * getLevel(p), 3));
+                    tam.addPotionEffect(PotionEffectType.REGENERATION.createEffect(25 * level, 3));
 
                     if (getConfig().showParticles) {
                         Adapt.verbose("Healing tamed entity " + tam.getUniqueId() + " with particles");
@@ -89,13 +89,8 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
                     }
                 }
             }
-            lastDamage.put(e.getEntity().getUniqueId(), M.ms());
+            tam.getPersistentDataContainer().set(lastDamageKey, PersistentDataType.LONG, M.ms());
         }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void on(EntityDeathEvent e) {
-        lastDamage.remove(e.getEntity().getUniqueId());
     }
 
     private double getRegenSpeed(int level) {
@@ -103,17 +98,7 @@ public class TamingHealthRegeneration extends SimpleAdaptation<TamingHealthRegen
     }
 
     @Override
-    public boolean needsTicking() {
-        return true;
-    }
-
-    @Override
     public void onTick() {
-        for (UUID i : lastDamage.keySet()) {
-            if (M.ms() - lastDamage.get(i) > 8000) {
-                lastDamage.remove(i);
-            }
-        }
     }
 
     @Override

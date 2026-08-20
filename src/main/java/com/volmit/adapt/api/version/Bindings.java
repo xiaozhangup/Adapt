@@ -6,6 +6,7 @@ import org.bukkit.attribute.Attributable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.potion.PotionType;
 
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class Bindings {
         if (builder.getColor() != null)
             meta.setColor(builder.getColor());
         if (builder.getName() != null)
-            meta.setDisplayName("§r" + builder.getName());
+            meta.displayName(builder.getName().decoration(TextDecoration.ITALIC, false));
         stack.setItemMeta(meta);
         return stack;
     }

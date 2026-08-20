@@ -18,13 +18,19 @@
 
 package com.volmit.adapt.content.adaptation.axe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.item.ItemListings;
+import com.volmit.adapt.content.util.BoundedBlockSearch;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -38,8 +44,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> {
     private static final BlockFace[] LEAF_CHECK_FACES = {
@@ -49,8 +55,8 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
     public AxeWoodVeinminer() {
         super("axe-wood-veinminer");
         registerConfiguration(AxeWoodVeinminer.Config.class);
-        setDescription(Localizer.dLocalize("axe", "woodminer", "description"));
-        setDisplayName(Localizer.dLocalize("axe", "woodminer", "name"));
+        setDescription(Localizer.component("axe", "woodminer", "description"));
+        setDisplayName(Localizer.component("axe", "woodminer", "name"));
         setIcon(Material.DIAMOND_AXE);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -66,10 +72,11 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("axe", "woodminer", "lore1"));
-        v.addLore(C.GREEN + "" + (level + getConfig().baseRange) + C.GRAY + " "
-                + Localizer.dLocalize("axe", "woodminer", "lore2"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("axe", "woodminer", "lore3"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("axe", "woodminer", "lore1"))));
+        v.addLore(Components.mini("<green><range><gray> <lore>",
+                Placeholder.unparsed("range", Integer.toString(level + getConfig().baseRange)),
+                Placeholder.component("lore", Localizer.component("axe", "woodminer", "lore2"))));
+        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore", Localizer.component("axe", "woodminer", "lore3"))));
     }
 
     private int getRadius(int lvl) {
@@ -100,58 +107,48 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
                     return;
                 }
 
-                Set<Block> blockMap = new HashSet<>();
-                int blockCount = 0;
-                for (int i = 0; i < getRadius(level); i++) {
-                    for (int x = -i; x <= i; x++) {
-                        for (int y = -i; y <= i; y++) {
-                            for (int z = -i; z <= i; z++) {
-                                Block b = block.getRelative(x, y, z);
-                                if (b.getType() == block.getType()) {
-                                    blockCount++;
-                                    if (blockCount > getConfig().maxBlocks) {
-                                        Adapt.verbose("Block: " + blockCount + " > " + getConfig().maxBlocks);
-                                        break;
-                                    }
-                                    if (block.getLocation().distance(b.getLocation()) > getRadius(level)) {
-                                        Adapt.verbose("Block: " + b.getLocation() + " is too far away from "
-                                                + block.getLocation() + " (" + getRadius(level) + ")");
-                                        continue;
-                                    }
-                                    if (!canBlockBreak(p, b)) {
-                                        Adapt.verbose("Player " + p.getName() + " doesn't have permission.");
-                                        continue;
-                                    }
-                                    blockMap.add(b);
-                                }
-                            }
-                        }
-                    }
-                }
+                Material targetType = block.getType();
+                List<Block> blockMap = BoundedBlockSearch.find(block, getRadius(level), getConfig().maxBlocks,
+                        candidate -> candidate.getType() == targetType && canBlockBreak(p, candidate));
+
+                AdaptPlayer expectedPlayer = getPlayer(p);
+                UUID playerId = p.getUniqueId();
+                PlayerSkillLine line = expectedPlayer.getData().getSkillLineNullable("axes");
+                PlayerAdaptation adaptation = line != null
+                        ? line.getAdaptation("axe-drop-to-inventory") : null;
 
                 J.s(() -> {
+                    Player online = Bukkit.getPlayer(playerId);
+                    if (online == null || !online.isOnline()
+                            || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                            || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                        return;
+                    }
+                    int processed = 0;
                     for (Block blocks : blockMap) {
-                        PlayerSkillLine line = getPlayer(p).getData().getSkillLineNullable("axes");
-                        PlayerAdaptation adaptation = line != null
-                                ? line.getAdaptation("axe-drop-to-inventory") : null;
+                        if (blocks.getType() != targetType || !canBlockBreak(online, blocks)) {
+                            continue;
+                        }
                         if (adaptation != null && adaptation.getLevel() > 0) {
                             Collection<ItemStack> items = blocks.getDrops(tool);
                             for (ItemStack item : items) {
-                                safeGiveItem(p, item);
+                                safeGiveItem(online, item);
                                 Adapt.verbose("Giving item: " + item);
                             }
                             blocks.setType(Material.AIR);
                         } else {
                             blocks.breakNaturally(tool);
-                            SoundPlayer spw = SoundPlayer.of(blocks.getWorld());
-                            spw.play(e.getBlock().getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.01f, 0.25f);
-                            if (getConfig().showParticles) {
-                                blocks.getWorld().spawnParticle(Particle.ASH, blocks.getLocation().add(0.5, 0.5, 0.5),
-                                        25, 0.5, 0.5, 0.5, 0.1);
-                            }
                         }
+                        processed++;
+                    }
+
+                    if (processed > 0) {
+                        SoundPlayer.of(block.getWorld()).play(block.getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.01f,
+                                0.25f);
                         if (getConfig().showParticles) {
-                            this.vfxCuboidOutline(blocks, Particle.ENCHANT);
+                            block.getWorld().spawnParticle(Particle.ASH, block.getLocation().add(0.5, 0.5, 0.5),
+                                    Math.min(200, processed * 3), 1, 1, 1, 0.1);
+                            this.vfxCuboidOutline(block, Particle.ENCHANT);
                         }
                     }
                 });

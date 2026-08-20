@@ -25,7 +25,7 @@ import com.volmit.adapt.content.adaptation.nether.NetherWitherResist;
 import com.volmit.adapt.util.Localizer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -41,12 +41,12 @@ public class SkillNether extends SimpleSkill<SkillNether.Config> {
     private int witherRoseCooldown;
 
     public SkillNether() {
-        super("nether", Localizer.dLocalize("skill", "nether", "icon"));
+        super("nether", Localizer.component("skill", "nether", "icon"));
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("skill", "nether", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "nether", "name"));
+        setDescription(Localizer.component("skill", "nether", "description"));
+        setDisplayName(Localizer.component("skill", "nether", "name"));
         setInterval(7425);
-        setColor(ChatColor.of("#6a6d6d"));
+        setColor(TextColor.color(0x6a6d6d));
         setIcon(Material.NETHER_STAR);
         registerAdaptation(new NetherWitherResist());
         registerAdaptation(new NetherSkullYeet());

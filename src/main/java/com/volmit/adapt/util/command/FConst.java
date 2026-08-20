@@ -1,18 +1,11 @@
 package com.volmit.adapt.util.command;
 
+import com.volmit.adapt.util.Components;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Sound;
 
-import java.awt.*;
-
 public class FConst {
-    public static final Color COLOR_ERROR = new Color(255, 0, 0);
-    public static final Color COLOR_SUCCESS = new Color(0, 255, 0);
-    public static final Color COLOR_WARNING = new Color(255, 255, 0);
-    public static final Color COLOR_INFO = new Color(255, 255, 255);
-
     public static Feedback error(String message, Object... args) {
         return Feedback.builder().message(errorText(message, args))
                 .sound(SoundFeedback.builder().sound(Sound.BLOCK_DEEPSLATE_BREAK).pitch(0.5f).volume(1f).build())
@@ -38,20 +31,23 @@ public class FConst {
                 .build();
     }
 
-    public static TextComponent errorText(String message, Object... args) {
-        return Component.text(message.formatted(args)).color(TextColor.color(FConst.COLOR_ERROR.getRGB()));
+    public static Component errorText(String message, Object... args) {
+        return colored("<#ff0000><message>", message, args);
     }
 
-    public static TextComponent successText(String message, Object... args) {
-        return Component.text(message.formatted(args)).color(TextColor.color(FConst.COLOR_SUCCESS.getRGB()));
+    public static Component successText(String message, Object... args) {
+        return colored("<#00ff00><message>", message, args);
     }
 
-    public static TextComponent warningText(String message, Object... args) {
-        return Component.text(message.formatted(args)).color(TextColor.color(FConst.COLOR_WARNING.getRGB()));
+    public static Component warningText(String message, Object... args) {
+        return colored("<#ffff00><message>", message, args);
     }
 
-    public static TextComponent infoText(String message, Object... args) {
-        return Component.text(message.formatted(args)).color(TextColor.color(FConst.COLOR_INFO.getRGB()));
+    public static Component infoText(String message, Object... args) {
+        return colored("<#ffffff><message>", message, args);
     }
 
+    private static Component colored(String template, String message, Object... args) {
+        return Components.mini(template, Placeholder.unparsed("message", message.formatted(args)));
+    }
 }

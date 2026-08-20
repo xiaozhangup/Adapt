@@ -18,12 +18,16 @@
 
 package com.volmit.adapt.content.adaptation.excavation;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.content.item.multiItems.OmniTool;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -46,6 +50,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
 
 public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Config> {
     private static final OmniTool omniTool = new OmniTool();
@@ -53,8 +59,8 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
     public ExcavationOmniTool() {
         super("excavation-omnitool");
         registerConfiguration(ExcavationOmniTool.Config.class);
-        setDisplayName(Localizer.dLocalize("excavation", "omnitool", "name"));
-        setDescription(Localizer.dLocalize("excavation", "omnitool", "description"));
+        setDisplayName(Localizer.component("excavation", "omnitool", "name"));
+        setDescription(Localizer.component("excavation", "omnitool", "description"));
         setIcon(Material.DISC_FRAGMENT_5);
         setInterval(20202);
         setBaseCost(getConfig().baseCost);
@@ -65,14 +71,21 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("excavation", "omnitool", "lore1"));
-        v.addLore(C.GRAY + Localizer.dLocalize("excavation", "omnitool", "lore2"));
-        v.addLore(C.GREEN + Localizer.dLocalize("excavation", "omnitool", "lore3"));
-        v.addLore(C.RED + Localizer.dLocalize("excavation", "omnitool", "lore4"));
-        v.addLore(C.GRAY + Localizer.dLocalize("excavation", "omnitool", "lore5"));
-        v.addLore(C.GREEN + "" + (level + getConfig().startingSlots) + C.GRAY + " "
-                + Localizer.dLocalize("excavation", "omnitool", "lore6"));
-        v.addLore(C.UNDERLINE + Localizer.dLocalize("excavation", "omnitool", "lore7"));
+        v.addLore(Components.mini("<gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore1"))));
+        v.addLore(Components.mini("<gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore2"))));
+        v.addLore(Components.mini("<green><lore></green>",
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore3"))));
+        v.addLore(Components.mini("<red><lore></red>",
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore4"))));
+        v.addLore(Components.mini("<gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore5"))));
+        v.addLore(Components.mini("<green><slots></green><gray> <lore></gray>",
+                Placeholder.unparsed("slots", Integer.toString(level + getConfig().startingSlots)),
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore6"))));
+        v.addLore(Components.mini("<underlined><lore></underlined>",
+                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore7"))));
 
     }
 
@@ -89,8 +102,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
     public void on(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player p && validateTool(p.getInventory().getItemInMainHand())) {
             // deny if the tool durability is about to break
-            if (p.getInventory().getItemInMainHand().getType().getMaxDurability()
-                    - p.getInventory().getItemInMainHand().getDurability() <= 2) {
+            if (isNearBreaking(p.getInventory().getItemInMainHand())) {
                 e.setCancelled(true);
                 return;
             }
@@ -114,7 +126,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             if (!validateTool(hand)) {
                 return;
             }
-            J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextSword(hand)));
+            switchHeldTool(p, omniTool::nextSword);
             SoundPlayer spw = SoundPlayer.of(p.getWorld());
             spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
             if (inHand != null && inHand.hasDamage()) {
@@ -133,8 +145,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
         Player p = e.getPlayer();
         if (validateTool(p.getInventory().getItemInMainHand())) {
             // deny if the tool durability is about to break
-            if (p.getInventory().getItemInMainHand().getType().getMaxDurability()
-                    - p.getInventory().getItemInMainHand().getDurability() <= 2) {
+            if (isNearBreaking(p.getInventory().getItemInMainHand())) {
                 e.setCancelled(true);
                 return;
             }
@@ -151,8 +162,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
         Player p = e.getPlayer();
         if (validateTool(p.getInventory().getItemInMainHand())) {
             // deny if the tool durability is about to break
-            if (p.getInventory().getItemInMainHand().getType().getMaxDurability()
-                    - p.getInventory().getItemInMainHand().getDurability() <= 2) {
+            if (isNearBreaking(p.getInventory().getItemInMainHand())) {
                 e.setCancelled(true);
                 return;
             }
@@ -169,10 +179,10 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                     SoundPlayer spw = SoundPlayer.of(p.getWorld());
                     if (ItemListings.isFarmable(block.getType())) {
                         if (isShovel(hand)) {
-                            J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextHoe(hand)));
+                            switchHeldTool(p, omniTool::nextHoe);
                             spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
                         } else {
-                            J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextShovel(hand)));
+                            switchHeldTool(p, omniTool::nextShovel);
                             spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
                         }
                         if (imHand != null && imHand.hasDamage()) {
@@ -182,7 +192,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                             }
                         }
                     } else if (block.getType().isBurnable()) {
-                        J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextFnS(hand)));
+                        switchHeldTool(p, omniTool::nextFnS);
                         spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
                         if (imHand != null && imHand.hasDamage()) {
                             if ((hand.getType().getMaxDurability() - imHand.getDamage() - 2) <= 2) {
@@ -197,8 +207,11 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
 
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(PlayerDropItemEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Player p = e.getPlayer();
         if (!hasAdaptation(p)) {
             return;
@@ -210,9 +223,6 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                     Damageable iDmgable = (Damageable) i.getItemMeta();
                     if (i.hasItemMeta()) {
                         ItemMeta im = i.getItemMeta().clone();
-                        if (im.hasDisplayName()) {
-                            im.setDisplayName(im.getDisplayName());
-                        }
                         if (im.hasEnchants()) {
                             Map<Enchantment, Integer> enchants = im.getEnchants();
                             for (Enchantment enchant : enchants.keySet()) {
@@ -222,20 +232,17 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
                         if (iDmgable != null && iDmgable.hasDamage()) {
                             ((Damageable) im).setDamage(iDmgable.getDamage());
                         }
-                        im.setLore(null);
+                        im.lore(null);
                         i.setItemMeta(im);
                     }
                     drops.set(drops.indexOf(i), i);
                 }
 
-                J.s(() -> {
-                    SoundPlayer sp = SoundPlayer.of(p);
-                    sp.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_DEATH, 0.25f, 0.77f);
-                    for (ItemStack i : drops) {
-                        p.getWorld().dropItem(p.getLocation(), i);
-                    }
-                });
                 e.getItemDrop().setItemStack(new ItemStack(Material.AIR));
+                SoundPlayer.of(p).play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_DEATH, 0.25f, 0.77f);
+                for (ItemStack i : drops) {
+                    p.getWorld().dropItemNaturally(p.getLocation(), i);
+                }
             }
         }
     }
@@ -258,7 +265,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             if (ItemListings.isAxePreference(b)) {
                 if (!isAxe(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to axe");
-                    J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextAxe(hand)));
+                    switchHeldTool(p, omniTool::nextAxe);
                     itemDelegate(e, hand, imHand);
                 } else {
                     Adapt.verbose("Omnitool for " + p.getName() + " is already axe");
@@ -266,7 +273,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             } else if (ItemListings.isShovelPreference(b)) {
                 if (!isShovel(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to shovel");
-                    J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextShovel(hand)));
+                    switchHeldTool(p, omniTool::nextShovel);
                     itemDelegate(e, hand, imHand);
                 } else {
                     Adapt.verbose("Omnitool for " + p.getName() + " is already shovel");
@@ -274,7 +281,7 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             } else if (ItemListings.isSwordPreference(b)) {
                 if (!isSword(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to sword");
-                    J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextSword(hand)));
+                    switchHeldTool(p, omniTool::nextSword);
                     itemDelegate(e, hand, imHand);
                 } else {
                     Adapt.verbose("Omnitool for " + p.getName() + " is already sword");
@@ -282,15 +289,18 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
             } else { // Default to pickaxe
                 if (!isPickaxe(hand)) {
                     Adapt.verbose("Omnitool for " + p.getName() + " changed to pickaxe");
-                    J.s(() -> p.getInventory().setItemInMainHand(omniTool.nextPickaxe(hand)));
+                    switchHeldTool(p, omniTool::nextPickaxe);
                     itemDelegate(e, hand, imHand);
                 }
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(InventoryClickEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         if (!hasAdaptation((Player) e.getWhoClicked())) {
             return;
         }
@@ -338,9 +348,35 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
         }
     }
 
+    private void switchHeldTool(Player player, Function<ItemStack, ItemStack> conversion) {
+        UUID playerId = player.getUniqueId();
+        int slot = player.getInventory().getHeldItemSlot();
+        AdaptPlayer expectedPlayer = getPlayer(player);
+        J.s(() -> {
+            Player currentPlayer = Bukkit.getPlayer(playerId);
+            if (currentPlayer == null || !currentPlayer.isOnline()
+                    || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                    || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                return;
+            }
+            ItemStack current = currentPlayer.getInventory().getItem(slot);
+            if (current == null || !validateTool(current)) {
+                return;
+            }
+            currentPlayer.getInventory().setItem(slot, conversion.apply(current));
+        });
+    }
+
     private boolean validateTool(ItemStack item) {
-        return (item.getItemMeta() != null && item.getItemMeta().getLore() != null
-                && item.getItemMeta().getLore().toString().contains("Leatherman"));
+        return item.getItemMeta() != null && item.getItemMeta().lore() != null
+                && item.getItemMeta().lore().stream()
+                        .map(Components::plain)
+                        .anyMatch(lore -> lore.contains("Leatherman"));
+    }
+
+    private boolean isNearBreaking(ItemStack item) {
+        return item.getItemMeta() instanceof Damageable damageable
+                && item.getType().getMaxDurability() - damageable.getDamage() <= 2;
     }
 
     private double getSlots(double level) {

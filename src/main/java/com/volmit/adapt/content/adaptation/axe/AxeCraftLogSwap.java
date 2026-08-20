@@ -18,9 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.axe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.type.Shapeless;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -42,8 +46,8 @@ public class AxeCraftLogSwap extends SimpleAdaptation<AxeCraftLogSwap.Config> {
     public AxeCraftLogSwap() {
         super("axe-logswap");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("axe", "logswap", "description"));
-        setDisplayName(Localizer.dLocalize("axe", "logswap", "name"));
+        setDescription(Localizer.component("axe", "logswap", "description"));
+        setDisplayName(Localizer.component("axe", "logswap", "name"));
         setIcon(Material.MUDDY_MANGROVE_ROOTS);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -102,7 +106,8 @@ public class AxeCraftLogSwap extends SimpleAdaptation<AxeCraftLogSwap.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("axe", "logswap", "lore1"));
+        v.addLore(Components.mini("<green>+ <gray><lore>",
+                Placeholder.component("lore", Localizer.component("axe", "logswap", "lore1"))));
     }
 
     @Override

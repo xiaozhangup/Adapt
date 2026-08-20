@@ -19,6 +19,7 @@
 package com.volmit.adapt.content.skill;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
 import com.volmit.adapt.api.skill.SimpleSkill;
@@ -29,11 +30,14 @@ import com.volmit.adapt.content.adaptation.axe.AxeDropToInventory;
 import com.volmit.adapt.content.adaptation.axe.AxeGroundSmash;
 import com.volmit.adapt.content.adaptation.axe.AxeWoodVeinminer;
 import com.volmit.adapt.content.item.ItemListings;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,19 +47,21 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillAxes() {
-        super("axes", Localizer.dLocalize("skill", "axes", "icon"));
+        super("axes", Localizer.component("skill", "axes", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#ffb756"));
-        setDescription(Localizer.dLocalize("skill", "axes", "description1") + C.ITALIC
-                + Localizer.dLocalize("skill", "axes", "description2") + C.GRAY + " "
-                + Localizer.dLocalize("skill", "axes", "description3"));
-        setDisplayName(Localizer.dLocalize("skill", "axes", "name"));
+        setColor(TextColor.color(0xffb756));
+        setDescription(Components.mini("<description1><italic><description2><gray><!italic> <description3>",
+                Placeholder.component("description1", Localizer.component("skill", "axes", "description1")),
+                Placeholder.component("description2", Localizer.component("skill", "axes", "description2")),
+                Placeholder.component("description3", Localizer.component("skill", "axes", "description3"))));
+        setDisplayName(Localizer.component("skill", "axes", "name"));
         setInterval(5251);
         setIcon(Material.GOLDEN_AXE);
         cooldowns = new WeakHashMap<>();
@@ -64,23 +70,23 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
         registerAdaptation(new AxeWoodVeinminer());
         registerAdaptation(new AxeCraftLogSwap());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.WOODEN_AXE).key("challenge_chop_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_chop_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_chop_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_chop_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_chop_1k", "description"))
                 .model(CustomModel.get(Material.WOODEN_AXE, "advancement", "axes", "challenge_chop_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.STONE_AXE).key("challenge_chop_5k")
-                        .title(Localizer.dLocalize("advancement", "challenge_chop_5k", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_chop_5k", "description"))
+                        .title(Localizer.component("advancement", "challenge_chop_5k", "title"))
+                        .description(Localizer.component("advancement", "challenge_chop_5k", "description"))
                         .model(CustomModel.get(Material.STONE_AXE, "advancement", "axes", "challenge_chop_5k"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.IRON_AXE).key("challenge_chop_50k")
-                                .title(Localizer.dLocalize("advancement", "challenge_chop_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_chop_50k", "description"))
+                                .title(Localizer.component("advancement", "challenge_chop_50k", "title"))
+                                .description(Localizer.component("advancement", "challenge_chop_50k", "description"))
                                 .model(CustomModel.get(Material.IRON_AXE, "advancement", "axes", "challenge_chop_50k"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.DIAMOND_AXE).key("challenge_chop_500k")
-                                        .title(Localizer.dLocalize("advancement", "challenge_chop_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_chop_500k",
+                                        .title(Localizer.component("advancement", "challenge_chop_500k", "title"))
+                                        .description(Localizer.component("advancement", "challenge_chop_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.DIAMOND_AXE, "advancement", "axes",
                                                 "challenge_chop_500k"))
@@ -88,8 +94,8 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.NETHERITE_AXE)
                                                 .key("challenge_chop_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_chop_5m", "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_chop_5m",
+                                                .title(Localizer.component("advancement", "challenge_chop_5m", "title"))
+                                                .description(Localizer.component("advancement", "challenge_chop_5m",
                                                         "description"))
                                                 .model(CustomModel.get(Material.NETHERITE_AXE, "advancement", "axes",
                                                         "challenge_chop_5m"))
@@ -151,8 +157,20 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
                 AdaptPlayer a = getPlayer(p);
                 a.getData().addStat("axes.blocks.broken", 1);
                 a.getData().addStat("axes.blocks.value", getValue(e.getBlock().getBlockData()));
-                handleCooldown(p,
-                        () -> xp(p, e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5), blockXP(e.getBlock(), v)));
+                handleCooldown(p, () -> {
+                    Location location = e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5);
+                    int x = e.getBlock().getX();
+                    int y = e.getBlock().getY();
+                    int z = e.getBlock().getZ();
+                    UUID playerId = p.getUniqueId();
+                    queueBlockXP(e.getBlock().getWorld(), x, y, z, v, amount -> {
+                        Player online = Bukkit.getPlayer(playerId);
+                        if (online != null && Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, a)
+                                && Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+                            xp(online, location, amount);
+                        }
+                    });
+                });
             }
         });
     }

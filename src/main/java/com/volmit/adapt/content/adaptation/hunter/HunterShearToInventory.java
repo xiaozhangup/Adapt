@@ -1,10 +1,11 @@
 package com.volmit.adapt.content.adaptation.hunter;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,8 +21,8 @@ public class HunterShearToInventory extends SimpleAdaptation<HunterShearToInvent
     public HunterShearToInventory() {
         super("hunter-shear-to-inventory");
         registerConfiguration(HunterShearToInventory.Config.class);
-        setDescription(Localizer.dLocalize("hunter", "sheartoinventory", "description"));
-        setDisplayName(Localizer.dLocalize("hunter", "sheartoinventory", "name"));
+        setDescription(Localizer.component("hunter", "sheartoinventory", "description"));
+        setDisplayName(Localizer.component("hunter", "sheartoinventory", "name"));
         setIcon(Material.SHEARS);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -36,7 +37,8 @@ public class HunterShearToInventory extends SimpleAdaptation<HunterShearToInvent
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("hunter", "sheartoinventory", "lore1"));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
+                Localizer.component("hunter", "sheartoinventory", "lore1"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -75,4 +77,3 @@ public class HunterShearToInventory extends SimpleAdaptation<HunterShearToInvent
         double costFactor = 1;
     }
 }
-

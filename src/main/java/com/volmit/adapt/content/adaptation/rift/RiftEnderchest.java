@@ -21,11 +21,12 @@ package com.volmit.adapt.content.adaptation.rift;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -37,8 +38,8 @@ import org.bukkit.inventory.ItemStack;
 public class RiftEnderchest extends SimpleAdaptation<RiftEnderchest.Config> {
     public RiftEnderchest() {
         super("rift-enderchest");
-        setDescription(Localizer.dLocalize("rift", "chest", "description"));
-        setDisplayName(Localizer.dLocalize("rift", "chest", "name"));
+        setDescription(Localizer.component("rift", "chest", "description"));
+        setDisplayName(Localizer.component("rift", "chest", "name"));
         setIcon(Material.ENDER_CHEST);
         setBaseCost(0);
         setCostFactor(0);
@@ -50,7 +51,8 @@ public class RiftEnderchest extends SimpleAdaptation<RiftEnderchest.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "chest", "lore1"));
+        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "chest", "lore1"))));
     }
 
     @EventHandler

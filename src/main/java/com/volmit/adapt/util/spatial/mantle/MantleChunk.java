@@ -127,11 +127,26 @@ public class MantleChunk {
         Matter matter = get(section);
 
         if (matter == null) {
-            matter = new SpatialMatter(16, 16, 16);
-            sections.set(section, matter);
+            Matter created = new SpatialMatter(16, 16, 16);
+            if (sections.compareAndSet(section, null, created)) {
+                matter = created;
+            } else {
+                matter = sections.get(section);
+            }
         }
 
         return matter;
+    }
+
+    MantleChunk shiftedCopy(int newSectionHeight, int sectionOffset) {
+        MantleChunk shifted = new MantleChunk(newSectionHeight, x, z);
+        for (int i = 0; i < sections.length(); i++) {
+            int target = i + sectionOffset;
+            if (target >= 0 && target < newSectionHeight) {
+                shifted.sections.set(target, sections.get(i));
+            }
+        }
+        return shifted;
     }
 
     /**

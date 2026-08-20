@@ -18,11 +18,11 @@
 
 package com.volmit.adapt.api.notification;
 
-import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.M;
 import lombok.Builder;
 import lombok.Data;
+import net.kyori.adventure.text.Component;
 
 @Data
 @Builder
@@ -30,7 +30,7 @@ public class ActionBarNotification implements Notification {
     @Builder.Default
     private final long duration = 750;
     @Builder.Default
-    private final String title = " ";
+    private final Component title = Component.space();
     @Builder.Default
     private final String group = "default";
     @Builder.Default
@@ -55,6 +55,6 @@ public class ActionBarNotification implements Notification {
             return;
         }
 
-        Adapt.actionbar(p.getPlayer(), title);
+        p.getPlayer().sendActionBar(title);
     }
 }

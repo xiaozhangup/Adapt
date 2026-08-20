@@ -18,20 +18,20 @@
 
 package com.volmit.adapt.util.spatial.parallel;
 
-import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.volmit.adapt.util.spatial.util.CompressedNumbers;
 import com.volmit.adapt.util.spatial.util.Run;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 public class HyperLock {
-    private final ConcurrentLinkedHashMap<Long, ReentrantLock> locks;
-    private boolean enabled = true;
-    private boolean fair = false;
+    private final ConcurrentHashMap<Long, ReentrantLock> locks;
+    private volatile boolean enabled = true;
+    private final boolean fair;
 
     public HyperLock() {
         this(1024, false);
@@ -43,80 +43,95 @@ public class HyperLock {
 
     public HyperLock(int capacity, boolean fair) {
         this.fair = fair;
-        locks = new ConcurrentLinkedHashMap.Builder<Long, ReentrantLock>().initialCapacity(capacity)
-                .maximumWeightedCapacity(capacity).concurrencyLevel(32).build();
+        locks = new ConcurrentHashMap<>(capacity);
     }
 
     public void clear() {
         for (Long i : new HashSet<>(locks.keySet())) {
-            if (locks.get(i).isLocked()) {
+            ReentrantLock lock = locks.get(i);
+            if (lock == null || lock.isLocked() || lock.hasQueuedThreads()) {
                 continue;
             }
 
-            locks.remove(i);
+            locks.remove(i, lock);
         }
     }
 
     public void with(int x, int z, Runnable r) {
-        lock(x, z);
-        r.run();
-        unlock(x, z);
+        ReentrantLock lock = enabled ? getLock(x, z) : null;
+        if (lock != null) {
+            lock.lock();
+        }
+        try {
+            r.run();
+        } finally {
+            if (lock != null) {
+                lock.unlock();
+            }
+        }
     }
 
     public void withLong(long k, Runnable r) {
-        lock(CompressedNumbers.i2a(k), CompressedNumbers.i2b(k));
-        r.run();
-        unlock(CompressedNumbers.i2a(k), CompressedNumbers.i2b(k));
+        with(CompressedNumbers.i2a(k), CompressedNumbers.i2b(k), r);
     }
 
     public void withNasty(int x, int z, Run.Throwable r) throws Throwable {
-        lock(x, z);
-        Throwable ee = null;
+        ReentrantLock lock = enabled ? getLock(x, z) : null;
+        if (lock != null) {
+            lock.lock();
+        }
         try {
             r.run();
-        } catch (Throwable e) {
-            ee = e;
         } finally {
-            unlock(x, z);
-
-            if (ee != null) {
-                throw ee;
+            if (lock != null) {
+                lock.unlock();
             }
         }
     }
 
     public void withIO(int x, int z, Run.IO r) throws IOException {
-        lock(x, z);
-        IOException ee = null;
+        ReentrantLock lock = enabled ? getLock(x, z) : null;
+        if (lock != null) {
+            lock.lock();
+        }
         try {
             r.run();
-        } catch (IOException e) {
-            ee = e;
         } finally {
-            unlock(x, z);
-
-            if (ee != null) {
-                throw ee;
+            if (lock != null) {
+                lock.unlock();
             }
         }
     }
 
     public <T> T withResult(int x, int z, Supplier<T> r) {
-        lock(x, z);
-        T t = r.get();
-        unlock(x, z);
-        return t;
+        ReentrantLock lock = enabled ? getLock(x, z) : null;
+        if (lock != null) {
+            lock.lock();
+        }
+        try {
+            return r.get();
+        } finally {
+            if (lock != null) {
+                lock.unlock();
+            }
+        }
     }
 
     public boolean tryLock(int x, int z) {
+        if (!enabled) {
+            return true;
+        }
         return getLock(x, z).tryLock();
     }
 
     public boolean tryLock(int x, int z, long timeout) {
+        if (!enabled) {
+            return true;
+        }
         try {
             return getLock(x, z).tryLock(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         return false;
@@ -135,11 +150,10 @@ public class HyperLock {
     }
 
     public void unlock(int x, int z) {
-        if (!enabled) {
-            return;
+        ReentrantLock lock = locks.get(CompressedNumbers.i2(x, z));
+        if (lock != null && lock.isHeldByCurrentThread()) {
+            lock.unlock();
         }
-
-        getLock(x, z).unlock();
     }
 
     public void disable() {

@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.axe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
@@ -38,8 +41,8 @@ public class AxeGroundSmash extends SimpleAdaptation<AxeGroundSmash.Config> {
     public AxeGroundSmash() {
         super("axe-ground-smash");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("axe", "groundsmash", "description"));
-        setDisplayName(Localizer.dLocalize("axe", "groundsmash", "name"));
+        setDescription(Localizer.component("axe", "groundsmash", "description"));
+        setDisplayName(Localizer.component("axe", "groundsmash", "name"));
         setIcon(Material.NETHERITE_AXE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -51,14 +54,20 @@ public class AxeGroundSmash extends SimpleAdaptation<AxeGroundSmash.Config> {
     @Override
     public void addStats(int level, Element v) {
         double f = getLevelPercent(level);
-        v.addLore(C.RED + "+ " + Form.f(getFalloffDamage(f), 1) + " - " + Form.f(getDamage(f), 1) + C.GRAY + " "
-                + Localizer.dLocalize("axe", "groundsmash", "lore1"));
-        v.addLore(C.RED + "+ " + Form.f(getRadius(f), 1) + C.GRAY + " "
-                + Localizer.dLocalize("axe", "groundsmash", "lore2"));
-        v.addLore(C.RED + "+ " + Form.pc(getForce(f), 0) + C.GRAY + " "
-                + Localizer.dLocalize("axe", "groundsmash", "lore3"));
-        v.addLore(C.YELLOW + "* " + Form.duration(getCooldownTime(getLevelPercent(level)) * 50D, 1) + C.GRAY + " "
-                + Localizer.dLocalize("axe", "groundsmash", "lore4"));
+        v.addLore(Components.mini("<red>+ <min> - <max><gray> <lore>",
+                Placeholder.unparsed("min", Form.f(getFalloffDamage(f), 1)),
+                Placeholder.unparsed("max", Form.f(getDamage(f), 1)),
+                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore1"))));
+        v.addLore(Components.mini("<red>+ <radius><gray> <lore>",
+                Placeholder.unparsed("radius", Form.f(getRadius(f), 1)),
+                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore2"))));
+        v.addLore(Components.mini("<red>+ <force><gray> <lore>",
+                Placeholder.unparsed("force", Form.pc(getForce(f), 0)),
+                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore3"))));
+        v.addLore(Components.mini("<yellow>* <cooldown><gray> <lore>",
+                Placeholder.unparsed("cooldown",
+                        Form.duration(getCooldownTime(getLevelPercent(level)) * 50D, 1)),
+                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore4"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

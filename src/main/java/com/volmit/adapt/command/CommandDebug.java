@@ -64,7 +64,7 @@ public class CommandDebug implements DecreeExecutor {
         }
 
         Player player = player();
-        J.a(() -> player.spawnParticle(particle, player.getLocation(), 10, 10));
+        player.spawnParticle(particle, player.getLocation(), 10, 10);
     }
 
     @Decree(name = "particle", origin = DecreeOrigin.PLAYER, description = "Summon a particle in front of you for testing!")

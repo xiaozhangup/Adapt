@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingFatigue extends SimpleAdaptation<BrewingFatigue.Config> {
     public BrewingFatigue() {
         super("brewing-fatigue");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "fatigue", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "fatigue", "name"));
+        setDescription(Localizer.component("brewing", "fatigue", "description"));
+        setDisplayName(Localizer.component("brewing", "fatigue", "name"));
         setIcon(Material.SLIME_BALL);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,14 +48,14 @@ public class BrewingFatigue extends SimpleAdaptation<BrewingFatigue.Config> {
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-fatigue-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.SLIME_BALL)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.WEAKNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Fatigue")
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Fatigue"))
                         .setColor(Color.fromRGB(0, 66, 0))
                         .addEffect(PotionEffectType.MINING_FATIGUE, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-fatigue-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.SLIME_BLOCK)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.WEAKNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Fatigue 2")
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Fatigue 2"))
                         .setColor(Color.fromRGB(0, 66, 0))
                         .addEffect(PotionEffectType.MINING_FATIGUE, 600, 2, true, true, true).build())
                 .build());
@@ -60,8 +63,8 @@ public class BrewingFatigue extends SimpleAdaptation<BrewingFatigue.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "fatigue", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "fatigue", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "fatigue", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "fatigue", "lore2"))));
     }
 
     @Override

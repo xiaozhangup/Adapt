@@ -21,10 +21,11 @@ package com.volmit.adapt.content.adaptation.seaborrne;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.ItemListings;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -39,8 +40,8 @@ public class SeaborneFishersFantasy extends SimpleAdaptation<SeaborneFishersFant
     public SeaborneFishersFantasy() {
         super("seaborne-fishers-fantasy");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("seaborn", "fishersfantasy", "description"));
-        setDisplayName(Localizer.dLocalize("seaborn", "fishersfantasy", "name"));
+        setDescription(Localizer.component("seaborn", "fishersfantasy", "description"));
+        setDisplayName(Localizer.component("seaborn", "fishersfantasy", "name"));
         setIcon(Material.FISHING_ROD);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -51,7 +52,8 @@ public class SeaborneFishersFantasy extends SimpleAdaptation<SeaborneFishersFant
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("seaborn", "fishersfantasy", "lore1"));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
+                Localizer.component("seaborn", "fishersfantasy", "lore1"))));
     }
 
     @EventHandler

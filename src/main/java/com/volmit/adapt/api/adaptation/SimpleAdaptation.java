@@ -30,7 +30,8 @@ import com.volmit.adapt.util.*;
 import com.volmit.adapt.util.IO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 
 import java.io.File;
@@ -46,9 +47,9 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
     private int initialCost;
     private int baseCost;
     private double costFactor;
-    private String displayName;
+    private Component displayName;
     private Skill<?> skill;
-    private String description;
+    private Component description;
     private Material icon;
     private String name;
     private List<AdaptAdvancement> cachedAdvancements;
@@ -67,14 +68,8 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
         setBaseCost(3);
         setIcon(Material.PAPER);
         setInitialCost(1);
-        setDescription("No Description Provided");
+        setDescription(Component.text("No Description Provided"));
         this.name = name;
-
-        J.a(() -> {
-            if (!isEnabled()) {
-                unregister();
-            }
-        }, 1);
     }
 
     @Override
@@ -101,7 +96,7 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
 
                 if (!l.exists()) {
                     try {
-                        IO.writeAll(l, Json.toJson(dummy, true));
+                        IO.writeAllAtomic(l, Json.toJson(dummy, true));
                     } catch (IOException e) {
                         e.printStackTrace();
                         config = dummy;
@@ -110,9 +105,9 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
                 }
 
                 try {
-                    config = Json.fromJson(IO.readAll(l), getConfigurationClass());
-                    IO.writeAll(l, Json.toJson(config, true));
-                } catch (IOException e) {
+                    T loaded = Json.fromJson(IO.readAll(l), getConfigurationClass());
+                    config = loaded == null ? dummy : loaded;
+                } catch (Throwable e) {
                     e.printStackTrace();
                     config = dummy;
                     return config;
@@ -134,11 +129,15 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
     }
 
     @Override
-    public String getDisplayName() {
+    public Component getDisplayName() {
         try {
             return displayName == null
                     ? Adaptation.super.getDisplayName()
-                    : (C.RESET + "" + C.BOLD + getSkill().getColor().toString() + displayName);
+                    : Component.empty().color(getSkill().getColor())
+                            .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                            .decoration(TextDecoration.STRIKETHROUGH, false)
+                            .decoration(TextDecoration.UNDERLINED, false).decoration(TextDecoration.ITALIC, false)
+                            .append(displayName);
         } catch (Exception ignored) {
             Adapt.verbose("Failed to get display name for " + getName());
             return null;
@@ -146,11 +145,15 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
     }
 
     @Override
-    public String getTitleDisplay() {
+    public Component getTitleDisplay() {
         try {
             return displayName == null
                     ? Adaptation.super.getDisplayName()
-                    : (C.RESET + "" + C.BOLD + ChatColor.of(getSkill().getColor().getColor().darker()) + displayName);
+                    : Component.empty().color(Components.darker(getSkill().getColor()))
+                            .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                            .decoration(TextDecoration.STRIKETHROUGH, false)
+                            .decoration(TextDecoration.UNDERLINED, false).decoration(TextDecoration.ITALIC, false)
+                            .append(displayName);
         } catch (Exception ignored) {
             Adapt.verbose("Failed to get display name for " + getName());
             return null;
@@ -171,8 +174,10 @@ public abstract class SimpleAdaptation<T> extends TickedObject implements Adapta
         onRegisterAdvancements(a);
 
         return AdaptAdvancement.builder().key("adaptation_" + getName()).title(getDisplayName())
-                .description(getDescription() + ". " + Localizer.dLocalize("snippets", "gui", "unlockthisbyclicking")
-                        + " " + AdaptConfig.get().adaptActivatorBlockName)
+                .description(Component.empty().append(getDescription()).append(Component.text(". "))
+                        .append(Localizer.component("snippets", "gui", "unlockthisbyclicking"))
+                        .append(Component.space())
+                        .append(Localizer.configured(AdaptConfig.get().adaptActivatorBlockName)))
                 .icon(getIcon()).children(a).visibility(AdvancementVisibility.PARENT_GRANTED).build();
     }
 }

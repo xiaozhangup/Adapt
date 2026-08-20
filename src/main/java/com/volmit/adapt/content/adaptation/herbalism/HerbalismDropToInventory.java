@@ -18,11 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import lombok.NoArgsConstructor;
 import org.bukkit.GameMode;
@@ -40,8 +42,8 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
     public HerbalismDropToInventory() {
         super("herbalism-drop-to-inventory");
         registerConfiguration(HerbalismDropToInventory.Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "droptoinventory", "description"));
-        setDisplayName(Localizer.dLocalize("herbalism", "droptoinventory", "name"));
+        setDescription(Localizer.component("pickaxe", "droptoinventory", "description"));
+        setDisplayName(Localizer.component("herbalism", "droptoinventory", "name"));
         setIcon(Material.DIRT);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -57,7 +59,8 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("pickaxe", "droptoinventory", "lore1"));
+        v.addLore(Components.mini("<gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("pickaxe", "droptoinventory", "lore1"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -73,7 +76,8 @@ public class HerbalismDropToInventory extends SimpleAdaptation<HerbalismDropToIn
         if (p.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
-        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_HOE")) {
+        if (p.getInventory().getItemInMainHand().getType().name().endsWith("_HOE")
+                || p.getInventory().getItemInOffHand().getType().name().endsWith("_HOE")) {
             List<Item> items = new KList<>(e.getItems());
             for (Item i : items) {
                 var leftover = p.getInventory().addItem(i.getItemStack());

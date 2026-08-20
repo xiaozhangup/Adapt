@@ -29,22 +29,32 @@ import com.volmit.adapt.util.IO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class AdaptPlayer extends TickedObject {
     private final Player player;
-    private PlayerData data;
-    private boolean isActive;
+    private final UUID uuid;
+    private final String playerName;
+    private final String sqlSessionId;
+    private final AtomicBoolean closed;
+    private final AtomicBoolean pendingSqlClaim;
+    private volatile PlayerData data;
+    private volatile boolean isActive;
+    private volatile boolean sqlSessionAcquired;
+    private volatile boolean discardOnClose;
     private ChronoLatch savelatch;
     private ChronoLatch updatelatch;
     private Notifier not;
@@ -59,8 +69,15 @@ public class AdaptPlayer extends TickedObject {
     public AdaptPlayer(Player p) {
         super("players", p.getUniqueId().toString(), 50);
         this.player = p;
+        this.uuid = p.getUniqueId();
+        this.playerName = p.getName();
+        this.sqlSessionId = UUID.randomUUID().toString();
+        this.closed = new AtomicBoolean(false);
+        this.pendingSqlClaim = new AtomicBoolean(false);
         data = null;
         isActive = false;
+        sqlSessionAcquired = false;
+        discardOnClose = false;
         updatelatch = new ChronoLatch(1000);
         savelatch = new ChronoLatch(60000);
         not = new Notifier(this);
@@ -71,56 +88,121 @@ public class AdaptPlayer extends TickedObject {
         lastSeen = M.ms();
         velocity = new Vector();
 
+    }
+
+    /** Called after AdaptServer has published this instance in its player map. */
+    public void startLoading() {
         if (AdaptConfig.get().isUseSql()) {
-            final class MutableInt {
-                private int value = 0;
+            attemptSqlLogin();
+            return;
+        }
 
-                public void increment() {
-                    value++;
-                }
+        PlayerData loaded = loadLocalPlayerData();
+        data = loaded == null ? new PlayerData() : loaded;
+        isActive = true;
+        loggedIn();
+    }
 
-                public int get() {
-                    return value;
-                }
-            }
-            final MutableInt fi = new MutableInt();
-            BukkitRunnable fr = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (!player.isOnline())
-                        cancel();
-                    Long l = Adapt.instance.getSqlManager().fetchTime(player.getUniqueId());
-                    if (l == null) {
-                        cancelAndFinishInitial();
+    private void attemptSqlLogin() {
+        if (closed.get()) {
+            return;
+        }
+
+        Adapt.instance.getSqlManager().acquireSession(uuid, sqlSessionId, this::initialSqlData)
+                .thenAccept(result -> {
+                    if (result.status() == SQLManager.AcquireStatus.ACQUIRED) {
+                        pendingSqlClaim.set(true);
+                    }
+                    if (closed.get()) {
+                        releasePendingSqlClaim();
                         return;
                     }
-                    if (l == 0) {
-                        cancelAndFinishInitial();
-                    } else {
-                        fi.increment();
-                        if (fi.get() > 9) {
-                            Adapt.error("Failed to load player data for " + player.getName()
-                                    + " after 10 tries. Fallback to local file.");
+                    J.s(() -> finishSqlLogin(result));
+                });
+    }
 
-                            cancelAndFinishInitial();
-                        }
-                    }
-                }
-
-                private void cancelAndFinishInitial() {
-                    cancel();
-                    data = loadPlayerData();
-                    isActive = true;
-                    loggedIn();
-                }
-            };
-            fr.runTaskTimerAsynchronously(Adapt.instance, 0, 4);
-        } else {
-            PlayerData d = loadPlayerData();
-            data = d == null ? new PlayerData() : d;
-            isActive = true;
-            loggedIn();
+    private void finishSqlLogin(SQLManager.AcquireResult result) {
+        if (closed.get() || !player.isOnline()
+                || !Adapt.instance.getAdaptServer().isCurrentPlayer(uuid, this)) {
+            releasePendingSqlClaim();
+            return;
         }
+
+        switch (result.status()) {
+            case ACQUIRED -> {
+                PlayerData loaded;
+                try {
+                    loaded = Json.fromJson(result.data(), PlayerData.class);
+                    if (loaded == null) {
+                        throw new IllegalStateException("SQL player data decoded to null");
+                    }
+                } catch (Throwable e) {
+                    backupBrokenSqlData(result.data());
+                    Adapt.error("Failed to decode SQL data for " + playerName + " (" + uuid
+                            + "); the row was preserved and the player was not activated.");
+                    e.printStackTrace();
+                    releasePendingSqlClaim();
+                    player.kick(Components.mini(
+                            "Your Adapt data could not be loaded. Please contact an administrator."));
+                    return;
+                }
+
+                pendingSqlClaim.set(false);
+                sqlSessionAcquired = true;
+                data = loaded;
+                isActive = true;
+                loggedIn();
+            }
+            case BUSY -> scheduleSqlLoginRetry(20);
+            case ERROR -> {
+                Adapt.error("SQL data for " + playerName + " (" + uuid
+                        + ") could not be read; local data was not written back. Retrying.");
+                scheduleSqlLoginRetry(100);
+            }
+            case CLOSED -> {
+                // Plugin shutdown owns the lifecycle from here.
+            }
+        }
+    }
+
+    private void scheduleSqlLoginRetry(int ticks) {
+        J.s(() -> {
+            if (!closed.get() && player.isOnline()
+                    && Adapt.instance.getAdaptServer().isCurrentPlayer(uuid, this)) {
+                attemptSqlLogin();
+            }
+        }, ticks);
+    }
+
+    private String initialSqlData() {
+        File local = getPlayerDataFile(uuid);
+        if (local.exists()) {
+            try {
+                String text = IO.readAll(local);
+                PlayerData.fromJson(text);
+                return text;
+            } catch (Throwable e) {
+                System.err.println("[Adapt-SQL] Failed to load local player data for " + playerName + " (" + uuid
+                        + ") while creating its first SQL row: " + e.getMessage());
+            }
+        }
+
+        try {
+            return new PlayerData().toJson(true);
+        } catch (Throwable e) {
+            throw new IllegalStateException("Failed to create initial SQL data for " + uuid, e);
+        }
+    }
+
+    private void backupBrokenSqlData(String sqlData) {
+        J.a(() -> {
+            try {
+                IO.writeAll(getPlayerDataBackupFile(uuid), sqlData);
+            } catch (Throwable e) {
+                Adapt.instance.getLogger().log(Level.SEVERE,
+                        "Failed to back up broken SQL data for " + playerName + " (" + uuid + ")", e);
+            }
+        });
     }
 
     public boolean canConsumeFood(double cost, int minFood) {
@@ -179,26 +261,16 @@ public class AdaptPlayer extends TickedObject {
 
     @SneakyThrows
     private void save() {
-        UUID uuid = player.getUniqueId();
         if (this.data == null)
             return;
         String data = this.data.toJson(AdaptConfig.get().isUseSql());
 
         if (AdaptConfig.get().isUseSql()) {
-            Adapt.instance.getSqlManager().updateData(uuid, data);
-        } else {
-            IO.writeAll(getPlayerDataFile(uuid), data);
-        }
-    }
-
-    @SneakyThrows
-    private void unSave() {
-        UUID uuid = player.getUniqueId();
-        String data = new PlayerData().toJson(AdaptConfig.get().isUseSql());
-        unregister();
-
-        if (AdaptConfig.get().isUseSql()) {
-            Adapt.instance.getSqlManager().updateData(uuid, data);
+            if (!sqlSessionAcquired || closed.get()) {
+                return;
+            }
+            Adapt.instance.getSqlManager().saveSession(uuid, sqlSessionId, data)
+                    .thenAccept(this::handleSqlWriteResult);
         } else {
             IO.writeAll(getPlayerDataFile(uuid), data);
         }
@@ -206,35 +278,105 @@ public class AdaptPlayer extends TickedObject {
 
     @Override
     public void unregister() {
+        if (!closed.compareAndSet(false, true)) {
+            return;
+        }
         isActive = false;
         not.unregister();
         actionBarNotifier.unregister();
         super.unregister();
-        save();
+        releasePendingSqlClaim();
+
+        if (data == null || discardOnClose) {
+            return;
+        }
+
+        if (AdaptConfig.get().isUseSql()) {
+            if (sqlSessionAcquired) {
+                String serialized = serializeSqlData();
+                if (serialized != null) {
+                    Adapt.instance.getSqlManager().releaseSession(uuid, sqlSessionId, serialized)
+                            .thenAccept(this::handleSqlWriteResult);
+                }
+                sqlSessionAcquired = false;
+            }
+        } else {
+            saveLocalData();
+        }
     }
 
     @SneakyThrows
     public void delete(UUID uuid) {
+        if (AdaptConfig.get().isUseSql()) {
+            if (!sqlSessionAcquired || closed.get()) {
+                Adapt.error("Cannot delete SQL data for " + playerName + ": this server does not own the session.");
+                return;
+            }
+            Adapt.instance.getSqlManager().deleteSession(this.uuid, sqlSessionId).thenAccept(result -> J.s(() -> {
+                if (result == SQLManager.WriteResult.STORED) {
+                    sqlSessionAcquired = false;
+                    discardOnClose = true;
+                    player.kick(Components.mini("Your data has been deleted."));
+                } else {
+                    Adapt.error("Failed to delete SQL data for " + playerName + " (" + this.uuid
+                            + "): " + result);
+                }
+            }));
+            return;
+        }
+
         File local = getPlayerDataFile(player.getUniqueId());
         Adapt.warn("Deleting Player Data: " + local.getAbsolutePath());
-        Player p = player;
-        J.s(() -> {
+        discardOnClose = true;
+        player.kick(Components.mini("Your data has been deleted."));
+        J.a(() -> {
             try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Files.deleteIfExists(local.toPath());
+            } catch (Throwable e) {
+                System.err.println("[Adapt] Failed to delete local player data " + local.getAbsolutePath());
+                e.printStackTrace();
             }
-            p.kickPlayer("Your data has been deleted.");
-            if (local.exists()) {
-                local.delete();
-                unSave();
-                local.delete();
-                save();
-                local.delete();
-                unSave();
-            }
-            if (AdaptConfig.get().isUseSql()) {
-                Adapt.instance.getSqlManager().delete(uuid);
+        });
+    }
+
+    private String serializeSqlData() {
+        try {
+            return data.toJson(true);
+        } catch (Throwable e) {
+            Adapt.error("Failed to serialize SQL data for " + playerName + " (" + uuid + ")");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void releasePendingSqlClaim() {
+        if (pendingSqlClaim.compareAndSet(true, false)) {
+            Adapt.instance.getSqlManager().releaseSessionUnchanged(uuid, sqlSessionId)
+                    .thenAccept(this::handleSqlWriteResult);
+        }
+    }
+
+    @SneakyThrows
+    private void saveLocalData() {
+        IO.writeAll(getPlayerDataFile(uuid), data.toJson(false));
+    }
+
+    private void handleSqlWriteResult(SQLManager.WriteResult result) {
+        if (closed.get() || result == SQLManager.WriteResult.STORED || result == SQLManager.WriteResult.CLOSED) {
+            return;
+        }
+
+        J.s(() -> {
+            if (result == SQLManager.WriteResult.LOST_LEASE) {
+                sqlSessionAcquired = false;
+                isActive = false;
+                if (!closed.get() && player.isOnline()) {
+                    Adapt.error("SQL session ownership was lost for " + playerName + " (" + uuid + ").");
+                    player.kick(Components.mini(
+                            "Your Adapt session moved to another server. Please reconnect."));
+                }
+            } else if (!closed.get()) {
+                Adapt.error("Failed to save SQL data for " + playerName + " (" + uuid + ").");
             }
         });
     }
@@ -248,40 +390,14 @@ public class AdaptPlayer extends TickedObject {
         return lastSeen + 60_000 < System.currentTimeMillis();
     }
 
-    private PlayerData loadPlayerData() {
-        boolean upload = false;
-        if (AdaptConfig.get().isUseSql()) {
-            Adapt.instance.getSqlManager().updateTime(player.getUniqueId(), System.currentTimeMillis());
-            String sqlData = Adapt.instance.getSqlManager().fetchData(player.getUniqueId());
-            if (sqlData != null) {
-                try {
-                    return Json.fromJson(sqlData, PlayerData.class);
-                } catch (Throwable e) {
-                    try {
-                        IO.writeAll(getPlayerDataBackupFile(player.getUniqueId()), sqlData);
-                    } catch (Throwable ee) {
-                        Adapt.error("Failed to backup player data for " + player.getName() + " (" + player.getUniqueId()
-                                + ")");
-                        ee.printStackTrace();
-                    }
-                    Adapt.error("Encountered an error while loading player " + player.getName()
-                            + "'s data, loading failed, data was overwritten by local file");
-                    e.printStackTrace();
-                }
-            }
-            upload = true;
-        }
-
-        File f = getPlayerDataFile(player.getUniqueId());
+    private PlayerData loadLocalPlayerData() {
+        File f = getPlayerDataFile(uuid);
         if (f.exists()) {
             try {
                 String text = IO.readAll(f);
-                if (upload) {
-                    Adapt.instance.getSqlManager().updateData(player.getUniqueId(), text);
-                }
                 return PlayerData.fromJson(text);
             } catch (Throwable ignored) {
-                Adapt.verbose("Failed to load player data for " + player.getName() + " (" + player.getUniqueId() + ")");
+                Adapt.verbose("Failed to load player data for " + playerName + " (" + uuid + ")");
             }
         }
 
@@ -378,11 +494,15 @@ public class AdaptPlayer extends TickedObject {
                 return;
             getNot().queue(AdvancementNotification.builder()
                     .title(first
-                            ? Localizer.dLocalize("snippets", "gui", "welcome")
-                            : Localizer.dLocalize("snippets", "gui", "welcomeback") + "\n" + C.GREEN + "+"
-                                    + Form.pc(boostAmount, 0) + C.GRAY + " "
-                                    + Localizer.dLocalize("snippets", "gui", "xpbonusfortime") + " " + C.AQUA
-                                    + Form.duration(boostTime, 0))
+                            ? Localizer.component("snippets", "gui", "welcome")
+                            : Components.mini(
+                                    "<welcome_back>\n<green>+<amount><gray> <bonus> <aqua><duration>",
+                                    Placeholder.component("welcome_back",
+                                            Localizer.component("snippets", "gui", "welcomeback")),
+                                    Placeholder.unparsed("amount", Form.pc(boostAmount, 0)),
+                                    Placeholder.component("bonus",
+                                            Localizer.component("snippets", "gui", "xpbonusfortime")),
+                                    Placeholder.unparsed("duration", Form.duration(boostTime, 0))))
                     .model(CustomModel.get(Material.DIAMOND, "snippets", "gui", first ? "welcome" : "welcomeback"))
                     .build());
         }

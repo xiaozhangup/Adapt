@@ -20,10 +20,12 @@ package com.volmit.adapt.content.item;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.item.DataItem;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -83,24 +85,35 @@ public class KnowledgeOrb implements DataItem<KnowledgeOrb.Data> {
     }
 
     @Override
-    public void applyLore(Data data, List<String> lore) {
+    public String getDataKey() {
+        return "knowledge_orb";
+    }
+
+    @Override
+    public void applyLore(Data data, List<Component> lore) {
         for (Map.Entry<String, Integer> entry : data.getKnowledgeMap().entrySet()) {
             String skill = entry.getKey();
             int knowledge = entry.getValue();
-            lore.add(C.WHITE + Localizer.dLocalize("snippets", "knowledgeorb", "contains") + " " + C.UNDERLINE + C.WHITE
-                    + knowledge + " "
-                    + Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(skill).getDisplayName() + " "
-                    + Localizer.dLocalize("snippets", "knowledgeorb", "knowledge"));
+            var rawSkill = Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(skill);
+            Component trailing = Component.text(" ", rawSkill.getColor())
+                    .append(Localizer.component("snippets", "knowledgeorb", "knowledge").color(rawSkill.getColor()));
+            lore.add(Components.mini("<white><contains> <amount> </white><skill><trailing>",
+                    Placeholder.component("contains", Localizer.component("snippets", "knowledgeorb", "contains")),
+                    Placeholder.unparsed("amount", Integer.toString(knowledge)),
+                    Placeholder.component("skill", rawSkill.getDisplayName()),
+                    Placeholder.component("trailing", trailing)));
         }
-        lore.add(C.LIGHT_PURPLE + Localizer.dLocalize("snippets", "knowledgeorb", "rightclick") + " " + C.GRAY
-                + Localizer.dLocalize("snippets", "knowledgeorb", "togainknowledge"));
+        lore.add(Components.mini("<light_purple><action></light_purple><gray> <result></gray>",
+                Placeholder.component("action", Localizer.component("snippets", "knowledgeorb", "rightclick")),
+                Placeholder.component("result",
+                        Localizer.component("snippets", "knowledgeorb", "togainknowledge"))));
     }
 
     @Override
     public void applyMeta(Data data, ItemMeta meta) {
         meta.addEnchant(Enchantment.BINDING_CURSE, 10, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-        meta.setDisplayName(Localizer.dLocalize("snippets", "knowledgeorb", "knowledgeorb"));
+        meta.displayName(Localizer.component("snippets", "knowledgeorb", "knowledgeorb"));
     }
 
     @AllArgsConstructor

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.util;
 
-import com.volmit.adapt.Adapt;
 import org.bukkit.event.Listener;
 
 public interface AdaptService extends Listener {
@@ -26,7 +25,4 @@ public interface AdaptService extends Listener {
 
     void onDisable();
 
-    default void postShutdown(Runnable r) {
-        Adapt.instance.postShutdown(r);
-    }
 }

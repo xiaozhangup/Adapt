@@ -24,7 +24,7 @@ import com.volmit.adapt.content.adaptation.sword.SwordsBloodyBlade;
 import com.volmit.adapt.content.adaptation.sword.SwordsPoisonedBlade;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,11 +39,11 @@ public class SkillSwords extends SimpleSkill<SkillSwords.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillSwords() {
-        super("swords", Localizer.dLocalize("skill", "swords", "icon"));
+        super("swords", Localizer.component("skill", "swords", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#e8b523"));
-        setDescription(Localizer.dLocalize("skill", "swords", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "swords", "name"));
+        setColor(TextColor.color(0xe8b523));
+        setDescription(Localizer.component("skill", "swords", "description"));
+        setDisplayName(Localizer.component("skill", "swords", "name"));
         setInterval(2150);
         setIcon(Material.DIAMOND_SWORD);
         cooldowns = new WeakHashMap<>();

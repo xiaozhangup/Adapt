@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingHunger extends SimpleAdaptation<BrewingHunger.Config> {
     public BrewingHunger() {
         super("brewing-hunger");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "hunger", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "hunger", "name"));
+        setDescription(Localizer.component("brewing", "hunger", "description"));
+        setDisplayName(Localizer.component("brewing", "hunger", "name"));
         setIcon(Material.ROTTEN_FLESH);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingHunger extends SimpleAdaptation<BrewingHunger.Config> {
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-hunger-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.ROTTEN_FLESH)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Hunger").setColor(Color.GREEN)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Hunger")).setColor(Color.GREEN)
                         .addEffect(PotionEffectType.HUNGER, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-hunger-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.ROTTEN_FLESH)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.WEAKNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Hunger 2").setColor(Color.GREEN)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Hunger 2")).setColor(Color.GREEN)
                         .addEffect(PotionEffectType.HUNGER, 600, 3, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "hunger", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "hunger", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "hunger", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "hunger", "lore2"))));
     }
 
     @Override

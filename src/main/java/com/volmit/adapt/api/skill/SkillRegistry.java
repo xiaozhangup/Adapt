@@ -28,11 +28,13 @@ import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.api.xp.XPMultiplier;
 import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.content.skill.*;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.M;
 import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KMap;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -45,14 +47,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class SkillRegistry extends TickedObject {
     public static final KMap<String, Skill<?>> skills = new KMap<>();
+    private final Material adaptActivatorBlock;
 
     public SkillRegistry() {
         super("registry", UUID.randomUUID() + "-sk", 1250);
+        adaptActivatorBlock = resolveAdaptActivatorBlock();
         registerSkill(SkillAgility.class);
         registerSkill(SkillArchitect.class);
         registerSkill(SkillAxes.class);
@@ -106,7 +111,7 @@ public class SkillRegistry extends TickedObject {
         boolean isAdaptActivator = !e.getBlockFace().equals(BlockFace.UP) && !e.getBlockFace().equals(BlockFace.DOWN)
                 && !p.isSneaking() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock() != null
                 && canInteract(p, e.getClickedBlock().getLocation())
-                && e.getClickedBlock().getType().equals(Material.valueOf(AdaptConfig.get().adaptActivatorBlock))
+                && e.getClickedBlock().getType().equals(adaptActivatorBlock)
                 && (p.getInventory().getItemInMainHand().getType().equals(Material.AIR)
                         || !p.getInventory().getItemInMainHand().getType().isBlock())
                 && (p.getInventory().getItemInOffHand().getType().equals(Material.AIR)
@@ -131,8 +136,11 @@ public class SkillRegistry extends TickedObject {
                 playDebug(p);
                 it.getItemMeta().getPersistentDataContainer().getKeys()
                         .forEach(k -> Bukkit.getServer().getConsoleSender()
-                                .sendMessage(k + " = " + it.getItemMeta().getPersistentDataContainer().getOrDefault(k,
-                                        PersistentDataType.STRING, "Not a String")));
+                                .sendMessage(Components.mini("<key> = <value>",
+                                        Placeholder.unparsed("key", k.toString()),
+                                        Placeholder.unparsed("value",
+                                                it.getItemMeta().getPersistentDataContainer().getOrDefault(k,
+                                                        PersistentDataType.STRING, "Not a String")))));
             }
         }
 
@@ -140,7 +148,7 @@ public class SkillRegistry extends TickedObject {
             ItemStack it = p.getInventory().getItemInMainHand();
             if (it.getType().equals(Material.EXPERIENCE_BOTTLE)) {
                 e.setCancelled(true);
-                Bukkit.getServer().getConsoleSender().sendMessage("   ");
+                Bukkit.getServer().getConsoleSender().sendMessage(Components.mini("   "));
                 p.setCooldown(Material.ENCHANTED_BOOK, 3);
                 AdaptPlayer a = getPlayer(p);
                 playDebug(p);
@@ -148,17 +156,22 @@ public class SkillRegistry extends TickedObject {
                 String xv = a.getData().getMultiplier() - 1d > 0
                         ? "+" + Form.pc(a.getData().getMultiplier() - 1D)
                         : Form.pc(a.getData().getMultiplier() - 1D);
-                Bukkit.getServer().getConsoleSender().sendMessage("Global" + C.GRAY + ": " + C.GREEN + xv);
+                Bukkit.getServer().getConsoleSender().sendMessage(Components.mini(
+                        "Global<gray>: <green><value>", Placeholder.unparsed("value", xv)));
 
                 for (XPMultiplier i : a.getData().getMultipliers()) {
                     String vv = i.getMultiplier() > 0 ? "+" + Form.pc(i.getMultiplier()) : Form.pc(i.getMultiplier());
-                    Bukkit.getServer().getConsoleSender().sendMessage(
-                            C.GREEN + "* " + vv + C.GRAY + " for " + Form.duration(i.getGoodFor() - M.ms(), 0));
+                    Bukkit.getServer().getConsoleSender().sendMessage(Components.mini(
+                            "<green>* <value><gray> for <duration>",
+                            Placeholder.unparsed("value", vv),
+                            Placeholder.unparsed("duration", Form.duration(i.getGoodFor() - M.ms(), 0))));
                 }
                 for (XPMultiplier i : Adapt.instance.getAdaptServer().getData().getMultipliers()) {
                     String vv = i.getMultiplier() > 0 ? "+" + Form.pc(i.getMultiplier()) : Form.pc(i.getMultiplier());
-                    Bukkit.getServer().getConsoleSender().sendMessage(
-                            C.GREEN + "* " + vv + C.GRAY + " for " + Form.duration(i.getGoodFor() - M.ms(), 0));
+                    Bukkit.getServer().getConsoleSender().sendMessage(Components.mini(
+                            "<green>* <value><gray> for <duration>",
+                            Placeholder.unparsed("value", vv),
+                            Placeholder.unparsed("duration", Form.duration(i.getGoodFor() - M.ms(), 0))));
                 }
 
                 for (PlayerSkillLine i : a.getData().getSkillLines().v()) {
@@ -166,14 +179,19 @@ public class SkillRegistry extends TickedObject {
                     String v = i.getMultiplier() - a.getData().getMultiplier() > 0
                             ? "+" + Form.pc(i.getMultiplier() - a.getData().getMultiplier())
                             : Form.pc(i.getMultiplier() - a.getData().getMultiplier());
-                    Bukkit.getServer().getConsoleSender()
-                            .sendMessage("  " + s.getDisplayName() + C.GRAY + ": " + s.getColor() + v);
+                    Bukkit.getServer().getConsoleSender().sendMessage(Components.mini(
+                            "  <skill><gray>: <value>",
+                            Placeholder.component("skill", s.getDisplayName()),
+                            Placeholder.component("value", Component.text(v, s.getColor()))));
                     for (XPMultiplier j : i.getMultipliers()) {
                         String vv = j.getMultiplier() > 0
                                 ? "+" + Form.pc(j.getMultiplier())
                                 : Form.pc(j.getMultiplier());
-                        Bukkit.getServer().getConsoleSender().sendMessage("  " + s.getShortName() + C.GRAY + " " + vv
-                                + " for " + Form.duration(j.getGoodFor() - M.ms(), 0));
+                        Bukkit.getServer().getConsoleSender().sendMessage(Components.mini(
+                                "  <skill><gray> <value> for <duration>",
+                                Placeholder.component("skill", s.getShortName()),
+                                Placeholder.unparsed("value", vv),
+                                Placeholder.unparsed("duration", Form.duration(j.getGoodFor() - M.ms(), 0))));
                     }
                 }
             }
@@ -202,6 +220,7 @@ public class SkillRegistry extends TickedObject {
             Skill<?> sk = skill.getConstructor().newInstance();
 
             if (!sk.isEnabled()) {
+                sk.unregister();
                 return;
             }
 
@@ -230,10 +249,23 @@ public class SkillRegistry extends TickedObject {
 
     @Override
     public void unregister() {
-        for (Skill<?> i : skills.v()) {
+        for (Skill<?> i : new ArrayList<>(skills.v())) {
             i.unregister();
             unregisterRecipes(i);
         }
+        skills.clear();
+        super.unregister();
+    }
+
+    private Material resolveAdaptActivatorBlock() {
+        String configured = AdaptConfig.get().adaptActivatorBlock;
+        Material material = configured == null ? null : Material.matchMaterial(configured);
+        if (material != null && material.isBlock()) {
+            return material;
+        }
+
+        Adapt.warn("Invalid adaptActivatorBlock '" + configured + "', using BOOKSHELF instead.");
+        return Material.BOOKSHELF;
     }
 
     @Override

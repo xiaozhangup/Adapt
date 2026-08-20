@@ -19,12 +19,13 @@
 package com.volmit.adapt.content.adaptation.hunter;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -44,8 +45,8 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
     public HunterDropToInventory() {
         super("hunter-drop-to-inventory");
         registerConfiguration(HunterDropToInventory.Config.class);
-        setDescription(Localizer.dLocalize("hunter", "droptoinventory", "description"));
-        setDisplayName(Localizer.dLocalize("hunter", "droptoinventory", "name"));
+        setDescription(Localizer.component("hunter", "droptoinventory", "description"));
+        setDisplayName(Localizer.component("hunter", "droptoinventory", "name"));
         setIcon(Material.DIRT);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -61,7 +62,8 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("hunter", "droptoinventory", "lore1"));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
+                Localizer.component("hunter", "droptoinventory", "lore1"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

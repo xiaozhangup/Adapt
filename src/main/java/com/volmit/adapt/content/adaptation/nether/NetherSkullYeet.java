@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.nether;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.Data;
@@ -32,24 +34,19 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
-
-    private final Map<Player, Long> lastJump = new WeakHashMap<>();
 
     public NetherSkullYeet() {
         super("nether-skull-toss");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("nether", "skulltoss", "description1") + C.ITALIC + " "
-                + Localizer.dLocalize("nether", "skulltoss", "description2") + " " + C.GRAY
-                + Localizer.dLocalize("nether", "skulltoss", "description3"));
-        setDisplayName(Localizer.dLocalize("nether", "skulltoss", "name"));
+        setDescription(Components.mini("<description1><italic> <description2> </italic><gray><description3></gray>",
+                Placeholder.component("description1", Localizer.component("nether", "skulltoss", "description1")),
+                Placeholder.component("description2", Localizer.component("nether", "skulltoss", "description2")),
+                Placeholder.component("description3", Localizer.component("nether", "skulltoss", "description3"))));
+        setDisplayName(Localizer.component("nether", "skulltoss", "name"));
         setIcon(Material.WITHER_SKELETON_SKULL);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -61,21 +58,17 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
     @Override
     public void addStats(int level, Element v) {
         int chance = getConfig().getBaseCooldown() - getConfig().getLevelCooldown() * level;
-        v.addLore(
-                C.GREEN + String.valueOf(chance) + C.GRAY + " " + Localizer.dLocalize("nether", "skulltoss", "lore1"));
-        v.addLore(C.GRAY + Localizer.dLocalize("nether", "skulltoss", "lore2") + C.DARK_GRAY
-                + Localizer.dLocalize("nether", "skulltoss", "lore3") + C.GRAY + ", "
-                + Localizer.dLocalize("nether", "skulltoss", "lore4"));
+        v.addLore(Components.mini("<green><chance></green><gray> <lore></gray>",
+                Placeholder.unparsed("chance", Integer.toString(chance)),
+                Placeholder.component("lore", Localizer.component("nether", "skulltoss", "lore1"))));
+        v.addLore(Components.mini("<gray><lore2></gray><dark_gray><lore3></dark_gray><gray>, <lore4></gray>",
+                Placeholder.component("lore2", Localizer.component("nether", "skulltoss", "lore2")),
+                Placeholder.component("lore3", Localizer.component("nether", "skulltoss", "lore3")),
+                Placeholder.component("lore4", Localizer.component("nether", "skulltoss", "lore4"))));
     }
 
     private int getCooldownDuration(Player p) {
         return (getConfig().getBaseCooldown() - getConfig().getLevelCooldown() * getLevel(p)) * 20;
-    }
-
-    @EventHandler
-    public void on(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        lastJump.remove(p);
     }
 
     @EventHandler
@@ -98,15 +91,6 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
         Player p = e.getPlayer();
         SoundPlayer sp = SoundPlayer.of(p);
 
-        if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration(p)) {
-            sp.play(p, Sound.BLOCK_CONDUIT_DEACTIVATE, 1F, 1F);
-            return;
-        }
-
-        if (lastJump.get(p) != null && M.ms() - lastJump.get(p) <= getCooldownDuration(p)) {
-            return;
-        }
-
         if (p.hasCooldown(p.getInventory().getItemInMainHand().getType())) {
             e.setCancelled(true);
             sp.play(p, Sound.BLOCK_CONDUIT_DEACTIVATE, 1F, 1F);
@@ -117,7 +101,6 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
 
         if (p.getGameMode() != GameMode.CREATIVE) {
             e.getItem().setAmount(e.getItem().getAmount() - 1);
-            lastJump.put(p, M.ms());
         }
 
         Vector dir = p.getEyeLocation().getDirection();

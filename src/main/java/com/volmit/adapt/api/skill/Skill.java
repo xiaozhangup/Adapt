@@ -20,7 +20,6 @@ package com.volmit.adapt.api.skill;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
-import com.volmit.adapt.api.Component;
 import com.volmit.adapt.api.adaptation.Adaptation;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
@@ -32,7 +31,10 @@ import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.content.gui.AllSkillsGui;
 import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.util.*;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,7 +43,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public interface Skill<T> extends Ticked, Component {
+public interface Skill<T> extends Ticked, com.volmit.adapt.api.Component {
     AdaptAdvancement buildAdvancements();
 
     Class<T> getConfigurationClass();
@@ -54,11 +56,11 @@ public interface Skill<T> extends Ticked, Component {
 
     String getName();
 
-    String getEmojiName();
+    Component getEmojiName();
 
     Material getIcon();
 
-    String getDescription();
+    Component getDescription();
 
     List<AdaptRecipe> getRecipes();
 
@@ -90,7 +92,7 @@ public interface Skill<T> extends Ticked, Component {
 
     List<Adaptation<?>> getAdaptations();
 
-    ChatColor getColor();
+    TextColor getColor();
 
     double getMinXp();
 
@@ -105,33 +107,47 @@ public interface Skill<T> extends Ticked, Component {
         return p.hasPermission(blacklistPermission);
     }
 
-    default String getDisplayName() {
+    default Component getDisplayName() {
         if (!this.isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + getColor().toString() + getEmojiName() + " " + Form.capitalize(getName());
+        return Component.text().color(getColor())
+                .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                .decoration(TextDecoration.STRIKETHROUGH, false).decoration(TextDecoration.UNDERLINED, false)
+                .decoration(TextDecoration.ITALIC, false)
+                .append(getEmojiName()).append(Component.space())
+                .append(Component.text(Form.capitalize(getName()))).build();
     }
 
-    default String getTitleDisplay() {
+    default Component getTitleDisplay() {
         if (!this.isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + ChatColor.of(getColor().getColor().darker()) + getEmojiName() + " "
-                + Form.capitalize(getName());
+        return Component.text().color(Components.darker(getColor()))
+                .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                .decoration(TextDecoration.STRIKETHROUGH, false).decoration(TextDecoration.UNDERLINED, false)
+                .decoration(TextDecoration.ITALIC, false)
+                .append(getEmojiName()).append(Component.space())
+                .append(Component.text(Form.capitalize(getName()))).build();
     }
 
-    default String getShortName() {
+    default Component getShortName() {
         if (!this.isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + getColor().toString() + getEmojiName();
+        return Component.text().color(getColor())
+                .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                .decoration(TextDecoration.STRIKETHROUGH, false).decoration(TextDecoration.UNDERLINED, false)
+                .decoration(TextDecoration.ITALIC, false).append(getEmojiName()).build();
     }
 
-    default String getDisplayName(int level) {
+    default Component getDisplayName(int level) {
         if (!this.isEnabled()) {
             this.unregister();
         }
-        return getDisplayName() + C.RESET + " " + C.UNDERLINE + C.WHITE + level + C.RESET;
+        return Components.mini("<name><reset> <white><level><reset>",
+                Placeholder.component("name", getDisplayName()),
+                Placeholder.unparsed("level", Integer.toString(level)));
     }
 
     default CustomModel getModel() {
@@ -230,7 +246,7 @@ public interface Skill<T> extends Ticked, Component {
         spw.play(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 0.3f, 1.855f);
         Window w = new UIWindow(player);
         w.setTag("skill/" + getName());
-        w.setDecorator((window, position, row) -> new UIElement("bg").setName(" ")
+        w.setDecorator((window, position, row) -> new UIElement("bg").setName(Component.space())
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
 
@@ -246,12 +262,16 @@ public interface Skill<T> extends Ticked, Component {
             w.setElement(pos, row,
                     new UIElement("ada-" + i.getName()).setMaterial(new MaterialBlock(i.getIcon()))
                             .setModel(i.getModel()).setName(i.getDisplayName(lvl))
-                            .addLore(Form.wrapWordsPrefixed(i.getDescription(), "" + C.GRAY, 45)) // Set to the actual
-                                                                                                    // Description
+                            .addLore(Components.mini("<gray><description>",
+                                    Placeholder.component("description", i.getDescription())))
                             .addLore(lvl == 0
-                                    ? (C.DARK_GRAY + Localizer.dLocalize("snippets", "gui", "notlearned"))
-                                    : (C.GRAY + Localizer.dLocalize("snippets", "gui", "level") + " " + C.WHITE
-                                            + Form.toRoman(lvl)))
+                                    ? Components.mini("<dark_gray><not_learned>",
+                                            Placeholder.component("not_learned",
+                                                    Localizer.component("snippets", "gui", "notlearned")))
+                                    : Components.mini("<gray><level> <white><value>",
+                                            Placeholder.component("level",
+                                                    Localizer.component("snippets", "gui", "level")),
+                                            Placeholder.unparsed("value", Form.toRoman(lvl))))
                             .setProgress(1D).onLeftClick((e) -> i.openGui(player)));
             ind++;
         }
@@ -263,17 +283,21 @@ public interface Skill<T> extends Ticked, Component {
                 backRow++;
             w.setElement(backPos, backRow, new UIElement("back").setMaterial(new MaterialBlock(Material.RED_BED))
                     .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
-                    .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back")).onLeftClick((e) -> {
+                    .setName(Components.mini("<reset><red><!italic><back>",
+                            Placeholder.component("back", Localizer.component("snippets", "gui", "back"))))
+                    .onLeftClick((e) -> {
                         w.close();
                         onGuiClose(player, true, simple);
                     }));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(getTitleDisplay() + C.BLACK + " ("
-                + Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp())) + " "
-                + Localizer.dLocalize("snippets", "gui", "xp") + " " + (a.getSkillLine(getName()).getLevel() + 1)
-                + ")");
+        w.setTitle(Components.mini("<title><black> (<remaining> <xp> <level>)",
+                Placeholder.component("title", getTitleDisplay()),
+                Placeholder.unparsed("remaining",
+                        Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp()))),
+                Placeholder.component("xp", Localizer.component("snippets", "gui", "xp")),
+                Placeholder.unparsed("level", Integer.toString(a.getSkillLine(getName()).getLevel() + 1))));
         w.onClosed((vv) -> J.s(() -> {
             w.close();
             onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis(), simple);

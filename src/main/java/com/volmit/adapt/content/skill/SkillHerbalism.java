@@ -28,7 +28,7 @@ import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -43,19 +43,19 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.meta.PotionMeta;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
-    private final Map<Player, Long> cooldown = new WeakHashMap<>();
+    private final Map<Player, Long> cooldown = new HashMap<>();
 
     public SkillHerbalism() {
-        super("herbalism", Localizer.dLocalize("skill", "herbalism", "icon"));
+        super("herbalism", Localizer.component("skill", "herbalism", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#82994c"));
+        setColor(TextColor.color(0x82994c));
         setInterval(3990);
-        setDescription(Localizer.dLocalize("skill", "herbalism", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "herbalism", "name"));
+        setDescription(Localizer.component("skill", "herbalism", "description"));
+        setDisplayName(Localizer.component("skill", "herbalism", "name"));
         setIcon(Material.WHEAT);
         registerAdaptation(new HerbalismGrowthAura());
         registerAdaptation(new HerbalismReplant());
@@ -69,18 +69,18 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
         registerAdaptation(new HerbalismCraftableCobweb());
         registerAdaptation(new HerbalismNoTrample());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_eat_100")
-                .title(Localizer.dLocalize("advancement", "challenge_eat_100", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_eat_100", "description"))
+                .title(Localizer.component("advancement", "challenge_eat_100", "title"))
+                .description(Localizer.component("advancement", "challenge_eat_100", "description"))
                 .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "challenge_eat_100"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_eat_1000")
-                        .title(Localizer.dLocalize("advancement", "challenge_eat_1000", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_eat_1000", "description"))
+                        .title(Localizer.component("advancement", "challenge_eat_1000", "title"))
+                        .description(Localizer.component("advancement", "challenge_eat_1000", "description"))
                         .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "challenge_eat_1000"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_eat_10000")
-                                .title(Localizer.dLocalize("advancement", "challenge_eat_10000", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_eat_10000", "description"))
+                                .title(Localizer.component("advancement", "challenge_eat_10000", "title"))
+                                .description(Localizer.component("advancement", "challenge_eat_10000", "description"))
                                 .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism",
                                         "challenge_eat_10000"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
@@ -95,13 +95,13 @@ public class SkillHerbalism extends SimpleSkill<SkillHerbalism.Config> {
                 .reward(getConfig().challengeEat1kReward).build());
 
         registerAdvancement(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_harvest_100")
-                .title(Localizer.dLocalize("advancement", "challenge_harvest_100", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_harvest_100", "description"))
+                .title(Localizer.component("advancement", "challenge_harvest_100", "title"))
+                .description(Localizer.component("advancement", "challenge_harvest_100", "description"))
                 .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "harvest_100"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.COOKED_BEEF).key("challenge_harvest_1000")
-                        .title(Localizer.dLocalize("advancement", "challenge_harvest_1000", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_harvest_1000", "description"))
+                        .title(Localizer.component("advancement", "challenge_harvest_1000", "title"))
+                        .description(Localizer.component("advancement", "challenge_harvest_1000", "description"))
                         .model(CustomModel.get(Material.COOKED_BEEF, "advancement", "herbalism", "harvest_1000"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());

@@ -1,12 +1,16 @@
 package com.volmit.adapt.content.adaptation.ranged;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -14,26 +18,26 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 import static java.util.concurrent.ThreadLocalRandom.current;
 
 public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Config> {
-    private final Map<Arrow, Player> shotArrows;
+    private final NamespacedKey shooterKey;
 
     public RangedArrowRecovery() {
         super("ranged-recovery");
         registerConfiguration(RangedArrowRecovery.Config.class);
-        setDescription(Localizer.dLocalize("ranged", "arrowrecovery", "description"));
-        setDisplayName(Localizer.dLocalize("ranged", "arrowrecovery", "name"));
+        setDescription(Localizer.component("ranged", "arrowrecovery", "description"));
+        setDisplayName(Localizer.component("ranged", "arrowrecovery", "name"));
         setIcon(Material.ARROW);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        shotArrows = new HashMap<>();
+        shooterKey = new NamespacedKey(Adapt.instance, "ranged-recovery-shooter");
     }
 
     @EventHandler
@@ -41,7 +45,8 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
         if (event.getEntity() instanceof Player player && hasAdaptation(player)) {
             if (!event.getBow().containsEnchantment(Enchantment.INFINITY)) {
                 if (event.getProjectile() instanceof Arrow arrow) {
-                    shotArrows.put(arrow, player);
+                    arrow.getPersistentDataContainer().set(shooterKey, PersistentDataType.STRING,
+                            player.getUniqueId().toString());
                 }
             }
         }
@@ -50,7 +55,9 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
-            Player shooter = shotArrows.get(arrow);
+            String storedShooter = arrow.getPersistentDataContainer().get(shooterKey, PersistentDataType.STRING);
+            arrow.getPersistentDataContainer().remove(shooterKey);
+            Player shooter = getShooter(storedShooter);
             if (shooter != null && hasAdaptation(shooter)) {
                 int level = getLevel(shooter);
                 double chance = getConfig().hitChance[level - 1] / 100.0;
@@ -60,7 +67,17 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
                     Adapt.info("Arrow added to inventory.");
                 }
             }
-            shotArrows.remove(arrow);
+        }
+    }
+
+    private Player getShooter(String storedShooter) {
+        if (storedShooter == null) {
+            return null;
+        }
+        try {
+            return Bukkit.getPlayer(UUID.fromString(storedShooter));
+        } catch (IllegalArgumentException ignored) {
+            return null;
         }
     }
 
@@ -78,14 +95,22 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
     }
 
     @Override
+    public boolean needsTicking() {
+        return false;
+    }
+
+    @Override
     public boolean isPermanent() {
         return getConfig().permanent;
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("ranged", "arrowrecovery", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("ranged", "arrowrecovery", "lore2") + chancePerLevel(level));
+        v.addLore(Components.mini("<green><lore></green>",
+                Placeholder.component("lore", Localizer.component("ranged", "arrowrecovery", "lore1"))));
+        v.addLore(Components.mini("<green><lore><chance></green>",
+                Placeholder.component("lore", Localizer.component("ranged", "arrowrecovery", "lore2")),
+                Placeholder.unparsed("chance", Double.toString(chancePerLevel(level)))));
     }
 
     @NoArgsConstructor

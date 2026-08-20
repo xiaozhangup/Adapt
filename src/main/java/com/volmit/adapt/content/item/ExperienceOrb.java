@@ -20,11 +20,13 @@ package com.volmit.adapt.content.item;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.item.DataItem;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -68,24 +70,33 @@ public class ExperienceOrb implements DataItem<ExperienceOrb.Data> {
     }
 
     @Override
-    public void applyLore(Data data, List<String> lore) {
+    public String getDataKey() {
+        return "experience_orb";
+    }
+
+    @Override
+    public void applyLore(Data data, List<Component> lore) {
         for (Map.Entry<String, Double> entry : data.getExperienceMap().entrySet()) {
             String skill = entry.getKey();
             double experience = entry.getValue();
-            lore.add(C.WHITE + Form.capitalize(Localizer.dLocalize("snippets", "experienceorb", "contains")) + " "
-                    + C.UNDERLINE + C.WHITE + Form.f(experience, 0) + " "
-                    + Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(skill).getDisplayName() + C.GRAY + " "
-                    + Localizer.dLocalize("snippets", "experienceorb", "xp"));
+            lore.add(Components.mini("<white><contains> <amount> </white><skill><gray> <xp></gray>",
+                    Placeholder.component("contains", Components.capitalize(
+                            Localizer.component("snippets", "experienceorb", "contains"))),
+                    Placeholder.unparsed("amount", Form.f(experience, 0)),
+                    Placeholder.component("skill", Adapt.instance.getAdaptServer().getSkillRegistry().getSkill(skill)
+                            .getDisplayName()),
+                    Placeholder.component("xp", Localizer.component("snippets", "experienceorb", "xp"))));
         }
-        lore.add(C.LIGHT_PURPLE + Localizer.dLocalize("snippets", "experienceorb", "rightclick") + " " + C.GRAY
-                + Localizer.dLocalize("snippets", "experienceorb", "togainxp"));
+        lore.add(Components.mini("<light_purple><action></light_purple><gray> <result></gray>",
+                Placeholder.component("action", Localizer.component("snippets", "experienceorb", "rightclick")),
+                Placeholder.component("result", Localizer.component("snippets", "experienceorb", "togainxp"))));
     }
 
     @Override
     public void applyMeta(Data data, ItemMeta meta) {
         meta.addEnchant(Enchantment.BINDING_CURSE, 10, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-        meta.setDisplayName(Localizer.dLocalize("snippets", "experienceorb", "xporb"));
+        meta.displayName(Localizer.component("snippets", "experienceorb", "xporb"));
     }
 
     @AllArgsConstructor

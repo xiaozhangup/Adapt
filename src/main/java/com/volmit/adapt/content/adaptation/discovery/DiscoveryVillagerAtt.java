@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.discovery;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
@@ -38,8 +40,8 @@ public class DiscoveryVillagerAtt extends SimpleAdaptation<DiscoveryVillagerAtt.
     public DiscoveryVillagerAtt() {
         super("discovery-villager-att");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("discovery", "villager", "description"));
-        setDisplayName(Localizer.dLocalize("discovery", "villager", "name"));
+        setDescription(Localizer.component("discovery", "villager", "description"));
+        setDisplayName(Localizer.component("discovery", "villager", "name"));
         setIcon(Material.GLASS_BOTTLE);
         setInterval(5832);
         setBaseCost(getConfig().baseCost);
@@ -50,11 +52,14 @@ public class DiscoveryVillagerAtt extends SimpleAdaptation<DiscoveryVillagerAtt.
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("discovery", "villager", "lore1"));
-        v.addLore(C.GREEN + "+ " + Form.pc(getEffectiveness(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("discovery", "villager", "lore2"));
-        v.addLore(C.GREEN + "+ " + getXpTaken(level) + " " + C.GRAY
-                + Localizer.dLocalize("discovery", "villager", "lore3"));
+        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("discovery", "villager", "lore1"))));
+        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
+                Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("discovery", "villager", "lore2"))));
+        v.addLore(Components.mini("<green>+ <amount> </green><gray><lore></gray>",
+                Placeholder.unparsed("amount", Integer.toString(getXpTaken(level))),
+                Placeholder.component("lore", Localizer.component("discovery", "villager", "lore3"))));
     }
 
     private double getEffectiveness(double multiplier) {

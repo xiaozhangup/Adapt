@@ -28,10 +28,12 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.CustomModel;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -49,9 +51,9 @@ public class AdaptAdvancement {
     @Builder.Default
     private CustomModel model = null;
     @Builder.Default
-    private String title = "MISSING TITLE";
+    private Component title = Component.text("MISSING TITLE");
     @Builder.Default
-    private String description = "MISSING DESCRIPTION";
+    private Component description = Component.text("MISSING DESCRIPTION");
     @Builder.Default
     private AdvancementFrameType frame = AdvancementFrameType.TASK;
     @Builder.Default
@@ -71,7 +73,8 @@ public class AdaptAdvancement {
         }
 
         var icon = getModel() != null ? getModel().toItemStack() : new ItemStack(getIcon());
-        AdvancementDisplay d = new AdvancementDisplayBuilder(icon, getTitle()).description(getDescription())
+        AdvancementDisplay d = new AdvancementDisplayBuilder(icon, Components.legacyString(getTitle()))
+                .description(Components.legacyString(getDescription()))
                 .frame(getFrame()).showToast(toast).x(1f + depth).y(1f + index).build();
 
         if (parent == null) {

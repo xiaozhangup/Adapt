@@ -20,13 +20,13 @@ package com.volmit.adapt;
 
 import com.jeff_media.customblockdata.CustomBlockData;
 import com.volmit.adapt.api.advancement.AdvancementManager;
+import com.volmit.adapt.api.Component;
 import com.volmit.adapt.api.data.WorldData;
 import com.volmit.adapt.api.potion.BrewingManager;
 import com.volmit.adapt.api.protection.ProtectorRegistry;
 import com.volmit.adapt.api.tick.Ticker;
 import com.volmit.adapt.api.value.MaterialValue;
 import com.volmit.adapt.api.world.AdaptServer;
-import com.volmit.adapt.content.gui.SkillsGui;
 import com.volmit.adapt.content.protector.OrangDomainProtector;
 import com.volmit.adapt.content.protector.SlimeCargoProtector;
 import com.volmit.adapt.content.protector.WorldProtector;
@@ -36,13 +36,10 @@ import com.volmit.adapt.util.collection.KMap;
 import de.slikey.effectlib.EffectManager;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,16 +50,16 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import static com.volmit.adapt.util.decree.context.AdaptationListingHandler.initializeAdaptationListings;
 
 public class Adapt extends VolmitPlugin {
     public static Adapt instance;
-    public static HashMap<String, String> wordKey = new HashMap<>();
+    public static final Map<String, String> wordKey = new ConcurrentHashMap<>();
     private static VolmitSender sender;
     public final EffectManager adaptEffectManager = new EffectManager(this);
-    private final KList<Runnable> postShutdown = new KList<>();
     @Getter
     private final Map<String, Window> guiLeftovers = new HashMap<>();
     private KMap<Class<? extends AdaptService>, AdaptService> services;
@@ -76,6 +73,7 @@ public class Adapt extends VolmitPlugin {
     private ProtectorRegistry protectorRegistry;
     @Getter
     private AdvancementManager manager;
+    private PapiExpansion papiExpansion;
 
     public Adapt() {
         super();
@@ -167,100 +165,58 @@ public class Adapt extends VolmitPlugin {
         }
     }
 
-    public static void actionbar(Player p, String msg) {
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
+    public static void actionbar(Player p, net.kyori.adventure.text.Component message) {
+        p.sendActionBar(message);
     }
 
     public static void debug(String string) {
         if (AdaptConfig.get().isDebug()) {
-            msg(C.DARK_PURPLE + string);
+            msg(Components.mini("<dark_purple><message>", Placeholder.unparsed("message", string)));
         }
     }
 
     public static void warn(String string) {
-        msg(C.YELLOW + string);
+        msg(Components.mini("<yellow><message>", Placeholder.unparsed("message", string)));
     }
 
     public static void error(String string) {
-        msg(C.RED + string);
+        msg(Components.mini("<red><message>", Placeholder.unparsed("message", string)));
     }
 
     public static void verbose(String string) {
         if (AdaptConfig.get().isVerbose()) {
-            msg(C.LIGHT_PURPLE + string);
+            msg(Components.mini("<light_purple><message>", Placeholder.unparsed("message", string)));
         }
     }
 
     public static void success(String string) {
-        msg(C.GREEN + string);
+        msg(Components.mini("<green><message>", Placeholder.unparsed("message", string)));
     }
 
     public static void info(String string) {
-        msg(C.WHITE + string);
+        msg(Components.mini("<white><message>", Placeholder.unparsed("message", string)));
     }
 
-    public static void messagePlayer(Player p, String string) {
-        String msg = C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "] " + string;
-        p.sendMessage(msg);
+    public static void messagePlayer(Player p, net.kyori.adventure.text.Component message) {
+        p.sendMessage(prefixed(message));
     }
 
-    public static void msg(String string) {
+    public static void msg(net.kyori.adventure.text.Component message) {
         try {
             if (instance == null) {
-                System.out.println("[Adapt]: " + string);
+                System.out.println("[Adapt]: " + Components.plain(message));
                 return;
             }
 
-            String msg = C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "] " + string;
-            Bukkit.getConsoleSender().sendMessage(msg);
+            Bukkit.getConsoleSender().sendMessage(prefixed(message));
         } catch (Throwable e) {
-            System.out.println("[Adapt]: " + string);
+            System.out.println("[Adapt]: " + Components.plain(message));
         }
     }
 
-    public static void hotloaded() {
-        J.s(() -> {
-            instance.guiLeftovers.values().forEach(window -> {
-                HandlerList.unregisterAll((Listener) window);
-                window.close();
-            });
-            instance.stop();
-            instance.start();
-
-            instance.getGuiLeftovers().forEach((s, window) -> {
-
-                if (window.getTag() != null) {
-                    if (window.getTag().equals("/")) {
-                        SkillsGui.open(Bukkit.getPlayer(UUID.fromString(s)));
-                    } else {
-                        String[] split = window.getTag().split("\\Q/\\E");
-                        if (split.length == 2) {
-                            if (split[0].equals("skill")) {
-                                instance.getAdaptServer().getSkillRegistry().getSkill(split[1])
-                                        .openGui(Bukkit.getPlayer(UUID.fromString(s)));
-                            }
-                        } else if (split.length == 3) {
-                            if (split[0].equals("skill")) {
-                                try {
-                                    instance.getAdaptServer().getSkillRegistry().getSkill(split[1]).getAdaptations()
-                                            .stream()
-                                            .filter(a -> a.getId().equals(split[2]))
-                                            .findFirst()
-                                            .orElseThrow()
-                                            .openGui(Bukkit.getPlayer(UUID.fromString(s)));
-
-                                } catch (Throwable e) {
-                                    instance.getAdaptServer().getSkillRegistry().getSkill(split[1])
-                                            .openGui(Bukkit.getPlayer(UUID.fromString(s)));
-                                }
-                            }
-                        }
-                    }
-
-                }
-            });
-
-        }, 20);
+    private static net.kyori.adventure.text.Component prefixed(net.kyori.adventure.text.Component message) {
+        return Components.mini("<dark_gray>[<#cddced>属性<dark_gray>] <message>",
+                Placeholder.component("message", message));
     }
 
     @Override
@@ -276,7 +232,8 @@ public class Adapt extends VolmitPlugin {
 
         Localizer.updateLanguageFile();
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PapiExpansion().register();
+            papiExpansion = new PapiExpansion();
+            papiExpansion.register();
         }
         printInformation();
         sqlManager = new SQLManager();
@@ -292,27 +249,6 @@ public class Adapt extends VolmitPlugin {
             // autoUpdateCheck();
         }
         protectorRegistry = new ProtectorRegistry();
-        // if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-        // protectorRegistry.registerProtector(new WorldGuardProtector());
-        // }
-        // if (getServer().getPluginManager().getPlugin("Factions") != null) {
-        // protectorRegistry.registerProtector(new FactionsClaimProtector());
-        // }
-        // if (getServer().getPluginManager().getPlugin("ChestProtect") != null) {
-        // protectorRegistry.registerProtector(new ChestProtectProtector());
-        // }
-        // if (getServer().getPluginManager().getPlugin("Residence") != null) {
-        // protectorRegistry.registerProtector(new ResidenceProtector());
-        // }
-        // if (getServer().getPluginManager().getPlugin("GriefDefender") != null) {
-        // protectorRegistry.registerProtector(new GriefDefenderProtector());
-        // }
-        // if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
-        // protectorRegistry.registerProtector(new GriefPreventionProtector());
-        // }
-        // if (getServer().getPluginManager().getPlugin("LockettePro") != null) {
-        // protectorRegistry.registerProtector(new LocketteProProtector());
-        // }
         if (getServer().getPluginManager().getPlugin("SlimeCargoNext") != null) {
             protectorRegistry.registerProtector(new SlimeCargoProtector());
             info("Enabled SlimeCargoProtector!");
@@ -333,27 +269,74 @@ public class Adapt extends VolmitPlugin {
         manager.enable();
     }
 
-    public void postShutdown(Runnable r) {
-        postShutdown.add(r);
-    }
-
     public void stopSim() {
-        ticker.clear();
-        postShutdown.forEach(Runnable::run);
-        adaptServer.unregister();
-        manager.disable();
-        MaterialValue.save();
-        WorldData.stop();
-        CustomModel.clear();
+        stopSafely("ticker", () -> {
+            if (ticker != null) {
+                ticker.clear();
+            }
+        });
+        stopSafely("block XP", () -> Component.flushBlockXP(30, TimeUnit.SECONDS));
+        stopSafely("players and skills", () -> {
+            if (adaptServer != null) {
+                adaptServer.unregister();
+            }
+        });
+        stopSafely("advancements", () -> {
+            if (manager != null) {
+                manager.disable();
+            }
+        });
+        stopSafely("brewing", BrewingManager::clear);
+        stopSafely("material values", MaterialValue::save);
+        stopSafely("world data", WorldData::stop);
+        stopSafely("custom models", CustomModel::clear);
     }
 
     @Override
     public void stop() {
-        services.values().forEach(AdaptService::onDisable);
-        sqlManager.closeConnection();
-        stopSim();
-        protectorRegistry.unregisterAll();
-        services.clear();
+        stopSafely("PlaceholderAPI", () -> {
+            if (papiExpansion != null) {
+                papiExpansion.unregister();
+                papiExpansion = null;
+            }
+        });
+        stopSafely("services", () -> {
+            if (services != null) {
+                services.values().forEach(service ->
+                        stopSafely(service.getClass().getSimpleName(), service::onDisable));
+            }
+        });
+        stopSafely("GUI", () -> {
+            List.copyOf(guiLeftovers.values()).forEach(Window::close);
+            guiLeftovers.clear();
+        });
+        stopSafely("simulation", this::stopSim);
+        stopSafely("SQL", () -> {
+            if (sqlManager != null) {
+                sqlManager.closeConnection();
+            }
+        });
+        stopSafely("EffectLib", adaptEffectManager::dispose);
+        stopSafely("protectors", () -> {
+            if (protectorRegistry != null) {
+                protectorRegistry.unregisterAll();
+            }
+        });
+        stopSafely("service registry", () -> {
+            if (services != null) {
+                services.clear();
+            }
+        });
+        stopSafely("async executor", MultiBurst::shutdownAll);
+    }
+
+    private void stopSafely(String component, Runnable action) {
+        try {
+            action.run();
+        } catch (Throwable e) {
+            error("Failed to stop " + component + ".");
+            e.printStackTrace();
+        }
     }
 
     public File getJarFile() {
@@ -361,8 +344,8 @@ public class Adapt extends VolmitPlugin {
     }
 
     @Override
-    public String getTag(String subTag) {
-        return C.BOLD + "" + C.DARK_GRAY + "[" + C.BOLD + C.DARK_RED + "Adapt" + C.BOLD + C.DARK_GRAY + "]" + C.RESET
-                + C.GRAY + ": ";
+    public net.kyori.adventure.text.Component getTag(String subTag) {
+        return Components.mini("<dark_gray>[<dark_red>Adapt<dark_gray>]<reset><gray>: ")
+                .colorIfAbsent(NamedTextColor.GRAY);
     }
 }

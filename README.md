@@ -6,6 +6,7 @@
 
 本项目仅针对 HAPPYLAND AssiahLand 服务器的需求进行修改，可能不能直接在其他服务器运行
 目前已转变为 HARD-FORK 项目，和原版的差异只会越来越大
+当前唯一支持的运行与构建环境为 Octopus/Paper 26.2 和 Java 25。
 
 ### 修改内容如下：
 
@@ -63,57 +64,13 @@ the best it can be for everyone.
 
 ### Build your own .jar
 
-**Building Adapt can be challenging and requires some technical knowledge**, such as
-with [Iris](https://www.spigotmc.org/resources/iris-world-gen-custom-biome-colors.84586/). However, you will need to set
-up a few things if your system has never been used for Java development.
+Install JDK 25, select it as Gradle's JVM, then run:
 
-<details>
+```shell
+./gradlew adapt
+```
 
-<summary> Build Steps </summary>
-
-### So this is fairly similar to Iris, but a bit modified.
-
-### IDE Builds (for development & Compilation)
-
-You NEED TO BE USING Intelij To build this project, or anything that can support the
-plugin [Manifold](https://plugins.jetbrains.com/plugin/10057-manifold)
-
-## Preface: if you need help compiling and you are a developer / intend to help out in the community or with development we would love to help you regardless in the discord! however do not come to the discord asking for free copies, or a tutorial on how to compile.
-
-1. Install [Java JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-2. Set the JDK installation path to `JAVA_HOME` as an environment variable.
-    * Windows
-        1. Start > Type `env` and press Enter
-        2. Advanced > Environment Variables
-        3. Under System Variables, click `New...`
-        4. Variable Name: `JAVA_HOME`
-        5. Variable Value: `C:\Program Files\Java\jdk-17.0.1` (verify this exists after installing java don't just copy
-           the example text)
-    * MacOS
-        1. Run `/usr/libexec/java_home -V` and look for Java 17
-        2. Run `sudo nano ~/.zshenv`
-        3. Add `export JAVA_HOME=$(/usr/libexec/java_home)` as a new line
-        4. Use `CTRL + X`, then Press `Y`, Then `ENTER`
-        5. Quit & Reopen Terminal and verify with `echo $JAVA_HOME`. It should print a directory
-
-3. Setup Gradle
-
-<details>
-<summary> Gradle Setup </summary>
-
-* Run `gradlew setup` any time you get dependency issues with craftbukkit
-* Configure ITJ Gradle to use JDK 17 (in settings, search for gradle)
-* Resync the project & run your newly created task (under the development folder in gradle tasks!)
-
-</details>
-
-4. INSTALL [MANIFOLD](https://plugins.jetbrains.com/plugin/10057-manifold)
-5. If this is your first time building Adapt for MC 1.19+ run `gradlew setup` inside the root Adapt project folder.
-   Otherwise, skip this step. Grab a coffee, this may take up to 5 minutes depending on your cpu & internet connection.
-6. Once the project has setup, run `gradlew adapt`
-7. The Adapt jar will be placed in `Adapt/build/Adapt-XXX-XXX.jar` Enjoy! Consider supporting us by buying it on spigot!
-
-</details>
+The deployable jar is written to `build/Adapt-<version>.jar`.
 
 
 <details>

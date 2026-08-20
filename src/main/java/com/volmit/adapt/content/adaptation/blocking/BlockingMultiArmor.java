@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.blocking;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.multiItems.MultiArmor;
 import com.volmit.adapt.util.*;
@@ -48,8 +51,8 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
     public BlockingMultiArmor() {
         super("blocking-multiarmor");
         registerConfiguration(BlockingMultiArmor.Config.class);
-        setDisplayName(Localizer.dLocalize("blocking", "multiarmor", "name"));
-        setDescription(Localizer.dLocalize("blocking", "multiarmor", "description"));
+        setDisplayName(Localizer.component("blocking", "multiarmor", "name"));
+        setDescription(Localizer.component("blocking", "multiarmor", "description"));
         setIcon(Material.ELYTRA);
         setInterval(20202);
         setBaseCost(getConfig().baseCost);
@@ -61,12 +64,12 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("blocking", "multiarmor", "lore1"));
-        v.addLore(C.GRAY + "" + C.GRAY + Localizer.dLocalize("blocking", "multiarmor", "lore2"));
-        v.addLore(C.GREEN + Localizer.dLocalize("blocking", "multiarmor", "lore3"));
-        v.addLore(C.RED + Localizer.dLocalize("blocking", "multiarmor", "lore4"));
-        v.addLore(C.GRAY + Localizer.dLocalize("blocking", "multiarmor", "lore5"));
-        v.addLore(C.UNDERLINE + Localizer.dLocalize("blocking", "multiarmor", "lore6"));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore1"))));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore2"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore3"))));
+        v.addLore(Components.mini("<red><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore4"))));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore5"))));
+        v.addLore(Components.mini("<underlined><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore6"))));
     }
 
     @Override
@@ -99,7 +102,7 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
                 if (isChestplate(chest)) {
                     return;
                 }
-                J.s(() -> p.getInventory().setChestplate(multiarmor.nextChestplate(chest)));
+                p.getInventory().setChestplate(multiarmor.nextChestplate(chest));
                 cooldowns.put(p, System.currentTimeMillis());
                 spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
                 spw.play(p.getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 0.5f, 0.77f);
@@ -108,7 +111,7 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
                 if (isElytra(chest)) {
                     return;
                 }
-                J.s(() -> p.getInventory().setChestplate(multiarmor.nextElytra(chest)));
+                p.getInventory().setChestplate(multiarmor.nextElytra(chest));
                 cooldowns.put(p, System.currentTimeMillis());
                 spw.play(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1f, 0.77f);
                 spw.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 0.5f, 0.77f);
@@ -116,8 +119,11 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(PlayerDropItemEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Player p = e.getPlayer();
         SoundPlayer sp = SoundPlayer.of(p);
         if (!hasAdaptation(p)) {
@@ -129,26 +135,27 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
                 for (ItemStack i : drops) {
                     var meta = i.getItemMeta();
                     if (meta != null) {
-                        meta.setLore(MultiArmor.getLoreWithout(meta));
+                        meta.lore(MultiArmor.getLoreWithout(meta));
                     }
                     i.setItemMeta(meta);
 
                     drops.set(drops.indexOf(i), i);
                 }
 
-                J.s(() -> {
-                    sp.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_DEATH, 0.25f, 0.77f);
-                    for (ItemStack i : drops) {
-                        p.getWorld().dropItem(p.getLocation(), i);
-                    }
-                });
                 e.getItemDrop().setItemStack(new ItemStack(Material.AIR));
+                sp.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_DEATH, 0.25f, 0.77f);
+                for (ItemStack i : drops) {
+                    p.getWorld().dropItemNaturally(p.getLocation(), i);
+                }
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(InventoryClickEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         if (!hasAdaptation((Player) e.getWhoClicked())) {
             return;
         }
@@ -188,9 +195,10 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
     }
 
     private boolean validateArmor(ItemStack item) {
-        if (item.getItemMeta() != null && item.getItemMeta().getLore() != null) {
-            for (String lore : item.getItemMeta().getLore()) {
-                if (lore != null && (lore.contains("复合盔甲") || lore.contains("MultiArmor"))) {
+        if (item.getItemMeta() != null && item.getItemMeta().lore() != null) {
+            for (var lore : item.getItemMeta().lore()) {
+                String text = Components.plain(lore);
+                if (text.contains("复合盔甲") || text.contains("MultiArmor")) {
                     return true;
                 }
             }

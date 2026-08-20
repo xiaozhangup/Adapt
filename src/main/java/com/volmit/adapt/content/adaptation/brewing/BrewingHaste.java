@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingHaste extends SimpleAdaptation<BrewingHaste.Config> {
     public BrewingHaste() {
         super("brewing-haste");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "haste", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "haste", "name"));
+        setDescription(Localizer.component("brewing", "haste", "description"));
+        setDisplayName(Localizer.component("brewing", "haste", "name"));
         setIcon(Material.AMETHYST_SHARD);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingHaste extends SimpleAdaptation<BrewingHaste.Config> {
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-haste-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.AMETHYST_SHARD)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.SWIFTNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Haste").setColor(Color.YELLOW)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Haste")).setColor(Color.YELLOW)
                         .addEffect(PotionEffectType.HASTE, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-haste-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.AMETHYST_BLOCK)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.SWIFTNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Haste 2").setColor(Color.YELLOW)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Haste 2")).setColor(Color.YELLOW)
                         .addEffect(PotionEffectType.HASTE, 600, 2, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "haste", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "haste", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "haste", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "haste", "lore2"))));
     }
 
     @Override

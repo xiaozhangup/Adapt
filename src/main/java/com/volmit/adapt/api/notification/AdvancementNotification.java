@@ -24,6 +24,7 @@ import com.volmit.adapt.util.AdvancementUtils;
 import com.volmit.adapt.util.CustomModel;
 import lombok.Builder;
 import lombok.Data;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -35,9 +36,9 @@ public class AdvancementNotification implements Notification {
     @Builder.Default
     private final CustomModel model = null;
     @Builder.Default
-    private final String title = " ";
+    private final Component title = Component.space();
     @Builder.Default
-    private final String description = " ";
+    private final Component description = Component.space();
     @Builder.Default
     private final AdvancementFrameType frameType = AdvancementFrameType.TASK;
     @Builder.Default
@@ -61,11 +62,4 @@ public class AdvancementNotification implements Notification {
         }
     }
 
-    public String buildTitle() {
-        if (description.trim().isEmpty()) {
-            return title;
-        }
-
-        return title + "\n" + description;
-    }
 }

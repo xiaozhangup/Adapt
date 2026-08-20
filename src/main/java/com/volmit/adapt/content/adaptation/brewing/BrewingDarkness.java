@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingDarkness extends SimpleAdaptation<BrewingDarkness.Config> {
     public BrewingDarkness() {
         super("brewing-darkness");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "darkness", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "darkness", "name"));
+        setDescription(Localizer.component("brewing", "darkness", "description"));
+        setDisplayName(Localizer.component("brewing", "darkness", "name"));
         setIcon(Material.BLACK_CONCRETE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,15 +48,15 @@ public class BrewingDarkness extends SimpleAdaptation<BrewingDarkness.Config> {
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-darkness").brewingTime(320).fuelCost(16)
                 .ingredient(Material.BLACK_CONCRETE)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.NIGHT_VISION, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Darkness").setColor(Color.BLACK)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Darkness")).setColor(Color.BLACK)
                         .addEffect(PotionEffectType.DARKNESS, 600, 100, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "darkness", "lore1"));
-        v.addLore(C.GRAY + Localizer.dLocalize("brewing", "darkness", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "darkness", "lore1"))));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("brewing", "darkness", "lore2"))));
     }
 
     @Override

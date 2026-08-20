@@ -21,26 +21,30 @@ package com.volmit.adapt.content.adaptation.rift;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class RiftDescent extends SimpleAdaptation<RiftDescent.Config> {
-    private final List<Player> cooldown = new ArrayList<>();
+    private final Map<UUID, Long> cooldown = new HashMap<>();
 
     public RiftDescent() {
         super("rift-descent");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("rift", "descent", "description"));
-        setDisplayName(Localizer.dLocalize("rift", "descent", "name"));
+        setDescription(Localizer.component("rift", "descent", "description"));
+        setDisplayName(Localizer.component("rift", "descent", "name"));
         setMaxLevel(1);
         setIcon(Material.SHULKER_BOX);
         setBaseCost(getConfig().baseCost);
@@ -51,9 +55,11 @@ public class RiftDescent extends SimpleAdaptation<RiftDescent.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.YELLOW + Localizer.dLocalize("rift", "descent", "lore1"));
-        v.addLore(
-                C.GREEN + Localizer.dLocalize("rift", "descent", "lore2") + " " + C.WHITE + getConfig().cooldown + "s");
+        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "descent", "lore1"))));
+        v.addLore(Components.mini("<green><lore> <white><cooldown>s",
+                Placeholder.component("lore", Localizer.component("rift", "descent", "lore2")),
+                Placeholder.unparsed("cooldown", String.valueOf(getConfig().cooldown))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -66,32 +72,38 @@ public class RiftDescent extends SimpleAdaptation<RiftDescent.Config> {
         if (!hasAdaptation(p)) {
             return;
         }
-        if (cooldown.contains(p)) {
+        UUID playerId = p.getUniqueId();
+        Long cooldownUntil = cooldown.get(playerId);
+        if (cooldownUntil != null && cooldownUntil > M.ms()) {
             return;
         }
+        cooldown.remove(playerId);
 
         PotionEffect levi = p.getPotionEffect(PotionEffectType.LEVITATION);
 
         if (!e.isSneaking() && (levi != null)) {
             p.removePotionEffect(PotionEffectType.LEVITATION);
-            J.a(() -> {
-                cooldown.add(p);
-                try {
-                    Thread.sleep((long) (getConfig().cooldown * 1000));
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-                sp.play(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                cooldown.remove(p);
-
-            });
-
+            int cooldownTicks = Math.max(1, (int) Math.round(getConfig().cooldown * 20));
+            long expiresAt = M.ms() + cooldownTicks * 50L;
+            cooldown.put(playerId, expiresAt);
             J.s(() -> {
-                p.addPotionEffect(
-                        new PotionEffect(PotionEffectType.SLOW_FALLING, (int) (20 * getConfig().cooldown), 0));
-                sp.play(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1f, 1f);
-            });
+                if (!cooldown.remove(playerId, expiresAt)) {
+                    return;
+                }
+                Player online = Bukkit.getPlayer(playerId);
+                if (online != null && online.clientConnected()) {
+                    SoundPlayer.of(online).play(online.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                }
+            }, cooldownTicks);
+
+            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, (int) cooldownTicks, 0));
+            sp.play(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1f, 1f);
         }
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        cooldown.remove(event.getPlayer().getUniqueId());
     }
 
     @Override

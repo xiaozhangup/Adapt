@@ -18,11 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.unarmed;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,8 +35,8 @@ public class UnarmedPower extends SimpleAdaptation<UnarmedPower.Config> {
     public UnarmedPower() {
         super("unarmed-power");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("unarmed", "power", "description"));
-        setDisplayName(Localizer.dLocalize("unarmed", "power", "name"));
+        setDescription(Localizer.component("unarmed", "power", "description"));
+        setDisplayName(Localizer.component("unarmed", "power", "name"));
         setIcon(Material.LEATHER_HELMET);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -45,8 +47,9 @@ public class UnarmedPower extends SimpleAdaptation<UnarmedPower.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getUnarmedDamage(level), 0) + C.GRAY
-                + Localizer.dLocalize("unarmed", "power", "lore1"));
+        v.addLore(Components.mini("<green>+ <damage></green><gray><lore></gray>",
+                Placeholder.unparsed("damage", Form.pc(getUnarmedDamage(level), 0)),
+                Placeholder.component("lore", Localizer.component("unarmed", "power", "lore1"))));
     }
 
     @EventHandler

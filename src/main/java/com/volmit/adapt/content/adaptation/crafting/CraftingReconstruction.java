@@ -18,9 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.type.Shapeless;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -33,8 +37,8 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
     public CraftingReconstruction() {
         super("crafting-reconstruction");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("crafting", "reconstruction", "description"));
-        setDisplayName(Localizer.dLocalize("crafting", "reconstruction", "name"));
+        setDescription(Localizer.component("crafting", "reconstruction", "description"));
+        setDisplayName(Localizer.component("crafting", "reconstruction", "name"));
         setIcon(Material.COAL_ORE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -143,10 +147,10 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("crafting", "reconstruction", "lore1"));
-        v.addLore(C.UNDERLINE + Localizer.dLocalize("crafting", "reconstruction", "lore2"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("crafting", "reconstruction", "lore3"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("crafting", "reconstruction", "lore4"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore1"))));
+        v.addLore(Components.mini("<underlined><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore2"))));
+        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore3"))));
+        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore4"))));
     }
 
     @EventHandler

@@ -25,15 +25,17 @@ import com.volmit.adapt.api.notification.SoundNotification;
 import com.volmit.adapt.api.notification.TitleNotification;
 import com.volmit.adapt.api.xp.XP;
 import com.volmit.adapt.api.xp.XPMultiplier;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Json;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import com.volmit.adapt.util.collection.KMap;
 import com.volmit.adapt.util.collection.KSet;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -163,8 +165,12 @@ public class PlayerData {
                                     .group("lvl").build(),
                             SoundNotification.builder().sound(Sound.BLOCK_AMETHYST_BLOCK_CHIME).volume(1f).pitch(1.34f)
                                     .group("lvl").build(),
-                            TitleNotification.builder().in(250).stay(1450).out(2250).group("lvl").title("")
-                                    .subtitle(C.GOLD + Localizer.dLocalize("snippets", "gui", "level") + " " + level)// I'm
+                            TitleNotification.builder().in(250).stay(1450).out(2250).group("lvl")
+                                    .title(Component.empty())
+                                    .subtitle(Components.mini("<gold><label> <level>",
+                                            Placeholder.component("label",
+                                                    Localizer.component("snippets", "gui", "level")),
+                                            Placeholder.unparsed("level", Integer.toString(level))))// I'm
                                                                                                                         // sorry
                                                                                                                         // I
                                                                                                                         // missed
@@ -172,8 +178,11 @@ public class PlayerData {
                                     .build());
             p.getActionBarNotifier()
                     .queue(ActionBarNotification.builder().duration(450).group("power")
-                            .title(C.GOLD + "" + Form.f(level * AdaptConfig.get().getPowerPerLevel(), 0) + C.GRAY + " "
-                                    + Localizer.dLocalize("snippets", "gui", "maxabilitypower")) // I'm sorry I missed
+                            .title(Components.mini("<gold><power><gray> <label>",
+                                    Placeholder.unparsed("power",
+                                            Form.f(level * AdaptConfig.get().getPowerPerLevel(), 0)),
+                                    Placeholder.component("label",
+                                            Localizer.component("snippets", "gui", "maxabilitypower")))) // I'm sorry I missed
                                                                                                     // this!
                             .build());
 

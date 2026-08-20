@@ -19,6 +19,7 @@
 package com.volmit.adapt.content.skill;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
 import com.volmit.adapt.api.skill.SimpleSkill;
@@ -28,9 +29,12 @@ import com.volmit.adapt.content.adaptation.excavation.ExcavationDropToInventory;
 import com.volmit.adapt.content.adaptation.excavation.ExcavationHaste;
 import com.volmit.adapt.content.adaptation.excavation.ExcavationOmniTool;
 import com.volmit.adapt.util.CustomModel;
+import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,17 +44,18 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillExcavation() {
-        super("excavation", Localizer.dLocalize("skill", "excavation", "icon"));
+        super("excavation", Localizer.component("skill", "excavation", "icon"));
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("skill", "excavation", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "excavation", "name"));
-        setColor(ChatColor.of("#dfc393"));
+        setDescription(Localizer.component("skill", "excavation", "description"));
+        setDisplayName(Localizer.component("skill", "excavation", "name"));
+        setColor(TextColor.color(0xdfc393));
         setInterval(5953);
         setIcon(Material.DIAMOND_SHOVEL);
         cooldowns = new WeakHashMap<>();
@@ -58,27 +63,27 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
         registerAdaptation(new ExcavationOmniTool());
         registerAdaptation(new ExcavationDropToInventory());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.WOODEN_SHOVEL).key("challenge_excavate_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_excavate_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_excavate_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_excavate_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_excavate_1k", "description"))
                 .model(CustomModel.get(Material.WOODEN_SHOVEL, "advancement", "excavation", "challenge_excavate_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_excavate_5k")
-                        .title(Localizer.dLocalize("advancement", "challenge_excavate_5k", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_excavate_5k", "description"))
+                        .title(Localizer.component("advancement", "challenge_excavate_5k", "title"))
+                        .description(Localizer.component("advancement", "challenge_excavate_5k", "description"))
                         .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "excavation",
                                 "challenge_excavate_5k"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.STONE_SHOVEL).key("challenge_excavate_50k")
-                                .title(Localizer.dLocalize("advancement", "challenge_excavate_50k", "title"))
+                                .title(Localizer.component("advancement", "challenge_excavate_50k", "title"))
                                 .description(
-                                        Localizer.dLocalize("advancement", "challenge_excavate_50k", "description"))
+                                        Localizer.component("advancement", "challenge_excavate_50k", "description"))
                                 .model(CustomModel.get(Material.STONE_SHOVEL, "advancement", "excavation",
                                         "challenge_excavate_50k"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.IRON_SHOVEL)
                                         .key("challenge_excavate_500k")
-                                        .title(Localizer.dLocalize("advancement", "challenge_excavate_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_excavate_500k",
+                                        .title(Localizer.component("advancement", "challenge_excavate_500k", "title"))
+                                        .description(Localizer.component("advancement", "challenge_excavate_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.IRON_SHOVEL, "advancement", "excavation",
                                                 "challenge_excavate_500k"))
@@ -86,9 +91,9 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.DIAMOND_SHOVEL)
                                                 .key("challenge_excavate_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_excavate_5m",
+                                                .title(Localizer.component("advancement", "challenge_excavate_5m",
                                                         "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_excavate_5m",
+                                                .description(Localizer.component("advancement", "challenge_excavate_5m",
                                                         "description"))
                                                 .model(CustomModel.get(Material.DIAMOND_SHOVEL, "advancement",
                                                         "excavation", "challenge_excavate_5m"))
@@ -152,14 +157,26 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
     }
 
     private void handleBlockBreakWithShovel(Player p, BlockBreakEvent e) {
-        getPlayer(p).getData().addStat("excavation.blocks.broken", 1);
-        getPlayer(p).getData().addStat("excavation.blocks.value", getValue(e.getBlock().getBlockData()));
+        AdaptPlayer adaptPlayer = getPlayer(p);
+        adaptPlayer.getData().addStat("excavation.blocks.broken", 1);
+        adaptPlayer.getData().addStat("excavation.blocks.value", getValue(e.getBlock().getBlockData()));
         Long cooldown = cooldowns.get(p);
         if (cooldown != null && cooldown + getConfig().cooldownDelay > System.currentTimeMillis())
             return;
         cooldowns.put(p, System.currentTimeMillis());
         double v = getValue(e.getBlock().getType());
-        xp(p, e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5), blockXP(e.getBlock(), v));
+        Location location = e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5);
+        int x = e.getBlock().getX();
+        int y = e.getBlock().getY();
+        int z = e.getBlock().getZ();
+        UUID playerId = p.getUniqueId();
+        queueBlockXP(e.getBlock().getWorld(), x, y, z, v, amount -> {
+            Player online = Bukkit.getPlayer(playerId);
+            if (online != null && Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, adaptPlayer)
+                    && Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+                xp(online, location, amount);
+            }
+        });
     }
 
     public double getValue(Material type) {

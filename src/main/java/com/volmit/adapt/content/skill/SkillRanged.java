@@ -25,7 +25,7 @@ import com.volmit.adapt.content.adaptation.ranged.RangedLungeShot;
 import com.volmit.adapt.content.adaptation.ranged.RangedPiercing;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
@@ -44,11 +44,11 @@ public class SkillRanged extends SimpleSkill<SkillRanged.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillRanged() {
-        super("ranged", Localizer.dLocalize("skill", "ranged", "icon"));
+        super("ranged", Localizer.component("skill", "ranged", "icon"));
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("skill", "ranged", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "ranged", "name"));
-        setColor(ChatColor.of("#c7a998"));
+        setDescription(Localizer.component("skill", "ranged", "description"));
+        setDisplayName(Localizer.component("skill", "ranged", "name"));
+        setColor(TextColor.color(0xc7a998));
         setInterval(3044);
         registerAdaptation(new RangedForce());
         registerAdaptation(new RangedPiercing());

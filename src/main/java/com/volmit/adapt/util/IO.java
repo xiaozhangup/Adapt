@@ -20,6 +20,9 @@ package com.volmit.adapt.util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -304,6 +307,22 @@ public class IO {
         PrintWriter pw = new PrintWriter(new FileWriter(f));
         pw.println(c.toString());
         pw.close();
+    }
+
+    public static void writeAllAtomic(File file, Object content) throws IOException {
+        Files.createDirectories(file.toPath().getParent());
+        var temporary = Files.createTempFile(file.toPath().getParent(), file.getName(), ".tmp");
+        try {
+            Files.writeString(temporary, content + System.lineSeparator(), StandardCharsets.UTF_8);
+            try {
+                Files.move(temporary, file.toPath(), StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException ignored) {
+                Files.move(temporary, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(temporary);
+        }
     }
 
     public static String readAll(File f) throws IOException {

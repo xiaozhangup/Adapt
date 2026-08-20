@@ -18,12 +18,17 @@
 
 package com.volmit.adapt.content.adaptation.pickaxe;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.api.world.PlayerAdaptation;
 import com.volmit.adapt.api.world.PlayerSkillLine;
+import com.volmit.adapt.content.util.BoundedBlockSearch;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -33,16 +38,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> {
+    private static final int DEFAULT_MAX_BLOCKS = 128;
+
     public PickaxeVeinminer() {
         super("pickaxe-veinminer");
         registerConfiguration(PickaxeVeinminer.Config.class);
-        setDescription(Localizer.dLocalize("pickaxe", "veinminer", "description"));
-        setDisplayName(Localizer.dLocalize("pickaxe", "veinminer", "name"));
+        setDescription(Localizer.component("pickaxe", "veinminer", "description"));
+        setDisplayName(Localizer.component("pickaxe", "veinminer", "name"));
         setIcon(Material.IRON_PICKAXE);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -52,10 +59,13 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("pickaxe", "veinminer", "lore1"));
-        v.addLore(C.GREEN + "" + (level + getConfig().baseRange) + C.GRAY + " "
-                + Localizer.dLocalize("pickaxe", "veinminer", "lore2"));
-        v.addLore(C.ITALIC + Localizer.dLocalize("pickaxe", "veinminer", "lore3"));
+        v.addLore(Components.mini("<green><lore></green>",
+                Placeholder.component("lore", Localizer.component("pickaxe", "veinminer", "lore1"))));
+        v.addLore(Components.mini("<green><range></green><gray> <lore></gray>",
+                Placeholder.unparsed("range", Integer.toString(level + getConfig().baseRange)),
+                Placeholder.component("lore", Localizer.component("pickaxe", "veinminer", "lore2"))));
+        v.addLore(Components.mini("<italic><lore></italic>",
+                Placeholder.component("lore", Localizer.component("pickaxe", "veinminer", "lore3"))));
     }
 
     private int getRadius(int lvl) {
@@ -82,57 +92,57 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
         }
 
         Block block = e.getBlock();
-        List<Block> blockMap = new ArrayList<>();
-        blockMap.add(block);
+        Material targetType = block.getType();
+        int configuredLimit = getConfig().maxBlocks > 0 ? getConfig().maxBlocks : DEFAULT_MAX_BLOCKS;
+        int radius = getRadius(getLevel(p));
+        List<Block> blockMap = BoundedBlockSearch.find(block, radius, configuredLimit,
+                candidate -> candidate.getType() == targetType && canBlockBreak(p, candidate));
 
-        for (int i = 0; i < getRadius(getLevel(p)); i++) {
-            for (int x = -i; x <= i; x++) {
-                for (int y = -i; y <= i; y++) {
-                    for (int z = -i; z <= i; z++) {
-                        Block b = block.getRelative(x, y, z);
-                        if (b.getType() == block.getType()) {
-                            if (!canBlockBreak(p, e.getBlock())) {
-                                continue;
-                            }
-                            blockMap.add(b);
-                        }
-                    }
-                }
-            }
-        }
+        AdaptPlayer expectedPlayer = getPlayer(p);
+        UUID playerId = p.getUniqueId();
+        PlayerSkillLine line = expectedPlayer.getData().getSkillLineNullable("pickaxe");
+        PlayerAdaptation autoSmelt = line != null ? line.getAdaptation("pickaxe-autosmelt") : null;
+        PlayerAdaptation drop2Inv = line != null ? line.getAdaptation("pickaxe-drop-to-inventory") : null;
         J.s(() -> {
+            Player online = Bukkit.getPlayer(playerId);
+            if (online == null || !online.isOnline()
+                    || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                    || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                return;
+            }
+            int processed = 0;
             for (Block b : blockMap) {
-                if (!canBlockBreak(p, b)) {
-                    Adapt.verbose("Player " + p.getName() + " doesn't have permission.");
+                if (b.getType() != targetType || !canBlockBreak(online, b)) {
+                    Adapt.verbose("Player " + online.getName() + " doesn't have permission.");
                     continue;
                 }
-                PlayerSkillLine line = getPlayer(p).getData().getSkillLineNullable("pickaxe");
-                PlayerAdaptation autoSmelt = line != null ? line.getAdaptation("pickaxe-autosmelt") : null;
-                PlayerAdaptation drop2Inv = line != null ? line.getAdaptation("pickaxe-drop-to-inventory") : null;
                 if (autoSmelt != null && autoSmelt.getLevel() > 0) {
                     if (drop2Inv != null && drop2Inv.getLevel() > 0) {
-                        PickaxeAutosmelt.autosmeltBlockDTI(b, p);
+                        PickaxeAutosmelt.autosmeltBlockDTI(b, online);
                     } else {
-                        PickaxeAutosmelt.autosmeltBlock(b, p);
+                        PickaxeAutosmelt.autosmeltBlock(b, online);
                     }
                 } else {
                     if (drop2Inv != null
                             && drop2Inv.getLevel() > 0) {
-                        b.getDrops(p.getInventory().getItemInMainHand(), p).forEach(item -> {
-                            HashMap<Integer, ItemStack> extra = p.getInventory().addItem(item);
-                            extra.forEach((k, v) -> p.getWorld().dropItem(p.getLocation(), v));
+                        b.getDrops(online.getInventory().getItemInMainHand(), online).forEach(item -> {
+                            HashMap<Integer, ItemStack> extra = online.getInventory().addItem(item);
+                            extra.forEach((k, v) -> online.getWorld().dropItem(online.getLocation(), v));
                         });
                         b.setType(Material.AIR);
                     } else {
-                        b.breakNaturally(p.getInventory().getItemInMainHand());
-                        SoundPlayer spw = SoundPlayer.of(e.getBlock().getWorld());
-                        spw.play(e.getBlock().getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.4f, 0.25f);
-                        if (getConfig().showParticles) {
-
-                            e.getBlock().getWorld().spawnParticle(Particle.ASH,
-                                    e.getBlock().getLocation().add(0.5, 0.5, 0.5), 25, 0.5, 0.5, 0.5, 0.1);
-                        }
+                        b.breakNaturally(online.getInventory().getItemInMainHand());
                     }
+                }
+                processed++;
+            }
+
+            if (processed > 0) {
+                SoundPlayer.of(block.getWorld()).play(block.getLocation(), Sound.BLOCK_FUNGUS_BREAK, 0.4f, 0.25f);
+                if (getConfig().showParticles) {
+                    block.getWorld().spawnParticle(Particle.ASH, block.getLocation().add(0.5, 0.5, 0.5),
+                            Math.min(200, processed * 3), Math.min(2, radius / 2D),
+                            Math.min(2, radius / 2D), Math.min(2, radius / 2D), 0.1);
                 }
             }
         });
@@ -162,5 +172,6 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
         int initialCost = 4;
         double costFactor = 2.325;
         int baseRange = 2;
+        int maxBlocks = DEFAULT_MAX_BLOCKS;
     }
 }

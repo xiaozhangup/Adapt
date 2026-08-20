@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingHealthBoost extends SimpleAdaptation<BrewingHealthBoost.Conf
     public BrewingHealthBoost() {
         super("brewing-healthboost");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "healthboost", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "healthboost", "name"));
+        setDescription(Localizer.component("brewing", "healthboost", "description"));
+        setDisplayName(Localizer.component("brewing", "healthboost", "name"));
         setIcon(Material.ENCHANTED_GOLDEN_APPLE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingHealthBoost extends SimpleAdaptation<BrewingHealthBoost.Conf
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-healthboost").brewingTime(320).fuelCost(16)
                 .ingredient(Material.GOLDEN_APPLE)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.HEALING, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Life").setColor(Color.RED)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Life")).setColor(Color.RED)
                         .addEffect(PotionEffectType.HEALTH_BOOST, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-healthboost").brewingTime(320).fuelCost(16)
                 .ingredient(Material.ENCHANTED_GOLDEN_APPLE)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.HEALING, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Life").setColor(Color.RED)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Life")).setColor(Color.RED)
                         .addEffect(PotionEffectType.HEALTH_BOOST, 1200, 2, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "healthboost", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "healthboost", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "healthboost", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "healthboost", "lore2"))));
     }
 
     @Override

@@ -29,7 +29,7 @@ import com.volmit.adapt.content.adaptation.seaborrne.*;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
@@ -49,11 +49,11 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillSeaborne() {
-        super("seaborne", Localizer.dLocalize("skill", "seaborne", "icon"));
+        super("seaborne", Localizer.component("skill", "seaborne", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#61a1a9"));
-        setDescription(Localizer.dLocalize("skill", "seaborne", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "seaborne", "name"));
+        setColor(TextColor.color(0x61a1a9));
+        setDescription(Localizer.component("skill", "seaborne", "description"));
+        setDisplayName(Localizer.component("skill", "seaborne", "name"));
         setInterval(2120);
         setIcon(Material.TRIDENT);
         registerAdaptation(new SeaborneOxygen());
@@ -62,8 +62,8 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
         registerAdaptation(new SeaborneTurtlesVision());
         registerAdaptation(new SeaborneTurtlesMiningSpeed());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.TURTLE_HELMET).key("challenge_swim_1nm")
-                .title(Localizer.dLocalize("advancement", "challenge_swim_1nm", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_swim_1nm", "description"))
+                .title(Localizer.component("advancement", "challenge_swim_1nm", "title"))
+                .description(Localizer.component("advancement", "challenge_swim_1nm", "description"))
                 .model(CustomModel.get(Material.TURTLE_HELMET, "advancement", "seaborne", "challenge_swim_1nm"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_swim_1nm").goal(1852).stat("move.swim")

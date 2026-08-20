@@ -19,11 +19,11 @@
 package com.volmit.adapt.content.adaptation.tragoul;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
-import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -33,6 +33,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -42,8 +44,8 @@ public class TragoulGlobe extends SimpleAdaptation<TragoulGlobe.Config> {
     public TragoulGlobe() {
         super("tragoul-globe");
         registerConfiguration(TragoulGlobe.Config.class);
-        setDescription(Localizer.dLocalize("tragoul", "globe", "description"));
-        setDisplayName(Localizer.dLocalize("tragoul", "globe", "name"));
+        setDescription(Localizer.component("tragoul", "globe", "description"));
+        setDisplayName(Localizer.component("tragoul", "globe", "name"));
         setIcon(Material.ENDER_PEARL);
         setInterval(25000);
         setBaseCost(getConfig().baseCost);
@@ -55,11 +57,15 @@ public class TragoulGlobe extends SimpleAdaptation<TragoulGlobe.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("tragoul", "globe", "lore1"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "globe", "lore2")
-                + ((getConfig().rangePerLevel * level) + getConfig().initalRange));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "globe", "lore3")
-                + (getConfig().bonusDamagePerLevel * level));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore",
+                Localizer.component("tragoul", "globe", "lore1"))));
+        v.addLore(Components.mini("<yellow><lore><value>",
+                Placeholder.component("lore", Localizer.component("tragoul", "globe", "lore2")),
+                Placeholder.unparsed("value",
+                        String.valueOf((getConfig().rangePerLevel * level) + getConfig().initalRange))));
+        v.addLore(Components.mini("<yellow><lore><value>",
+                Placeholder.component("lore", Localizer.component("tragoul", "globe", "lore3")),
+                Placeholder.unparsed("value", String.valueOf(getConfig().bonusDamagePerLevel * level))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -76,28 +82,26 @@ public class TragoulGlobe extends SimpleAdaptation<TragoulGlobe.Config> {
         cooldowns.put(p, System.currentTimeMillis());
         double range = (getConfig().rangePerLevel * getLevel(p)) + getConfig().initalRange;
 
-        int entitiesCount = 0;
+        List<LivingEntity> targets = new ArrayList<>();
         for (Entity entity : p.getNearbyEntities(range, range, range)) {
-            if (entity instanceof LivingEntity && !entity.equals(p)) {
-                entitiesCount++;
+            if (entity instanceof LivingEntity living && !entity.equals(p)) {
+                targets.add(living);
             }
         }
 
-        if (entitiesCount <= 1) {
+        if (targets.size() <= 1) {
             return;
         }
 
-        double damagePerEntity = e.getDamage() / entitiesCount + (getConfig().bonusDamagePerLevel * getLevel(p));
+        double damagePerEntity = e.getDamage() / targets.size() + (getConfig().bonusDamagePerLevel * getLevel(p));
         e.setDamage(damagePerEntity);
 
-        for (Entity entity : p.getNearbyEntities(range, range, range)) {
-            if (entity instanceof LivingEntity && !entity.equals(p)) {
-                ((LivingEntity) entity).damage(damagePerEntity, p);
-            }
+        for (LivingEntity target : targets) {
+            target.damage(damagePerEntity, p);
         }
 
         if (getConfig().showParticles) {
-            J.s(() -> vfxFastSphere(p.getLocation(), range, Color.BLACK, 400));
+            vfxFastSphere(p.getLocation(), range, Color.BLACK, 400);
         }
     }
 

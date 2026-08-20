@@ -6,11 +6,15 @@ import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.skill.SkillRegistry;
 import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.api.world.PlayerSkillLine;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Color;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +23,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -51,7 +61,7 @@ public class PapiExpansion extends PlaceholderExpansion {
                 skill -> String.valueOf(skill.getMultiplier()).equals("-5000")
                         ? "0"
                         : String.valueOf(skill.getMultiplier()));
-        skillMap.put("name", skill -> Localizer.dLocalize("skill", skill.getLine(), "name"));
+        skillMap.put("name", skill -> Components.legacyString(Localizer.component("skill", skill.getLine(), "name")));
 
         // this should be %adapt_player_level%, %adapt_player_multiplier%,
         // %adapt_player_availablepower%, %adapt_player_maxpower%,
@@ -104,13 +114,13 @@ public class PapiExpansion extends PlaceholderExpansion {
         adaptationMap.put("name", (playerData, adaptation) -> getAdaptionLocalizedName(adaptation));
     }
 
-private static List<String> getElementsFromSecond(String[] array) {
-    if (array == null || array.length < 2) {
-        return new ArrayList<>();
-    }
+    private static List<String> getElementsFromSecond(String[] array) {
+        if (array == null || array.length < 2) {
+            return new ArrayList<>();
+        }
 
-    return Arrays.asList(array).subList(1, array.length);
-}
+        return Arrays.asList(array).subList(1, array.length);
+    }
 
     private Integer getAdaptionLevel(Adaptation<?> adaptation, PlayerData playerData) {
         List<Skill<?>> skills = Adapt.instance.getAdaptServer().getSkillRegistry().getSkills();
@@ -118,7 +128,8 @@ private static List<String> getElementsFromSecond(String[] array) {
             List<Adaptation<?>> adaptations = skill.getAdaptations();
             for (Adaptation<?> a : adaptations) {
                 if (a.equals(adaptation)) {
-                    return playerData.getSkillLine(skill.getName()).getAdaptationLevel(adaptation.getName());
+                    PlayerSkillLine line = playerData.getNullableSkillLine(skill.getName());
+                    return line == null ? 0 : line.getAdaptationLevel(adaptation.getName());
                 }
             }
         }
@@ -131,7 +142,7 @@ private static List<String> getElementsFromSecond(String[] array) {
             List<Adaptation<?>> adaptations = skill.getAdaptations();
             for (Adaptation<?> a : adaptations) {
                 if (a.equals(adaptation)) {
-                    return Localizer.dLocalize(skill.getId(), adaptation.getDisplayName(), "name");
+                    return Components.legacyString(adaptation.getDisplayName());
                 }
             }
         }
@@ -159,13 +170,54 @@ private static List<String> getElementsFromSecond(String[] array) {
     }
 
     @Override
-    public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-        if (!Adapt.instance.getAdaptServer().isPlayerLoaded(player.getUniqueId())) {
+    public @Nullable String onRequest(@Nullable OfflinePlayer player, @NotNull String params) {
+        if (player == null || params == null || params.isBlank()) {
             return "";
         }
 
-        String[] args = params.split("_");
-        PlayerData p = Adapt.instance.getAdaptServer().peekData(player.getUniqueId());
+        Adapt plugin = Adapt.instance;
+        if (plugin == null || !plugin.isEnabled()) {
+            return "";
+        }
+
+        UUID playerId = player.getUniqueId();
+        if (Bukkit.isPrimaryThread()) {
+            return resolve(playerId, params);
+        }
+
+        Future<String> request;
+        try {
+            request = Bukkit.getScheduler().callSyncMethod(plugin, () -> resolve(playerId, params));
+        } catch (RuntimeException error) {
+            return "";
+        }
+
+        try {
+            return request.get(2, TimeUnit.SECONDS);
+        } catch (InterruptedException error) {
+            request.cancel(false);
+            Thread.currentThread().interrupt();
+            return "";
+        } catch (TimeoutException error) {
+            request.cancel(false);
+            return "";
+        } catch (CancellationException | ExecutionException error) {
+            return "";
+        }
+    }
+
+    private @Nullable String resolve(UUID playerId, String params) {
+        Adapt plugin = Adapt.instance;
+        if (plugin == null || plugin.getAdaptServer() == null) {
+            return "";
+        }
+
+        PlayerData p = plugin.getAdaptServer().getPlayerData(playerId).orElse(null);
+        if (p == null) {
+            return "";
+        }
+
+        String[] args = params.split("_", -1);
         String key = args[0];
 
         // Handle player attributes
@@ -179,7 +231,10 @@ private static List<String> getElementsFromSecond(String[] array) {
         // Handle skill attributes
         if (key.equals("skill")) {
             String skillID = args.length > 1 ? args[1] : "";
-            PlayerSkillLine line = p.getSkillLine(skillID);
+            if (skillID.isBlank() || SkillRegistry.skills.get(skillID) == null) {
+                return "";
+            }
+            PlayerSkillLine line = p.getNullableSkillLine(skillID);
             String skillAttr = args.length > 2 ? args[2] : "";
             if (line != null && skillMap.containsKey(skillAttr)) {
                 return skillMap.get(skillAttr).apply(line);
@@ -188,57 +243,75 @@ private static List<String> getElementsFromSecond(String[] array) {
 
         // Handle colored icons
         if (key.equals("icons")) {
-            List<String> icons = new ArrayList<>();
+            List<Component> icons = new ArrayList<>();
             for (String s : getElementsFromSecond(args)) {
                 var skill = SkillRegistry.skills.get(s);
+                if (skill == null) {
+                    continue;
+                }
                 var made = p.getNullableSkillLine(skill.getName());
 
                 if (made == null) {
-                    icons.add(C.WHITE + skill.getEmojiName() + C.RESET);
+                    icons.add(Component.empty().color(NamedTextColor.WHITE).append(skill.getEmojiName()));
                 } else {
-                    var gradiented = Color.gradientWhiteColors(Color.color2Hex(skill.getColor().getColor()), 16);
+                    var gradiented = Color.gradientWhiteColors(
+                            Color.color2Hex(new java.awt.Color(skill.getColor().value())), 16);
                     var color = gradiented.get(Math.max(0, Math.min(made.getLevel(), 15)));
 
-                    icons.add(ChatColor.of(color) + skill.getEmojiName() + C.RESET);
+                    icons.add(Component.empty().color(TextColor.fromHexString(color)).append(skill.getEmojiName()));
                 }
             }
 
-            return String.join(" ", icons);
+            return String.join(" ", icons.stream()
+                    .map(icon -> Components.legacyString(icon) + Components.legacyReset()).toList());
         }
 
         if (key.equals("pack")) {
+            if (args.length < 2 || args[1].isBlank()) {
+                return "";
+            }
             var skill = SkillRegistry.skills.get(args[1]);
+            if (skill == null) {
+                return "";
+            }
             var made = p.getNullableSkillLine(skill.getName());
-            var text = new StringBuilder();
+            Component text;
             if (made == null) {
-                text.append(ChatColor.WHITE).append(skill.getEmojiName()).append(ChatColor.RED).append(" 0");
+                text = Component.empty().color(NamedTextColor.WHITE).append(skill.getEmojiName())
+                        .append(Component.text(" 0", NamedTextColor.RED));
             } else {
-                var gradiented = Color.gradientWhiteColors(Color.color2Hex(skill.getColor().getColor()), 16);
+                var gradiented = Color.gradientWhiteColors(
+                        Color.color2Hex(new java.awt.Color(skill.getColor().value())), 16);
                 var color = gradiented.get(Math.max(0, Math.min(made.getLevel(), 15)));
 
-                text.append(ChatColor.of(color)).append(skill.getEmojiName()).append(" ").append(made.getLevel());
+                text = Component.empty().color(TextColor.fromHexString(color)).append(skill.getEmojiName())
+                        .append(Component.text(" " + made.getLevel()));
             }
 
-            return text.toString();
+            return Components.legacyString(text);
         }
 
         if (key.equals("miniicons")) {
-            List<String> icons = new ArrayList<>();
+            List<Component> icons = new ArrayList<>();
             for (String s : getElementsFromSecond(args)) {
                 var skill = SkillRegistry.skills.get(s);
+                if (skill == null) {
+                    continue;
+                }
                 var made = p.getNullableSkillLine(skill.getName());
 
                 if (made == null) {
-                    icons.add("<white>" + skill.getEmojiName() + "</white>");
+                    icons.add(Component.empty().color(NamedTextColor.WHITE).append(skill.getEmojiName()));
                 } else {
-                    var gradiented = Color.gradientWhiteColors(Color.color2Hex(skill.getColor().getColor()), 16);
+                    var gradiented = Color.gradientWhiteColors(
+                            Color.color2Hex(new java.awt.Color(skill.getColor().value())), 16);
                     var color = gradiented.get(Math.max(0, Math.min(made.getLevel(), 15)));
 
-                    icons.add("<color:" + color + ">" + skill.getEmojiName() + "</color>");
+                    icons.add(Component.empty().color(TextColor.fromHexString(color)).append(skill.getEmojiName()));
                 }
             }
 
-            return String.join(" ", icons);
+            return Components.miniString(Component.join(JoinConfiguration.separator(Component.space()), icons));
         }
 
         // Handle adaptation attributes
@@ -251,7 +324,7 @@ private static List<String> getElementsFromSecond(String[] array) {
             for (Skill<?> s : skill) {
                 List<Adaptation<?>> adaptations = s.getAdaptations();
                 for (Adaptation<?> a : adaptations) {
-                    String adaptationIdWithoutUUID = a.getId().substring(37);
+                    String adaptationIdWithoutUUID = a.getName();
                     Adapt.verbose(adaptID + " " + adaptationIdWithoutUUID);
                     if (adaptationIdWithoutUUID.equals(adaptID)) {
                         Adapt.verbose("Found adaptation: " + a.getId());

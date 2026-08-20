@@ -20,11 +20,11 @@ package com.volmit.adapt.content.adaptation.seaborrne;
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
-import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -35,8 +35,8 @@ public class SeaborneTurtlesVision extends SimpleAdaptation<SeaborneTurtlesVisio
     public SeaborneTurtlesVision() {
         super("seaborne-turtles-vision");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("seaborn", "nightvision", "description"));
-        setDisplayName(Localizer.dLocalize("seaborn", "nightvision", "name"));
+        setDescription(Localizer.component("seaborn", "nightvision", "description"));
+        setDisplayName(Localizer.component("seaborn", "nightvision", "name"));
         setIcon(Material.DIAMOND_HORSE_ARMOR);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -47,7 +47,8 @@ public class SeaborneTurtlesVision extends SimpleAdaptation<SeaborneTurtlesVisio
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GRAY + Localizer.dLocalize("seaborn", "nightvision", "lore1"));
+        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
+                Localizer.component("seaborn", "nightvision", "lore1"))));
     }
 
     @Override
@@ -60,8 +61,7 @@ public class SeaborneTurtlesVision extends SimpleAdaptation<SeaborneTurtlesVisio
         for (Player player : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (player.isInWater() && hasAdaptation(player)) {
                 if (player.getLocation().getBlock().isLiquid()) {
-                    J.s(() -> player
-                            .addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 62, 0, false, false)));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 62, 0, false, false));
                 }
             }
         }

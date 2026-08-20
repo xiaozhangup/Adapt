@@ -1,13 +1,13 @@
 package com.volmit.adapt.util.command;
 
-import com.volmit.adapt.util.C;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.VolmitSender;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.TextComponent;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +20,7 @@ public class Feedback {
     @Singular
     private List<SoundFeedback> sounds;
     @Singular
-    private List<TextComponent> messages;
+    private List<Component> messages;
 
     public void send(CommandSender serverOrPlayer) {
         if (serverOrPlayer instanceof Player p) {
@@ -29,9 +29,10 @@ public class Feedback {
             }
         }
 
-        for (TextComponent i : messages) {
-            String prefix = C.DARK_GRAY + "[" + ChatColor.of("#cddced") + "属性" + C.DARK_GRAY + "]";
-            serverOrPlayer.sendMessage(i.content(prefix + " " + i.content()));
+        for (Component i : messages) {
+            serverOrPlayer.sendMessage(Components.mini(
+                    "<dark_gray>[<#cddced>属性<dark_gray>] <message>",
+                    Placeholder.component("message", i)));
         }
     }
 

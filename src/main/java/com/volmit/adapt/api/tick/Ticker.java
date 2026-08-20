@@ -19,38 +19,20 @@
 package com.volmit.adapt.api.tick;
 
 import com.volmit.adapt.Adapt;
-import com.volmit.adapt.util.BurstExecutor;
-import com.volmit.adapt.util.MultiBurst;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Ticker {
     private final AtomicLong idGenerator = new AtomicLong(0);
-    private final AtomicBoolean isRunning = new AtomicBoolean(true);
-    private final AtomicBoolean isProcessing = new AtomicBoolean(false);
     private final ConcurrentHashMap<Long, Ticked> tickList = new ConcurrentHashMap<>();
-    private final BukkitTask task; // 任务执行线程
+    private final BukkitTask task;
+    private boolean running = true;
 
     public Ticker() {
-        task = Bukkit.getScheduler().runTaskTimerAsynchronously(
-                Adapt.instance,
-                () -> {
-                    if (!isProcessing.get()) {
-                        try {
-                            isProcessing.set(true);
-                            tick();
-                        } finally {
-                            isProcessing.set(false);
-                        }
-                    }
-                },
-                0,
-                1
-        );
+        task = Bukkit.getScheduler().runTaskTimer(Adapt.instance, this::tick, 0, 1);
     }
 
     public void register(Ticked ticked) {
@@ -63,7 +45,7 @@ public class Ticker {
 
     public void clear() {
         task.cancel();
-        isRunning.set(false);
+        running = false;
         tickList.clear();
     }
 
@@ -72,24 +54,22 @@ public class Ticker {
     }
 
     private void tick() {
-        if (!isRunning.get()) {
+        if (!running) {
             return;
         }
 
-        BurstExecutor e = MultiBurst.burst.burst(tickList.size());
         for (Ticked t : tickList.values()) {
-            e.queue(() -> {
-                if (t.shouldTick() && !t.isUnregistered()) {
-                    try {
-                        t.tick();
-                    } catch (Throwable ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
+            if (t.isUnregistered() || !t.shouldTick()) {
+                continue;
+            }
+
+            try {
+                t.tick();
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
         }
 
-        e.complete();
         tickList.values().removeIf(Ticked::isUnregistered);
     }
 }

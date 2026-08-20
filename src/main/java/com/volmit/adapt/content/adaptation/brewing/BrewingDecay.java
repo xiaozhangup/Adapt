@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingDecay extends SimpleAdaptation<BrewingDecay.Config> {
     public BrewingDecay() {
         super("brewing-decay");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "decay", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "decay", "name"));
+        setDescription(Localizer.component("brewing", "decay", "description"));
+        setDisplayName(Localizer.component("brewing", "decay", "name"));
         setIcon(Material.WITHER_ROSE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingDecay extends SimpleAdaptation<BrewingDecay.Config> {
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-decay-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.POISONOUS_POTATO)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.WEAKNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Decay").setColor(Color.MAROON)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Decay")).setColor(Color.MAROON)
                         .addEffect(PotionEffectType.WITHER, 300, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-decay-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.CRIMSON_ROOTS)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.WEAKNESS, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Decay 2").setColor(Color.MAROON)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Decay 2")).setColor(Color.MAROON)
                         .addEffect(PotionEffectType.WITHER, 150, 2, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "decay", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "decay", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "decay", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "decay", "lore2"))));
     }
 
     @Override

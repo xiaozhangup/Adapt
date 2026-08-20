@@ -18,10 +18,10 @@
 
 package com.volmit.adapt.content.item.multiItems;
 
+import com.volmit.adapt.util.Components;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,23 +31,25 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MultiArmor implements MultiItem {
-    public static List<String> getLoreWithout(ItemMeta meta) {
-        List<String> list = meta.getLore();
-        if (list == null) {
+    public static List<Component> getLoreWithout(ItemMeta meta) {
+        List<Component> currentLore = meta.lore();
+        if (currentLore == null) {
             return null;
         }
+        List<Component> list = new ArrayList<>(currentLore);
 
         String targetText = "复合盔甲";
-        List<String> removeList = new ArrayList<>();
+        List<Component> removeList = new ArrayList<>();
 
-        Iterator<String> iterator = list.iterator();
+        Iterator<Component> iterator = list.iterator();
         while (iterator.hasNext()) {
-            String current = iterator.next();
-            if (current.contains(targetText)) {
+            Component current = iterator.next();
+            if (Components.plain(current).contains(targetText)) {
                 removeList.add(current);
                 while (iterator.hasNext()) {
-                    String next = iterator.next();
-                    if (next.contains("-> ") || next.contains("-  ") || next.equals(" ")) {
+                    Component next = iterator.next();
+                    String text = Components.plain(next);
+                    if (text.contains("-> ") || text.contains("-  ") || text.equals(" ")) {
                         removeList.add(next);
                     } else {
                         break;
@@ -59,10 +61,6 @@ public class MultiArmor implements MultiItem {
 
         list.removeAll(removeList);
         return list;
-    }
-
-    private static String legacy(Component component) {
-        return LegacyComponentSerializer.legacySection().serialize(component);
     }
 
     @Override
@@ -77,8 +75,7 @@ public class MultiArmor implements MultiItem {
 
     @Override
     public void onApplyMeta(ItemStack item, ItemMeta meta, List<ItemStack> otherItems) {
-        List<String> list = getLoreWithout(meta);
-        meta.setLore(list); // 清理旧式的描述内容
+        List<Component> old = getLoreWithout(meta);
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("复合盔甲 (" + (otherItems.size() + 1) + " 个物品)").color(NamedTextColor.GRAY)
@@ -91,7 +88,6 @@ public class MultiArmor implements MultiItem {
                     .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
         }
 
-        List<Component> old = meta.lore();
         if (old != null) {
             lore.add(Component.text(" "));
             lore.addAll(old);

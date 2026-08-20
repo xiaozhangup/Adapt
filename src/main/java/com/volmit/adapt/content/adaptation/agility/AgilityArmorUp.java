@@ -18,12 +18,14 @@
 
 package com.volmit.adapt.content.adaptation.agility;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
@@ -33,9 +35,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
 
 public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     private static final UUID MODIFIER = UUID.nameUUIDFromBytes("adapt-armor-up".getBytes());
@@ -45,28 +48,31 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
     public AgilityArmorUp() {
         super("agility-armor-up");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("agility", "armorup", "description"));
+        setDescription(Localizer.component("agility", "armorup", "description"));
         setIcon(Material.IRON_CHESTPLATE);
-        setDisplayName(Localizer.dLocalize("agility", "armorup", "name"));
+        setDisplayName(Localizer.component("agility", "armorup", "name"));
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
         setInitialCost(getConfig().initialCost);
         setInterval(350);
-        ticksRunning = new WeakHashMap<>();
+        ticksRunning = new HashMap<>();
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getWindupArmor(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("agility", "armorup", "lore1"));
-        v.addLore(C.YELLOW + "* " + Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1) + " " + C.GRAY
-                + Localizer.dLocalize("agility", "armorup", "lore2"));
+        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+                Placeholder.unparsed("amount", Form.pc(getWindupArmor(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("agility", "armorup", "lore1"))));
+        v.addLore(Components.mini("<yellow>* <duration> <gray><lore>",
+                Placeholder.unparsed("duration", Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1)),
+                Placeholder.component("lore", Localizer.component("agility", "armorup", "lore2"))));
     }
 
     @EventHandler
     public void on(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         ticksRunning.remove(p);
+        removeModifier(p);
     }
 
     private double getWindupTicks(double factor) {
@@ -84,8 +90,7 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
 
     @Override
     public void onTick() {
-        J.s(() -> {
-            for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
+        for (Player p : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
                 if (!p.clientConnected()) {
                     continue;
                 }
@@ -138,8 +143,23 @@ public class AgilityArmorUp extends SimpleAdaptation<AgilityArmorUp.Config> {
                 } else {
                     ticksRunning.remove(p);
                 }
-            }
-        });
+        }
+    }
+
+    private void removeModifier(Player player) {
+        var attribute = Version.get().getAttribute(player, Attribute.ARMOR);
+        if (attribute != null) {
+            attribute.removeModifier(MODIFIER, MODIFIER_KEY);
+        }
+    }
+
+    @Override
+    public void unregister() {
+        HashSet<Player> players = new HashSet<>(ticksRunning.keySet());
+        players.addAll(Adapt.instance.getAdaptServer().getAdaptPlayers());
+        players.forEach(this::removeModifier);
+        ticksRunning.clear();
+        super.unregister();
     }
 
     @Override

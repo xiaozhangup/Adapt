@@ -31,7 +31,7 @@ import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
 import de.slikey.effectlib.effect.CloudEffect;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -48,11 +48,11 @@ public class SkillTragOul extends SimpleSkill<SkillTragOul.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillTragOul() {
-        super("tragoul", Localizer.dLocalize("skill", "tragoul", "icon"));
+        super("tragoul", Localizer.component("skill", "tragoul", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#96aeb0"));
-        setDescription(Localizer.dLocalize("skill", "tragoul", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "tragoul", "name"));
+        setColor(TextColor.color(0x96aeb0));
+        setDescription(Localizer.component("skill", "tragoul", "description"));
+        setDisplayName(Localizer.component("skill", "tragoul", "name"));
         setInterval(2755);
         setIcon(Material.CRIMSON_ROOTS);
         cooldowns = new WeakHashMap<>();

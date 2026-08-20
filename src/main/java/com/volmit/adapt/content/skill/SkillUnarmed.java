@@ -24,7 +24,7 @@ import com.volmit.adapt.content.adaptation.unarmed.UnarmedPower;
 import com.volmit.adapt.content.adaptation.unarmed.UnarmedSuckerPunch;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,11 +34,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class SkillUnarmed extends SimpleSkill<SkillUnarmed.Config> {
     public SkillUnarmed() {
-        super("unarmed", Localizer.dLocalize("skill", "unarmed", "icon"));
+        super("unarmed", Localizer.component("skill", "unarmed", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#cd4646"));
-        setDescription(Localizer.dLocalize("skill", "unarmed", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "unarmed", "name"));
+        setColor(TextColor.color(0xcd4646));
+        setDescription(Localizer.component("skill", "unarmed", "description"));
+        setDisplayName(Localizer.component("skill", "unarmed", "name"));
         setInterval(2579);
         registerAdaptation(new UnarmedSuckerPunch());
         registerAdaptation(new UnarmedPower());

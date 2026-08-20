@@ -18,9 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.function.Deconstruction;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
@@ -41,8 +45,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
     public CraftingDeconstruction() {
         super("crafting-deconstruction");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("crafting", "deconstruction", "description"));
-        setDisplayName(Localizer.dLocalize("crafting", "deconstruction", "name"));
+        setDescription(Localizer.component("crafting", "deconstruction", "description"));
+        setDisplayName(Localizer.component("crafting", "deconstruction", "name"));
         setIcon(Material.SHEARS);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(1);
@@ -53,8 +57,8 @@ public class CraftingDeconstruction extends SimpleAdaptation<CraftingDeconstruct
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("crafting", "deconstruction", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("crafting", "deconstruction", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("crafting", "deconstruction", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("crafting", "deconstruction", "lore2"))));
     }
 
     @EventHandler

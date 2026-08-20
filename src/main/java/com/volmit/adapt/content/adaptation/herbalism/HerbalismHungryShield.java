@@ -18,11 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -35,8 +37,8 @@ public class HerbalismHungryShield extends SimpleAdaptation<HerbalismHungryShiel
     public HerbalismHungryShield() {
         super("herbalism-hungry-shield");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("herbalism", "hungryshield", "description"));
-        setDisplayName(Localizer.dLocalize("herbalism", "hungryshield", "name"));
+        setDescription(Localizer.component("herbalism", "hungryshield", "description"));
+        setDisplayName(Localizer.component("herbalism", "hungryshield", "name"));
         setIcon(Material.APPLE);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -47,8 +49,9 @@ public class HerbalismHungryShield extends SimpleAdaptation<HerbalismHungryShiel
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getEffectiveness(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("herbalism", "hungryshield", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
+                Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("herbalism", "hungryshield", "lore1"))));
     }
 
     @Override

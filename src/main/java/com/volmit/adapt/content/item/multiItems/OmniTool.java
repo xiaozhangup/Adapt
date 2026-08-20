@@ -19,6 +19,9 @@
 package com.volmit.adapt.content.item.multiItems;
 
 import com.volmit.adapt.util.Form;
+import com.volmit.adapt.util.Components;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,15 +42,20 @@ public class OmniTool implements MultiItem {
 
     @Override
     public void onApplyMeta(ItemStack item, ItemMeta meta, List<ItemStack> otherItems) {
-        List<String> lore = new ArrayList<>();
-        lore.add("Leatherman (" + (otherItems.size() + 1) + " Items)");
-        lore.add("-> " + Form.capitalizeWords(item.getType().name().toLowerCase().replaceAll("\\Q_\\E", " ")));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Components.mini("Leatherman (<count> Items)",
+                Placeholder.unparsed("count", Integer.toString(otherItems.size() + 1))));
+        lore.add(Components.mini("-> <item>", Placeholder.unparsed("item", displayName(item))));
 
         for (ItemStack i : otherItems) {
-            lore.add("-  " + Form.capitalizeWords(i.getType().name().toLowerCase().replaceAll("\\Q_\\E", " ")));
+            lore.add(Components.mini("-  <item>", Placeholder.unparsed("item", displayName(i))));
         }
 
-        meta.setLore(lore);
+        meta.lore(lore);
+    }
+
+    private static String displayName(ItemStack item) {
+        return Form.capitalizeWords(item.getType().name().toLowerCase().replace('_', ' '));
     }
 
     public ItemStack nextPickaxe(ItemStack item) {

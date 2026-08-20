@@ -5,28 +5,55 @@ import com.google.common.collect.Maps;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.J;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class BrewingManager implements Listener {
 
     private static final Map<BrewingRecipe, List<String>> recipes = Maps.newHashMap();
     private static final Map<Location, BrewingTask> activeTasks = Maps.newHashMap();
+
+    public BrewingManager() {
+        Adapt.instance.getServer().getScheduler().runTaskTimer(Adapt.instance, BrewingManager::tickActiveTasks, 1L, 1L);
+    }
+
+    private static void tickActiveTasks() {
+        Iterator<Map.Entry<Location, BrewingTask>> iterator = activeTasks.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Location, BrewingTask> entry = iterator.next();
+            try {
+                if (!entry.getValue().tick()) {
+                    iterator.remove();
+                }
+            } catch (Throwable e) {
+                entry.getValue().cancel();
+                iterator.remove();
+                Adapt.warn("Cancelled broken custom brewing task at " + entry.getKey());
+                e.printStackTrace();
+            }
+        }
+    }
 
     public static void registerRecipe(String adaptation, BrewingRecipe recipe) {
         recipes.putIfAbsent(recipe, Lists.newArrayList(adaptation));
@@ -37,7 +64,24 @@ public class BrewingManager implements Listener {
         });
     }
 
+    public static void clear() {
+        activeTasks.values().forEach(BrewingTask::cancel);
+        activeTasks.clear();
+        recipes.clear();
+    }
+
     @EventHandler
+    public void on(WorldUnloadEvent event) {
+        activeTasks.entrySet().removeIf(entry -> {
+            if (!entry.getKey().getWorld().equals(event.getWorld())) {
+                return false;
+            }
+            entry.getValue().cancel();
+            return true;
+        });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getView().getTopInventory().getType() != InventoryType.BREWING
                 || e.getView().getTopInventory().getHolder() == null) {
@@ -51,37 +95,65 @@ public class BrewingManager implements Listener {
         if (doTheThing) {
             Adapt.verbose("Brewing Stand Ingredient Clicked");
             e.setCancelled(true);
+            inv.setIngredient(e.getCursor().clone());
+            e.setCursor(null);
         }
-        J.s(() -> {
-            if (doTheThing) {
-                inv.setIngredient(e.getCursor());
-                e.setCursor(null);
+        UUID playerId = e.getWhoClicked().getUniqueId();
+        if (!Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)) {
+            return;
+        }
+        AdaptPlayer expectedPlayer = Adapt.instance.getAdaptServer().getPlayer((Player) e.getWhoClicked());
+        Location standLocation = inv.getHolder().getLocation();
+        UUID worldId = standLocation.getWorld().getUID();
+        int x = standLocation.getBlockX();
+        int y = standLocation.getBlockY();
+        int z = standLocation.getBlockZ();
+        J.s(() -> refreshTask(worldId, x, y, z, playerId, expectedPlayer));
+    }
+
+    private void refreshTask(UUID worldId, int x, int y, int z, UUID playerId, AdaptPlayer expectedPlayer) {
+        Player player = Bukkit.getPlayer(playerId);
+        World world = Bukkit.getWorld(worldId);
+        if (player == null || !player.isOnline() || world == null
+                || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+            return;
+        }
+
+        Location location = new Location(world, x, y, z);
+        if (!(location.getBlock().getState() instanceof BrewingStand)) {
+            BrewingTask removed = activeTasks.remove(location);
+            if (removed != null) {
+                removed.cancel();
             }
-            BrewingStand stand = inv.getHolder();
-            AdaptPlayer p = Adapt.instance.getAdaptServer().getPlayer((Player) e.getWhoClicked());
-            Optional<BrewingRecipe> recipe = recipes.keySet().stream()
-                    .filter(r -> BrewingTask.isValid(r, stand.getLocation())).findFirst();
-            recipe.ifPresent(r -> {
-                if (activeTasks.containsKey(stand.getLocation())) {
-                    BrewingTask t = activeTasks.get(stand.getLocation());
-                    if (!t.getRecipe().getId().equals(r.getId())) {
-                        activeTasks.remove(stand.getLocation()).cancel();
-                        if (recipes.get(r).stream().noneMatch(p::hasAdaptation)) {
-                            return;
-                        }
-                        activeTasks.put(stand.getLocation(), new BrewingTask(r, stand.getLocation()));
-                    }
-                } else {
-                    if (recipes.get(r).stream().noneMatch(p::hasAdaptation)) {
-                        return;
-                    }
-                    activeTasks.put(stand.getLocation(), new BrewingTask(r, stand.getLocation()));
+            return;
+        }
+
+        Optional<BrewingRecipe> recipe = recipes.keySet().stream()
+                .filter(r -> BrewingTask.isValid(r, location)).findFirst();
+        recipe.ifPresent(r -> {
+            BrewingTask current = activeTasks.get(location);
+            if (current != null && current.getRecipe().getId().equals(r.getId())) {
+                return;
+            }
+            if (recipes.get(r).stream().noneMatch(expectedPlayer::hasAdaptation)) {
+                if (current != null) {
+                    activeTasks.remove(location);
+                    current.cancel();
                 }
-            });
-            if (recipe.isEmpty() && activeTasks.containsKey(stand.getLocation())) {
-                activeTasks.remove(stand.getLocation()).cancel();
+                return;
             }
+            if (current != null) {
+                current.cancel();
+            }
+            activeTasks.put(location, new BrewingTask(r, location));
         });
+        if (recipe.isEmpty()) {
+            BrewingTask removed = activeTasks.remove(location);
+            if (removed != null) {
+                removed.cancel();
+            }
+        }
     }
 
     @EventHandler

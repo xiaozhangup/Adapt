@@ -18,10 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,8 +36,8 @@ public class HerbalismNoTrample extends SimpleAdaptation<HerbalismNoTrample.Conf
     public HerbalismNoTrample() {
         super("herbalism-no-trample");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("herbalism", "notrample", "description"));
-        setDisplayName(Localizer.dLocalize("herbalism", "notrample", "name"));
+        setDescription(Localizer.component("herbalism", "notrample", "description"));
+        setDisplayName(Localizer.component("herbalism", "notrample", "name"));
         setIcon(Material.FARMLAND);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -46,7 +48,8 @@ public class HerbalismNoTrample extends SimpleAdaptation<HerbalismNoTrample.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + C.GRAY + Localizer.dLocalize("herbalism", "notrample", "lore1"));
+        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
+                Placeholder.component("lore", Localizer.component("herbalism", "notrample", "lore1"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -93,4 +96,3 @@ public class HerbalismNoTrample extends SimpleAdaptation<HerbalismNoTrample.Conf
         double costFactor = 1;
     }
 }
-

@@ -31,27 +31,27 @@ import com.volmit.adapt.content.adaptation.stealth.StealthSpeed;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class SkillStealth extends SimpleSkill<SkillStealth.Config> {
     public SkillStealth() {
-        super("stealth", Localizer.dLocalize("skill", "stealth", "icon"));
+        super("stealth", Localizer.component("skill", "stealth", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#858585"));
+        setColor(TextColor.color(0x858585));
         setInterval(1412);
         setIcon(Material.WITHER_ROSE);
-        setDescription(Localizer.dLocalize("skill", "stealth", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "stealth", "name"));
+        setDescription(Localizer.component("skill", "stealth", "description"));
+        setDisplayName(Localizer.component("skill", "stealth", "name"));
         registerAdaptation(new StealthSpeed());
         registerAdaptation(new StealthGhostArmor());
         registerAdaptation(new StealthSight());
         registerAdaptation(new StealthEnderVeil());
         registerAdvancement(AdaptAdvancement.builder().icon(Material.LEATHER_LEGGINGS).key("challenge_sneak_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_sneak_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_sneak_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_sneak_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_sneak_1k", "description"))
                 .model(CustomModel.get(Material.LEATHER_LEGGINGS, "advancement", "stealth", "challenge_sneak_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_sneak_1k").goal(1000).stat("move.sneak")

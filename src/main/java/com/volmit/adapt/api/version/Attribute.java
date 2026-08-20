@@ -33,7 +33,7 @@ public record Attribute(AttributeInstance instance) {
 
     @SuppressWarnings("all")
     public void addModifier(UUID uuid, NamespacedKey key, double amount, AttributeModifier.Operation operation) {
-        instance.addModifier(new AttributeModifier(key, amount, operation, EquipmentSlotGroup.ANY));
+        instance.addTransientModifier(new AttributeModifier(key, amount, operation, EquipmentSlotGroup.ANY));
     }
 
     public boolean hasModifier(UUID uuid, NamespacedKey key) {

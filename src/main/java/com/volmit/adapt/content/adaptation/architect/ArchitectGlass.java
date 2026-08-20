@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.architect;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
@@ -34,8 +37,8 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
     public ArchitectGlass() {
         super("architect-glass");
         registerConfiguration(ArchitectGlass.Config.class);
-        setDescription(Localizer.dLocalize("architect", "glass", "description"));
-        setDisplayName(Localizer.dLocalize("architect", "glass", "name"));
+        setDescription(Localizer.component("architect", "glass", "description"));
+        setDisplayName(Localizer.component("architect", "glass", "name"));
         setIcon(Material.GLASS);
         setInterval(25000);
         setBaseCost(getConfig().baseCost);
@@ -46,7 +49,7 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("architect", "glass", "lore1"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("architect", "glass", "lore1"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -69,7 +72,7 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
                 if (getConfig().showParticles) {
 
                     e.getBlock().getWorld().spawnParticle(Particle.SCRAPE, e.getBlock().getLocation(), 1);
-                    J.a(() -> vfxCuboidOutline(e.getBlock(), Particle.REVERSE_PORTAL));
+                    vfxCuboidOutline(e.getBlock(), Particle.REVERSE_PORTAL);
                 }
                 e.getBlock().breakNaturally();
             }

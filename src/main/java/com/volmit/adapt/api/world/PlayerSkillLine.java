@@ -31,11 +31,14 @@ import com.volmit.adapt.api.xp.XPMultiplier;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
 import com.volmit.adapt.util.J;
+import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import com.volmit.adapt.util.collection.KMap;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.xiaozhangup.whale.module.pet.Pets;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
@@ -209,13 +212,20 @@ public class PlayerSkillLine {
                             .group("lvl" + getLine()).build(),
                     SoundNotification.builder().sound(Sound.UI_TOAST_CHALLENGE_COMPLETE).volume(1f).pitch(0.75f)
                             .group("lvl" + getLine()).build(),
-                    TitleNotification.builder().in(250).stay(1450).out(2250).group("lvl" + getLine()).title("")
+                    TitleNotification.builder().in(250).stay(1450).out(2250).group("lvl" + getLine())
+                            .title(Component.empty())
                             .subtitle(p.getServer().getSkillRegistry().getSkill(getLine()).getDisplayName(getLevel()))
                             .build());
             p.getActionBarNotifier()
                     .queue(ActionBarNotification.builder().duration(450).group("know" + getLine())
-                            .title(kn + " " + p.getServer().getSkillRegistry().getSkill(getLine()).getShortName() + " "
-                                    + Localizer.dLocalize("snippets", "gui", "knowledge"))
+                            .title(Components.mini("<amount> <skill>",
+                                    Placeholder.unparsed("amount", Long.toString(kn)),
+                                    Placeholder.component("skill",
+                                            p.getServer().getSkillRegistry().getSkill(getLine()).getShortName()
+                                                    .append(Components.mini(" <knowledge>",
+                                                            Placeholder.component("knowledge",
+                                                                    Localizer.component("snippets", "gui",
+                                                                            "knowledge")))))))
                             .build());
 
         } else {

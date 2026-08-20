@@ -21,10 +21,11 @@ package com.volmit.adapt.content.adaptation.tragoul;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -32,36 +33,44 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.UUID;
 
 public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
-    private final Map<Player, Long> cooldowns;
-    private final Map<Player, Long> healingWindow;
+    private final Map<UUID, Long> cooldowns;
+    private final Map<UUID, Long> healingWindows;
+    private long nextWindowToken;
 
     public TragoulHealing() {
         super("tragoul-healing");
         registerConfiguration(TragoulHealing.Config.class);
-        setDescription(Localizer.dLocalize("tragoul", "healing", "description"));
-        setDisplayName(Localizer.dLocalize("tragoul", "healing", "name"));
+        setDescription(Localizer.component("tragoul", "healing", "description"));
+        setDisplayName(Localizer.component("tragoul", "healing", "name"));
         setIcon(Material.REDSTONE);
         setInterval(25000);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        cooldowns = new WeakHashMap<>();
-        healingWindow = new WeakHashMap<>();
+        cooldowns = new HashMap<>();
+        healingWindows = new HashMap<>();
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("tragoul", "healing", "lore1"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "healing", "lore2"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "healing", "lore3") + (getConfig().minHealPercent
-                + (getConfig().maxHealPercent - getConfig().minHealPercent) * (level - 1) / (getConfig().maxLevel - 1))
-                + "%");
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore",
+                Localizer.component("tragoul", "healing", "lore1"))));
+        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
+                Localizer.component("tragoul", "healing", "lore2"))));
+        double percent = getConfig().minHealPercent
+                + (getConfig().maxHealPercent - getConfig().minHealPercent) * (level - 1)
+                        / (getConfig().maxLevel - 1);
+        v.addLore(Components.mini("<yellow><lore><percent>%",
+                Placeholder.component("lore", Localizer.component("tragoul", "healing", "lore3")),
+                Placeholder.unparsed("percent", String.valueOf(percent))));
     }
 
     @EventHandler
@@ -71,7 +80,7 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
                 return;
             }
 
-            if (!healingWindow.containsKey(p)) {
+            if (!healingWindows.containsKey(p.getUniqueId())) {
                 Adapt.verbose("Starting healing window for " + p.getName());
                 startHealingWindow(p);
             }
@@ -92,18 +101,36 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
         }
     }
 
+    @EventHandler
+    public void on(PlayerQuitEvent e) {
+        UUID playerId = e.getPlayer().getUniqueId();
+        healingWindows.remove(playerId);
+        cooldowns.remove(playerId);
+    }
+
     private boolean isOnCooldown(Player p) {
-        Long cooldown = cooldowns.get(p);
+        Long cooldown = cooldowns.get(p.getUniqueId());
         return cooldown != null && cooldown > System.currentTimeMillis();
     }
 
     private void startHealingWindow(Player p) {
         long currentTime = System.currentTimeMillis();
-        healingWindow.put(p, currentTime + getConfig().windowDuration);
+        UUID playerId = p.getUniqueId();
+        long token = ++nextWindowToken;
+        healingWindows.put(playerId, token);
         Bukkit.getScheduler().runTaskLater(Adapt.instance, () -> {
-            healingWindow.remove(p);
-            cooldowns.put(p, currentTime + getConfig().windowDuration + getConfig().cooldownDuration);
+            if (healingWindows.remove(playerId, token)) {
+                cooldowns.put(playerId,
+                        currentTime + getConfig().windowDuration + getConfig().cooldownDuration);
+            }
         }, getConfig().windowDuration / 50);
+    }
+
+    @Override
+    public void unregister() {
+        healingWindows.clear();
+        cooldowns.clear();
+        super.unregister();
     }
 
     @Override

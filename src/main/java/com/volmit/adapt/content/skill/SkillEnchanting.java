@@ -30,7 +30,7 @@ import com.volmit.adapt.content.adaptation.enchanting.EnchantingXPReturn;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,11 +44,11 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
     private final Map<Player, Long> cooldowns;
 
     public SkillEnchanting() {
-        super("enchanting", Localizer.dLocalize("skill", "enchanting", "icon"));
+        super("enchanting", Localizer.component("skill", "enchanting", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#bf91b2"));
-        setDescription(Localizer.dLocalize("skill", "enchanting", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "enchanting", "name"));
+        setColor(TextColor.color(0xbf91b2));
+        setDescription(Localizer.component("skill", "enchanting", "description"));
+        setDisplayName(Localizer.component("skill", "enchanting", "name"));
         setInterval(3909);
         setIcon(Material.KNOWLEDGE_BOOK);
         cooldowns = new WeakHashMap<>();
@@ -56,26 +56,26 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
         registerAdaptation(new EnchantingLapisReturn());
         registerAdaptation(new EnchantingXPReturn()); //
         registerAdvancement(AdaptAdvancement.builder().icon(Material.CRAFTING_TABLE).key("challenge_enchant_1k")
-                .title(Localizer.dLocalize("advancement", "challenge_enchant_1k", "title"))
-                .description(Localizer.dLocalize("advancement", "challenge_enchant_1k", "description"))
+                .title(Localizer.component("advancement", "challenge_enchant_1k", "title"))
+                .description(Localizer.component("advancement", "challenge_enchant_1k", "description"))
                 .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "enchanting", "challenge_enchant_1k"))
                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_enchant_5k")
-                        .title(Localizer.dLocalize("advancement", "challenge_enchant_5k", "title"))
-                        .description(Localizer.dLocalize("advancement", "challenge_enchant_5k", "description"))
+                        .title(Localizer.component("advancement", "challenge_enchant_5k", "title"))
+                        .description(Localizer.component("advancement", "challenge_enchant_5k", "description"))
                         .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
                                 "challenge_enchant_5k"))
                         .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_enchant_50k")
-                                .title(Localizer.dLocalize("advancement", "challenge_enchant_50k", "title"))
-                                .description(Localizer.dLocalize("advancement", "challenge_enchant_50k", "description"))
+                                .title(Localizer.component("advancement", "challenge_enchant_50k", "title"))
+                                .description(Localizer.component("advancement", "challenge_enchant_50k", "description"))
                                 .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
                                         "challenge_enchant_50k"))
                                 .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK)
                                         .key("challenge_enchant_500k")
-                                        .title(Localizer.dLocalize("advancement", "challenge_enchant_500k", "title"))
-                                        .description(Localizer.dLocalize("advancement", "challenge_enchant_500k",
+                                        .title(Localizer.component("advancement", "challenge_enchant_500k", "title"))
+                                        .description(Localizer.component("advancement", "challenge_enchant_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
                                                 "challenge_enchant_500k"))
@@ -83,9 +83,9 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK)
                                                 .key("challenge_enchant_5m")
-                                                .title(Localizer.dLocalize("advancement", "challenge_enchant_5m",
+                                                .title(Localizer.component("advancement", "challenge_enchant_5m",
                                                         "title"))
-                                                .description(Localizer.dLocalize("advancement", "challenge_enchant_5m",
+                                                .description(Localizer.component("advancement", "challenge_enchant_5m",
                                                         "description"))
                                                 .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement",
                                                         "enchanting", "challenge_enchant_5m"))

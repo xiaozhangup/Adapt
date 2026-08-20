@@ -22,6 +22,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -32,8 +33,8 @@ public class SeaborneOxygen extends SimpleAdaptation<SeaborneOxygen.Config> {
     public SeaborneOxygen() {
         super("seaborne-oxygen");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("seaborn", "oxygen", "description"));
-        setDisplayName(Localizer.dLocalize("seaborn", "oxygen", "name"));
+        setDescription(Localizer.component("seaborn", "oxygen", "description"));
+        setDisplayName(Localizer.component("seaborn", "oxygen", "name"));
         setIcon(Material.GLASS_PANE);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -44,8 +45,9 @@ public class SeaborneOxygen extends SimpleAdaptation<SeaborneOxygen.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getAirBoost(level), 0) + C.GRAY
-                + Localizer.dLocalize("seaborn", "oxygen", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount><gray><lore>",
+                Placeholder.unparsed("amount", Form.pc(getAirBoost(level), 0)),
+                Placeholder.component("lore", Localizer.component("seaborn", "oxygen", "lore1"))));
     }
 
     public double getAirBoost(int level) {
@@ -61,8 +63,9 @@ public class SeaborneOxygen extends SimpleAdaptation<SeaborneOxygen.Config> {
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
             if (i.getLocation().getBlock().getType() == Material.WATER && hasAdaptation(i)) {
-                J.s(() -> i.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING,
-                        getLevel(i) * getConfig().airPerLevelTics, getLevel(i))));
+                int level = getLevel(i);
+                i.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING,
+                        level * getConfig().airPerLevelTics, level));
             }
         }
     }

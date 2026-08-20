@@ -1,6 +1,5 @@
 package com.volmit.adapt.api.potion;
 
-import com.volmit.adapt.Adapt;
 import com.volmit.adapt.util.SoundPlayer;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -10,17 +9,19 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class BrewingTask extends BukkitRunnable {
+public class BrewingTask {
 
     private static final int DEFAULT_BREW_TIME = 400;
+    private static final int DISPLAY_UPDATE_INTERVAL = 10;
 
     @Getter
     private final BrewingRecipe recipe;
 
     private final Location location;
     private int brewTime;
+    private boolean cancelled;
+    private boolean completed;
 
     public BrewingTask(BrewingRecipe recipe, Location loc) {
         this.recipe = recipe;
@@ -28,21 +29,14 @@ public class BrewingTask extends BukkitRunnable {
         this.brewTime = recipe.getBrewingTime();
 
         BrewingStand block = (BrewingStand) loc.getBlock().getState();
-        if (block.getFuelLevel() > recipe.getFuelCost()) {
-            block.setFuelLevel(block.getFuelLevel() - recipe.getFuelCost());
-        } else {
-            int rest = recipe.getFuelCost() - block.getFuelLevel();
-            block.getInventory().setIngredient(decrease(block.getInventory().getFuel(), 1 + rest / 20));
-            block.setFuelLevel(20 - rest % 20);
-        }
-
         block.setBrewingTime(DEFAULT_BREW_TIME);
         block.update(true);
-
-        runTaskTimer(Adapt.instance, 0L, 1L);
     }
 
     public static ItemStack decrease(ItemStack source, int amount) {
+        if (source == null || source.getType().isAir()) {
+            return new ItemStack(Material.AIR);
+        }
         if (source.getAmount() > amount) {
             source.setAmount(source.getAmount() - amount);
             return source;
@@ -74,11 +68,19 @@ public class BrewingTask extends BukkitRunnable {
         return false;
     }
 
-    @Override
-    public void run() {
-        BrewingStand block = (BrewingStand) this.location.getBlock().getState();
+    public boolean tick() {
+        if (cancelled || !(location.getBlock().getState() instanceof BrewingStand block)) {
+            return false;
+        }
+
         BrewerInventory inventory = block.getInventory();
         if (brewTime <= 0) {
+            if (!isValid(recipe, location)) {
+                cancel();
+                return false;
+            }
+
+            consumeFuel(block, recipe.getFuelCost());
             inventory.setIngredient(decrease(inventory.getIngredient(), 1));
 
             for (int i = 0; i < 3; i++) {
@@ -93,12 +95,42 @@ public class BrewingTask extends BukkitRunnable {
                     sp.play(block.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 1, 1);
                 }
             });
-            cancel();
+            completed = true;
+            block.setBrewingTime(0);
+            block.update(true);
+            cancelled = true;
+            return false;
+        }
+
+        brewTime--;
+        if (brewTime == 0 || brewTime % DISPLAY_UPDATE_INTERVAL == 0) {
+            block.setBrewingTime(getRemainingTime());
+            block.update(true);
+        }
+        return true;
+    }
+
+    public void cancel() {
+        if (cancelled || completed) {
             return;
         }
-        brewTime--;
-        block.setBrewingTime(getRemainingTime());
-        block.update(true);
+        cancelled = true;
+        if (location.getBlock().getState() instanceof BrewingStand block) {
+            block.setBrewingTime(0);
+            block.update(true);
+        }
+    }
+
+    private static void consumeFuel(BrewingStand block, int fuelCost) {
+        if (block.getFuelLevel() >= fuelCost) {
+            block.setFuelLevel(block.getFuelLevel() - fuelCost);
+            return;
+        }
+
+        int needed = fuelCost - block.getFuelLevel();
+        int fuelItems = (needed + 19) / 20;
+        block.getInventory().setFuel(decrease(block.getInventory().getFuel(), fuelItems));
+        block.setFuelLevel(fuelItems * 20 - needed);
     }
 
     private int getRemainingTime() {

@@ -18,9 +18,13 @@
 
 package com.volmit.adapt.content.adaptation.architect;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.util.Components;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.function.PlacementWand;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.J;
 import com.volmit.adapt.util.Localizer;
@@ -32,14 +36,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Config> {
     private final PlacementWand placementWand;
+    private final int renderingTask;
 
     public ArchitectPlacement() {
         super("architect-placement");
         registerConfiguration(ArchitectPlacement.Config.class);
-        setDescription(Localizer.dLocalize("architect", "placement", "description"));
-        setDisplayName(Localizer.dLocalize("architect", "placement", "name"));
+        setDescription(Localizer.component("architect", "placement", "description"));
+        setDisplayName(Localizer.component("architect", "placement", "name"));
         setIcon(Material.SCAFFOLDING);
         setInterval(360);
         setBaseCost(getConfig().baseCost);
@@ -48,7 +57,7 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
         setCostFactor(getConfig().costFactor);
 
         placementWand = new PlacementWand(this, getConfig().maxBlocks);
-        J.sr(() -> {
+        renderingTask = J.sr(() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!hasAdaptation(player)) {
                     continue;
@@ -61,7 +70,7 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("architect", "placement", "lore3"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("architect", "placement", "lore3"))));
     }
 
     @EventHandler
@@ -87,6 +96,15 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
 
     @Override
     public void onTick() {
+    }
+
+    @Override
+    public void unregister() {
+        Bukkit.getScheduler().cancelTask(renderingTask);
+        Set<UUID> players = new HashSet<>(placementWand.trackedPlayerIds());
+        Bukkit.getOnlinePlayers().forEach(player -> players.add(player.getUniqueId()));
+        players.forEach(placementWand::clearPlayerEntities);
+        super.unregister();
     }
 
     @NoArgsConstructor

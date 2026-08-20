@@ -20,11 +20,12 @@ package com.volmit.adapt.content.adaptation.rift;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.world.AdaptPlayer;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -40,8 +41,8 @@ public class RiftResist extends SimpleAdaptation<RiftResist.Config> {
     public RiftResist() {
         super("rift-resist");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("rift", "resist", "description"));
-        setDisplayName(Localizer.dLocalize("rift", "resist", "name"));
+        setDescription(Localizer.component("rift", "resist", "description"));
+        setDisplayName(Localizer.component("rift", "resist", "name"));
         setIcon(Material.SCULK_VEIN);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -68,8 +69,10 @@ public class RiftResist extends SimpleAdaptation<RiftResist.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.ITALIC + Localizer.dLocalize("rift", "resist", "lore1"));
-        v.addLore(C.UNDERLINE + Localizer.dLocalize("rift", "resist", "lore2"));
+        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "resist", "lore1"))));
+        v.addLore(Components.mini("<underlined><lore>", Placeholder.component("lore",
+                Localizer.component("rift", "resist", "lore2"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

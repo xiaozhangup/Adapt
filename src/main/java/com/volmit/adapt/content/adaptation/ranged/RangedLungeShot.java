@@ -18,6 +18,8 @@
 
 package com.volmit.adapt.content.adaptation.ranged;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
@@ -39,8 +41,8 @@ public class RangedLungeShot extends SimpleAdaptation<RangedLungeShot.Config> {
     public RangedLungeShot() {
         super("ranged-lunge-shot");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("ranged", "lungeshot", "description"));
-        setDisplayName(Localizer.dLocalize("ranged", "lungeshot", "name"));
+        setDescription(Localizer.component("ranged", "lungeshot", "description"));
+        setDisplayName(Localizer.component("ranged", "lungeshot", "name"));
         setIcon(Material.FEATHER);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -55,8 +57,9 @@ public class RangedLungeShot extends SimpleAdaptation<RangedLungeShot.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + Form.pc(getSpeed(getLevelPercent(level)), 0) + C.GRAY + " "
-                + Localizer.dLocalize("ranged", "lungeshot", "lore1"));
+        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
+                Placeholder.unparsed("amount", Form.pc(getSpeed(getLevelPercent(level)), 0)),
+                Placeholder.component("lore", Localizer.component("ranged", "lungeshot", "lore1"))));
     }
 
     @EventHandler

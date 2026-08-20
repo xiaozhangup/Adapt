@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingResistance extends SimpleAdaptation<BrewingResistance.Config
     public BrewingResistance() {
         super("brewing-resistance");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "resistance", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "resistance", "name"));
+        setDescription(Localizer.component("brewing", "resistance", "description"));
+        setDisplayName(Localizer.component("brewing", "resistance", "name"));
         setIcon(Material.IRON_BLOCK);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingResistance extends SimpleAdaptation<BrewingResistance.Config
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-resistance-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.IRON_INGOT)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Resistance").setColor(Color.WHITE)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Resistance")).setColor(Color.WHITE)
                         .addEffect(PotionEffectType.ABSORPTION, 1200, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-resistance-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.IRON_BLOCK)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Resistance 2")
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Resistance 2"))
                         .setColor(Color.WHITE).addEffect(PotionEffectType.ABSORPTION, 600, 2, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "resistance", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "resistance", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "resistance", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "resistance", "lore2"))));
     }
 
     @Override

@@ -23,18 +23,18 @@ import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.skill.SimpleSkill;
 import com.volmit.adapt.util.Localizer;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class SkillChronos extends SimpleSkill<SkillChronos.Config> {
     public SkillChronos() {
-        super("chronos", Localizer.dLocalize("skill", "chronos", "icon"));
+        super("chronos", Localizer.component("skill", "chronos", "icon"));
         registerConfiguration(Config.class);
-        setColor(ChatColor.of("#b3c4d5"));
+        setColor(TextColor.color(0xb3c4d5));
         setInterval(600000);
-        setDescription(Localizer.dLocalize("skill", "chronos", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "chronos", "name"));
+        setDescription(Localizer.component("skill", "chronos", "description"));
+        setDisplayName(Localizer.component("skill", "chronos", "name"));
         setInterval(getConfig().setInterval);
         setIcon(Material.CLOCK);
     }

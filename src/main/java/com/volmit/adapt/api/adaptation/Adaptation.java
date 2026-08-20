@@ -21,7 +21,6 @@ package com.volmit.adapt.api.adaptation;
 import com.google.common.collect.ImmutableSet;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
-import com.volmit.adapt.api.Component;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.protection.Protector;
@@ -34,16 +33,20 @@ import com.volmit.adapt.api.world.PlayerData;
 import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.content.event.AdaptAdaptationUseEvent;
 import com.volmit.adapt.util.*;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 
+import java.time.Duration;
 import java.util.*;
 
-public interface Adaptation<T> extends Ticked, Component {
+public interface Adaptation<T> extends Ticked, com.volmit.adapt.api.Component {
     int getMaxLevel();
 
     default void xp(Player p, double amount) {
@@ -155,7 +158,7 @@ public interface Adaptation<T> extends Ticked, Component {
 
     int getBaseCost();
 
-    String getDescription();
+    Component getDescription();
 
     Material getIcon();
 
@@ -349,36 +352,48 @@ public interface Adaptation<T> extends Ticked, Component {
         return c;
     }
 
-    default String getDisplayName() {
+    default Component getDisplayName() {
         if (!this.getSkill().isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + getSkill().getColor().toString() + Form.capitalizeWords(
-                getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " "));
+        return Component.text(Form.capitalizeWords(
+                        getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " ")),
+                        getSkill().getColor())
+                .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                .decoration(TextDecoration.STRIKETHROUGH, false).decoration(TextDecoration.UNDERLINED, false)
+                .decoration(TextDecoration.ITALIC, false);
     }
 
-    default String getTitleDisplay() {
+    default Component getTitleDisplay() {
         if (!this.getSkill().isEnabled()) {
             this.unregister();
         }
-        return C.RESET + "" + C.BOLD + ChatColor.of(getSkill().getColor().getColor().darker()) + Form.capitalizeWords(
-                getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " "));
+        return Component.text(Form.capitalizeWords(
+                        getName().replaceAll("\\Q" + getSkill().getName() + "-\\E", "").replaceAll("\\Q-\\E", " ")),
+                        Components.darker(getSkill().getColor()))
+                .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.BOLD, false)
+                .decoration(TextDecoration.STRIKETHROUGH, false).decoration(TextDecoration.UNDERLINED, false)
+                .decoration(TextDecoration.ITALIC, false);
     }
 
-    default String getDisplayName(int level) {
+    default Component getDisplayName(int level) {
         if (!this.getSkill().isEnabled()) {
             this.unregister();
         }
         if (level >= 1) {
-            return getDisplayName() + C.RESET + " " + C.UNDERLINE + C.WHITE + Form.toRoman(level) + C.RESET;
+            return Components.mini("<name><reset> <white><level><reset>",
+                    Placeholder.component("name", getDisplayName()),
+                    Placeholder.unparsed("level", Form.toRoman(level)));
         }
 
         return getDisplayName();
     }
 
-    default String getDisplayNameNoRoman(int level) {
+    default Component getDisplayNameNoRoman(int level) {
         if (level >= 1) {
-            return getDisplayName() + C.RESET + " " + C.UNDERLINE + C.WHITE + level + C.RESET;
+            return Components.mini("<name><reset> <white><level><reset>",
+                    Placeholder.component("name", getDisplayName()),
+                    Placeholder.unparsed("level", Integer.toString(level)));
         }
 
         return getDisplayName();
@@ -428,7 +443,7 @@ public interface Adaptation<T> extends Ticked, Component {
         Window w = new UIWindow(player);
         w.setTag("skill/" + getSkill().getName() + "/" + getName());
         w.setDecorator((window, position, row) -> new UIElement("bg")
-                .setName(" ")
+                .setName(Component.space())
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
         w.setResolution(WindowResolution.W9_H6);
@@ -460,49 +475,82 @@ public interface Adaptation<T> extends Ticked, Component {
             int rc = getRefundCostFor(i - 1, mylevel);
             int pc = getPowerCostFor(i, mylevel);
             int lvl = i;
+            Component cost = Component.empty();
+            if (mylevel < lvl) {
+                cost = AdaptConfig.get().isHardcoreNoRefunds()
+                        ? Components.mini(
+                                "<white><cost><gray> <knowledge_cost> <dark_red><bold><no_refunds>",
+                                Placeholder.unparsed("cost", Integer.toString(c)),
+                                Placeholder.component("knowledge_cost",
+                                        Localizer.component("snippets", "adaptmenu", "knowledgecost")),
+                                Placeholder.component("no_refunds",
+                                        Localizer.component("snippets", "adaptmenu", "norefunds")))
+                        : Components.mini("<white><cost><gray> <knowledge_cost>",
+                                Placeholder.unparsed("cost", Integer.toString(c)),
+                                Placeholder.component("knowledge_cost",
+                                        Localizer.component("snippets", "adaptmenu", "knowledgecost")));
+            }
+
+            Component state;
+            if (mylevel >= lvl) {
+                if (AdaptConfig.get().isHardcoreNoRefunds()) {
+                    state = Components.mini("<green><learned> <dark_red><bold><no_refunds>",
+                            Placeholder.component("learned",
+                                    Localizer.component("snippets", "adaptmenu", "alreadylearned")),
+                            Placeholder.component("no_refunds",
+                                    Localizer.component("snippets", "adaptmenu", "norefunds")));
+                } else if (isPermanent()) {
+                    state = Component.empty();
+                } else {
+                    state = Components.mini(
+                            "<green><learned><gray> <unlearn_refund> <green><refund> <knowledge_cost>",
+                            Placeholder.component("learned",
+                                    Localizer.component("snippets", "adaptmenu", "alreadylearned")),
+                            Placeholder.component("unlearn_refund",
+                                    Localizer.component("snippets", "adaptmenu", "unlearnrefund")),
+                            Placeholder.unparsed("refund", Integer.toString(rc)),
+                            Placeholder.component("knowledge_cost",
+                                    Localizer.component("snippets", "adaptmenu", "knowledgecost")));
+                }
+            } else if (k >= c) {
+                state = Components.mini("<blue><click_learn> <name>",
+                        Placeholder.component("click_learn",
+                                Localizer.component("snippets", "adaptmenu", "clicklearn")),
+                        Placeholder.component("name", getDisplayName(i)));
+            } else if (k == 0) {
+                state = Components.mini("<red><no_knowledge>",
+                        Placeholder.component("no_knowledge",
+                                Localizer.component("snippets", "adaptmenu", "noknowledge")));
+            } else {
+                state = Components.mini("<red>(<you_only_have> <white><knowledge><red> <available>)",
+                        Placeholder.component("you_only_have",
+                                Localizer.component("snippets", "adaptmenu", "youonlyhave")),
+                        Placeholder.unparsed("knowledge", Long.toString(k)),
+                        Placeholder.component("available",
+                                Localizer.component("snippets", "adaptmenu", "knowledgeavailable")));
+            }
+
+            Component power = mylevel < lvl && !getPlayer(player).getData().hasPowerAvailable(pc)
+                    ? Components.mini("<red><not_enough_power>\n<how_to_level>",
+                            Placeholder.component("not_enough_power",
+                                    Localizer.component("snippets", "adaptmenu", "notenoughpower")),
+                            Placeholder.component("how_to_level",
+                                    Localizer.component("snippets", "adaptmenu", "howtolevelup")))
+                    : Components.mini("<green><level> <power_drain>",
+                            Placeholder.unparsed("level", Integer.toString(lvl)),
+                            Placeholder.component("power_drain",
+                                    Localizer.component("snippets", "adaptmenu", "powerdrain")));
+
+            Component permanent = isPermanent()
+                    ? Components.mini("<red><bold><permanent>",
+                            Placeholder.component("permanent",
+                                    Localizer.component("snippets", "adaptmenu", "maynotunlearn")))
+                    : Component.empty();
             Element de = new UIElement("lp-" + i + "g").setMaterial(new MaterialBlock(getIcon())).setModel(getModel(i))
                     .setName(getDisplayName(i)).setEnchanted(mylevel >= lvl).setProgress(1D)
-                    .addLore(
-                            Form.wrapWordsPrefixed(getDescription(), "" + C.GRAY, 40))
-                    .addLore(mylevel >= lvl
-                            ? ("")
-                            : ("" + C.WHITE + c + C.GRAY + " "
-                                    + Localizer.dLocalize("snippets", "adaptmenu", "knowledgecost") + " "
-                                    + (AdaptConfig.get().isHardcoreNoRefunds()
-                                            ? C.DARK_RED + "" + C.BOLD
-                                                    + Localizer.dLocalize("snippets", "adaptmenu", "norefunds")
-                                            : "")))
-                    .addLore(mylevel >= lvl
-                            ? AdaptConfig.get().isHardcoreNoRefunds()
-                                    ? (C.GREEN + Localizer.dLocalize("snippets", "adaptmenu", "alreadylearned") + " "
-                                            + C.DARK_RED + C.BOLD
-                                            + Localizer.dLocalize("snippets", "adaptmenu", "norefunds"))
-                                    : (isPermanent()
-                                            ? ""
-                                            : (C.GREEN + Localizer.dLocalize("snippets", "adaptmenu", "alreadylearned")
-                                                    + " " + C.GRAY
-                                                    + Localizer.dLocalize("snippets", "adaptmenu", "unlearnrefund")
-                                                    + " " + C.GREEN + rc + " "
-                                                    + Localizer.dLocalize("snippets", "adaptmenu", "knowledgecost")))
-                            : (k >= c
-                                    ? (C.BLUE + Localizer.dLocalize("snippets", "adaptmenu", "clicklearn") + " "
-                                            + getDisplayName(i))
-                                    : (k == 0
-                                            ? (C.RED + Localizer.dLocalize("snippets", "adaptmenu", "noknowledge"))
-                                            : (C.RED + "(" + Localizer.dLocalize("snippets", "adaptmenu", "youonlyhave")
-                                                    + " " + C.WHITE + k + C.RED + " "
-                                                    + Localizer.dLocalize("snippets", "adaptmenu", "knowledgeavailable")
-                                                    + ")"))))
-                    .addLore(mylevel < lvl && getPlayer(player).getData().hasPowerAvailable(pc)
-                            ? C.GREEN + "" + lvl + " " + Localizer.dLocalize("snippets", "adaptmenu", "powerdrain")
-                            : mylevel >= lvl
-                                    ? C.GREEN + "" + lvl + " "
-                                            + Localizer.dLocalize("snippets", "adaptmenu", "powerdrain")
-                                    : C.RED + Localizer.dLocalize("snippets", "adaptmenu", "notenoughpower") + "\n"
-                                            + C.RED + Localizer.dLocalize("snippets", "adaptmenu", "howtolevelup"))
-                    .addLore((isPermanent()
-                            ? C.RED + "" + C.BOLD + Localizer.dLocalize("snippets", "adaptmenu", "maynotunlearn")
-                            : ""))
+                    .addLore(Components.mini("<gray><description>",
+                            Placeholder.component("description", getDescription())))
+                    .addLore(cost).addLore(state).addLore(power).addLore(permanent)
                     .onLeftClick((e) -> {
                         if (mylevel >= lvl) {
                             unlearn(player, lvl, false);
@@ -512,16 +560,22 @@ public interface Adaptation<T> extends Ticked, Component {
                             if (AdaptConfig.get().getLearnUnlearnButtonDelayTicks() != 0) {
                                 if (isPermanent()) {
                                     spw.play(player.getLocation(), Sound.ENTITY_BLAZE_DEATH, 0.5f, 1.355f);
-                                    player.sendTitle(" ",
-                                            C.RED + "" + C.BOLD
-                                                    + Localizer.dLocalize("snippets", "adaptmenu", "maynotunlearn")
-                                                    + " " + getDisplayName(mylevel),
-                                            1, 10, 11);
+                                    player.showTitle(Title.title(Component.space(),
+                                            Components.mini("<red><bold><permanent> <name>",
+                                                    Placeholder.component("permanent",
+                                                            Localizer.component("snippets", "adaptmenu",
+                                                                    "maynotunlearn")),
+                                                    Placeholder.component("name", getDisplayName(mylevel))),
+                                            Title.Times.times(Duration.ofMillis(50), Duration.ofMillis(500),
+                                                    Duration.ofMillis(550))));
                                 } else {
-                                    player.sendTitle(" ",
-                                            C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "unlearned") + " "
-                                                    + getDisplayName(mylevel),
-                                            1, 10, 11);
+                                    player.showTitle(Title.title(Component.space(),
+                                            Components.mini("<gray><unlearned> <name>",
+                                                    Placeholder.component("unlearned",
+                                                            Localizer.component("snippets", "adaptmenu", "unlearned")),
+                                                    Placeholder.component("name", getDisplayName(mylevel))),
+                                            Title.Times.times(Duration.ofMillis(50), Duration.ofMillis(500),
+                                                    Duration.ofMillis(550))));
                                 }
                             }
                             J.s(() -> openGui(player), AdaptConfig.get().getLearnUnlearnButtonDelayTicks());
@@ -541,10 +595,13 @@ public interface Adaptation<T> extends Ticked, Component {
                                 }
                                 w.close();
                                 if (AdaptConfig.get().getLearnUnlearnButtonDelayTicks() != 0) {
-                                    player.sendTitle(" ",
-                                            C.GRAY + Localizer.dLocalize("snippets", "adaptmenu", "learned") + " "
-                                                    + getDisplayName(lvl),
-                                            1, 5, 11);
+                                    player.showTitle(Title.title(Component.space(),
+                                            Components.mini("<gray><learned> <name>",
+                                                    Placeholder.component("learned",
+                                                            Localizer.component("snippets", "adaptmenu", "learned")),
+                                                    Placeholder.component("name", getDisplayName(lvl))),
+                                            Title.Times.times(Duration.ofMillis(50), Duration.ofMillis(250),
+                                                    Duration.ofMillis(550))));
                                 }
                                 J.s(() -> openGui(player), AdaptConfig.get().getLearnUnlearnButtonDelayTicks());
                             } else {
@@ -554,7 +611,7 @@ public interface Adaptation<T> extends Ticked, Component {
                             spw.play(player.getLocation(), Sound.BLOCK_BAMBOO_HIT, 0.7f, 1.855f);
                         }
                     });
-            de.addLore(" ");
+            de.addLore(Component.space());
             addStats(lvl, de);
             w.setElement(pos, row, de);
         }
@@ -565,14 +622,18 @@ public interface Adaptation<T> extends Ticked, Component {
             w.setElement(backPos, backRow,
                     new UIElement("back").setMaterial(new MaterialBlock(Material.RED_BED))
                             .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
-                            .setName("" + C.RESET + C.RED + Localizer.dLocalize("snippets", "gui", "back"))
+                            .setName(Components.mini("<reset><red><!italic><back>",
+                                    Placeholder.component("back", Localizer.component("snippets", "gui", "back"))))
                             .onLeftClick((e) -> onGuiClose(player, true)));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(getTitleDisplay() + " " + C.DARK_GRAY + " "
-                + Form.f(a.getSkillLine(getSkill().getName()).getKnowledge()) + " "
-                + Localizer.dLocalize("snippets", "adaptmenu", "knowledge"));
+        w.setTitle(Components.mini("<title> <dark_gray> <amount> <knowledge>",
+                Placeholder.component("title", getTitleDisplay()),
+                Placeholder.unparsed("amount",
+                        Form.f(a.getSkillLine(getSkill().getName()).getKnowledge())),
+                Placeholder.component("knowledge",
+                        Localizer.component("snippets", "adaptmenu", "knowledge"))));
         w.onClosed((vv) -> J.s(() -> onGuiClose(player, !AdaptConfig.get().isEscClosesAllGuis())));
         w.open();
         Adapt.instance.getGuiLeftovers().put(player.getUniqueId().toString(), w);

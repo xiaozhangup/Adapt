@@ -30,6 +30,7 @@ import com.volmit.adapt.util.decree.DecreeParameter;
 import com.volmit.adapt.util.decree.annotations.Decree;
 import com.volmit.adapt.util.decree.exceptions.DecreeParsingException;
 import lombok.Data;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -369,7 +370,8 @@ public class VirtualDecreeCommand {
             // Still failed to find, error them
             if (param == null) {
                 Adapt.debug("Can't find parameter key for " + key + "=" + value + " in " + getPath());
-                sender.sendMessage(C.YELLOW + "Unknown Parameter: " + key);
+                sender.sendMessage(Components.mini("<yellow>Unknown Parameter: <key>",
+                        Placeholder.unparsed("key", key)));
                 unknownInputs.add(value); // Add the value to the unknowns and see if we can assume it later
                 continue;
             }
@@ -381,8 +383,9 @@ public class VirtualDecreeCommand {
             } catch (DecreeParsingException e) {
                 Adapt.debug("Can't parse parameter value for " + key + "=" + value + " in " + getPath()
                         + " using handler " + param.getHandler().getClass().getSimpleName());
-                sender.sendMessage(
-                        C.RED + "Cannot convert \"" + value + "\" into a " + param.getType().getSimpleName());
+                sender.sendMessage(Components.mini("<red>Cannot convert \"<value>\" into a <type>",
+                        Placeholder.unparsed("value", value),
+                        Placeholder.unparsed("type", param.getType().getSimpleName())));
                 e.printStackTrace();
                 return null;
             }
@@ -404,14 +407,17 @@ public class VirtualDecreeCommand {
                 } catch (DecreeParsingException e) {
                     Adapt.debug("Can't parse parameter value for " + par.getName() + "=" + stringParam + " in "
                             + getPath() + " using handler " + par.getHandler().getClass().getSimpleName());
-                    sender.sendMessage(
-                            C.RED + "Cannot convert \"" + stringParam + "\" into a " + par.getType().getSimpleName());
+                    sender.sendMessage(Components.mini("<red>Cannot convert \"<value>\" into a <type>",
+                            Placeholder.unparsed("value", stringParam),
+                            Placeholder.unparsed("type", par.getType().getSimpleName())));
                     e.printStackTrace();
                     return null;
                 }
             } catch (IndexOutOfBoundsException e) {
-                sender.sendMessage(C.YELLOW + "Unknown Parameter: " + stringParam + " (" + getNumberSuffixThStRd(x + 1)
-                        + " argument)");
+                sender.sendMessage(Components.mini(
+                        "<yellow>Unknown Parameter: <value> (<position> argument)",
+                        Placeholder.unparsed("value", stringParam),
+                        Placeholder.unparsed("position", getNumberSuffixThStRd(x + 1))));
             }
         }
 
@@ -477,8 +483,9 @@ public class VirtualDecreeCommand {
             } catch (DecreeParsingException e) {
                 Adapt.debug("Can't parse parameter value for " + i.getName() + "=" + i.getParam().defaultValue()
                         + " in " + getPath() + " using handler " + i.getHandler().getClass().getSimpleName());
-                sender.sendMessage(C.RED + "Cannot convert \"" + i.getParam().defaultValue() + "\" into a "
-                        + i.getType().getSimpleName());
+                sender.sendMessage(Components.mini("<red>Cannot convert \"<value>\" into a <type>",
+                        Placeholder.unparsed("value", i.getParam().defaultValue()),
+                        Placeholder.unparsed("type", i.getType().getSimpleName())));
                 return false;
             }
 
@@ -513,8 +520,11 @@ public class VirtualDecreeCommand {
             }
 
             if (i.isRequired() && value == null) {
-                sender.sendMessage(C.RED + "Missing argument \"" + i.getName() + "\" (" + i.getType().getSimpleName()
-                        + ") as the " + getNumberSuffixThStRd(vm + 1) + " argument.");
+                sender.sendMessage(Components.mini(
+                        "<red>Missing argument \"<name>\" (<type>) as the <position> argument.",
+                        Placeholder.unparsed("name", i.getName()),
+                        Placeholder.unparsed("type", i.getType().getSimpleName()),
+                        Placeholder.unparsed("position", getNumberSuffixThStRd(vm + 1))));
                 sender.sendDecreeHelpNode(this);
                 return false;
             }
@@ -532,6 +542,8 @@ public class VirtualDecreeCommand {
             } catch (Throwable e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to execute <INSERT REAL NODE HERE>"); // TODO:
+            } finally {
+                DecreeContext.clear();
             }
         };
 

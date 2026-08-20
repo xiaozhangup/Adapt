@@ -50,13 +50,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static org.bukkit.potion.PotionType.*;
 import static java.util.concurrent.ThreadLocalRandom.current;
 
 public interface Component {
+    Set<CompletableFuture<?>> PENDING_BLOCK_XP = ConcurrentHashMap.newKeySet();
+    Queue<Runnable> COMPLETED_BLOCK_XP = new ConcurrentLinkedQueue<>();
+    AtomicBoolean BLOCK_XP_DRAIN_SCHEDULED = new AtomicBoolean();
+
     default void wisdom(Player p, long w) {
         XP.wisdom(p, w);
     }
@@ -254,36 +267,83 @@ public interface Component {
                 return;
             }
         }
-        // if we didn't find an existing effect, add a new one
-        J.a(() -> {
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            J.s(() -> {
-                p.addPotionEffect(new PotionEffect(potionEffect, duration, amplifier));
-                sp.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 0.25f, 0.25f);
-            });
-        });
-
+        p.addPotionEffect(new PotionEffect(potionEffect, duration, amplifier));
+        sp.play(p.getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 0.25f, 0.25f);
     }
 
     default void potion(Player p, PotionEffectType type, int power, int duration) {
         p.addPotionEffect(new PotionEffect(type, power, duration, true, false, false));
     }
 
-    default double blockXP(Block block, double xp) {
-        try {
-            return Math.round(xp * getBlockMultiplier(block));
-        } catch (Exception e) {
-            Adapt.verbose("Error in blockXP: " + e.getMessage());
-        }
-        return xp;
+    default CompletableFuture<Double> blockXPAsync(World world, int x, int y, int z, double xp) {
+        return WorldData.of(world).reportEarningsAsync(x, y, z).handle((multiplier, error) -> {
+            if (error != null) {
+                if (AdaptConfig.get().isVerbose()) {
+                    Adapt.instance.getLogger().fine("Error in blockXP: " + error.getMessage());
+                }
+                return xp;
+            }
+            return (double) Math.round(xp * multiplier);
+        });
     }
 
-    default double getBlockMultiplier(Block block) {
-        return WorldData.of(block.getWorld()).reportEarnings(block);
+    default void queueBlockXP(World world, int x, int y, int z, double xp, Consumer<Double> commit) {
+        CompletableFuture<Double> future = blockXPAsync(world, x, y, z, xp);
+        PENDING_BLOCK_XP.add(future);
+        future.whenComplete((amount, error) -> {
+            double awarded = error == null && amount != null ? amount : xp;
+            COMPLETED_BLOCK_XP.add(() -> commit.accept(awarded));
+            PENDING_BLOCK_XP.remove(future);
+            scheduleBlockXPDrain();
+        });
+    }
+
+    static void scheduleBlockXPDrain() {
+        if (!BLOCK_XP_DRAIN_SCHEDULED.compareAndSet(false, true)) {
+            return;
+        }
+        try {
+            J.s(Component::drainBlockXPCommits);
+        } catch (Throwable error) {
+            BLOCK_XP_DRAIN_SCHEDULED.set(false);
+        }
+    }
+
+    static void drainBlockXPCommits() {
+        BLOCK_XP_DRAIN_SCHEDULED.set(false);
+        Runnable commit;
+        while ((commit = COMPLETED_BLOCK_XP.poll()) != null) {
+            try {
+                commit.run();
+            } catch (Throwable error) {
+                Adapt.warn("Failed to commit block XP: " + error.getMessage());
+            }
+        }
+    }
+
+    static void flushBlockXP(long timeout, TimeUnit unit) {
+        long deadline = System.nanoTime() + unit.toNanos(timeout);
+        while (!PENDING_BLOCK_XP.isEmpty()) {
+            long remaining = deadline - System.nanoTime();
+            if (remaining <= 0) {
+                break;
+            }
+            CompletableFuture<?>[] pending = PENDING_BLOCK_XP.toArray(CompletableFuture[]::new);
+            try {
+                CompletableFuture.allOf(pending).get(remaining, TimeUnit.NANOSECONDS);
+            } catch (ExecutionException ignored) {
+                // Completion handlers still enqueue the base-XP fallback.
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (TimeoutException e) {
+                break;
+            }
+        }
+        drainBlockXPCommits();
+        if (!PENDING_BLOCK_XP.isEmpty()) {
+            Adapt.warn("Timed out waiting for " + PENDING_BLOCK_XP.size() + " block XP calculation(s)");
+        }
     }
 
     default double getValue(Material material) {

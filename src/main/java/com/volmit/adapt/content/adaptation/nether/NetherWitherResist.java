@@ -18,10 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.nether;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -40,8 +42,8 @@ public class NetherWitherResist extends SimpleAdaptation<NetherWitherResist.Conf
     public NetherWitherResist() {
         super("nether-wither-resist");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("nether", "witherresist", "description"));
-        setDisplayName(Localizer.dLocalize("nether", "witherresist", "name"));
+        setDescription(Localizer.component("nether", "witherresist", "description"));
+        setDisplayName(Localizer.component("nether", "witherresist", "name"));
         setIcon(Material.NETHERITE_CHESTPLATE);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -53,9 +55,12 @@ public class NetherWitherResist extends SimpleAdaptation<NetherWitherResist.Conf
     @Override
     public void addStats(int level, Element v) {
         int chance = (int) (getConfig().basePieceChance + getConfig().getChanceAddition() * level);
-        v.addLore(C.GREEN + "+ " + chance + "%" + C.GRAY + Localizer.dLocalize("nether", "witherresist", "lore1"));
-        v.addLore(C.GRAY + " " + Localizer.dLocalize("nether", "witherresist", "lore1") + C.DARK_GRAY
-                + Localizer.dLocalize("nether", "witherresist", "lore2"));
+        v.addLore(Components.mini("<green>+ <chance>%</green><gray><lore></gray>",
+                Placeholder.unparsed("chance", Integer.toString(chance)),
+                Placeholder.component("lore", Localizer.component("nether", "witherresist", "lore1"))));
+        v.addLore(Components.mini("<gray> <lore1></gray><dark_gray><lore2></dark_gray>",
+                Placeholder.component("lore1", Localizer.component("nether", "witherresist", "lore1")),
+                Placeholder.component("lore2", Localizer.component("nether", "witherresist", "lore2"))));
     }
 
     @EventHandler

@@ -19,9 +19,9 @@
 package com.volmit.adapt.util;
 
 import com.volmit.adapt.Adapt;
-import com.volmit.adapt.api.version.Version;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +46,7 @@ public class UIWindow implements Window, Listener {
     private WindowDecorator decorator;
     private Callback<Window> eClose;
     private WindowResolution resolution;
-    private String title;
+    private Component title;
     private boolean visible;
     private int viewportPosition;
     private int viewportSize;
@@ -61,7 +61,7 @@ public class UIWindow implements Window, Listener {
         doubleclicked = false;
         this.viewer = viewer;
         this.elements = new HashMap<>();
-        setTitle("");
+        setTitle(Component.empty());
         setDecorator(new UIVoidDecorator());
         setResolution(WindowResolution.W9_H6);
         setViewportHeight(clip(3, 1, getResolution().getMaxHeight()).intValue());
@@ -85,17 +85,8 @@ public class UIWindow implements Window, Listener {
     }
 
     private static Inventory getCurrentInventory(UIWindow window, Holder holder) {
-        if (!Version.SET_TITLE || holder.getResolution() != window.getResolution()) {
-            holder.window.close();
-            return createInventory(window);
-        }
-
-        var openInventory = holder.inventory;
         holder.unregister();
-        holder.setWindow(window);
-
-        openInventory.clear();
-        return openInventory;
+        return createInventory(window);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -313,12 +304,12 @@ public class UIWindow implements Window, Listener {
     }
 
     @Override
-    public String getTitle() {
+    public Component getTitle() {
         return title;
     }
 
     @Override
-    public UIWindow setTitle(String title) {
+    public UIWindow setTitle(Component title) {
         this.title = title;
 
         if (isVisible()) {
@@ -450,9 +441,6 @@ public class UIWindow implements Window, Listener {
     @Override
     public Window updateInventory() {
         if (isVisible()) {
-            if (Version.SET_TITLE) {
-                viewer.getOpenInventory().setTitle(getTitle());
-            }
             ItemStack[] is = inventory.getContents();
             Set<ItemStack> isf = new HashSet<>();
 
@@ -494,11 +482,6 @@ public class UIWindow implements Window, Listener {
 
     @Override
     public Window reopen() {
-        if (Version.SET_TITLE) {
-            visible = false;
-            HandlerList.unregisterAll(this);
-            return open();
-        }
         return this.close().open();
     }
 

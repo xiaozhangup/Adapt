@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.potion.BrewingRecipe;
 import com.volmit.adapt.api.potion.PotionBuilder;
-import com.volmit.adapt.util.C;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,8 +37,8 @@ public class BrewingBlindness extends SimpleAdaptation<BrewingBlindness.Config> 
     public BrewingBlindness() {
         super("brewing-blindness");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("brewing", "blindness", "description"));
-        setDisplayName(Localizer.dLocalize("brewing", "blindness", "name"));
+        setDescription(Localizer.component("brewing", "blindness", "description"));
+        setDisplayName(Localizer.component("brewing", "blindness", "name"));
         setIcon(Material.INK_SAC);
         setBaseCost(getConfig().baseCost);
         setCostFactor(getConfig().costFactor);
@@ -45,21 +48,21 @@ public class BrewingBlindness extends SimpleAdaptation<BrewingBlindness.Config> 
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-blindness-1").brewingTime(320).fuelCost(16)
                 .ingredient(Material.INK_SAC)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Blindness").setColor(Color.OLIVE)
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Blindness")).setColor(Color.OLIVE)
                         .addEffect(PotionEffectType.BLINDNESS, 600, 1, true, true, true).build())
                 .build());
         registerBrewingRecipe(BrewingRecipe.builder().id("brewing-blindness-2").brewingTime(320).fuelCost(32)
                 .ingredient(Material.GLOW_INK_SAC)
                 .basePotion(PotionBuilder.vanilla(PotionBuilder.Type.REGULAR, PotionType.AWKWARD, false, false))
-                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName("Bottled Blindness 2")
+                .result(PotionBuilder.of(PotionBuilder.Type.REGULAR).setName(Components.mini("Bottled Blindness 2"))
                         .setColor(Color.OLIVE).addEffect(PotionEffectType.BLINDNESS, 300, 3, true, true, true).build())
                 .build());
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "blindness", "lore1"));
-        v.addLore(C.GREEN + Localizer.dLocalize("brewing", "blindness", "lore2"));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "blindness", "lore1"))));
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "blindness", "lore2"))));
     }
 
     @Override

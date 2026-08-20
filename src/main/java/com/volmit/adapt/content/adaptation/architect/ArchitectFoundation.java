@@ -18,6 +18,9 @@
 
 package com.volmit.adapt.content.adaptation.architect;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
@@ -36,7 +39,9 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 
 import java.util.*;
 
@@ -51,25 +56,26 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
     public ArchitectFoundation() {
         super("architect-foundation");
         registerConfiguration(ArchitectFoundation.Config.class);
-        setDescription(Localizer.dLocalize("architect", "foundation", "description"));
-        setDisplayName(Localizer.dLocalize("architect", "foundation", "name"));
+        setDescription(Localizer.component("architect", "foundation", "description"));
+        setDisplayName(Localizer.component("architect", "foundation", "name"));
         setIcon(Material.TINTED_GLASS);
         setInterval(988);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
         setInitialCost(getConfig().initialCost);
         setCostFactor(getConfig().costFactor);
-        blockPower = new WeakHashMap<>();
-        cooldowns = new WeakHashMap<>();
+        blockPower = new HashMap<>();
+        cooldowns = new HashMap<>();
         active = new HashSet<>();
         activeBlocks = new HashSet<>();
     }
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("architect", "foundation", "lore1")
-                + (getBlockPower(getLevelPercent(level))) + C.GRAY + " "
-                + Localizer.dLocalize("architect", "foundation", "lore2"));
+        v.addLore(Components.mini("<green><lore1><power><gray> <lore2>",
+                Placeholder.component("lore1", Localizer.component("architect", "foundation", "lore1")),
+                Placeholder.unparsed("power", Double.toString(getBlockPower(getLevelPercent(level)))),
+                Placeholder.component("lore2", Localizer.component("architect", "foundation", "lore2"))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -84,16 +90,13 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         if (!hasAdaptation(p)) {
             return;
         }
-        if (!canBlockPlace(p, p.getLocation().getBlock())) {
-            return;
-        }
         if (!e.getFrom().getBlock().equals(e.getTo().getBlock())) {
             return;
         }
         if (!this.active.contains(p.getUniqueId())) {
             return;
         }
-        int power = blockPower.get(p);
+        int power = blockPower.getOrDefault(p, 0);
 
         if (power <= 0) {
             return;
@@ -108,7 +111,7 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         locs.add(world.getBlockAt(l.clone().add(-0.3, -1, +0.3)));
 
         for (Block b : locs) {
-            if (addFoundation(b)) {
+            if (addFoundation(p, b)) {
                 power--;
             }
 
@@ -204,8 +207,16 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         }
     }
 
-    public boolean addFoundation(Block block) {
-        if (!block.getType().isAir()) {
+    @EventHandler
+    public void on(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        blockPower.remove(p);
+        cooldowns.remove(p);
+        active.remove(p.getUniqueId());
+    }
+
+    public boolean addFoundation(Player player, Block block) {
+        if (!block.getType().isAir() || !canBlockPlace(player, block)) {
             return false;
         }
 
@@ -213,10 +224,8 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
                 entity -> entity instanceof ItemFrame || entity instanceof Painting).isEmpty())
             return false;
 
-        J.s(() -> {
-            block.setBlockData(BLOCK);
-            activeBlocks.add(block);
-        });
+        block.setBlockData(BLOCK);
+        activeBlocks.add(block);
         SoundPlayer spw = SoundPlayer.of(block.getWorld());
         spw.play(block.getLocation(), Sound.BLOCK_DEEPSLATE_PLACE, 1.0f, 1.0f);
         if (getConfig().showParticles) {
@@ -224,23 +233,33 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
             vfxCuboidOutline(block, Particle.REVERSE_PORTAL);
             vfxCuboidOutline(block, Particle.ASH);
         }
-        J.a(() -> removeFoundation(block), 3 * 20);
+        J.s(() -> removeFoundation(block), 3 * 20);
         return true;
     }
 
     public void removeFoundation(Block block) {
+        if (!activeBlocks.remove(block)) {
+            return;
+        }
         if (!block.getBlockData().equals(BLOCK)) {
             return;
         }
 
-        J.s(() -> {
-            block.setBlockData(AIR);
-            activeBlocks.remove(block);
-            SoundPlayer spw = SoundPlayer.of(block.getWorld());
-            spw.play(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
-        });
+        block.setBlockData(AIR);
+        SoundPlayer spw = SoundPlayer.of(block.getWorld());
+        spw.play(block.getLocation(), Sound.BLOCK_DEEPSLATE_BREAK, 1.0f, 1.0f);
         if (getConfig().showParticles) {
             vfxCuboidOutline(block, Particle.ENCHANT);
+        }
+    }
+
+    @EventHandler
+    public void on(WorldUnloadEvent event) {
+        UUID worldId = event.getWorld().getUID();
+        for (Block block : new HashSet<>(activeBlocks)) {
+            if (block.getWorld().getUID().equals(worldId)) {
+                removeFoundation(block);
+            }
         }
     }
 
@@ -256,28 +275,28 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
     @Override
     public void onTick() {
         for (Player i : Adapt.instance.getAdaptServer().getAdaptPlayers()) {
-            if (!hasAdaptation(i)) {
-                continue;
-            }
-
-            boolean ready = hasCooldown(i);
-            int availablePower = getBlockPower(getLevelPercent(i));
-            blockPower.compute(i, (k, v) -> {
-                if ((k == null || v == null) || (ready && v != availablePower)) {
-                    if (i == null) {
-                        return 0;
-                    }
-                    final var world = i.getWorld();
-                    final var location = i.getLocation();
-
-                    SoundPlayer spw = SoundPlayer.of(world);
-                    spw.play(location, Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 10.0f);
-                    spw.play(location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 0.81f);
-
-                    return availablePower;
+                if (!hasAdaptation(i)) {
+                    continue;
                 }
-                return v;
-            });
+
+                boolean ready = hasCooldown(i);
+                int availablePower = getBlockPower(getLevelPercent(i));
+                blockPower.compute(i, (k, v) -> {
+                    if ((k == null || v == null) || (ready && v != availablePower)) {
+                        if (i == null) {
+                            return 0;
+                        }
+                        final var world = i.getWorld();
+                        final var location = i.getLocation();
+
+                        SoundPlayer spw = SoundPlayer.of(world);
+                        spw.play(location, Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 10.0f);
+                        spw.play(location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 0.81f);
+
+                        return availablePower;
+                    }
+                    return v;
+                });
         }
     }
 
@@ -289,6 +308,18 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
         }
 
         return !cooldowns.containsKey(i);
+    }
+
+    @Override
+    public void unregister() {
+        for (Block block : new HashSet<>(activeBlocks)) {
+            removeFoundation(block);
+        }
+        activeBlocks.clear();
+        blockPower.clear();
+        cooldowns.clear();
+        active.clear();
+        super.unregister();
     }
 
     @Override

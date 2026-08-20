@@ -19,19 +19,22 @@
 package com.volmit.adapt.util;
 
 import com.volmit.adapt.util.collection.KList;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class UIElement implements Element {
     private final String id;
-    private final KList<String> lore;
+    private final KList<Component> lore;
     private MaterialBlock material;
     private CustomModel model;
     private boolean enchanted;
-    private String name;
+    private Component name;
     private double progress;
     private boolean bg;
     private Callback<Element> eLeft;
@@ -82,12 +85,12 @@ public class UIElement implements Element {
     }
 
     @Override
-    public String getName() {
+    public Component getName() {
         return name;
     }
 
     @Override
-    public UIElement setName(String name) {
+    public UIElement setName(Component name) {
         this.name = name;
         return this;
     }
@@ -104,7 +107,7 @@ public class UIElement implements Element {
     }
 
     @Override
-    public KList<String> getLore() {
+    public KList<Component> getLore() {
         return lore;
     }
 
@@ -177,8 +180,11 @@ public class UIElement implements Element {
     }
 
     @Override
-    public Element addLore(String loreLine) {
-        getLore().add(wrapWordsWithFormatting(loreLine.replaceAll("\\Q\n\\E", " "), 52).split("\\Q\n\\E"));
+    public Element addLore(Component loreLine) {
+        String legacy = Components.legacyString(loreLine);
+        for (String line : wrapWordsWithFormatting(legacy.replace("\n", " "), 52).split("\n")) {
+            getLore().add(Components.legacy(line));
+        }
         return this;
     }
 
@@ -187,7 +193,7 @@ public class UIElement implements Element {
         String last = null;
         for (String i : Form.wrapWords(f, l).split("\\Q\n\\E")) {
             if (last != null) {
-                sb.append("\n").append(C.getLastColors(last)).append(i);
+                sb.append("\n").append(lastLegacyColors(last)).append(i);
             } else {
                 sb.append("\n").append(i);
             }
@@ -196,6 +202,26 @@ public class UIElement implements Element {
         }
 
         return sb.substring(1);
+    }
+
+    private static String lastLegacyColors(String input) {
+        StringBuilder result = new StringBuilder();
+        for (int index = input.length() - 1; index >= 0; index--) {
+            if (input.charAt(index) != LegacyComponentSerializer.SECTION_CHAR || index == input.length() - 1) {
+                continue;
+            }
+
+            char code = Character.toLowerCase(input.charAt(index + 1));
+            if ("0123456789abcdefklmnor".indexOf(code) < 0) {
+                continue;
+            }
+
+            result.insert(0, LegacyComponentSerializer.SECTION_CHAR + String.valueOf(code));
+            if ("0123456789abcdefr".indexOf(code) >= 0) {
+                break;
+            }
+        }
+        return result.toString();
     }
 
     @Override
@@ -220,19 +246,20 @@ public class UIElement implements Element {
         return count;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public ItemStack computeItemStack() {
         try {
             ItemStack is = getModel() != null ? getModel().toItemStack() : new ItemStack(getMaterial().getMaterial());
             is.setAmount(getCount());
-            is.setDurability(getEffectiveDurability());
 
             ItemMeta im = is.getItemMeta();
             if (im == null)
                 return is;
-            im.setDisplayName(getName());
-            im.setLore(getLore().copy());
+            if (im instanceof Damageable damageable) {
+                damageable.setDamage(getEffectiveDurability());
+            }
+            im.displayName(getName() == null ? null : Components.itemColors(getName()));
+            im.lore(getLore().stream().map(Components::itemColors).toList());
             if (isEnchanted()) {
                 im.addEnchant(Enchantment.UNBREAKING, 1, true);
             }

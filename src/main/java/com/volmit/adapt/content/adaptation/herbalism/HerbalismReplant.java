@@ -18,12 +18,15 @@
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
+import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.api.world.PlayerAdaptation;
-import com.volmit.adapt.api.world.PlayerSkillLine;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.skill.SkillHerbalism;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -36,15 +39,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> {
 
     public HerbalismReplant() {
         super("herbalism-replant");
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("herbalism", "replant", "description"));
-        setDisplayName(Localizer.dLocalize("herbalism", "replant", "name"));
+        setDescription(Localizer.component("herbalism", "replant", "description"));
+        setDisplayName(Localizer.component("herbalism", "replant", "name"));
         setIcon(Material.PUMPKIN_SEEDS);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -55,7 +60,9 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + "+ " + getRadius(level) + C.GRAY + Localizer.dLocalize("herbalism", "replant", "lore1"));
+        v.addLore(Components.mini("<green>+ <radius></green><gray><lore></gray>",
+                Placeholder.unparsed("radius", Float.toString(getRadius(level))),
+                Placeholder.component("lore", Localizer.component("herbalism", "replant", "lore1"))));
     }
 
     private int getCooldown(double factor, int level) {
@@ -70,10 +77,12 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
         return lvl - getConfig().radiusSub;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(PlayerInteractEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Player p = e.getPlayer();
-        SoundPlayer spw = SoundPlayer.of(p.getWorld());
         if (e.getClickedBlock() == null) {
             return;
         }
@@ -85,21 +94,28 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
             return;
         }
 
-        int lvl = getLevel(p);
+        if (!hasAdaptation(p)) {
+            return;
+        }
 
+        int lvl = getLevel(p);
         if (lvl > 0) {
             ItemStack right = p.getInventory().getItemInMainHand();
             ItemStack left = p.getInventory().getItemInOffHand();
+            boolean useOffHand;
+            Material toolType;
 
             if (isTool(left) && isHoe(left) && !p.hasCooldown(left.getType())) {
-                damageOffHand(p, 1 + ((lvl - 1) * 7));
-                p.setCooldown(left.getType(), getCooldown(getLevelPercent(p), getLevel(p)));
+                useOffHand = true;
+                toolType = left.getType();
             } else if (isTool(right) && isHoe(right) && !p.hasCooldown(right.getType())) {
-                damageHand(p, 1 + ((lvl - 1) * 7));
-                p.setCooldown(right.getType(), getCooldown(getLevelPercent(p), getLevel(p)));
+                useOffHand = false;
+                toolType = right.getType();
             } else {
                 return;
             }
+
+            AdaptPlayer expectedPlayer = getPlayer(p);
 
             if (lvl > 1) {
                 Cuboid c = new Cuboid(e.getClickedBlock().getLocation().clone().add(0.5, 0.5, 0.5));
@@ -110,62 +126,102 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
                 c = c.expand(Cuboid.CuboidDirection.East, Math.round(getRadius(lvl)));
                 c = c.expand(Cuboid.CuboidDirection.West, Math.round(getRadius(lvl)));
 
-                for (Block i : c) {
-                    J.s(() -> hit(p, i), M.irand(1, 6));
+                List<Block> crops = new ArrayList<>();
+                for (Block block : c) {
+                    if (block.getBlockData() instanceof Ageable crop && crop.getAge() > 0
+                            && canBlockBreak(p, block)) {
+                        crops.add(block);
+                    }
                 }
-                spw.play(p.getLocation(), Sound.ITEM_SHOVEL_FLATTEN, 1f, 0.66f);
-                spw.play(p.getLocation(), Sound.BLOCK_BAMBOO_SAPLING_BREAK, 1f, 0.66f);
-                if (getConfig().showParticles) {
-                    p.spawnParticle(Particle.HAPPY_VILLAGER, p.getLocation().clone().add(0.5, 0.5, 0.5),
-                            getLevel(p) * 3, 0.3 * getLevel(p), 0.3 * getLevel(p), 0.3 * getLevel(p), 0.9);
+                if (!crops.isEmpty()) {
+                    UUID playerId = p.getUniqueId();
+                    J.s(() -> {
+                        Player online = Bukkit.getPlayer(playerId);
+                        if (online == null || !online.isOnline() || !hasAdaptation(online)
+                                || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                                || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                            return;
+                        }
+                        ItemStack currentHoe = useOffHand
+                                ? online.getInventory().getItemInOffHand()
+                                : online.getInventory().getItemInMainHand();
+                        if (currentHoe.getType() != toolType || !isTool(currentHoe) || !isHoe(currentHoe)) {
+                            return;
+                        }
+                        boolean harvested = false;
+                        for (Block crop : crops) {
+                            if (canBlockBreak(online, crop)) {
+                                harvested |= hit(online, crop, lvl);
+                            }
+                        }
+                        if (harvested) {
+                            consumeHoe(online, useOffHand, toolType, lvl);
+                            playHarvestEffects(online, lvl);
+                        }
+                    }, M.irand(1, 6));
+                } else {
+                    return;
                 }
             } else {
-                hit(p, e.getClickedBlock());
+                if (!(e.getClickedBlock().getBlockData() instanceof Ageable crop) || crop.getAge() <= 0
+                        || !canBlockBreak(p, e.getClickedBlock())) {
+                    return;
+                }
+                if (hit(p, e.getClickedBlock(), lvl)) {
+                    consumeHoe(p, useOffHand, toolType, lvl);
+                }
             }
         }
     }
 
-    private void hit(Player p, Block b) {
-        if (b != null && b.getBlockData() instanceof Ageable aa && hasAdaptation(p)) {
+    private void playHarvestEffects(Player player, int level) {
+        SoundPlayer sounds = SoundPlayer.of(player.getWorld());
+        sounds.play(player.getLocation(), Sound.ITEM_SHOVEL_FLATTEN, 1f, 0.66f);
+        sounds.play(player.getLocation(), Sound.BLOCK_BAMBOO_SAPLING_BREAK, 1f, 0.66f);
+        if (getConfig().showParticles) {
+            player.spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation().clone().add(0.5, 0.5, 0.5),
+                    level * 3, 0.3 * level, 0.3 * level, 0.3 * level, 0.9);
+        }
+    }
+
+    private void consumeHoe(Player player, boolean offHand, Material toolType, int level) {
+        if (offHand) {
+            damageOffHand(player, 1 + ((level - 1) * 7));
+        } else {
+            damageHand(player, 1 + ((level - 1) * 7));
+        }
+        player.setCooldown(toolType, getCooldown(getLevelPercent(player), level));
+    }
+
+    private boolean hit(Player p, Block b, int level) {
+        if (b != null && canBlockBreak(p, b) && b.getBlockData() instanceof Ageable aa) {
             if (aa.getAge() == 0) {
-                return;
+                return false;
+            }
+
+            int age = aa.getAge();
+            if (!p.breakBlock(b)) {
+                return false;
             }
 
             xp(p, b.getLocation().clone().add(0.5, 0.5, 0.5),
-                    ((SkillHerbalism.Config) getSkill().getConfig()).harvestPerAgeXP * aa.getAge());
+                    ((SkillHerbalism.Config) getSkill().getConfig()).harvestPerAgeXP * age);
             xp(p, b.getLocation().clone().add(0.5, 0.5, 0.5),
                     ((SkillHerbalism.Config) getSkill().getConfig()).plantCropSeedsXP);
-            PlayerSkillLine line = getPlayer(p).getData().getSkillLineNullable("herbalism");
-            PlayerAdaptation adaptation = line != null
-                    ? line.getAdaptation("herbalism-drop-to-inventory") : null;
-            if (adaptation != null && adaptation.getLevel() > 0) {
-                Collection<ItemStack> items = b.getDrops();
-                SoundPlayer sp = SoundPlayer.of(p);
-                for (ItemStack i : items) {
-                    sp.play(p.getLocation(), Sound.BLOCK_CALCITE_HIT, 0.05f, 0.01f);
-                    i.setAmount(1);
-                    if (!p.getInventory().addItem(i).isEmpty()) {
-                        p.getWorld().dropItem(p.getLocation(), i);
-                    }
-                }
-                aa.setAge(0);
-                J.s(() -> b.setBlockData(aa, true));
-
-            } else {
-                p.breakBlock(b);
-            }
 
             aa.setAge(0);
-            J.s(() -> b.setBlockData(aa, true));
+            b.setBlockData(aa, true);
 
             getPlayer(p).getData().addStat("harvest.blocks", 1);
             getPlayer(p).getData().addStat("harvest.planted", 1);
 
-            if (M.r(1D / (double) getLevel(p))) {
+            if (M.r(1D / (double) level)) {
                 SoundPlayer spw = SoundPlayer.of(p.getWorld());
                 spw.play(b.getLocation(), Sound.ITEM_CROP_PLANT, 1f, 0.7f);
             }
+            return true;
         }
+        return false;
     }
 
     @Override

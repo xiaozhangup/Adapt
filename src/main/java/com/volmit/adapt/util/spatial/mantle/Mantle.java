@@ -1,25 +1,9 @@
 /*
  * Spatial is a spatial api for Java...
  * Copyright (c) 2021 Arcane Arts
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 package com.volmit.adapt.util.spatial.mantle;
 
-import com.volmit.adapt.util.BurstExecutor;
-import com.volmit.adapt.util.MultiBurst;
 import com.volmit.adapt.util.spatial.matter.Matter;
 import com.volmit.adapt.util.spatial.matter.MatterSlice;
 import com.volmit.adapt.util.spatial.parallel.HyperLock;
@@ -29,411 +13,646 @@ import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.io.UncheckedIOException;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
- * The mantle can store any type of data slice anywhere and manage regions & IO
- * on it's own. This class is fully thread safe read & writeNodeData
+ * Region-backed spatial storage. Disk IO is owned by one serial executor;
+ * region locks protect in-memory mutations and lifecycle transitions.
  */
 public class Mantle {
     private final File dataFolder;
+    private final int minHeight;
+    private final int maxHeight;
     private final int worldHeight;
-    private final Map<Long, Long> lastUse;
+    private final Map<Long, Long> lastUse = new ConcurrentHashMap<>();
     @Getter
-    private final Map<Long, MantleRegion> loadedRegions;
-    private final HyperLock hyperLock;
-    private final Set<Long> unload;
-    private final AtomicBoolean closed;
-    private final MultiBurst ioBurst;
-    private final AtomicBoolean io;
+    private final Map<Long, MantleRegion> loadedRegions = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<MantleRegion>> loadingRegions = new ConcurrentHashMap<>();
+    private final HyperLock hyperLock = new HyperLock();
+    private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final AtomicBoolean saveQueued = new AtomicBoolean(false);
+    private final AtomicBoolean trimQueued = new AtomicBoolean(false);
+    private final ReentrantReadWriteLock lifecycleLock = new ReentrantReadWriteLock();
+    private final AtomicReference<Thread> ioThread = new AtomicReference<>();
+    private final Object submissionGate = new Object();
+    private final CompletableFuture<Void> predecessorClose;
+    private final ExecutorService ioExecutor;
+    private volatile CompletableFuture<Void> closeFuture;
 
-    /**
-     * Create a new mantle
-     *
-     * @param dataFolder
-     *            the data folder
-     * @param worldHeight
-     *            the world's height (in blocks)
-     */
+    /** Backwards-compatible zero-based layout used by RawSpace. */
     public Mantle(File dataFolder, int worldHeight) {
-        this.hyperLock = new HyperLock();
-        this.closed = new AtomicBoolean(false);
-        this.dataFolder = dataFolder;
-        this.worldHeight = worldHeight;
-        this.io = new AtomicBoolean(false);
-        unload = new HashSet<>();
-        loadedRegions = new HashMap<>();
-        lastUse = new HashMap<>();
-        ioBurst = MultiBurst.virtualBurst;
+        this(dataFolder, 0, worldHeight);
+    }
+
+    /** Creates storage for the half-open world Y range [minHeight, maxHeight). */
+    public Mantle(File dataFolder, int minHeight, int maxHeight) {
+        this(dataFolder, minHeight, maxHeight, CompletableFuture.completedFuture(null));
     }
 
     /**
-     * Get the file for a region
-     *
-     * @param folder
-     *            the folder
-     * @param x
-     *            the x coord
-     * @param z
-     *            the z coord
-     * @return the file
+     * Creates storage after a previous owner of the same folder has finished its
+     * final flush. Waiting happens only on this Mantle's IO lane.
      */
+    public Mantle(File dataFolder, int minHeight, int maxHeight, CompletableFuture<Void> predecessorClose) {
+        MantleHeight.validate(minHeight, maxHeight);
+        this.dataFolder = dataFolder;
+        this.minHeight = minHeight;
+        this.maxHeight = maxHeight;
+        this.worldHeight = maxHeight - minHeight;
+        this.predecessorClose = predecessorClose;
+        this.ioExecutor = Executors.newSingleThreadExecutor(r -> {
+            Thread thread = new Thread(r, "Adapt-Mantle-" + Integer.toHexString(dataFolder.hashCode()));
+            thread.setDaemon(true);
+            ioThread.set(thread);
+            return thread;
+        });
+    }
+
+    /** Legacy (zero-based) region filename retained for migration. */
     public static File fileForRegion(File folder, int x, int z) {
         return fileForRegion(folder, key(x, z));
     }
 
-    /**
-     * Get the file for the given region
-     *
-     * @param folder
-     *            the data folder
-     * @param key
-     *            the region key
-     * @return the file
-     */
+    /** Legacy (zero-based) region filename retained for migration. */
     public static File fileForRegion(File folder, Long key) {
-        File f = new File(folder, "p." + key + ".ttp");
-        if (!f.getParentFile().exists()) {
-            f.getParentFile().mkdirs();
-        }
-        return f;
+        return new File(folder, "p." + key + ".ttp");
     }
 
-    /**
-     * Get the long value representing a chunk or region coordinate
-     *
-     * @param x
-     *            the x
-     * @param z
-     *            the z
-     * @return the value
-     */
+    private static File currentFileForRegion(File folder, long key) {
+        return new File(folder, "p2." + key + ".ttp");
+    }
+
     public static Long key(int x, int z) {
         return CompressedNumbers.i2(x, z);
     }
 
+    /** Destructive clear keeps its historical synchronous semantics. */
     public void clear() {
-        loadedRegions.clear();
-        lastUse.clear();
-        unload.clear();
-        hyperLock.clear();
-
-        if (dataFolder.exists() && dataFolder.isDirectory()) {
-            for (File i : dataFolder.listFiles()) {
-                i.delete();
+        lifecycleLock.writeLock().lock();
+        try {
+            ensureOpen();
+            loadedRegions.clear();
+            lastUse.clear();
+            hyperLock.clear();
+            File[] files = dataFolder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (!file.delete()) {
+                        file.deleteOnExit();
+                    }
+                }
             }
+            if (dataFolder.exists() && !dataFolder.delete()) {
+                dataFolder.deleteOnExit();
+            }
+        } finally {
+            lifecycleLock.writeLock().unlock();
         }
+    }
 
-        dataFolder.delete();
+    /** Queues a cold region read without blocking the caller. */
+    public void preloadChunk(int chunkX, int chunkZ) {
+        if (closed.get()) {
+            return;
+        }
+        loadRegionAsync(chunkX >> 5, chunkZ >> 5, false).exceptionally(error -> {
+            System.err.println("[Adapt-Mantle] Failed to preload region for chunk " + chunkX + "," + chunkZ);
+            error.printStackTrace();
+            return null;
+        });
     }
 
     public MantleChunk getChunk(int x, int z) {
-        return get(x >> 5, z >> 5).getOrCreate(x & 31, z & 31);
+        return withRegion(x >> 5, z >> 5, true, region -> region.getOrCreate(x & 31, z & 31));
     }
 
     public void deleteChunk(int x, int z) {
-        get(x >> 5, z >> 5).delete(x & 31, z & 31);
+        withRegion(x >> 5, z >> 5, false, region -> {
+            region.delete(x & 31, z & 31);
+            return null;
+        });
     }
 
-    /**
-     * Check very quickly if a tectonic plate exists via cached or the file system
-     *
-     * @param x
-     *            the x region coordinate
-     * @param z
-     *            the z region coordinate
-     * @return true if it exists
-     */
     public boolean hasTectonicPlate(int x, int z) {
-        Long k = key(x, z);
-        return loadedRegions.containsKey(k) || fileForRegion(dataFolder, k).exists();
-    }
-
-    /**
-     * Iterate data in a chunk
-     *
-     * @param x
-     *            the chunk x
-     * @param z
-     *            the chunk z
-     * @param type
-     *            the type of data to iterate
-     * @param iterator
-     *            the iterator (x,y,z,data) -> do stuff
-     * @param <T>
-     *            the type of data to iterate
-     */
-    public <T> void iterateChunk(int x, int z, Class<T> type, Consume.Four<Integer, Integer, Integer, T> iterator) {
-        if (!hasTectonicPlate(x >> 5, z >> 5)) {
-            return;
-        }
-
-        get(x >> 5, z >> 5).getOrCreate(x & 31, z & 31).iterate(type, iterator);
-    }
-
-    /**
-     * Set data T at the given block position. This method will attempt to find a
-     * Tectonic Plate either by loading it or creating a new one. This method uses
-     * the hyper lock packaged with each Mantle. The hyperlock allows locking of
-     * multiple threads at a single region while still allowing other threads to
-     * continue reading & writing other regions. Hyperlocks are slow sync, but in
-     * multicore environments, they drastically speed up loading & saving large
-     * counts of plates
-     *
-     * @param x
-     *            the block's x coordinate
-     * @param y
-     *            the block's y coordinate
-     * @param z
-     *            the block's z coordinate
-     * @param t
-     *            the data to set at the block
-     * @param <T>
-     *            the type of data (generic method)
-     */
-
-    public <T> void set(int x, int y, int z, T t) {
         if (closed.get()) {
-            throw new RuntimeException("The Mantle is closed");
+            return false;
         }
-
-        if (y < 0 || y >= worldHeight) {
-            return;
-        }
-
-        Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5).getOrCreate((x >> 4) & 31, (z >> 4) & 31).getOrCreate(y >> 4);
-        matter.slice(matter.getClass(t)).set(x & 15, y & 15, z & 15, t);
+        long regionKey = key(x, z);
+        return loadedRegions.containsKey(regionKey)
+                || currentFileForRegion(dataFolder, regionKey).exists()
+                || fileForRegion(dataFolder, regionKey).exists();
     }
 
-    public <T> void remove(int x, int y, int z, Class<T> t) {
-        if (closed.get()) {
-            throw new RuntimeException("The Mantle is closed");
-        }
-
-        if (y < 0 || y >= worldHeight) {
-            return;
-        }
-
-        Matter matter = get((x >> 4) >> 5, (z >> 4) >> 5).getOrCreate((x >> 4) & 31, (z >> 4) & 31).getOrCreate(y >> 4);
-        matter.slice(t).set(x & 15, y & 15, z & 15, null);
+    public <T> void iterateChunk(int x, int z, Class<T> type,
+            Consume.Four<Integer, Integer, Integer, T> iterator) {
+        withRegion(x >> 5, z >> 5, false, region -> {
+            MantleChunk chunk = region.get(x & 31, z & 31);
+            if (chunk != null) {
+                chunk.iterate(type, (xx, yy, zz, value) -> iterator.accept(xx, yy + minHeight, zz, value));
+            }
+            return null;
+        });
     }
 
-    /**
-     * Gets the data tat the current block position This method will attempt to find
-     * a Tectonic Plate either by loading it or creating a new one. This method uses
-     * the hyper lock packaged with each Mantle. The hyperlock allows locking of
-     * multiple threads at a single region while still allowing other threads to
-     * continue reading & writing other regions. Hyperlocks are slow sync, but in
-     * multicore environments, they drastically speed up loading & saving large
-     * counts of plates
-     *
-     * @param x
-     *            the block's x coordinate
-     * @param y
-     *            the block's y coordinate
-     * @param z
-     *            the block's z coordinate
-     * @param t
-     *            the class representing the type of data being requested
-     * @param <T>
-     *            the type assumed from the provided class
-     * @return the returned result (or null) if it doesnt exist
-     */
+    public <T> void set(int x, int y, int z, T value) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
+            return;
+        }
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        withRegion(chunkX >> 5, chunkZ >> 5, true, region -> {
+            Matter matter = region.getOrCreate(chunkX & 31, chunkZ & 31).getOrCreate(internalY >> 4);
+            matter.slice(matter.getClass(value)).set(x & 15, internalY & 15, z & 15, value);
+            return null;
+        });
+    }
+
+    public <T> void remove(int x, int y, int z, Class<T> type) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
+            return;
+        }
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        withRegion(chunkX >> 5, chunkZ >> 5, false, region -> {
+            MantleChunk chunk = region.get(chunkX & 31, chunkZ & 31);
+            Matter matter = chunk == null ? null : chunk.get(internalY >> 4);
+            MatterSlice<T> slice = matter == null ? null : matter.getSlice(type);
+            if (slice != null) {
+                slice.set(x & 15, internalY & 15, z & 15, null);
+            }
+            return null;
+        });
+    }
+
     @SuppressWarnings("unchecked")
-
-    public <T> T get(int x, int y, int z, Class<T> t) {
-        if (closed.get()) {
-            throw new RuntimeException("The Mantle is closed");
-        }
-
-        if (!hasTectonicPlate((x >> 4) >> 5, (z >> 4) >> 5)) {
+    public <T> T get(int x, int y, int z, Class<T> type) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
             return null;
         }
-
-        if (y < 0 || y >= worldHeight) {
-            return null;
-        }
-
-        return (T) get((x >> 4) >> 5, (z >> 4) >> 5).getOrCreate((x >> 4) & 31, (z >> 4) & 31).getOrCreate(y >> 4)
-                .slice(t).get(x & 15, y & 15, z & 15);
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        return withRegion(chunkX >> 5, chunkZ >> 5, false, region -> {
+            MantleChunk chunk = region.get(chunkX & 31, chunkZ & 31);
+            Matter matter = chunk == null ? null : chunk.get(internalY >> 4);
+            MatterSlice<T> slice = matter == null ? null : matter.getSlice(type);
+            return slice == null ? null : (T) slice.get(x & 15, internalY & 15, z & 15);
+        });
     }
 
-    /**
-     * Is this mantle closed
-     *
-     * @return true if it is
-     */
+    public <T> CompletableFuture<T> getAsync(int x, int y, int z, Class<T> type) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
+            return CompletableFuture.completedFuture(null);
+        }
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        return withRegionAsync(chunkX >> 5, chunkZ >> 5, false, region -> {
+            MantleChunk chunk = region.get(chunkX & 31, chunkZ & 31);
+            Matter matter = chunk == null ? null : chunk.get(internalY >> 4);
+            MatterSlice<T> slice = matter == null ? null : matter.getSlice(type);
+            return slice == null ? null : slice.get(x & 15, internalY & 15, z & 15);
+        });
+    }
+
+    public <T> CompletableFuture<Void> setAsync(int x, int y, int z, T value) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
+            return CompletableFuture.completedFuture(null);
+        }
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        return withRegionAsync(chunkX >> 5, chunkZ >> 5, true, region -> {
+            Matter matter = region.getOrCreate(chunkX & 31, chunkZ & 31).getOrCreate(internalY >> 4);
+            matter.slice(matter.getClass(value)).set(x & 15, internalY & 15, z & 15, value);
+            return null;
+        });
+    }
+
+    public <T> CompletableFuture<Void> removeAsync(int x, int y, int z, Class<T> type) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
+            return CompletableFuture.completedFuture(null);
+        }
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        return withRegionAsync(chunkX >> 5, chunkZ >> 5, false, region -> {
+            MantleChunk chunk = region.get(chunkX & 31, chunkZ & 31);
+            Matter matter = chunk == null ? null : chunk.get(internalY >> 4);
+            MatterSlice<T> slice = matter == null ? null : matter.getSlice(type);
+            if (slice != null) {
+                slice.set(x & 15, internalY & 15, z & 15, null);
+            }
+            return null;
+        });
+    }
+
+    /** Atomically updates one value under its region lock on the IO lane. */
+    public <T> CompletableFuture<T> updateAsync(int x, int y, int z, Class<T> type, UnaryOperator<T> update) {
+        int internalY = MantleHeight.toInternalY(y, minHeight, maxHeight);
+        if (internalY < 0) {
+            return CompletableFuture.completedFuture(null);
+        }
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        return withRegionAsync(chunkX >> 5, chunkZ >> 5, true, region -> {
+            MantleChunk chunk = region.get(chunkX & 31, chunkZ & 31);
+            Matter matter = chunk == null ? null : chunk.get(internalY >> 4);
+            MatterSlice<T> existingSlice = matter == null ? null : matter.getSlice(type);
+            T current = existingSlice == null ? null : existingSlice.get(x & 15, internalY & 15, z & 15);
+            T updated = update.apply(current);
+            if (updated == null) {
+                if (existingSlice != null) {
+                    existingSlice.set(x & 15, internalY & 15, z & 15, null);
+                }
+                return null;
+            }
+
+            Matter target = region.getOrCreate(chunkX & 31, chunkZ & 31).getOrCreate(internalY >> 4);
+            MatterSlice<T> targetSlice = target.slice(type);
+            targetSlice.set(x & 15, internalY & 15, z & 15, updated);
+            return updated;
+        });
+    }
+
     public boolean isClosed() {
         return closed.get();
     }
 
-    /**
-     * Closes the Mantle. By closing the mantle, you can no longer read or
-     * writeNodeData any data to the mantle or it's Tectonic Plates. Closing will
-     * also flush any loaded regions to the disk in parallel.
-     */
-    public synchronized void close() {
-        if (closed.get()) {
+    /** Starts a final ordered flush and returns immediately. */
+    public void close() {
+        closeAsync();
+    }
+
+    public synchronized CompletableFuture<Void> closeAsync() {
+        synchronized (submissionGate) {
+            if (closeFuture != null) {
+                return closeFuture;
+            }
+            closed.set(true);
+            // The gate makes this final flush queue strictly after every accepted
+            // async mutation and prevents later mutations from entering the lane.
+            closeFuture = submitIo(() -> {
+                lifecycleLock.writeLock().lock();
+                try {
+                    saveAllUnlocked();
+                    loadedRegions.clear();
+                    lastUse.clear();
+                    loadingRegions.clear();
+                    hyperLock.clear();
+                } finally {
+                    lifecycleLock.writeLock().unlock();
+                }
+                return null;
+            });
+            closeFuture.whenComplete((ignored, error) -> ioExecutor.shutdown());
+            return closeFuture;
+        }
+    }
+
+    /** Used only by final plugin shutdown, after gameplay has stopped. */
+    public void closeAndWait() {
+        try {
+            closeAsync().get(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while flushing Mantle", e);
+        } catch (ExecutionException | TimeoutException e) {
+            throw new IllegalStateException("Failed to flush Mantle during shutdown", e);
+        }
+    }
+
+    /** Queues idle-region persistence and unloading on the IO lane. */
+    public void trim(long idleDuration) {
+        if (closed.get() || !trimQueued.compareAndSet(false, true)) {
             return;
         }
-
-        closed.set(true);
-        saveAll();
-        loadedRegions.clear();
-    }
-
-    /**
-     * Save & unload regions that have not been used for more than the specified
-     * amount of milliseconds
-     *
-     * @param idleDuration
-     *            the duration
-     */
-    public synchronized void trim(long idleDuration) {
-        if (closed.get()) {
-            throw new RuntimeException("The Mantle is closed");
-        }
-
-        io.set(true);
-        unload.clear();
-
-        for (Long i : lastUse.keySet()) {
-            hyperLock.withLong(i, () -> {
-                if (System.currentTimeMillis() - lastUse.get(i) >= idleDuration) {
-                    unload.add(i);
-                }
-            });
-        }
-
-        for (Long i : unload) {
-            hyperLock.withLong(i, () -> {
-                MantleRegion m = loadedRegions.remove(i);
-                lastUse.remove(i);
-
-                try {
-                    m.write(fileForRegion(dataFolder, i));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        io.set(false);
-    }
-
-    /**
-     * This retreives a future of the Tectonic Plate at the given coordinates. All
-     * methods accessing tectonic plates should go through this method
-     *
-     * @param x
-     *            the region x
-     * @param z
-     *            the region z
-     * @return the future of a tectonic plate.
-     */
-    private MantleRegion get(int x, int z) {
-        if (io.get()) {
+        submitIo(() -> {
             try {
-                return getSafe(x, z).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+                trimOnIoThread(idleDuration);
+            } finally {
+                trimQueued.set(false);
+            }
+            return null;
+        }).exceptionally(error -> {
+            System.err.println("[Adapt-Mantle] Asynchronous trim failed");
+            error.printStackTrace();
+            return null;
+        });
+    }
+
+    private void trimOnIoThread(long idleDuration) {
+        if (closed.get()) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        lifecycleLock.readLock().lock();
+        try {
+            for (Long regionKey : new ArrayList<>(lastUse.keySet())) {
+                hyperLock.withLong(regionKey, () -> {
+                    Long used = lastUse.get(regionKey);
+                    MantleRegion region = loadedRegions.get(regionKey);
+                    if (used == null || region == null || now - used < idleDuration) {
+                        return;
+                    }
+                    try {
+                        writeRegion(regionKey, region);
+                        if (lastUse.get(regionKey) == used) {
+                            loadedRegions.remove(regionKey, region);
+                            lastUse.remove(regionKey, used);
+                        }
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+            }
+        } finally {
+            lifecycleLock.readLock().unlock();
+        }
+        lifecycleLock.writeLock().lock();
+        try {
+            hyperLock.clear();
+        } finally {
+            lifecycleLock.writeLock().unlock();
+        }
+    }
+
+    /** Queues a coalesced snapshot flush on the IO lane. */
+    public void saveAll() {
+        if (closed.get() || !saveQueued.compareAndSet(false, true)) {
+            return;
+        }
+        submitIo(() -> {
+            try {
+                if (closed.get()) {
+                    return null;
+                }
+                lifecycleLock.readLock().lock();
+                try {
+                    saveAllUnlocked();
+                } finally {
+                    lifecycleLock.readLock().unlock();
+                }
+                return null;
+            } finally {
+                saveQueued.set(false);
+            }
+        }).exceptionally(error -> {
+            System.err.println("[Adapt-Mantle] Asynchronous save failed");
+            error.printStackTrace();
+            return null;
+        });
+    }
+
+    /** Runs only on the Mantle IO lane, with at least a lifecycle read lock. */
+    private void saveAllUnlocked() {
+        RuntimeException failure = null;
+        for (Map.Entry<Long, MantleRegion> entry : new ArrayList<>(loadedRegions.entrySet())) {
+            try {
+                hyperLock.withLong(entry.getKey(), () -> {
+                    MantleRegion current = loadedRegions.get(entry.getKey());
+                    if (current == null) {
+                        return;
+                    }
+                    try {
+                        writeRegion(entry.getKey(), current);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+            } catch (UncheckedIOException e) {
+                if (failure == null) {
+                    failure = new IllegalStateException("One or more Mantle regions could not be saved", e);
+                } else {
+                    failure.addSuppressed(e);
+                }
             }
         }
-
-        MantleRegion p = loadedRegions.get(key(x, z));
-
-        if (p != null) {
-            return p;
+        if (failure != null) {
+            throw failure;
         }
-
-        try {
-            return getSafe(x, z).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return get(x, z);
     }
 
     /**
-     * This retreives a future of the Tectonic Plate at the given coordinates. All
-     * methods accessing tectonic plates should go through this method
-     *
-     * @param x
-     *            the region x
-     * @param z
-     *            the region z
-     * @return the future of a tectonic plate.
+     * Cold reads retain the synchronous API, but the disk access itself executes
+     * on the IO lane. Chunk-load prefetch normally resolves it before gameplay.
      */
-    private Future<MantleRegion> getSafe(int x, int z) {
-        Long k = key(x, z);
-        MantleRegion p = loadedRegions.get(k);
-
-        if (p != null) {
-            lastUse.put(k, System.currentTimeMillis());
-            return CompletableFuture.completedFuture(p);
-        }
-
-        return ioBurst.getService().submit(() -> hyperLock.withResult(x, z, () -> {
-            lastUse.put(k, System.currentTimeMillis());
-            MantleRegion region = loadedRegions.get(k);
-
-            if (region != null) {
-                return region;
-            }
-
-            File file = fileForRegion(dataFolder, x, z);
-
-            if (file.exists()) {
+    private <T> T withRegion(int regionX, int regionZ, boolean create, Function<MantleRegion, T> operation) {
+        ensureOpen();
+        long regionKey = key(regionX, regionZ);
+        while (true) {
+            MantleRegion region = loadedRegions.get(regionKey);
+            if (region == null) {
                 try {
-                    region = MantleRegion.read(worldHeight, file);
-                    loadedRegions.put(k, region);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    region = new MantleRegion(worldHeight, x, z);
-                    loadedRegions.put(k, region);
+                    region = loadRegionAsync(regionX, regionZ, create).join();
+                } catch (CompletionException e) {
+                    throw new IllegalStateException("Failed to load Mantle region " + regionX + "," + regionZ,
+                            e.getCause());
                 }
-
-                return region;
+                if (region == null) {
+                    if (create) {
+                        loadingRegions.remove(regionKey);
+                        continue;
+                    }
+                    return null;
+                }
             }
 
-            region = new MantleRegion(worldHeight, x, z);
-            loadedRegions.put(k, region);
-            return region;
-        }));
+            lifecycleLock.readLock().lock();
+            try {
+                ensureOpen();
+                RegionResult<T> result = hyperLock.withResult(regionX, regionZ, () -> {
+                    MantleRegion current = loadedRegions.get(regionKey);
+                    if (current == null) {
+                        return new RegionResult<>(false, null);
+                    }
+                    lastUse.put(regionKey, System.currentTimeMillis());
+                    return new RegionResult<>(true, operation.apply(current));
+                });
+                if (result.applied()) {
+                    return result.value();
+                }
+            } finally {
+                lifecycleLock.readLock().unlock();
+            }
+        }
     }
 
-    public void saveAll() {
-        if (loadedRegions.isEmpty()) {
-            return;
-        }
+    private <T> CompletableFuture<T> withRegionAsync(int regionX, int regionZ, boolean create,
+            Function<MantleRegion, T> operation) {
+        return submitOperation(() -> withRegionOnIoThread(regionX, regionZ, create, operation));
+    }
 
-        BurstExecutor b = ioBurst.burst(loadedRegions.size());
-        for (Long i : loadedRegions.keySet()) {
-            b.queue(() -> {
+    /** One accepted mutation is one FIFO IO-lane job, including a possible cold load. */
+    private <T> T withRegionOnIoThread(int regionX, int regionZ, boolean create,
+            Function<MantleRegion, T> operation) {
+        long regionKey = key(regionX, regionZ);
+        lifecycleLock.readLock().lock();
+        try {
+            return hyperLock.withResult(regionX, regionZ, () -> {
+                MantleRegion region = loadedRegions.get(regionKey);
+                if (region == null) {
+                    region = loadRegionOnIoThread(regionX, regionZ, create);
+                }
+                if (region == null) {
+                    return null;
+                }
+                lastUse.put(regionKey, System.currentTimeMillis());
+                return operation.apply(region);
+            });
+        } finally {
+            lifecycleLock.readLock().unlock();
+        }
+    }
+
+    private CompletableFuture<MantleRegion> loadRegionAsync(int regionX, int regionZ, boolean create) {
+        synchronized (submissionGate) {
+            long regionKey = key(regionX, regionZ);
+            MantleRegion present = loadedRegions.get(regionKey);
+            if (present != null) {
+                return CompletableFuture.completedFuture(present);
+            }
+            if (closed.get()) {
+                return CompletableFuture.failedFuture(new IllegalStateException("The Mantle is closed"));
+            }
+
+            CompletableFuture<MantleRegion> existing = loadingRegions.get(regionKey);
+            if (existing != null) {
+                return existing;
+            }
+            CompletableFuture<MantleRegion> result = new CompletableFuture<>();
+            CompletableFuture<MantleRegion> raced = loadingRegions.putIfAbsent(regionKey, result);
+            if (raced != null) {
+                return raced;
+            }
+
+            CompletableFuture<MantleRegion> load = submitIo(() -> {
+                lifecycleLock.readLock().lock();
                 try {
-                    if (!dataFolder.exists()) {
-                        dataFolder.mkdirs();
-                    }
-                    loadedRegions.get(i).write(fileForRegion(dataFolder, i));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    return hyperLock.withResult(regionX, regionZ,
+                            () -> loadRegionOnIoThread(regionX, regionZ, create));
+                } finally {
+                    lifecycleLock.readLock().unlock();
                 }
             });
+            load.whenComplete((loaded, error) -> {
+                loadingRegions.remove(regionKey, result);
+                if (error == null) {
+                    result.complete(loaded);
+                } else {
+                    result.completeExceptionally(error);
+                }
+            });
+            return result;
+        }
+    }
+
+    /** Called on the IO lane while the matching HyperLock is held. */
+    private MantleRegion loadRegionOnIoThread(int regionX, int regionZ, boolean create) {
+        long regionKey = key(regionX, regionZ);
+        MantleRegion loaded = loadedRegions.get(regionKey);
+        if (loaded != null) {
+            return loaded;
         }
 
+        File current = currentFileForRegion(dataFolder, regionKey);
+        File legacy = fileForRegion(dataFolder, regionKey);
         try {
-            b.complete();
+            MantleRegion region;
+            if (current.exists()) {
+                MantleRegion.StoredRegion stored = MantleRegion.readVersioned(current);
+                int sectionOffset = (stored.minHeight() - minHeight) >> 4;
+                if (stored.minHeight() == minHeight && stored.maxHeight() == maxHeight) {
+                    region = stored.region();
+                } else {
+                    region = stored.region().shiftedCopy(worldHeight, sectionOffset);
+                    writeRegion(regionKey, region);
+                }
+            } else if (legacy.exists()) {
+                int legacyHeight = Math.max(16, maxHeight);
+                MantleRegion old = MantleRegion.read(legacyHeight, legacy);
+                region = old.shiftedCopy(worldHeight, MantleHeight.legacySectionOffset(minHeight));
+                writeRegion(regionKey, region);
+            } else if (create) {
+                region = new MantleRegion(worldHeight, regionX, regionZ);
+            } else {
+                return null;
+            }
+            lastUse.put(regionKey, System.currentTimeMillis());
+            loadedRegions.put(regionKey, region);
+            return region;
         } catch (Throwable e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to load Mantle region " + regionX + "," + regionZ
+                    + "; the on-disk file was left untouched", e);
+        }
+    }
+
+    private void writeRegion(long regionKey, MantleRegion region) throws IOException {
+        if (Thread.currentThread() != ioThread.get()) {
+            throw new IllegalStateException("Mantle disk IO escaped its owner thread");
+        }
+        Files.createDirectories(dataFolder.toPath());
+        File target = currentFileForRegion(dataFolder, regionKey);
+        File temporary = new File(dataFolder, target.getName() + ".tmp");
+        region.writeVersioned(temporary, minHeight, maxHeight);
+        try {
+            Files.move(temporary.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException ignored) {
+            Files.move(temporary.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private <T> CompletableFuture<T> submitIo(IoCallable<T> work) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        try {
+            ioExecutor.execute(() -> {
+                try {
+                    predecessorClose.join();
+                    future.complete(work.call());
+                } catch (Throwable e) {
+                    future.completeExceptionally(e);
+                }
+            });
+        } catch (RejectedExecutionException e) {
+            future.completeExceptionally(e);
+        }
+        return future;
+    }
+
+    private <T> CompletableFuture<T> submitOperation(IoCallable<T> work) {
+        synchronized (submissionGate) {
+            if (closed.get()) {
+                return CompletableFuture.failedFuture(new IllegalStateException("The Mantle is closed"));
+            }
+            return submitIo(work);
+        }
+    }
+
+    private void ensureOpen() {
+        if (closed.get()) {
+            throw new IllegalStateException("The Mantle is closed");
         }
     }
 
@@ -441,8 +660,22 @@ public class Mantle {
         return worldHeight;
     }
 
-    public void deleteChunkSlice(int x, int z, Class<?> c) {
-        getChunk(x, z).deleteSlices(c);
+    public int getMinHeight() {
+        return minHeight;
+    }
+
+    public int getMaxHeight() {
+        return maxHeight;
+    }
+
+    public void deleteChunkSlice(int x, int z, Class<?> type) {
+        withRegion(x >> 5, z >> 5, false, region -> {
+            MantleChunk chunk = region.get(x & 31, z & 31);
+            if (chunk != null) {
+                chunk.deleteSlices(type);
+            }
+            return null;
+        });
     }
 
     public int getLoadedRegionCount() {
@@ -453,11 +686,18 @@ public class Mantle {
         if (slice.isEmpty()) {
             return;
         }
-
-        slice.iterateSync((xx, yy, zz, t) -> set(x + xx, y + yy, z + zz, t));
+        slice.iterateSync((xx, yy, zz, value) -> set(x + xx, y + yy, z + zz, value));
     }
 
     public boolean isChunkLoaded(int x, int z) {
         return loadedRegions.containsKey(key(x >> 5, z >> 5));
+    }
+
+    private record RegionResult<T>(boolean applied, T value) {
+    }
+
+    @FunctionalInterface
+    private interface IoCallable<T> {
+        T call() throws Exception;
     }
 }

@@ -18,10 +18,12 @@ package com.volmit.adapt.content.adaptation.tragoul;/*--------------------------
 
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
-import com.volmit.adapt.util.C;
+import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
+import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,6 +36,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
@@ -42,8 +45,8 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
     public TragoulLance() {
         super("tragoul-lance");
         registerConfiguration(TragoulLance.Config.class);
-        setDescription(Localizer.dLocalize("tragoul", "lance", "description"));
-        setDisplayName(Localizer.dLocalize("tragoul", "lance", "name"));
+        setDescription(Localizer.component("tragoul", "lance", "description"));
+        setDisplayName(Localizer.component("tragoul", "lance", "name"));
         setIcon(Material.TRIDENT);
         setBaseCost(getConfig().baseCost);
         setMaxLevel(getConfig().maxLevel);
@@ -66,12 +69,13 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
                 double damageDealt = e.getDamage();
                 double seekerDamage = getConfig().seekerDamageMultiplier * damageDealt;
 
-                triggerSeeker(p, event.getEntity(), seekerDamage, level, baseSeekerRange);
+                triggerSeeker(p, getPlayer(p), event.getEntity(), seekerDamage, level, baseSeekerRange);
             }
         }
     }
 
-    private void triggerSeeker(Player p, Entity origin, double damage, int remainingSeekers, double range) {
+    private void triggerSeeker(Player p, AdaptPlayer expectedPlayer, Entity origin, double damage,
+            int remainingSeekers, double range) {
         if (remainingSeekers <= 0) {
             return;
         }
@@ -102,11 +106,18 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
             p.damage(selfDamage, p);
 
             LivingEntity finalNearest = nearest;
+            UUID playerId = p.getUniqueId();
             Bukkit.getScheduler().runTaskLater(Adapt.instance, () -> {
+                Player online = Bukkit.getPlayer(playerId);
+                if (online == null || !online.isOnline() || !finalNearest.isValid() || finalNearest.isDead()
+                        || !Adapt.instance.getAdaptServer().isPlayerLoaded(playerId)
+                        || !Adapt.instance.getAdaptServer().isCurrentPlayer(playerId, expectedPlayer)) {
+                    return;
+                }
                 double remainingHealth = finalNearest.getHealth() - damage;
-                finalNearest.damage(damage, p);
+                finalNearest.damage(damage, online);
                 if (remainingHealth <= 0) {
-                    triggerSeeker(p, finalNearest, damage * 0.5, remainingSeekers - 1, range);
+                    triggerSeeker(online, expectedPlayer, finalNearest, damage * 0.5, remainingSeekers - 1, range);
                 }
             }, getConfig().seekerDelay);
         }
@@ -128,9 +139,13 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(C.GREEN + Localizer.dLocalize("tragoul", "lance", "lore1"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "lance", "lore2"));
-        v.addLore(C.YELLOW + Localizer.dLocalize("tragoul", "lance", "lore3") + level);
+        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore",
+                Localizer.component("tragoul", "lance", "lore1"))));
+        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
+                Localizer.component("tragoul", "lance", "lore2"))));
+        v.addLore(Components.mini("<yellow><lore><level>",
+                Placeholder.component("lore", Localizer.component("tragoul", "lance", "lore3")),
+                Placeholder.unparsed("level", Integer.toString(level))));
     }
 
     @NoArgsConstructor

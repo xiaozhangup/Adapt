@@ -23,9 +23,8 @@ import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.content.adaptation.rift.*;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.M;
-import com.volmit.adapt.util.collection.KWeakMap;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -37,16 +36,18 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SkillRift extends SimpleSkill<SkillRift.Config> {
-    private final KWeakMap<Player, Long> lasttp;
+    private final Map<Player, Long> lasttp;
 
     public SkillRift() {
-        super("rift", Localizer.dLocalize("skill", "rift", "icon"));
+        super("rift", Localizer.component("skill", "rift", "icon"));
         registerConfiguration(Config.class);
-        setDescription(Localizer.dLocalize("skill", "rift", "description"));
-        setDisplayName(Localizer.dLocalize("skill", "rift", "name"));
-        setColor(ChatColor.DARK_PURPLE);
-        setInterval(1154);
+        setDescription(Localizer.component("skill", "rift", "description"));
+        setDisplayName(Localizer.component("skill", "rift", "name"));
+        setColor(NamedTextColor.DARK_PURPLE);
         setIcon(Material.ENDER_EYE);
         registerAdaptation(new RiftResist());
         registerAdaptation(new RiftAccess());
@@ -54,7 +55,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
         registerAdaptation(new RiftGate());
         registerAdaptation(new RiftBlink());
         registerAdaptation(new RiftDescent());
-        lasttp = new KWeakMap<>();
+        lasttp = new HashMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -64,9 +65,11 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
         }
         Player p = e.getPlayer();
         shouldReturnForPlayer(e.getPlayer(), e, () -> {
-            if (!lasttp.containsKey(p)) {
+            long now = M.ms();
+            Long lastTeleport = lasttp.get(p);
+            if (lastTeleport == null || now - lastTeleport > getConfig().teleportXPCooldown) {
                 xpSilent(p, getConfig().teleportXP);
-                lasttp.put(p, M.ms());
+                lasttp.put(p, now);
             }
         });
     }
@@ -133,22 +136,7 @@ public class SkillRift extends SimpleSkill<SkillRift.Config> {
     }
 
     @Override
-    public boolean needsTicking() {
-        return true;
-    }
-
-    @Override
     public void onTick() {
-        if (!this.isEnabled()) {
-            return;
-        }
-        for (Player i : lasttp.k()) {
-            shouldReturnForPlayer(i, () -> {
-                if (M.ms() - lasttp.get(i) > getConfig().teleportXPCooldown) {
-                    lasttp.remove(i);
-                }
-            });
-        }
     }
 
     @Override
