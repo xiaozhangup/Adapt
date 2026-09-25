@@ -9,7 +9,7 @@ api-version: '${apiversion}'
 depend:
   - WhaleMechanism
   - SlimeCargoNext
-  - CarbKotlin
+  - CrabKotlin
   - packetevents
 softdepend:
   - PlaceholderAPI
