@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.axe;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -106,8 +104,7 @@ public class AxeCraftLogSwap extends SimpleAdaptation<AxeCraftLogSwap.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <gray><lore>",
-                Placeholder.component("lore", Localizer.component("axe", "logswap", "lore1"))));
+        v.addLore(Localizer.components("axe", "logswap", "lore"));
     }
 
     @Override

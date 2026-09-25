@@ -23,7 +23,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -52,9 +51,8 @@ public class NetherFireResist extends SimpleAdaptation<NetherFireResist.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<red>+ <amount></red><gray> <lore></gray>",
-                Placeholder.unparsed("amount", Form.pc(getFireResist(level), 0)),
-                Placeholder.component("lore", Localizer.component("nether", "fireresist", "lore1"))));
+        v.addLore(Localizer.components("nether", "fireresist", "lore",
+                Placeholder.unparsed("amount", Form.pc(getFireResist(level), 0))));
     }
 
     @EventHandler(priority = EventPriority.HIGH)

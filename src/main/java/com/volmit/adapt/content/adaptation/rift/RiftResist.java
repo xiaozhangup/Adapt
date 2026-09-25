@@ -23,9 +23,7 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -69,10 +67,7 @@ public class RiftResist extends SimpleAdaptation<RiftResist.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "resist", "lore1"))));
-        v.addLore(Components.mini("<underlined><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "resist", "lore2"))));
+        v.addLore(Localizer.components("rift", "resist", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

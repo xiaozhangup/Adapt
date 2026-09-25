@@ -23,7 +23,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -53,11 +52,8 @@ public class EnchantingXPReturn extends SimpleAdaptation<EnchantingXPReturn.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("enchanting", "return", "lore1"))));
-        v.addLore(Components.mini("<green><amount><lore></green>",
-                Placeholder.unparsed("amount", Integer.toString(getConfig().xpReturn * (level * level))),
-                Placeholder.component("lore", Localizer.component("enchanting", "return", "lore2"))));
+        v.addLore(Localizer.components("enchanting", "return", "lore",
+                Placeholder.unparsed("amount", Integer.toString(getConfig().xpReturn * (level * level)))));
     }
 
     @EventHandler

@@ -32,10 +32,9 @@ import com.volmit.adapt.content.adaptation.axe.AxeWoodVeinminer;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.CustomModel;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -57,10 +56,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
         super("axes", Localizer.component("skill", "axes", "icon"));
         registerConfiguration(Config.class);
         setColor(TextColor.color(0xffb756));
-        setDescription(Components.mini("<description1><italic><description2><gray><!italic> <description3>",
-                Placeholder.component("description1", Localizer.component("skill", "axes", "description1")),
-                Placeholder.component("description2", Localizer.component("skill", "axes", "description2")),
-                Placeholder.component("description3", Localizer.component("skill", "axes", "description3"))));
+        setDescription(Component.empty().children(Localizer.components("skill", "axes", "description")));
         setDisplayName(Localizer.component("skill", "axes", "name"));
         setInterval(5251);
         setIcon(Material.GOLDEN_AXE);

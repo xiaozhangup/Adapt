@@ -60,6 +60,11 @@ public interface Element {
 
     Element addLore(Component loreLine);
 
+    default Element addLore(List<Component> lore) {
+        lore.forEach(this::addLore);
+        return this;
+    }
+
     List<Component> getLore();
 
     Element call(ElementEvent event, Element context);

@@ -63,12 +63,8 @@ public class AgilitySuperJump extends SimpleAdaptation<AgilitySuperJump.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
-                Placeholder.unparsed("amount", Form.pc(getJumpHeight(level), 0)),
-                Placeholder.component("lore", Localizer.component("agility", "superjump", "lore1"))));
-        v.addLore(Components.mini("<light_purple> <lore>",
-                Placeholder.component("lore", Localizer.component("agility", "superjump", "lore2"))));
-
+        v.addLore(Localizer.components("agility", "superjump", "lore",
+                Placeholder.unparsed("amount", Form.pc(getJumpHeight(level), 0))));
     }
 
     @EventHandler

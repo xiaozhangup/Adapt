@@ -151,7 +151,7 @@ public class AdaptServer extends TickedObject {
                         .title(Components.mini("<gray>+ <white><amount> <skill>",
                                 Placeholder.unparsed("amount", Long.toString(data.getKnowledge())),
                                 Placeholder.component("skill",
-                                        skill.getDisplayName().append(Components.mini(" Knowledge")))))
+                                        skill.getDisplayName().append(Components.mini(" 知识")))))
                         .build());
             } else {
                 ExperienceOrb.Data datax = ExperienceOrb.get(s.getItem());

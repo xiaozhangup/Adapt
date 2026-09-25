@@ -26,7 +26,6 @@ import com.volmit.adapt.content.event.AdaptAdaptationTeleportEvent;
 import com.volmit.adapt.content.item.BoundEyeOfEnder;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.Color;
 import org.bukkit.block.Block;
@@ -64,13 +63,7 @@ public class RiftGate extends SimpleAdaptation<RiftGate.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "gate", "lore1"))));
-        v.addLore(Components.mini("<red><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "gate", "lore2"))));
-        v.addLore(Components.mini("<italic><lore3></italic><red><lore4>",
-                Placeholder.component("lore3", Localizer.component("rift", "gate", "lore3")),
-                Placeholder.component("lore4", Localizer.component("rift", "gate", "lore4"))));
+        v.addLore(Localizer.components("rift", "gate", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

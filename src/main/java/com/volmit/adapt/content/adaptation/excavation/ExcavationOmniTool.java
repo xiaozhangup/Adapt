@@ -71,22 +71,8 @@ public class ExcavationOmniTool extends SimpleAdaptation<ExcavationOmniTool.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore1"))));
-        v.addLore(Components.mini("<gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore2"))));
-        v.addLore(Components.mini("<green><lore></green>",
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore3"))));
-        v.addLore(Components.mini("<red><lore></red>",
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore4"))));
-        v.addLore(Components.mini("<gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore5"))));
-        v.addLore(Components.mini("<green><slots></green><gray> <lore></gray>",
-                Placeholder.unparsed("slots", Integer.toString(level + getConfig().startingSlots)),
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore6"))));
-        v.addLore(Components.mini("<underlined><lore></underlined>",
-                Placeholder.component("lore", Localizer.component("excavation", "omnitool", "lore7"))));
-
+        v.addLore(Localizer.components("excavation", "omnitool", "lore",
+                Placeholder.unparsed("slots", Integer.toString(level + getConfig().startingSlots))));
     }
 
     @Override

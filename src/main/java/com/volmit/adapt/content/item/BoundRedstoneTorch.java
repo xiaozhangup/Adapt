@@ -95,12 +95,8 @@ public class BoundRedstoneTorch implements DataItem<BoundRedstoneTorch.Data> {
 
     @Override
     public void applyLore(Data data, List<Component> lore) {
-        lore.add(Components.mini("<white><text></white>",
-                Placeholder.component("text", Localizer.component("items", "boundredstonetorch", "name"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundredstonetorch", "usage1"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundredstonetorch", "usage2"))));
+        lore.addAll(Localizer.components("items", "boundredstonetorch", "usage",
+                Placeholder.component("name", Localizer.component("items", "boundredstonetorch", "name"))));
     }
 
     @Override

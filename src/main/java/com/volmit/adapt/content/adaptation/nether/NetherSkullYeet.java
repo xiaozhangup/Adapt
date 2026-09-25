@@ -18,6 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.nether;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -42,10 +43,7 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
     public NetherSkullYeet() {
         super("nether-skull-toss");
         registerConfiguration(Config.class);
-        setDescription(Components.mini("<description1><italic> <description2> </italic><gray><description3></gray>",
-                Placeholder.component("description1", Localizer.component("nether", "skulltoss", "description1")),
-                Placeholder.component("description2", Localizer.component("nether", "skulltoss", "description2")),
-                Placeholder.component("description3", Localizer.component("nether", "skulltoss", "description3"))));
+        setDescription(Component.empty().children(Localizer.components("nether", "skulltoss", "description")));
         setDisplayName(Localizer.component("nether", "skulltoss", "name"));
         setIcon(Material.WITHER_SKELETON_SKULL);
         setBaseCost(getConfig().baseCost);
@@ -58,13 +56,8 @@ public class NetherSkullYeet extends SimpleAdaptation<NetherSkullYeet.Config> {
     @Override
     public void addStats(int level, Element v) {
         int chance = getConfig().getBaseCooldown() - getConfig().getLevelCooldown() * level;
-        v.addLore(Components.mini("<green><chance></green><gray> <lore></gray>",
-                Placeholder.unparsed("chance", Integer.toString(chance)),
-                Placeholder.component("lore", Localizer.component("nether", "skulltoss", "lore1"))));
-        v.addLore(Components.mini("<gray><lore2></gray><dark_gray><lore3></dark_gray><gray>, <lore4></gray>",
-                Placeholder.component("lore2", Localizer.component("nether", "skulltoss", "lore2")),
-                Placeholder.component("lore3", Localizer.component("nether", "skulltoss", "lore3")),
-                Placeholder.component("lore4", Localizer.component("nether", "skulltoss", "lore4"))));
+        v.addLore(Localizer.components("nether", "skulltoss", "lore",
+                Placeholder.unparsed("chance", Integer.toString(chance))));
     }
 
     private int getCooldownDuration(Player p) {

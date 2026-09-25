@@ -56,14 +56,9 @@ public class StealthGhostArmor extends SimpleAdaptation<StealthGhostArmor.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(stat(Form.f(getMaxArmorPoints(getLevelPercent(level)), 0), "lore1"));
-        v.addLore(stat(Form.f(getMaxArmorPerTick(getLevelPercent(level)), 1), "lore2"));
-    }
-
-    private static net.kyori.adventure.text.Component stat(String amount, String key) {
-        return Components.mini("<green>+ <amount><gray> <lore>",
-                Placeholder.unparsed("amount", amount),
-                Placeholder.component("lore", Localizer.component("stealth", "ghostarmor", key)));
+        v.addLore(Localizer.components("stealth", "ghostarmor", "lore",
+                Placeholder.unparsed("armor", Form.f(getMaxArmorPoints(getLevelPercent(level)), 0)),
+                Placeholder.unparsed("speed", Form.f(getMaxArmorPerTick(getLevelPercent(level)), 1))));
     }
 
     public double getMaxArmorPoints(double factor) {

@@ -45,7 +45,7 @@ public class HunterLuck extends SimpleAdaptation<HunterLuck.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        HunterText.addStats(v, level, "luck", false);
+        HunterText.addStats(v, level, "luck");
 
     }
 

@@ -23,7 +23,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.version.Version;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
@@ -61,15 +60,10 @@ public class TragoulHealing extends SimpleAdaptation<TragoulHealing.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore",
-                Localizer.component("tragoul", "healing", "lore1"))));
-        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
-                Localizer.component("tragoul", "healing", "lore2"))));
         double percent = getConfig().minHealPercent
                 + (getConfig().maxHealPercent - getConfig().minHealPercent) * (level - 1)
                         / (getConfig().maxLevel - 1);
-        v.addLore(Components.mini("<yellow><lore><percent>%",
-                Placeholder.component("lore", Localizer.component("tragoul", "healing", "lore3")),
+        v.addLore(Localizer.components("tragoul", "healing", "lore",
                 Placeholder.unparsed("percent", String.valueOf(percent))));
     }
 

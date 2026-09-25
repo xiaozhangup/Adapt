@@ -87,12 +87,8 @@ public class BoundEnderPearl implements DataItem<BoundEnderPearl.Data> {
 
     @Override
     public void applyLore(Data data, List<Component> lore) {
-        lore.add(Components.mini("<white><text></white>",
-                Placeholder.component("text", Localizer.component("items", "boundenderperal", "name"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundenderperal", "usage1"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundenderperal", "usage2"))));
+        lore.addAll(Localizer.components("items", "boundenderperal", "usage",
+                Placeholder.component("name", Localizer.component("items", "boundenderperal", "name"))));
     }
 
     @Override

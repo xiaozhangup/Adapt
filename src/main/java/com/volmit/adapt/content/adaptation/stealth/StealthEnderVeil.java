@@ -3,11 +3,9 @@ package com.volmit.adapt.content.adaptation.stealth;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.reflect.events.api.ReflectiveHandler;
 import com.volmit.adapt.util.reflect.events.api.entity.EndermanAttackPlayerEvent;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -42,8 +40,7 @@ public class StealthEnderVeil extends SimpleAdaptation<StealthEnderVeil.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
-                Localizer.component("stealth", "enderveil", "lore" + (level < 2 ? 1 : 2)))));
+        v.addLore(Localizer.components("stealth", "enderveil", "lore").get(level < 2 ? 0 : 1));
     }
 
     @Override

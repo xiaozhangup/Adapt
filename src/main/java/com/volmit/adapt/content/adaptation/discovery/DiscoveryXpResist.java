@@ -52,14 +52,9 @@ public class DiscoveryXpResist extends SimpleAdaptation<DiscoveryXpResist.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("discovery", "resist", "lore0"))));
-        v.addLore(Components.mini("<green>+ <amount></green><gray><lore></gray>",
+        v.addLore(Localizer.components("discovery", "resist", "lore",
                 Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("discovery", "resist", "lore1"))));
-        v.addLore(Components.mini("<green>+ <amount> </green><gray><lore></gray>",
-                Placeholder.unparsed("amount", Integer.toString(getXpTaken(level))),
-                Placeholder.component("lore", Localizer.component("discovery", "resist", "lore2"))));
+                Placeholder.unparsed("xp", Integer.toString(getXpTaken(level)))));
     }
 
     private double getEffectiveness(double factor) {

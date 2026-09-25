@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.blocking;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -65,12 +63,7 @@ public class BlockingHorseArmorer extends SimpleAdaptation<BlockingHorseArmorer.
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <gray><lore>",
-                Placeholder.component("lore", Localizer.component("blocking", "horsearmorer", "lore1"))));
-        v.addLore(Components.mini("XXX"));
-        v.addLore(Components.mini("XSX"));
-        v.addLore(Components.mini("XXX"));
-
+        v.addLore(Localizer.components("blocking", "horsearmorer", "lore"));
     }
 
     @Override

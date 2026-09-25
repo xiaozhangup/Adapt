@@ -87,10 +87,8 @@ public class BoundSnowBall implements DataItem<BoundSnowBall.Data> {
 
     @Override
     public void applyLore(Data data, List<Component> lore) {
-        lore.add(Components.mini("<white><text></white>",
-                Placeholder.component("text", Localizer.component("items", "boundsnowball", "name"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundsnowball", "usage1"))));
+        lore.addAll(Localizer.components("items", "boundsnowball", "usage",
+                Placeholder.component("name", Localizer.component("items", "boundsnowball", "name"))));
     }
 
     @Override

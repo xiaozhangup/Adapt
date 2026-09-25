@@ -285,14 +285,11 @@ public interface Skill<T> extends Ticked, com.volmit.adapt.api.Component {
                     .setModel(CustomModel.get(Material.RED_BED, "snippets", "gui", "back"))
                     .setName(Components.mini("<reset><red><!italic><back>",
                             Placeholder.component("back", Localizer.component("snippets", "gui", "back"))))
-                    .onLeftClick((e) -> {
-                        w.close();
-                        onGuiClose(player, true, simple);
-                    }));
+                    .onLeftClick((e) -> onGuiClose(player, true, simple)));
         }
 
         AdaptPlayer a = Adapt.instance.getAdaptServer().getPlayer(player);
-        w.setTitle(Components.mini("<title><black> (<remaining> <xp> <level>)",
+        w.setTitle(Components.mini("<title><dark_gray> (<remaining> <xp> <level>)",
                 Placeholder.component("title", getTitleDisplay()),
                 Placeholder.unparsed("remaining",
                         Form.f((int) XP.getXpUntilLevelUp(a.getSkillLine(getName()).getXp()))),

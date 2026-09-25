@@ -45,7 +45,7 @@ public class HunterSpeed extends SimpleAdaptation<HunterSpeed.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        HunterText.addStats(v, level, "speed", false);
+        HunterText.addStats(v, level, "speed");
 
     }
 

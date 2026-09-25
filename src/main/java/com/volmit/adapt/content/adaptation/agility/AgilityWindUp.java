@@ -65,12 +65,9 @@ public class AgilityWindUp extends SimpleAdaptation<AgilityWindUp.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
+        v.addLore(Localizer.components("agility", "windup", "lore",
                 Placeholder.unparsed("amount", Form.pc(getWindupSpeed(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("agility", "windup", "lore1"))));
-        v.addLore(Components.mini("<yellow>* <duration><gray> <lore>",
-                Placeholder.unparsed("duration", Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1)),
-                Placeholder.component("lore", Localizer.component("agility", "windup", "lore2"))));
+                Placeholder.unparsed("duration", Form.duration(getWindupTicks(getLevelPercent(level)) * 50D, 1))));
     }
 
     @EventHandler

@@ -23,7 +23,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,11 +48,8 @@ public class ExcavationHaste extends SimpleAdaptation<ExcavationHaste.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore></green>",
-                Placeholder.component("lore", Localizer.component("excavation", "haste", "lore1"))));
-        v.addLore(Components.mini("<green><level></green><gray><lore></gray>",
-                Placeholder.unparsed("level", Integer.toString(level)),
-                Placeholder.component("lore", Localizer.component("excavation", "haste", "lore2"))));
+        v.addLore(Localizer.components("excavation", "haste", "lore",
+                Placeholder.unparsed("level", Integer.toString(level))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -58,12 +58,9 @@ public class AgilityWallJump extends SimpleAdaptation<AgilityWallJump.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
-                Placeholder.unparsed("amount", Integer.toString(getMaxJumps(level))),
-                Placeholder.component("lore", Localizer.component("agility", "walljump", "lore1"))));
-        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
-                Placeholder.unparsed("amount", Form.pc(getJumpHeight(level), 0)),
-                Placeholder.component("lore", Localizer.component("agility", "walljump", "lore2"))));
+        v.addLore(Localizer.components("agility", "walljump", "lore",
+                Placeholder.unparsed("jumps", Integer.toString(getMaxJumps(level))),
+                Placeholder.unparsed("height", Form.pc(getJumpHeight(level), 0))));
     }
 
     @EventHandler

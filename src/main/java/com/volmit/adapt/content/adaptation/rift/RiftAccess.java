@@ -26,7 +26,6 @@ import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.content.item.BoundEnderPearl;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -71,14 +70,7 @@ public class RiftAccess extends SimpleAdaptation<RiftAccess.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(italic("lore1"));
-        v.addLore(italic("lore2"));
-        v.addLore(italic("lore3"));
-    }
-
-    private static net.kyori.adventure.text.Component italic(String key) {
-        return Components.mini("<italic><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "remoteaccess", key)));
+        v.addLore(Localizer.components("rift", "remoteaccess", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

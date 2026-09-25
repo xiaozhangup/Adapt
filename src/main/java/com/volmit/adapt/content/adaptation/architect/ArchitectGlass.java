@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.content.adaptation.architect;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -49,7 +48,7 @@ public class ArchitectGlass extends SimpleAdaptation<ArchitectGlass.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("architect", "glass", "lore1"))));
+        v.addLore(Localizer.components("architect", "glass", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -45,7 +45,7 @@ public class HunterJumpBoost extends SimpleAdaptation<HunterJumpBoost.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        HunterText.addStats(v, level, "jumpboost", false);
+        HunterText.addStats(v, level, "jumpboost");
 
     }
 

@@ -21,7 +21,6 @@ package com.volmit.adapt.content.adaptation.tragoul;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Color;
@@ -57,15 +56,10 @@ public class TragoulGlobe extends SimpleAdaptation<TragoulGlobe.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore",
-                Localizer.component("tragoul", "globe", "lore1"))));
-        v.addLore(Components.mini("<yellow><lore><value>",
-                Placeholder.component("lore", Localizer.component("tragoul", "globe", "lore2")),
-                Placeholder.unparsed("value",
-                        String.valueOf((getConfig().rangePerLevel * level) + getConfig().initalRange))));
-        v.addLore(Components.mini("<yellow><lore><value>",
-                Placeholder.component("lore", Localizer.component("tragoul", "globe", "lore3")),
-                Placeholder.unparsed("value", String.valueOf(getConfig().bonusDamagePerLevel * level))));
+        v.addLore(Localizer.components("tragoul", "globe", "lore",
+                Placeholder.unparsed("range",
+                        String.valueOf((getConfig().rangePerLevel * level) + getConfig().initalRange)),
+                Placeholder.unparsed("damage", String.valueOf(getConfig().bonusDamagePerLevel * level))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

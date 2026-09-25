@@ -18,12 +18,10 @@
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -48,8 +46,7 @@ public class HerbalismNoTrample extends SimpleAdaptation<HerbalismNoTrample.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("herbalism", "notrample", "lore1"))));
+        v.addLore(Localizer.components("herbalism", "notrample", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -62,9 +62,8 @@ public class TamingDamage extends SimpleAdaptation<TamingDamage.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
-                Placeholder.unparsed("amount", Form.pc(getDamageBoost(level), 0)),
-                Placeholder.component("lore", Localizer.component("taming", "damage", "lore1"))));
+        v.addLore(Localizer.components("taming", "damage", "lore",
+                Placeholder.unparsed("amount", Form.pc(getDamageBoost(level), 0))));
     }
 
     private double getDamageBoost(int level) {

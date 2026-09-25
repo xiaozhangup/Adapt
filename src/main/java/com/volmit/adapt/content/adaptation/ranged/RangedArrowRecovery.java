@@ -6,7 +6,6 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -106,10 +105,7 @@ public class RangedArrowRecovery extends SimpleAdaptation<RangedArrowRecovery.Co
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore></green>",
-                Placeholder.component("lore", Localizer.component("ranged", "arrowrecovery", "lore1"))));
-        v.addLore(Components.mini("<green><lore><chance></green>",
-                Placeholder.component("lore", Localizer.component("ranged", "arrowrecovery", "lore2")),
+        v.addLore(Localizer.components("ranged", "arrowrecovery", "lore",
                 Placeholder.unparsed("chance", Double.toString(chancePerLevel(level)))));
     }
 

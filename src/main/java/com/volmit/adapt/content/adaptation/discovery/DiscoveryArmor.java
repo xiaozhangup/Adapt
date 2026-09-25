@@ -65,11 +65,7 @@ public class DiscoveryArmor extends SimpleAdaptation<DiscoveryArmor.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <lore1></green><gray>, <lore2></gray>",
-                Placeholder.component("lore1", Localizer.component("discovery", "armor", "lore1")),
-                Placeholder.component("lore2", Localizer.component("discovery", "armor", "lore2"))));
-        v.addLore(Components.mini("<yellow>~ <lore></yellow><blue> +<bonus></blue>",
-                Placeholder.component("lore", Localizer.component("discovery", "armor", "lore3")),
+        v.addLore(Localizer.components("discovery", "armor", "lore",
                 Placeholder.unparsed("bonus", Double.toString(level * 0.25))));
     }
 

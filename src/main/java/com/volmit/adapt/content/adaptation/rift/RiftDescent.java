@@ -55,10 +55,7 @@ public class RiftDescent extends SimpleAdaptation<RiftDescent.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "descent", "lore1"))));
-        v.addLore(Components.mini("<green><lore> <white><cooldown>s",
-                Placeholder.component("lore", Localizer.component("rift", "descent", "lore2")),
+        v.addLore(Localizer.components("rift", "descent", "lore",
                 Placeholder.unparsed("cooldown", String.valueOf(getConfig().cooldown))));
     }
 

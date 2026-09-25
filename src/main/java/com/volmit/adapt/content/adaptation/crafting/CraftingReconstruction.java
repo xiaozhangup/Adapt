@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -147,10 +145,7 @@ public class CraftingReconstruction extends SimpleAdaptation<CraftingReconstruct
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore1"))));
-        v.addLore(Components.mini("<underlined><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore2"))));
-        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore3"))));
-        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore", Localizer.component("crafting", "reconstruction", "lore4"))));
+        v.addLore(Localizer.components("crafting", "reconstruction", "lore"));
     }
 
     @EventHandler

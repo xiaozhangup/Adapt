@@ -60,9 +60,8 @@ public class HerbalismReplant extends SimpleAdaptation<HerbalismReplant.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <radius></green><gray><lore></gray>",
-                Placeholder.unparsed("radius", Float.toString(getRadius(level))),
-                Placeholder.component("lore", Localizer.component("herbalism", "replant", "lore1"))));
+        v.addLore(Localizer.components("herbalism", "replant", "lore",
+                Placeholder.unparsed("radius", Float.toString(getRadius(level)))));
     }
 
     private int getCooldown(double factor, int level) {

@@ -21,6 +21,7 @@ package com.volmit.adapt.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.AdaptConfig;
 import lombok.SneakyThrows;
@@ -32,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Localizer {
@@ -76,22 +79,14 @@ public class Localizer {
     public static String raw(String s1, String s2, String s3) {
         String cacheKey = s1 + '\0' + s2 + '\0' + s3;
         if (!Adapt.wordKey.containsKey(cacheKey)) {
-            if (primaryLanguage == null) {
-                updateLanguageFile();
-            }
-
+            JsonElement value = localized(s1, s2, s3);
             String key = s1 + "." + s2 + "." + s3;
-            String value = find(primaryLanguage, s1, s2, s3);
-            if (value == null) {
-                Adapt.warn("Your Language File is missing the following key: " + key);
-                value = find(fallbackLanguage, s1, s2, s3);
+            if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isString()) {
+                Adapt.error("Language key " + key + " must be a string.");
+                Adapt.wordKey.put(cacheKey, key);
+            } else {
+                Adapt.wordKey.put(cacheKey, value.getAsString());
             }
-            if (value == null) {
-                value = key;
-                Adapt.error("Your Fallback Language File is missing the following key: " + key);
-                Adapt.error("Please report this to the developer!");
-            }
-            Adapt.wordKey.put(cacheKey, value);
         }
 
         return Adapt.wordKey.get(cacheKey);
@@ -99,6 +94,25 @@ public class Localizer {
 
     public static Component component(String s1, String s2, String s3, TagResolver... resolvers) {
         return configured(raw(s1, s2, s3), resolvers);
+    }
+
+    public static List<Component> components(String s1, String s2, String s3, TagResolver... resolvers) {
+        JsonElement value = localized(s1, s2, s3);
+        String key = s1 + "." + s2 + "." + s3;
+        if (!value.isJsonArray()) {
+            Adapt.error("Language key " + key + " must be a list.");
+            return List.of(Component.text(key));
+        }
+
+        List<Component> lines = new ArrayList<>();
+        for (JsonElement line : value.getAsJsonArray()) {
+            if (!line.isJsonPrimitive() || !line.getAsJsonPrimitive().isString()) {
+                Adapt.error("Language key " + key + " contains a non-string lore line.");
+                continue;
+            }
+            lines.add(configured(line.getAsString(), resolvers));
+        }
+        return lines;
     }
 
     public static Component configured(String input, TagResolver... resolvers) {
@@ -117,7 +131,26 @@ public class Localizer {
         return json.getAsJsonObject();
     }
 
-    private static String find(JsonObject root, String first, String second, String third) {
+    private static JsonElement localized(String first, String second, String third) {
+        if (primaryLanguage == null) {
+            updateLanguageFile();
+        }
+
+        String key = first + "." + second + "." + third;
+        JsonElement value = find(primaryLanguage, first, second, third);
+        if (value == null) {
+            Adapt.warn("Your Language File is missing the following key: " + key);
+            value = find(fallbackLanguage, first, second, third);
+        }
+        if (value == null) {
+            Adapt.error("Your Fallback Language File is missing the following key: " + key);
+            Adapt.error("Please report this to the developer!");
+            return new JsonPrimitive(key);
+        }
+        return value;
+    }
+
+    private static JsonElement find(JsonObject root, String first, String second, String third) {
         if (root == null || !root.has(first) || !root.get(first).isJsonObject()) {
             return null;
         }
@@ -126,10 +159,9 @@ public class Localizer {
             return null;
         }
         JsonObject secondObject = firstObject.getAsJsonObject(second);
-        if (!secondObject.has(third) || !secondObject.get(third).isJsonPrimitive()
-                || !secondObject.get(third).getAsJsonPrimitive().isString()) {
+        if (!secondObject.has(third)) {
             return null;
         }
-        return secondObject.get(third).getAsString();
+        return secondObject.get(third);
     }
 }

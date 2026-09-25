@@ -54,20 +54,13 @@ public class AxeGroundSmash extends SimpleAdaptation<AxeGroundSmash.Config> {
     @Override
     public void addStats(int level, Element v) {
         double f = getLevelPercent(level);
-        v.addLore(Components.mini("<red>+ <min> - <max><gray> <lore>",
+        v.addLore(Localizer.components("axe", "groundsmash", "lore",
                 Placeholder.unparsed("min", Form.f(getFalloffDamage(f), 1)),
                 Placeholder.unparsed("max", Form.f(getDamage(f), 1)),
-                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore1"))));
-        v.addLore(Components.mini("<red>+ <radius><gray> <lore>",
                 Placeholder.unparsed("radius", Form.f(getRadius(f), 1)),
-                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore2"))));
-        v.addLore(Components.mini("<red>+ <force><gray> <lore>",
                 Placeholder.unparsed("force", Form.pc(getForce(f), 0)),
-                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore3"))));
-        v.addLore(Components.mini("<yellow>* <cooldown><gray> <lore>",
                 Placeholder.unparsed("cooldown",
-                        Form.duration(getCooldownTime(getLevelPercent(level)) * 50D, 1)),
-                Placeholder.component("lore", Localizer.component("axe", "groundsmash", "lore4"))));
+                        Form.duration(getCooldownTime(getLevelPercent(level)) * 50D, 1))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

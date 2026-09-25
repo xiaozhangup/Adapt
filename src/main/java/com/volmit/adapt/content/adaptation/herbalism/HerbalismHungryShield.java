@@ -24,7 +24,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,9 +48,8 @@ public class HerbalismHungryShield extends SimpleAdaptation<HerbalismHungryShiel
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
-                Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("herbalism", "hungryshield", "lore1"))));
+        v.addLore(Localizer.components("herbalism", "hungryshield", "lore",
+                Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0))));
     }
 
     @Override

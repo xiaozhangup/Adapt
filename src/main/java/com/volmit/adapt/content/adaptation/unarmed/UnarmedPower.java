@@ -24,7 +24,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -47,9 +46,8 @@ public class UnarmedPower extends SimpleAdaptation<UnarmedPower.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <damage></green><gray><lore></gray>",
-                Placeholder.unparsed("damage", Form.pc(getUnarmedDamage(level), 0)),
-                Placeholder.component("lore", Localizer.component("unarmed", "power", "lore1"))));
+        v.addLore(Localizer.components("unarmed", "power", "lore",
+                Placeholder.unparsed("damage", Form.pc(getUnarmedDamage(level), 0))));
     }
 
     @EventHandler

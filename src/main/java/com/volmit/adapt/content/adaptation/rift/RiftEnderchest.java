@@ -24,9 +24,7 @@ import com.volmit.adapt.api.world.PlayerSkillLine;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -51,8 +49,7 @@ public class RiftEnderchest extends SimpleAdaptation<RiftEnderchest.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore",
-                Localizer.component("rift", "chest", "lore1"))));
+        v.addLore(Localizer.components("rift", "chest", "lore"));
     }
 
     @EventHandler

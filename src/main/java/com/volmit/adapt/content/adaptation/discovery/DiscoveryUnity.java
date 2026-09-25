@@ -53,10 +53,8 @@ public class DiscoveryUnity extends SimpleAdaptation<DiscoveryUnity.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount> <lore1></green><gray> <lore2></gray>",
-                Placeholder.unparsed("amount", Form.f(getXPGained(getLevelPercent(level), 1), 0)),
-                Placeholder.component("lore1", Localizer.component("discovery", "unity", "lore1")),
-                Placeholder.component("lore2", Localizer.component("discovery", "unity", "lore2"))));
+        v.addLore(Localizer.components("discovery", "unity", "lore",
+                Placeholder.unparsed("amount", Form.f(getXPGained(getLevelPercent(level), 1), 0))));
     }
 
     // Give random XP to the player when they gain XP!

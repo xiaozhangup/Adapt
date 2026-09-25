@@ -3,9 +3,7 @@ package com.volmit.adapt.content.adaptation.hunter;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,8 +35,7 @@ public class HunterShearToInventory extends SimpleAdaptation<HunterShearToInvent
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
-                Localizer.component("hunter", "sheartoinventory", "lore1"))));
+        v.addLore(Localizer.components("hunter", "sheartoinventory", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

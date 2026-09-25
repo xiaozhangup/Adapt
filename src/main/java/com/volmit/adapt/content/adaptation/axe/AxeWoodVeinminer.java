@@ -72,11 +72,8 @@ public class AxeWoodVeinminer extends SimpleAdaptation<AxeWoodVeinminer.Config> 
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("axe", "woodminer", "lore1"))));
-        v.addLore(Components.mini("<green><range><gray> <lore>",
-                Placeholder.unparsed("range", Integer.toString(level + getConfig().baseRange)),
-                Placeholder.component("lore", Localizer.component("axe", "woodminer", "lore2"))));
-        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore", Localizer.component("axe", "woodminer", "lore3"))));
+        v.addLore(Localizer.components("axe", "woodminer", "lore",
+                Placeholder.unparsed("range", Integer.toString(level + getConfig().baseRange))));
     }
 
     private int getRadius(int lvl) {

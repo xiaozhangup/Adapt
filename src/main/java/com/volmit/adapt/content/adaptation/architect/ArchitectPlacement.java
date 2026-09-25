@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.architect;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -70,7 +68,7 @@ public class ArchitectPlacement extends SimpleAdaptation<ArchitectPlacement.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("architect", "placement", "lore3"))));
+        v.addLore(Localizer.components("architect", "placement", "lore"));
     }
 
     @EventHandler

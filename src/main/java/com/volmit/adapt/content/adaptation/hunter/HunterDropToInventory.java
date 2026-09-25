@@ -22,10 +22,8 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -62,8 +60,7 @@ public class HunterDropToInventory extends SimpleAdaptation<HunterDropToInventor
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
-                Localizer.component("hunter", "droptoinventory", "lore1"))));
+        v.addLore(Localizer.components("hunter", "droptoinventory", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

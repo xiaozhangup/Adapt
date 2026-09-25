@@ -74,12 +74,8 @@ public class RiftBlink extends SimpleAdaptation<RiftBlink.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <distance><gray> <lore>",
-                Placeholder.unparsed("distance", String.valueOf(getBlinkDistance(level))),
-                Placeholder.component("lore", Localizer.component("rift", "blink", "lore1"))));
-        v.addLore(Components.mini("<italic><lore2></italic><dark_purple><lore3>",
-                Placeholder.component("lore2", Localizer.component("rift", "blink", "lore2")),
-                Placeholder.component("lore3", Localizer.component("rift", "blink", "lore3"))));
+        v.addLore(Localizer.components("rift", "blink", "lore",
+                Placeholder.unparsed("distance", String.valueOf(getBlinkDistance(level)))));
     }
 
     @EventHandler

@@ -24,7 +24,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -63,14 +62,8 @@ public class HerbalismLuck extends SimpleAdaptation<HerbalismLuck.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("herbalism", "luck", "lore0"))));
-        v.addLore(Components.mini("<green>+ (<amount></green><gray>%) + <lore></gray>",
-                Placeholder.unparsed("amount", Double.toString(getEffectiveness(level))),
-                Placeholder.component("lore", Localizer.component("herbalism", "luck", "lore1"))));
-        v.addLore(Components.mini("<green>+ (<amount></green><gray>%) + <lore></gray>",
-                Placeholder.unparsed("amount", Double.toString(getEffectiveness(level))),
-                Placeholder.component("lore", Localizer.component("herbalism", "luck", "lore2"))));
+        v.addLore(Localizer.components("herbalism", "luck", "lore",
+                Placeholder.unparsed("amount", Double.toString(getEffectiveness(level)))));
     }
 
     private double getEffectiveness(double factor) {

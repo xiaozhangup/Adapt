@@ -27,7 +27,6 @@ import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -167,11 +166,8 @@ public class PickaxeAutosmelt extends SimpleAdaptation<PickaxeAutosmelt.Config> 
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore></green>",
-                Placeholder.component("lore", Localizer.component("pickaxe", "autosmelt", "lore1"))));
-        v.addLore(Components.mini("<green><amount></green><gray><lore></gray>",
-                Placeholder.unparsed("amount", Double.toString(level * 1.25)),
-                Placeholder.component("lore", Localizer.component("pickaxe", "autosmelt", "lore2"))));
+        v.addLore(Localizer.components("pickaxe", "autosmelt", "lore",
+                Placeholder.unparsed("amount", Double.toString(level * 1.25))));
     }
 
     @EventHandler

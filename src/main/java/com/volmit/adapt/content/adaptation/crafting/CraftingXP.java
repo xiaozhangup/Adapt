@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -55,7 +53,7 @@ public class CraftingXP extends SimpleAdaptation<CraftingXP.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("crafting", "xp", "lore1"))));
+        v.addLore(Localizer.components("crafting", "xp", "lore"));
     }
 
     @EventHandler

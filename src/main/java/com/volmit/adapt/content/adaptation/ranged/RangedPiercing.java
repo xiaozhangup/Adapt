@@ -23,7 +23,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractArrow;
@@ -52,9 +51,8 @@ public class RangedPiercing extends SimpleAdaptation<RangedPiercing.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <level></green><gray> <lore></gray>",
-                Placeholder.unparsed("level", Integer.toString(level)),
-                Placeholder.component("lore", Localizer.component("ranged", "arrowpiercing", "lore1"))));
+        v.addLore(Localizer.components("ranged", "arrowpiercing", "lore",
+                Placeholder.unparsed("level", Integer.toString(level))));
     }
 
     @EventHandler

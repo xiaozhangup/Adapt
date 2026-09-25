@@ -45,7 +45,7 @@ public class HunterRegen extends SimpleAdaptation<HunterRegen.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        HunterText.addStats(v, level, "regen", false);
+        HunterText.addStats(v, level, "regen");
 
     }
 

@@ -90,7 +90,6 @@ public class AllSkillsGui {
                                         Placeholder.component("label",
                                                 Localizer.component("snippets", "gui", "powerused"))))
                                 .onLeftClick((e) -> {
-                                    w.close();
                                     sk.openGui(player);
                                 }));
                 locked.remove((Object) ind);
@@ -159,7 +158,7 @@ public class AllSkillsGui {
                                 }));
             }
 
-            w.setTitle(Components.mini("<label> <level> (<used>/<max> <power>)",
+            w.setTitle(Components.mini("<label> <level> <dark_gray>(<used>/<max> <power>)",
                     Placeholder.component("label", Localizer.component("snippets", "gui", "level")),
                     Placeholder.unparsed("level",
                             Integer.toString((int) XP.getLevelForXp(adaptPlayer.getData().getMasterXp()))),

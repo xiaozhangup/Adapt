@@ -26,7 +26,6 @@ import com.volmit.adapt.content.adaptation.sword.effects.DamagingBleedEffect;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Form;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import de.slikey.effectlib.effect.BleedEffect;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
@@ -59,14 +58,9 @@ public class SwordsBloodyBlade extends SimpleAdaptation<SwordsBloodyBlade.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ </green><gray> <lore></gray>",
-                Placeholder.component("lore", Localizer.component("sword", "bloodyblade", "lore1"))));
-        v.addLore(Components.mini("<yellow>* <duration></yellow><gray> <lore></gray>",
-                Placeholder.unparsed("duration", Form.duration(getDurationOfEffect(level), 1)),
-                Placeholder.component("lore", Localizer.component("sword", "bloodyblade", "lore2"))));
-        v.addLore(Components.mini("<red>* <duration></red><gray> <lore></gray>",
-                Placeholder.unparsed("duration", Form.duration(getCooldown(level), 1)),
-                Placeholder.component("lore", Localizer.component("sword", "bloodyblade", "lore3"))));
+        v.addLore(Localizer.components("sword", "bloodyblade", "lore",
+                Placeholder.unparsed("effect_duration", Form.duration(getDurationOfEffect(level), 1)),
+                Placeholder.unparsed("cooldown", Form.duration(getCooldown(level), 1))));
     }
 
     public long getCooldown(int level) {

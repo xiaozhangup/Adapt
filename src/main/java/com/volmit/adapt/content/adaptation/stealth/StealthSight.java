@@ -21,7 +21,6 @@ package com.volmit.adapt.content.adaptation.stealth;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.*;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -57,10 +56,7 @@ public class StealthSight extends SimpleAdaptation<StealthSight.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore1><green><lore2><gray><lore3>",
-                Placeholder.component("lore1", Localizer.component("stealth", "nightvision", "lore1")),
-                Placeholder.component("lore2", Localizer.component("stealth", "nightvision", "lore2")),
-                Placeholder.component("lore3", Localizer.component("stealth", "nightvision", "lore3"))));
+        v.addLore(Localizer.components("stealth", "nightvision", "lore"));
     }
 
     @EventHandler

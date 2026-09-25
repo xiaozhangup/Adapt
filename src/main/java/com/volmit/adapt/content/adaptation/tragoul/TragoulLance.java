@@ -21,7 +21,6 @@ import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
@@ -139,12 +138,7 @@ public class TragoulLance extends SimpleAdaptation<TragoulLance.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore",
-                Localizer.component("tragoul", "lance", "lore1"))));
-        v.addLore(Components.mini("<yellow><lore>", Placeholder.component("lore",
-                Localizer.component("tragoul", "lance", "lore2"))));
-        v.addLore(Components.mini("<yellow><lore><level>",
-                Placeholder.component("lore", Localizer.component("tragoul", "lance", "lore3")),
+        v.addLore(Localizer.components("tragoul", "lance", "lore",
                 Placeholder.unparsed("level", Integer.toString(level))));
     }
 

@@ -22,9 +22,7 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -47,8 +45,7 @@ public class SeaborneTurtlesMiningSpeed extends SimpleAdaptation<SeaborneTurtles
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore",
-                Localizer.component("seaborn", "haste", "lore1"))));
+        v.addLore(Localizer.components("seaborn", "haste", "lore"));
     }
 
     @Override

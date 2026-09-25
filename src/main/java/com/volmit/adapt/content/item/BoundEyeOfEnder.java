@@ -87,12 +87,8 @@ public class BoundEyeOfEnder implements DataItem<BoundEyeOfEnder.Data> {
 
     @Override
     public void applyLore(Data data, List<Component> lore) {
-        lore.add(Components.mini("<white><text></white>",
-                Placeholder.component("text", Localizer.component("items", "boundeyeofender", "name"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundeyeofender", "usage1"))));
-        lore.add(Components.mini("<gray><text></gray>",
-                Placeholder.component("text", Localizer.component("items", "boundeyeofender", "usage2"))));
+        lore.addAll(Localizer.components("items", "boundeyeofender", "usage",
+                Placeholder.component("name", Localizer.component("items", "boundeyeofender", "name"))));
     }
 
     @Override

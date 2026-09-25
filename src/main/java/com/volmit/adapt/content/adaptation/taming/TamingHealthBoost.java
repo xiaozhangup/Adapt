@@ -62,9 +62,8 @@ public class TamingHealthBoost extends SimpleAdaptation<TamingHealthBoost.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray> <lore>",
-                Placeholder.unparsed("amount", Form.pc(getHealthBoost(level), 0)),
-                Placeholder.component("lore", Localizer.component("taming", "health", "lore1"))));
+        v.addLore(Localizer.components("taming", "health", "lore",
+                Placeholder.unparsed("amount", Form.pc(getHealthBoost(level), 0))));
     }
 
     private double getHealthBoost(int level) {

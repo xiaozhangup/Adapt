@@ -1,12 +1,10 @@
 package com.volmit.adapt.content.adaptation.pickaxe;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.NaturalBlockDrop;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -57,8 +55,7 @@ public class PickaxeSilkBuddingAmethyst extends SimpleAdaptation<PickaxeSilkBudd
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore></green>", Placeholder.component("lore",
-                Localizer.component("pickaxe", "silkbuddingamethyst", "lore" + (level < 2 ? 1 : 2)))));
+        v.addLore(Localizer.components("pickaxe", "silkbuddingamethyst", "lore").get(level < 2 ? 0 : 1));
     }
 
     @Override

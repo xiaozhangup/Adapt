@@ -52,14 +52,9 @@ public class DiscoveryVillagerAtt extends SimpleAdaptation<DiscoveryVillagerAtt.
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("discovery", "villager", "lore1"))));
-        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
+        v.addLore(Localizer.components("discovery", "villager", "lore",
                 Placeholder.unparsed("amount", Form.pc(getEffectiveness(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("discovery", "villager", "lore2"))));
-        v.addLore(Components.mini("<green>+ <amount> </green><gray><lore></gray>",
-                Placeholder.unparsed("amount", Integer.toString(getXpTaken(level))),
-                Placeholder.component("lore", Localizer.component("discovery", "villager", "lore3"))));
+                Placeholder.unparsed("xp", Integer.toString(getXpTaken(level)))));
     }
 
     private double getEffectiveness(double multiplier) {

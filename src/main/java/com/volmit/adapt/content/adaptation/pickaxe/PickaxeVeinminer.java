@@ -59,13 +59,8 @@ public class PickaxeVeinminer extends SimpleAdaptation<PickaxeVeinminer.Config> 
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore></green>",
-                Placeholder.component("lore", Localizer.component("pickaxe", "veinminer", "lore1"))));
-        v.addLore(Components.mini("<green><range></green><gray> <lore></gray>",
-                Placeholder.unparsed("range", Integer.toString(level + getConfig().baseRange)),
-                Placeholder.component("lore", Localizer.component("pickaxe", "veinminer", "lore2"))));
-        v.addLore(Components.mini("<italic><lore></italic>",
-                Placeholder.component("lore", Localizer.component("pickaxe", "veinminer", "lore3"))));
+        v.addLore(Localizer.components("pickaxe", "veinminer", "lore",
+                Placeholder.unparsed("range", Integer.toString(level + getConfig().baseRange))));
     }
 
     private int getRadius(int lvl) {

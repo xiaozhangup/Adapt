@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.content.adaptation.blocking;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -64,12 +63,7 @@ public class BlockingMultiArmor extends SimpleAdaptation<BlockingMultiArmor.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore1"))));
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore2"))));
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore3"))));
-        v.addLore(Components.mini("<red><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore4"))));
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore5"))));
-        v.addLore(Components.mini("<underlined><lore>", Placeholder.component("lore", Localizer.component("blocking", "multiarmor", "lore6"))));
+        v.addLore(Localizer.components("blocking", "multiarmor", "lore"));
     }
 
     @Override

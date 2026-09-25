@@ -18,14 +18,12 @@
 
 package com.volmit.adapt.content.adaptation.herbalism;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.recipe.MaterialChar;
 import com.volmit.adapt.api.recipe.type.Shaped;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -52,8 +50,7 @@ public class HerbalismCraftableCobweb extends SimpleAdaptation<HerbalismCraftabl
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ </green><gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("herbalism", "cobweb", "lore1"))));
+        v.addLore(Localizer.components("herbalism", "cobweb", "lore"));
     }
 
     @Override

@@ -18,7 +18,6 @@
 
 package com.volmit.adapt.content.adaptation.brewing;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -61,8 +60,7 @@ public class BrewingResistance extends SimpleAdaptation<BrewingResistance.Config
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "resistance", "lore1"))));
-        v.addLore(Components.mini("<green><lore>", Placeholder.component("lore", Localizer.component("brewing", "resistance", "lore2"))));
+        v.addLore(Localizer.components("brewing", "resistance", "lore"));
     }
 
     @Override

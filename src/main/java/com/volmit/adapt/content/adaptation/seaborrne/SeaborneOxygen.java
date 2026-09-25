@@ -45,9 +45,8 @@ public class SeaborneOxygen extends SimpleAdaptation<SeaborneOxygen.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray><lore>",
-                Placeholder.unparsed("amount", Form.pc(getAirBoost(level), 0)),
-                Placeholder.component("lore", Localizer.component("seaborn", "oxygen", "lore1"))));
+        v.addLore(Localizer.components("seaborn", "oxygen", "lore",
+                Placeholder.unparsed("amount", Form.pc(getAirBoost(level), 0))));
     }
 
     public double getAirBoost(int level) {

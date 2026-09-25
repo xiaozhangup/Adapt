@@ -46,7 +46,7 @@ public class HunterInvis extends SimpleAdaptation<HunterInvis.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        HunterText.addStats(v, level, "invisibility", true);
+        HunterText.addStats(v, level, "invisibility");
 
     }
 

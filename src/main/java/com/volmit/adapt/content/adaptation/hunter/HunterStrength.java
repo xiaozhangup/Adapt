@@ -45,7 +45,7 @@ public class HunterStrength extends SimpleAdaptation<HunterStrength.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        HunterText.addStats(v, level, "strength", false);
+        HunterText.addStats(v, level, "strength");
 
     }
 

@@ -60,13 +60,10 @@ public class BrewingLingering extends SimpleAdaptation<BrewingLingering.Config> 
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><duration><gray> <lore>",
+        v.addLore(Localizer.components("brewing", "lingering", "lore",
                 Placeholder.unparsed("duration",
                         Form.duration((long) getDurationBoost(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("brewing", "lingering", "lore1"))));
-        v.addLore(Components.mini("<green><amount><gray> <lore>",
-                Placeholder.unparsed("amount", Form.pc(getPercentBoost(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("brewing", "lingering", "lore2"))));
+                Placeholder.unparsed("amount", Form.pc(getPercentBoost(getLevelPercent(level)), 0))));
     }
 
     public double getDurationBoost(double factor) {

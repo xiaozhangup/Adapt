@@ -18,13 +18,11 @@
 
 package com.volmit.adapt.content.adaptation.pickaxe;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.Components;
 import com.volmit.adapt.util.collection.KList;
 import lombok.NoArgsConstructor;
 import org.bukkit.GameMode;
@@ -58,8 +56,7 @@ public class PickaxeDropToInventory extends SimpleAdaptation<PickaxeDropToInvent
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore></gray>",
-                Placeholder.component("lore", Localizer.component("pickaxe", "droptoinventory", "lore1"))));
+        v.addLore(Localizer.components("pickaxe", "droptoinventory", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

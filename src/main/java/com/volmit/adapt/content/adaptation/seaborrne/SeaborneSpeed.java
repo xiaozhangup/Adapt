@@ -22,7 +22,6 @@ import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
@@ -48,12 +47,8 @@ public class SeaborneSpeed extends SimpleAdaptation<SeaborneSpeed.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore1><green><level><gray><lore2>",
-                Placeholder.component("lore1", Localizer.component("seaborn", "dolphingrace", "lore1")),
-                Placeholder.unparsed("level", Integer.toString(level)),
-                Placeholder.component("lore2", Localizer.component("seaborn", "dolphingrace", "lore2"))));
-        v.addLore(Components.mini("<italic><lore>", Placeholder.component("lore",
-                Localizer.component("seaborn", "dolphingrace", "lore3"))));
+        v.addLore(Localizer.components("seaborn", "dolphingrace", "lore",
+                Placeholder.unparsed("level", Integer.toString(level))));
     }
 
     @Override

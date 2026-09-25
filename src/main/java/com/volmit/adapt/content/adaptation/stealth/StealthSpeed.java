@@ -56,9 +56,8 @@ public class StealthSpeed extends SimpleAdaptation<StealthSpeed.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount><gray><lore>",
-                Placeholder.unparsed("amount", Form.pc(getSpeed(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("stealth", "speed", "lore1"))));
+        v.addLore(Localizer.components("stealth", "speed", "lore",
+                Placeholder.unparsed("amount", Form.pc(getSpeed(getLevelPercent(level)), 0))));
     }
 
     @EventHandler

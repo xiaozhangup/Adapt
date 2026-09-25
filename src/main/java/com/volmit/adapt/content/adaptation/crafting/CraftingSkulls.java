@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.crafting;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -71,25 +69,7 @@ public class CraftingSkulls extends SimpleAdaptation<CraftingSkulls.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore1"))));
-        v.addLore(Components.mini("<yellow>- <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore2"))));
-        v.addLore(Components.mini("<yellow>- <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore3"))));
-        v.addLore(Components.mini("<yellow>- <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore4"))));
-        v.addLore(Components.mini("<yellow>- <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore5"))));
-        v.addLore(Components.mini(" "));
-        v.addLore(Components.mini("<yellow>- <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore6"))));
-        v.addLore(Components.mini("<yellow>  <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore7"))));
-        v.addLore(Components.mini("<yellow>  <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore8"))));
-        v.addLore(Components.mini("<yellow>  <gray><lore>",
-                Placeholder.component("lore", Localizer.component("crafting", "skulls", "lore9"))));
+        v.addLore(Localizer.components("crafting", "skulls", "lore"));
     }
 
     @Override

@@ -447,30 +447,20 @@ public interface Adaptation<T> extends Ticked, com.volmit.adapt.api.Component {
                 .setMaterial(new MaterialBlock(Material.BLACK_STAINED_GLASS_PANE))
                 .setModel(CustomModel.get(Material.BLACK_STAINED_GLASS_PANE, "snippets", "gui", "background")));
         w.setResolution(WindowResolution.W9_H6);
-        int o = 0;
-
-        if (getMaxLevel() == 1 || getMaxLevel() == 2) {
-            o = 4;
-        }
-
-        if (getMaxLevel() == 3 || getMaxLevel() == 4) {
-            o = 3;
-        }
-
-        if (getMaxLevel() == 5 || getMaxLevel() == 6) {
-            o = 2;
-        }
-
-        if (getMaxLevel() == 7 || getMaxLevel() == 8) {
-            o = 1;
-        }
+        int maxLevel = getMaxLevel();
+        boolean wraps = maxLevel > 7;
+        w.setViewportHeight(wraps ? 4 : 3);
 
         int mylevel = getPlayer(player).getSkillLine(getSkill().getName()).getAdaptationLevel(getName());
 
         long k = getPlayer(player).getData().getSkillLine(getSkill().getName()).getKnowledge();
-        for (int i = 1; i <= getMaxLevel(); i++) {
-            int pos = w.getPosition(i - 1 + o);
-            int row = 1;
+        for (int i = 1; i <= maxLevel; i++) {
+            int index = i - 1;
+            int levelRow = wraps ? index / 7 : 0;
+            int row = levelRow + 1;
+            int rowStart = levelRow * 7;
+            int rowSize = wraps ? Math.min(7, maxLevel - rowStart) : maxLevel;
+            int pos = w.getPosition(index % 7 + (10 - rowSize) / 2);
             int c = getCostFor(i, mylevel);
             int rc = getRefundCostFor(i - 1, mylevel);
             int pc = getPowerCostFor(i, mylevel);

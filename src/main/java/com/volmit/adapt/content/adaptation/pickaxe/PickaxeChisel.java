@@ -52,12 +52,9 @@ public class PickaxeChisel extends SimpleAdaptation<PickaxeChisel.Config> {
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <chance></green><gray> <lore></gray>",
+        v.addLore(Localizer.components("pickaxe", "chisel", "lore",
                 Placeholder.unparsed("chance", Form.pc(getDropChance(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("pickaxe", "chisel", "lore1"))));
-        v.addLore(Components.mini("<red>- <damage></red><gray> <lore></gray>",
-                Placeholder.unparsed("damage", Integer.toString(getDamagePerBlock(getLevelPercent(level)))),
-                Placeholder.component("lore", Localizer.component("pickaxe", "chisel", "lore2"))));
+                Placeholder.unparsed("damage", Integer.toString(getDamagePerBlock(getLevelPercent(level))))));
     }
 
     private int getCooldownTime(double levelPercent) {

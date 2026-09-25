@@ -18,9 +18,7 @@
 
 package com.volmit.adapt.content.adaptation.axe;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.volmit.adapt.util.Components;
 
 
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
@@ -61,7 +59,7 @@ public class AxeDropToInventory extends SimpleAdaptation<AxeDropToInventory.Conf
     }
 
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<gray><lore>", Placeholder.component("lore", Localizer.component("pickaxe", "droptoinventory", "lore1"))));
+        v.addLore(Localizer.components("pickaxe", "droptoinventory", "lore"));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

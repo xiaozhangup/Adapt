@@ -66,9 +66,8 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <levels></green><gray> <lore></gray>",
-                Placeholder.unparsed("levels", Integer.toString(getTotalLevelCount(level))),
-                Placeholder.component("lore", Localizer.component("enchanting", "quickenchant", "lore1"))));
+        v.addLore(Localizer.components("enchanting", "quickenchant", "lore",
+                Placeholder.unparsed("levels", Integer.toString(getTotalLevelCount(level)))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -115,12 +114,8 @@ public class EnchantingQuickEnchant extends SimpleAdaptation<EnchantingQuickEnch
 
             SoundPlayer sp = SoundPlayer.of(p);
             if (power > getTotalLevelCount(getLevel(p))) {
-                Adapt.actionbar(p, Components.mini("<red><message><limit> <unit>",
-                        Placeholder.component("message",
-                                Localizer.component("enchanting", "quickenchant", "lore2")),
-                        Placeholder.unparsed("limit", Integer.toString(getTotalLevelCount(getLevel(p)))),
-                        Placeholder.component("unit",
-                                Localizer.component("enchanting", "quickenchant", "lore3"))));
+                Adapt.actionbar(p, Localizer.component("enchanting", "quickenchant", "limit-message",
+                        Placeholder.unparsed("limit", Integer.toString(getTotalLevelCount(getLevel(p))))));
                 sp.play(p.getLocation(), Sound.BLOCK_CONDUIT_DEACTIVATE, 0.5f, 1.7f);
                 return;
             }

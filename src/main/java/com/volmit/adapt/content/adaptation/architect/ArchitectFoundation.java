@@ -72,10 +72,8 @@ public class ArchitectFoundation extends SimpleAdaptation<ArchitectFoundation.Co
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><lore1><power><gray> <lore2>",
-                Placeholder.component("lore1", Localizer.component("architect", "foundation", "lore1")),
-                Placeholder.unparsed("power", Double.toString(getBlockPower(getLevelPercent(level)))),
-                Placeholder.component("lore2", Localizer.component("architect", "foundation", "lore2"))));
+        v.addLore(Localizer.components("architect", "foundation", "lore",
+                Placeholder.unparsed("power", Double.toString(getBlockPower(getLevelPercent(level))))));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

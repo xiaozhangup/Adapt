@@ -25,7 +25,6 @@ import com.volmit.adapt.content.item.ItemListings;
 import com.volmit.adapt.util.Element;
 import com.volmit.adapt.util.Localizer;
 import com.volmit.adapt.util.SoundPlayer;
-import com.volmit.adapt.util.Components;
 import lombok.NoArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -52,9 +51,8 @@ public class HerbalismHungryHippo extends SimpleAdaptation<HerbalismHungryHippo.
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ (<amount></green><gray> + <lore></gray>",
-                Placeholder.unparsed("amount", Integer.toString(2 + level)),
-                Placeholder.component("lore", Localizer.component("herbalism", "hippo", "lore1"))));
+        v.addLore(Localizer.components("herbalism", "hippo", "lore",
+                Placeholder.unparsed("amount", Integer.toString(2 + level))));
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

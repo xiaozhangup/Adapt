@@ -58,15 +58,10 @@ public class HerbalismGrowthAura extends SimpleAdaptation<HerbalismGrowthAura.Co
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
-                Placeholder.unparsed("amount", Form.f(getRadius(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("herbalism", "growthaura", "lore1"))));
-        v.addLore(Components.mini("<green>+ <amount></green><gray> <lore></gray>",
-                Placeholder.unparsed("amount", Form.pc(getStrength(level), 0)),
-                Placeholder.component("lore", Localizer.component("herbalism", "growthaura", "lore2"))));
-        v.addLore(Components.mini("<yellow>+ <amount></yellow><gray> <lore></gray>",
-                Placeholder.unparsed("amount", Form.f(getFoodCost(getLevelPercent(level)), 2)),
-                Placeholder.component("lore", Localizer.component("herbalism", "growthaura", "lore3"))));
+        v.addLore(Localizer.components("herbalism", "growthaura", "lore",
+                Placeholder.unparsed("radius", Form.f(getRadius(getLevelPercent(level)), 0)),
+                Placeholder.unparsed("strength", Form.pc(getStrength(level), 0)),
+                Placeholder.unparsed("food", Form.f(getFoodCost(getLevelPercent(level)), 2))));
     }
 
     private double getRadius(double factor) {

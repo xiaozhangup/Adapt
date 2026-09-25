@@ -73,12 +73,9 @@ public class BrewingSuperHeated extends SimpleAdaptation<BrewingSuperHeated.Conf
 
     @Override
     public void addStats(int level, Element v) {
-        v.addLore(Components.mini("<green><amount><gray> <lore>",
+        v.addLore(Localizer.components("brewing", "superheated", "lore",
                 Placeholder.unparsed("amount", Form.pc(getFireBoost(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("brewing", "superheated", "lore1"))));
-        v.addLore(Components.mini("<green><amount><gray> <lore>",
-                Placeholder.unparsed("amount", Form.pc(getLavaBoost(getLevelPercent(level)), 0)),
-                Placeholder.component("lore", Localizer.component("brewing", "superheated", "lore2"))));
+                Placeholder.unparsed("lava", Form.pc(getLavaBoost(getLevelPercent(level)), 0))));
     }
 
     public double getLavaBoost(double factor) {
