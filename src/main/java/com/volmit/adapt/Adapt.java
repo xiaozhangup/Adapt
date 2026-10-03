@@ -240,6 +240,7 @@ public class Adapt extends VolmitPlugin {
         if (AdaptConfig.get().isUseSql()) {
             sqlManager.establishConnection();
         }
+        MaterialValue.initialize();
         startSim();
         CustomBlockData.registerListener(this);
         registerListener(new BrewingManager());

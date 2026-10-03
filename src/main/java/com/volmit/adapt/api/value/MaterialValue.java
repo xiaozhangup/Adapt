@@ -23,9 +23,14 @@ import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.recipe.AdaptRecipe;
 import com.volmit.adapt.util.IO;
 import com.volmit.adapt.util.Json;
+import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.inventory.*;
 
 import java.io.File;
@@ -33,9 +38,10 @@ import java.io.IOException;
 import java.util.*;
 
 @Getter
-public class MaterialValue {
+public class MaterialValue implements Listener {
     private static final MaterialValue valueCache = get();
-    private static final Map<Material, Double> value = new HashMap<>();
+    private static final Map<Material, Double> value = new EnumMap<>(Material.class);
+    private static Map<Material, List<MaterialRecipe>> recipeIndex = Map.of();
     private final Map<Material, Double> valueMultipliers = new HashMap<>();
 
     static {
@@ -47,6 +53,46 @@ public class MaterialValue {
                 Adapt.verbose("Invalid material value multiplier: " + k);
             }
         });
+    }
+
+    public static void initialize() {
+        rebuildRecipeIndex();
+        Adapt.instance.registerListener(valueCache);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onServerLoad(ServerLoadEvent event) {
+        Bukkit.getScheduler().runTask(Adapt.instance, MaterialValue::rebuildRecipeIndex);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onResourcesReload(ServerResourcesReloadedEvent event) {
+        Bukkit.getScheduler().runTask(Adapt.instance, MaterialValue::rebuildRecipeIndex);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static synchronized void rebuildRecipeIndex() {
+        Map<Material, List<MaterialRecipe>> index = new EnumMap<>(Material.class);
+        Iterator<Recipe> iterator = Bukkit.recipeIterator();
+        while (iterator.hasNext()) {
+            Recipe recipe = iterator.next();
+            if (recipe instanceof AdaptRecipe) {
+                continue;
+            }
+            ItemStack result = recipe.getResult();
+            Material material = result.getType();
+            // Match Bukkit.getRecipesFor(new ItemStack(material)), including damage.
+            if (result.getDurability() != new ItemStack(material).getDurability()) {
+                continue;
+            }
+            MaterialRecipe converted = toMaterial(recipe);
+            if (converted != null) {
+                index.computeIfAbsent(material, ignored -> new ArrayList<>()).add(converted);
+            }
+        }
+        index.replaceAll((material, recipes) -> List.copyOf(recipes));
+        recipeIndex = Map.copyOf(index);
+        value.clear();
     }
 
     public static void save() {
@@ -83,7 +129,7 @@ public class MaterialValue {
         return d == null ? 1 : d;
     }
 
-    public static double getValue(Material m) {
+    public static synchronized double getValue(Material m) {
         try {
             return getValue(m, new HashSet<>());
         } catch (Exception ignored) {
@@ -132,24 +178,7 @@ public class MaterialValue {
     }
 
     private static List<MaterialRecipe> getRecipes(Material mat) {
-        List<MaterialRecipe> r = new ArrayList<>();
-        try {
-            ItemStack is = new ItemStack(mat);
-            Bukkit.getRecipesFor(is).forEach(i -> {
-                if (i instanceof AdaptRecipe) {
-                    Adapt.verbose("Skipping Adapt Recipe to prevent duplicates, " + mat.name() + " -> "
-                            + ((AdaptRecipe) i).getKey());
-                    return;
-                }
-                MaterialRecipe rx = toMaterial(i);
-                if (rx != null) {
-                    r.add(rx);
-                }
-            });
-        } catch (Throwable e) {
-            Adapt.verbose("Failed to get recipes for " + mat.name());
-        }
-        return r;
+        return recipeIndex.getOrDefault(mat, List.of());
     }
 
     private static MaterialRecipe toMaterial(Recipe r) {
