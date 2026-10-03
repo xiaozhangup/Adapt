@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.skill;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
@@ -66,20 +66,20 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
                 .title(Localizer.component("advancement", "challenge_excavate_1k", "title"))
                 .description(Localizer.component("advancement", "challenge_excavate_1k", "description"))
                 .model(CustomModel.get(Material.WOODEN_SHOVEL, "advancement", "excavation", "challenge_excavate_1k"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_excavate_5k")
                         .title(Localizer.component("advancement", "challenge_excavate_5k", "title"))
                         .description(Localizer.component("advancement", "challenge_excavate_5k", "description"))
                         .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "excavation",
                                 "challenge_excavate_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.STONE_SHOVEL).key("challenge_excavate_50k")
                                 .title(Localizer.component("advancement", "challenge_excavate_50k", "title"))
                                 .description(
                                         Localizer.component("advancement", "challenge_excavate_50k", "description"))
                                 .model(CustomModel.get(Material.STONE_SHOVEL, "advancement", "excavation",
                                         "challenge_excavate_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.IRON_SHOVEL)
                                         .key("challenge_excavate_500k")
                                         .title(Localizer.component("advancement", "challenge_excavate_500k", "title"))
@@ -87,7 +87,7 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
                                                 "description"))
                                         .model(CustomModel.get(Material.IRON_SHOVEL, "advancement", "excavation",
                                                 "challenge_excavate_500k"))
-                                        .frame(AdvancementFrameType.CHALLENGE)
+                                        .frame(AdvancementType.CHALLENGE)
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.DIAMOND_SHOVEL)
                                                 .key("challenge_excavate_5m")
@@ -97,7 +97,7 @@ public class SkillExcavation extends SimpleSkill<SkillExcavation.Config> {
                                                         "description"))
                                                 .model(CustomModel.get(Material.DIAMOND_SHOVEL, "advancement",
                                                         "excavation", "challenge_excavate_5m"))
-                                                .frame(AdvancementFrameType.CHALLENGE)
+                                                .frame(AdvancementType.CHALLENGE)
                                                 .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())

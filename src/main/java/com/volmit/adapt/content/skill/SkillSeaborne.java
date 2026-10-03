@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.skill;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
@@ -65,7 +65,7 @@ public class SkillSeaborne extends SimpleSkill<SkillSeaborne.Config> {
                 .title(Localizer.component("advancement", "challenge_swim_1nm", "title"))
                 .description(Localizer.component("advancement", "challenge_swim_1nm", "description"))
                 .model(CustomModel.get(Material.TURTLE_HELMET, "advancement", "seaborne", "challenge_swim_1nm"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_swim_1nm").goal(1852).stat("move.swim")
                 .reward(getConfig().challengeSwim1nmReward).build());
         cooldowns = new WeakHashMap<>();

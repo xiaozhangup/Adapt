@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.skill;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
@@ -61,19 +61,19 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
                 .title(Localizer.component("advancement", "challenge_block_1k", "title"))
                 .description(Localizer.component("advancement", "challenge_block_1k", "description"))
                 .model(CustomModel.get(Material.LEATHER_CHESTPLATE, "advancement", "blocking", "challenge_block_1k"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.CHAINMAIL_CHESTPLATE).key("challenge_block_5k")
                         .title(Localizer.component("advancement", "challenge_block_5k", "title"))
                         .description(Localizer.component("advancement", "challenge_block_5k", "description"))
                         .model(CustomModel.get(Material.CHAINMAIL_CHESTPLATE, "advancement", "blocking",
                                 "challenge_block_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.IRON_CHESTPLATE).key("challenge_block_50k")
                                 .title(Localizer.component("advancement", "challenge_block_50k", "title"))
                                 .description(Localizer.component("advancement", "challenge_block_50k", "description"))
                                 .model(CustomModel.get(Material.IRON_CHESTPLATE, "advancement", "blocking",
                                         "challenge_block_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.GOLDEN_CHESTPLATE)
                                         .key("challenge_block_500k")
                                         .title(Localizer.component("advancement", "challenge_block_500k", "title"))
@@ -81,7 +81,7 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
                                                 "description"))
                                         .model(CustomModel.get(Material.GOLDEN_CHESTPLATE, "advancement", "blocking",
                                                 "challenge_block_500k"))
-                                        .frame(AdvancementFrameType.CHALLENGE)
+                                        .frame(AdvancementType.CHALLENGE)
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.DIAMOND_CHESTPLATE)
                                                 .key("challenge_block_5m")
@@ -91,7 +91,7 @@ public class SkillBlocking extends SimpleSkill<SkillBlocking.Config> {
                                                         "description"))
                                                 .model(CustomModel.get(Material.DIAMOND_CHESTPLATE, "advancement",
                                                         "blocking", "challenge_block_5m"))
-                                                .frame(AdvancementFrameType.CHALLENGE)
+                                                .frame(AdvancementType.CHALLENGE)
                                                 .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())

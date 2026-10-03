@@ -18,28 +18,18 @@
 
 package com.volmit.adapt.api.advancement;
 
-import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
-import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
-import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
-import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplayBuilder;
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
-import com.volmit.adapt.Adapt;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementHolder;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
+import com.github.retrooper.packetevents.resources.ResourceLocation;
+import com.volmit.adapt.util.AdvancementUtils;
 import com.volmit.adapt.util.CustomModel;
-import com.volmit.adapt.util.Components;
-import com.volmit.adapt.util.collection.KList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -55,7 +45,7 @@ public class AdaptAdvancement {
     @Builder.Default
     private Component description = Component.text("MISSING DESCRIPTION");
     @Builder.Default
-    private AdvancementFrameType frame = AdvancementFrameType.TASK;
+    private AdvancementType frame = AdvancementType.TASK;
     @Builder.Default
     private boolean toast = false;
     @Builder.Default
@@ -67,77 +57,12 @@ public class AdaptAdvancement {
     @Singular
     private List<AdaptAdvancement> children;
 
-    private Advancement toAdvancement(Advancement parent, int index, int depth) {
-        if (children == null) {
-            children = new ArrayList<>();
-        }
-
-        var icon = getModel() != null ? getModel().toItemStack() : new ItemStack(getIcon());
-        AdvancementDisplay d = new AdvancementDisplayBuilder(icon, Components.legacyString(getTitle()))
-                .description(Components.legacyString(getDescription()))
-                .frame(getFrame()).showToast(toast).x(1f + depth).y(1f + index).build();
-
-        if (parent == null) {
-            if (background == null)
-                throw new IllegalArgumentException("Background cannot be null");
-
-            return new MainAdvancement(Adapt.instance.getManager().createAdvancementTab(getKey(), background), getKey(),
-                    d);
-        }
-
-        return new SubAdvancement(getKey(), d, parent, getVisibility());
+    public ItemStack getDisplayIcon() {
+        return model != null ? model.toItemStack() : new ItemStack(icon);
     }
 
-    public KList<Advancement> toAdvancements() {
-        return toAdvancements(null, 0, 0);
-    }
-
-    private KList<Advancement> toAdvancements(Advancement p, int index, int depth) {
-        KList<Advancement> aa = new KList<>();
-        Advancement a = toAdvancement(p, index, depth);
-        if (children != null && !children.isEmpty()) {
-            for (AdaptAdvancement i : children) {
-                aa.addAll(i.toAdvancements(a, aa.size(), depth + 1));
-            }
-        }
-
-        aa.add(a);
-
-        return aa;
-    }
-
-    private static class MainAdvancement extends RootAdvancement {
-
-        public MainAdvancement(@NotNull AdvancementTab advancementTab, @NotNull String key,
-                @NotNull AdvancementDisplay display) {
-            super(advancementTab, key, display);
-        }
-
-        @Override
-        public void grant(@NotNull Player player, boolean giveRewards) {
-            super.grant(player, giveRewards);
-            getAdvancementTab().showTab(player);
-        }
-
-        @Override
-        public void revoke(@NotNull Player player) {
-            super.revoke(player);
-            getAdvancementTab().hideTab(player);
-        }
-    }
-
-    private static class SubAdvancement extends BaseAdvancement {
-        private final AdvancementVisibility visibility;
-
-        public SubAdvancement(@NotNull String key, @NotNull AdvancementDisplay display, @NotNull Advancement parent,
-                @NotNull AdvancementVisibility visibility) {
-            super(parent, key, display);
-            this.visibility = visibility;
-        }
-
-        @Override
-        public boolean isVisible(@NotNull TeamProgression progression) {
-            return visibility.isVisible(this, progression);
-        }
+    AdvancementHolder toAdvancement(ResourceLocation id, ResourceLocation parent, int index, int depth) {
+        return AdvancementUtils.createAdvancement(id, parent, getDisplayIcon(), title, description, frame,
+                parent == null ? new ResourceLocation(background) : null, false, false, 1f + depth, 1f + index);
     }
 }

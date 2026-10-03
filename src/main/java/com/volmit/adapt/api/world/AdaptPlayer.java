@@ -479,6 +479,7 @@ public class AdaptPlayer extends TickedObject {
     }
 
     public void loggedIn() {
+        Adapt.instance.getManager().unlockExisting(this);
         lastSeen = M.ms();
         if (AdaptConfig.get().isLoginBonus()) {
             long timeGone = M.ms() - getData().getLastLogin();

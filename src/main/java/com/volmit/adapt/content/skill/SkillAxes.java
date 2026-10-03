@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.skill;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
@@ -69,24 +69,24 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
                 .title(Localizer.component("advancement", "challenge_chop_1k", "title"))
                 .description(Localizer.component("advancement", "challenge_chop_1k", "description"))
                 .model(CustomModel.get(Material.WOODEN_AXE, "advancement", "axes", "challenge_chop_1k"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.STONE_AXE).key("challenge_chop_5k")
                         .title(Localizer.component("advancement", "challenge_chop_5k", "title"))
                         .description(Localizer.component("advancement", "challenge_chop_5k", "description"))
                         .model(CustomModel.get(Material.STONE_AXE, "advancement", "axes", "challenge_chop_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.IRON_AXE).key("challenge_chop_50k")
                                 .title(Localizer.component("advancement", "challenge_chop_50k", "title"))
                                 .description(Localizer.component("advancement", "challenge_chop_50k", "description"))
                                 .model(CustomModel.get(Material.IRON_AXE, "advancement", "axes", "challenge_chop_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.DIAMOND_AXE).key("challenge_chop_500k")
                                         .title(Localizer.component("advancement", "challenge_chop_500k", "title"))
                                         .description(Localizer.component("advancement", "challenge_chop_500k",
                                                 "description"))
                                         .model(CustomModel.get(Material.DIAMOND_AXE, "advancement", "axes",
                                                 "challenge_chop_500k"))
-                                        .frame(AdvancementFrameType.CHALLENGE)
+                                        .frame(AdvancementType.CHALLENGE)
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.NETHERITE_AXE)
                                                 .key("challenge_chop_5m")
@@ -95,7 +95,7 @@ public class SkillAxes extends SimpleSkill<SkillAxes.Config> {
                                                         "description"))
                                                 .model(CustomModel.get(Material.NETHERITE_AXE, "advancement", "axes",
                                                         "challenge_chop_5m"))
-                                                .frame(AdvancementFrameType.CHALLENGE)
+                                                .frame(AdvancementType.CHALLENGE)
                                                 .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())

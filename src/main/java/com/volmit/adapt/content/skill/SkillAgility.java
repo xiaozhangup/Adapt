@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.skill;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.Adapt;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
@@ -64,18 +64,18 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
                 .title(Localizer.component("advancement", "challenge_move_1k", "title"))
                 .description(Localizer.component("advancement", "challenge_move_1k", "description"))
                 .model(CustomModel.get(Material.LEATHER_BOOTS, "advancement", "agility", "challenge_move_1k"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.IRON_BOOTS).key("challenge_sprint_5k")
                         .title(Localizer.component("advancement", "challenge_sprint_5k", "title"))
                         .description(Localizer.component("advancement", "challenge_sprint_5k", "description"))
                         .model(CustomModel.get(Material.IRON_BOOTS, "advancement", "agility", "challenge_sprint_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.DIAMOND_BOOTS).key("challenge_sprint_50k")
                                 .title(Localizer.component("advancement", "challenge_sprint_50k", "title"))
                                 .description(Localizer.component("advancement", "challenge_sprint_50k", "description"))
                                 .model(CustomModel.get(Material.DIAMOND_BOOTS, "advancement", "agility",
                                         "challenge_sprint_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.NETHERITE_BOOTS)
                                         .key("challenge_sprint_500k")
                                         .title(Localizer.component("advancement", "challenge_sprint_500k", "title"))
@@ -83,7 +83,7 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
                                                 "description"))
                                         .model(CustomModel.get(Material.NETHERITE_BOOTS, "advancement", "agility",
                                                 "challenge_sprint_500k"))
-                                        .frame(AdvancementFrameType.CHALLENGE)
+                                        .frame(AdvancementType.CHALLENGE)
                                         .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                 .build())
                         .build())
@@ -92,7 +92,7 @@ public class SkillAgility extends SimpleSkill<SkillAgility.Config> {
                         .description(Localizer.component("advancement", "challenge_sprint_marathon", "description"))
                         .model(CustomModel.get(Material.GOLDEN_BOOTS, "advancement", "agility",
                                 "challenge_sprint_marathon"))
-                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
+                        .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build())
                 .build());
         registerStatTracker(AdaptStatTracker.builder().advancement("challenge_move_1k").goal(1000).stat("move")
                 .reward(getConfig().challengeMove1kReward).build());

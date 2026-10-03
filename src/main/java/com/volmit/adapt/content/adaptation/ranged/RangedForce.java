@@ -20,7 +20,7 @@ package com.volmit.adapt.content.adaptation.ranged;
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.adaptation.SimpleAdaptation;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
@@ -52,7 +52,7 @@ public class RangedForce extends SimpleAdaptation<RangedForce.Config> {
         registerAdvancement(AdaptAdvancement.builder().icon(Material.SPECTRAL_ARROW).key("challenge_force_30")
                 .title(Localizer.component("ranged", "forceshot", "advancementname"))
                 .description(Localizer.component("ranged", "forceshot", "advancementlore"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED).build());
     }
 
     @Override

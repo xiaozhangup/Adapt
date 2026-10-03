@@ -1,122 +1,149 @@
 package com.volmit.adapt.api.advancement;
 
-import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
-import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
-import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
-import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
-import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
-import com.fren_gor.ultimateAdvancementAPI.database.impl.InMemory;
-import com.volmit.adapt.Adapt;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementHolder;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementProgress;
+import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.volmit.adapt.AdaptConfig;
 import com.volmit.adapt.api.skill.Skill;
 import com.volmit.adapt.api.world.AdaptPlayer;
+import com.volmit.adapt.api.world.PlayerData;
+import com.volmit.adapt.util.AdvancementUtils;
 import com.volmit.adapt.util.J;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.volmit.adapt.Adapt.instance;
 
 public class AdvancementManager {
-    private final AdvancementMain main;
-    private final Map<String, Advancement> advancements;
-    private final AtomicBoolean loaded = new AtomicBoolean(true);
-    private final AtomicBoolean enabled = new AtomicBoolean(false);
-
-    public AdvancementManager() {
-        main = new AdvancementMain(instance);
-        main.load();
-        advancements = new HashMap<>();
-    }
-
-    AdvancementTab createAdvancementTab(String namespace, String backgroundTexture) {
-        return main.createAdvancementTab(instance, "adapt_" + namespace, backgroundTexture);
-    }
+    private final Map<String, RegisteredAdvancement> advancements = new LinkedHashMap<>();
+    private final Map<String, List<RegisteredAdvancement>> tabs = new LinkedHashMap<>();
+    private volatile boolean enabled;
 
     public void grant(AdaptPlayer player, String key, boolean toast) {
         player.getData().ensureGranted(key);
-        Player p = player.getPlayer();
-        if (!AdaptConfig.get().isAdvancements() || !enabled.get() || p == null || !p.isOnline())
+        if (!AdaptConfig.get().isAdvancements() || !enabled)
             return;
-        Advancement advancement = advancements.get(key);
-        try {
-            J.s(() -> {
-                if (!p.isOnline())
-                    return;
-                advancement.grant(player.getPlayer(), true);
-            }, 5);
-        } catch (Exception e) {
-            Adapt.error("Failed to grant advancement " + key);
-        }
 
-        if (toast) {
-            try {
-                advancement.displayToastToPlayer(p);
-            } catch (Exception e) {
-                Adapt.error("Failed to grant advancement " + key + " Reattaching!");
+        J.s(() -> {
+            if (!enabled || !player.isActive() || !player.getPlayer().isOnline())
+                return;
+
+            RegisteredAdvancement advancement = advancements.get(key);
+            // Saved adaptations may have been disabled since the player last joined.
+            if (advancement == null)
+                return;
+            syncTab(player, tabs.get(advancement.root()));
+            if (toast || advancement.definition().isToast()) {
+                AdaptAdvancement definition = advancement.definition();
+                AdvancementUtils.displayToast(player.getPlayer(), definition.getDisplayIcon(), definition.getTitle(),
+                        definition.getDescription(), definition.getFrame());
             }
-        }
+        }, 5);
     }
 
     public void unlockExisting(AdaptPlayer player) {
-        if (!AdaptConfig.get().isAdvancements() || !enabled.get())
+        if (!AdaptConfig.get().isAdvancements() || !enabled)
             return;
-        J.s(() -> {
-            instance.getAdaptServer().getSkillRegistry().getSkills().stream().map(Skill::buildAdvancements)
-                    .forEach(aa -> unlockExisting(player, aa));
 
+        J.s(() -> {
+            if (!enabled || !player.isActive() || !player.getPlayer().isOnline())
+                return;
+
+            tabs.values().forEach(tab -> syncTab(player, tab));
             player.getAdvancementHandler().setReady(true);
         }, 20);
     }
 
-    private void unlockExisting(AdaptPlayer player, AdaptAdvancement aa) {
-        if (aa.getChildren() != null) {
-            for (AdaptAdvancement i : aa.getChildren()) {
-                unlockExisting(player, i);
+    private void syncTab(AdaptPlayer player, List<RegisteredAdvancement> tab) {
+        PlayerData data = player.getData();
+        Set<String> visible = new HashSet<>();
+        if (data.isGranted(tab.getFirst().definition().getKey())) {
+            for (RegisteredAdvancement advancement : tab) {
+                String parent = advancement.parent();
+                String grandparent = parent == null ? null : advancements.get(parent).parent();
+                if (parent == null || advancement.definition().getVisibility()
+                        .isVisible(data, advancement.definition().getKey(), parent, grandparent)) {
+                    // Visible children need their ancestors for the client to attach them to the tree.
+                    for (RegisteredAdvancement ancestor = advancement; ancestor != null;
+                            ancestor = ancestor.parent() == null ? null : advancements.get(ancestor.parent())) {
+                        visible.add(ancestor.definition().getKey());
+                    }
+                }
             }
         }
 
-        if (player.getData().isGranted(aa.getKey())) {
-            grant(player, aa.getKey(), false);
+        Set<ResourceLocation> sent = player.getAdvancementHandler().getVisibleAdvancements();
+        List<AdvancementHolder> added = new ArrayList<>();
+        Set<ResourceLocation> removed = new HashSet<>();
+        Map<ResourceLocation, AdvancementProgress> progress = new LinkedHashMap<>();
+        for (RegisteredAdvancement advancement : tab) {
+            ResourceLocation id = advancement.holder().getIdentifier();
+            if (visible.contains(advancement.definition().getKey())) {
+                if (!sent.contains(id))
+                    added.add(advancement.holder());
+                progress.put(id, AdvancementUtils.progress(data.isGranted(advancement.definition().getKey())));
+            } else if (sent.contains(id)) {
+                removed.add(id);
+            }
+        }
+
+        if (!added.isEmpty() || !removed.isEmpty() || !progress.isEmpty()) {
+            AdvancementUtils.send(player.getPlayer(), added, removed, progress, false);
+            sent.removeAll(removed);
+            added.forEach(advancement -> sent.add(advancement.getIdentifier()));
         }
     }
 
     public void enable() {
-        if (loaded.compareAndSet(false, true))
-            main.load();
-
-        if (!AdaptConfig.get().isAdvancements() || !enabled.compareAndSet(false, true))
+        if (!AdaptConfig.get().isAdvancements() || enabled)
             return;
-        main.enable(() -> new InMemory(main));
 
-        for (Skill<?> i : instance.getAdaptServer().getSkillRegistry().getSkills()) {
-            AdaptAdvancement aa = i.buildAdvancements();
-            Set<BaseAdvancement> set = new HashSet<>();
-            RootAdvancement root = null;
-
-            for (var a : aa.toAdvancements().reverse()) {
-                advancements.put(a.getKey().getKey(), a);
-                if (a instanceof RootAdvancement r && root == null)
-                    root = r;
-                else if (a instanceof BaseAdvancement b)
-                    set.add(b);
-            }
-
-            if (root == null) {
-                Adapt.error("Root advancement not found for " + i.getId());
-                continue;
-            }
-            root.getAdvancementTab().registerAdvancements(root, set);
+        for (Skill<?> skill : instance.getAdaptServer().getSkillRegistry().getSkills()) {
+            AdaptAdvancement root = skill.buildAdvancements();
+            List<RegisteredAdvancement> tab = new ArrayList<>();
+            register(root, null, root.getKey(), tab, 0, 0);
+            tabs.put(root.getKey(), tab);
         }
+        enabled = true;
+        instance.getAdaptServer().getAdaptPlayers()
+                .forEach(player -> unlockExisting(instance.getAdaptServer().getPlayer(player)));
+    }
+
+    private int register(AdaptAdvancement definition, RegisteredAdvancement parent, String root,
+            List<RegisteredAdvancement> tab, int index, int depth) {
+        ResourceLocation id = new ResourceLocation("adapt_" + root, definition.getKey());
+        AdvancementHolder holder = definition.toAdvancement(id,
+                parent == null ? null : parent.holder().getIdentifier(), index, depth);
+        RegisteredAdvancement advancement = new RegisteredAdvancement(definition,
+                parent == null ? null : parent.definition().getKey(), root, holder);
+        advancements.put(definition.getKey(), advancement);
+        tab.add(advancement);
+
+        int descendants = 0;
+        for (AdaptAdvancement child : definition.getChildren()) {
+            descendants += register(child, advancement, root, tab, descendants, depth + 1);
+        }
+        return descendants + 1;
     }
 
     public void disable() {
-        main.disable();
-        enabled.set(false);
-        loaded.set(false);
+        enabled = false;
+        Set<ResourceLocation> removed = new HashSet<>();
+        advancements.values().forEach(advancement -> removed.add(advancement.holder().getIdentifier()));
+        if (!removed.isEmpty()) {
+            Bukkit.getOnlinePlayers().forEach(player -> AdvancementUtils.send(player, List.of(), removed, Map.of(), false));
+        }
+        advancements.clear();
+        tabs.clear();
+    }
+
+    private record RegisteredAdvancement(AdaptAdvancement definition, String parent, String root,
+            AdvancementHolder holder) {
     }
 }

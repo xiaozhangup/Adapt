@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.api.notification;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.api.world.AdaptPlayer;
 import com.volmit.adapt.util.AdvancementUtils;
 import com.volmit.adapt.util.CustomModel;
@@ -40,7 +40,7 @@ public class AdvancementNotification implements Notification {
     @Builder.Default
     private final Component description = Component.space();
     @Builder.Default
-    private final AdvancementFrameType frameType = AdvancementFrameType.TASK;
+    private final AdvancementType frameType = AdvancementType.TASK;
     @Builder.Default
     private final String group = "default";
 

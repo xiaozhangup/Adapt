@@ -81,7 +81,7 @@ public abstract class SimpleSkill<T> extends TickedObject implements Skill<T> {
         setIcon(Material.BOOK);
         setDescription(Component.text("No Description Provided"));
         setMinXp(100);
-        setAdvancementBackground("minecraft:textures/block/deepslate_tiles.png");
+        setAdvancementBackground("minecraft:block/deepslate_tiles");
 
     }
 

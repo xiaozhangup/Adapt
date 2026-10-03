@@ -18,8 +18,12 @@
 
 package com.volmit.adapt.api.world;
 
+import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.volmit.adapt.AdaptConfig;
 import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.volmit.adapt.Adapt.instance;
 
@@ -27,10 +31,10 @@ import static com.volmit.adapt.Adapt.instance;
 public class AdvancementHandler {
     private AdaptPlayer player;
     private boolean ready;
+    private final Set<ResourceLocation> visibleAdvancements = new HashSet<>();
 
     public AdvancementHandler(AdaptPlayer player) {
         this.player = player;
-        instance.getManager().unlockExisting(player);
     }
 
     public void grant(String key, boolean toast) {

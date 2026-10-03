@@ -79,7 +79,6 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.org/repository/maven-public")
     maven("https://mvn.lumine.io/repository/maven-public/")
-    maven("https://nexus.frengor.com/repository/public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.glaremasters.me/repository/bloodshot/")
     maven("https://maven.enginehub.org/repo/")
@@ -103,7 +102,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.46")
 
     compileOnly("me.clip:placeholderapi:2.11.6")
-    implementation("com.frengor:ultimateadvancementapi-shadeable:3.0.0-beta-2")
     implementation("com.jeff-media:custom-block-data:2.2.3")
 
     // Dynamically Loaded
@@ -135,11 +133,8 @@ tasks.compileJava {
  */
 tasks.shadowJar {
     append("plugin.yml")
-    relocate("com.fren_gor.ultimateAdvancementAPI", "com.volmit.adapt.util.advancements")
     relocate("com.jeff_media.customblockdata", "com.volmit.adapt.util.customblocks")
     dependencies {
-        include(dependency("com.frengor:ultimateadvancementapi-shadeable:"))
-        include(dependency("net.byteflux:"))
         include(dependency("com.jeff-media:custom-block-data:"))
     }
 }

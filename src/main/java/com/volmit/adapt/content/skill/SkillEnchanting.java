@@ -18,7 +18,7 @@
 
 package com.volmit.adapt.content.skill;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.github.retrooper.packetevents.protocol.advancements.AdvancementType;
 import com.volmit.adapt.api.advancement.AdaptAdvancement;
 import com.volmit.adapt.api.advancement.AdvancementVisibility;
 import com.volmit.adapt.api.skill.SimpleSkill;
@@ -59,19 +59,19 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
                 .title(Localizer.component("advancement", "challenge_enchant_1k", "title"))
                 .description(Localizer.component("advancement", "challenge_enchant_1k", "description"))
                 .model(CustomModel.get(Material.CRAFTING_TABLE, "advancement", "enchanting", "challenge_enchant_1k"))
-                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                 .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_enchant_5k")
                         .title(Localizer.component("advancement", "challenge_enchant_5k", "title"))
                         .description(Localizer.component("advancement", "challenge_enchant_5k", "description"))
                         .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
                                 "challenge_enchant_5k"))
-                        .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                        .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                         .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK).key("challenge_enchant_50k")
                                 .title(Localizer.component("advancement", "challenge_enchant_50k", "title"))
                                 .description(Localizer.component("advancement", "challenge_enchant_50k", "description"))
                                 .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
                                         "challenge_enchant_50k"))
-                                .frame(AdvancementFrameType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
+                                .frame(AdvancementType.CHALLENGE).visibility(AdvancementVisibility.PARENT_GRANTED)
                                 .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK)
                                         .key("challenge_enchant_500k")
                                         .title(Localizer.component("advancement", "challenge_enchant_500k", "title"))
@@ -79,7 +79,7 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
                                                 "description"))
                                         .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement", "enchanting",
                                                 "challenge_enchant_500k"))
-                                        .frame(AdvancementFrameType.CHALLENGE)
+                                        .frame(AdvancementType.CHALLENGE)
                                         .visibility(AdvancementVisibility.PARENT_GRANTED)
                                         .child(AdaptAdvancement.builder().icon(Material.KNOWLEDGE_BOOK)
                                                 .key("challenge_enchant_5m")
@@ -89,7 +89,7 @@ public class SkillEnchanting extends SimpleSkill<SkillEnchanting.Config> {
                                                         "description"))
                                                 .model(CustomModel.get(Material.KNOWLEDGE_BOOK, "advancement",
                                                         "enchanting", "challenge_enchant_5m"))
-                                                .frame(AdvancementFrameType.CHALLENGE)
+                                                .frame(AdvancementType.CHALLENGE)
                                                 .visibility(AdvancementVisibility.PARENT_GRANTED).build())
                                         .build())
                                 .build())
