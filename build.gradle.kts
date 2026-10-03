@@ -31,9 +31,9 @@ plugins {
 }
 
 version = "1.16.12"
-val apiVersion = "26.2"
+val apiVersion = "26.3"
 val effectLibVersion = "10.10"
-val packetEventsVersion = "2.13.0"
+val packetEventsVersion = "2.14.0"
 val pluginName = rootProject.name
 val main = "com.volmit.adapt.Adapt"
 val outputJar = layout.buildDirectory.file("libs/Adapt-$version-all.jar")
@@ -107,7 +107,7 @@ dependencies {
     implementation("com.jeff-media:custom-block-data:2.2.3")
 
     // Dynamically Loaded
-    compileOnly("me.xiaozhangup.octopus:octopus-api:26.2-R0.1-SNAPSHOT")
+    compileOnly("me.xiaozhangup.octopus:octopus-api:26.3-R0.1-SNAPSHOT")
     compileOnly("me.xiaozhangup:SlimeCargoNext:1.0.2")
     compileOnly("me.xiaozhangup:OrangDomain:1.0.2")
     compileOnly("me.xiaozhangup:WhaleMechanism:1.0.1")

@@ -6,7 +6,7 @@
 
 本项目仅针对 HAPPYLAND AssiahLand 服务器的需求进行修改，可能不能直接在其他服务器运行
 目前已转变为 HARD-FORK 项目，和原版的差异只会越来越大
-当前唯一支持的运行与构建环境为 Octopus/Paper 26.2 和 Java 25。
+当前唯一支持的运行与构建环境为 Octopus/Paper 26.3 和 Java 25。
 
 ### 修改内容如下：
 
